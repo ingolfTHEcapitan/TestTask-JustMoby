@@ -1,3 +1,4 @@
+using _Project._Scripts.Player.StatSystem;
 using UnityEngine;
 
 namespace _Project._Scripts.Weapon
@@ -13,6 +14,12 @@ namespace _Project._Scripts.Weapon
         
         private float _nextTimeToFire;
         private Camera _camera;
+        private PlayerStatsSystem _playerStatsSystem;
+
+        public void Construct(PlayerStatsSystem playerStatsSystem)
+        {
+            _playerStatsSystem = playerStatsSystem;
+        }
 
         private void Start() => 
             _camera = Camera.main;
@@ -31,8 +38,8 @@ namespace _Project._Scripts.Weapon
             _nextTimeToFire = Time.time + 1 / _fireRate;
             
             Bullet bullet = Instantiate(_bulletPrefab, _shootPoint.position, Quaternion.identity);
-            bullet.SetDirection(shootDirection);
-            bullet.transform.SetParent(_bulletParent);
+            float damage = _playerStatsSystem.GetStatValue(StatName.Damage);
+            bullet.Initialize(shootDirection, damage, _bulletParent);
         }
 
         private Vector3 GetTargetPoint(Ray ray)

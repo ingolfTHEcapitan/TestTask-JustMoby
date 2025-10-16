@@ -4,15 +4,18 @@ using UnityEngine;
 
 namespace _Project._Scripts.SaveLoad
 {
-    public class SaveLoad
+    public class SaveLoadService
     {
+        private const string FolderName = "Saves";
+        private const string FileName = "Save.json";
+
         private readonly string SaveDirectoryPath;
-        private readonly string SavePath; 
-        
-        public SaveLoad()
+        private readonly string SavePath;
+
+        public SaveLoadService()
         {
-            SaveDirectoryPath = Path.Combine(Application.dataPath, "Save");
-            SavePath = Path.Combine(SaveDirectoryPath, "Save.json");
+            SaveDirectoryPath = Path.Combine(Application.dataPath, FolderName);
+            SavePath = Path.Combine(SaveDirectoryPath, FileName);
         }
         
         public void SaveProgress(PlayerProgress playerProgress)
@@ -26,16 +29,17 @@ namespace _Project._Scripts.SaveLoad
 
         public PlayerProgress LoadProgress()
         {
+            PlayerProgress playerProgress = new PlayerProgress();
+            
             if (File.Exists(SavePath))
             {
                 string json = File.ReadAllText(SavePath);
-                PlayerProgress playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
+                playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
                 return playerProgress;
             }
             
-            PlayerProgress newPlayerProgress = new PlayerProgress();
-            SaveProgress(newPlayerProgress);
-            return newPlayerProgress;
+            SaveProgress(playerProgress);
+            return null;
         }
     }
 }

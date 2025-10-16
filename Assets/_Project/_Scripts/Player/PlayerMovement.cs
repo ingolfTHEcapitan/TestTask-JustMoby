@@ -1,3 +1,4 @@
+using _Project._Scripts.Player.StatSystem;
 using UnityEngine;
 
 namespace _Project._Scripts.Player
@@ -7,14 +8,21 @@ namespace _Project._Scripts.Player
         [SerializeField] private CharacterController _characterController;
         
         [Header("Settings")]
-        [SerializeField] private float _speed = 6f;
         [SerializeField] private float _gravity = 21f;
 
         private Vector3 _movementDirection;
+        private PlayerStatsSystem _playerStatsSystem;
 
+        private float Speed => _playerStatsSystem.GetStatValue(StatName.Speed);
+        
+        public void Construct(PlayerStatsSystem playerStats)
+        {
+            _playerStatsSystem = playerStats;
+        }
+        
         private void Update()
         {
-            _movementDirection = new Vector3(Input.GetAxis("Horizontal") * _speed, _movementDirection.y, Input.GetAxis("Vertical") * _speed);
+            _movementDirection = new Vector3(Input.GetAxis("Horizontal") * Speed, _movementDirection.y, Input.GetAxis("Vertical") * Speed);
             _movementDirection = transform.TransformDirection(_movementDirection);
             
 

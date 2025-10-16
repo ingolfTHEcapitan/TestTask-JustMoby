@@ -8,17 +8,19 @@ namespace _Project._Scripts.Weapon
     {
         [Header("Settings")]
         [SerializeField] private float _speed = 8f;
-        [SerializeField] private float _damage = 10f;
         [SerializeField] private float _lifeTime = 5f;
         
         private Vector3 _direction;
+        private float _damage;
 
         private void Awake() => 
             DestroyBullet(_lifeTime);
 
-        public void SetDirection(Vector3 direction)
+        public void Initialize(Vector3 direction, float damage, Transform parent)
         {
             _direction = direction;
+            _damage = damage;
+            transform.SetParent(parent);
         }
         
         private void FixedUpdate()
