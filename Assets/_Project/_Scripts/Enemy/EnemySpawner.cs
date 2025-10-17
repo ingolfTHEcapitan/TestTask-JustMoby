@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.StatSystem;
+using _Project._Scripts.UI;
 using UnityEngine;
 
 namespace _Project._Scripts.Enemy
@@ -47,6 +48,12 @@ namespace _Project._Scripts.Enemy
             
             EnemyAgent enemyAgent = enemy.GetComponent<EnemyAgent>();
             enemyAgent.Construct(_pauseService);
+
+            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+            
+            HealthBarView playerHealthBarView = enemy.GetComponentInChildren<HealthBarView>();
+            playerHealthBarView.Construct(enemyHealth);
+            playerHealthBarView.Initialize();
             
             EnemyDeath enemyDeath = enemy.GetComponent<EnemyDeath>();
             _spawnedEnemies.Add(enemyDeath);

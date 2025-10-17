@@ -1,41 +1,31 @@
 using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace _Project._Scripts.Enemy
 {
-    public class EnemyHealth : MonoBehaviour
+    public class EnemyHealth : MonoBehaviour, IHealth
     {
         [SerializeField] private float _maxHealth = 100f;
-        [SerializeField] private Slider _healthSlider;
-        [SerializeField] private TextMeshProUGUI _healthText;
         
         public event Action OnHealthChanged;
         
-        public float Current {get; private set;}
+        public float CurrentHealth {get; private set;}
 
-        private void Awake()
+        public float MaxHealth
         {
-            Current = _maxHealth;
-            OnHealthChanged +=  UpdateView;
-        }
-        
-        private void Start()
-        {
-            UpdateView();
+            get => _maxHealth;
+            set => _maxHealth = value;
         }
 
-        private void UpdateView()
-        {
-            _healthSlider.value = Current / _maxHealth;
-            _healthText.text = $"{Current}/{_maxHealth}";
-        }
-        
+        private void Awake() => 
+            CurrentHealth = MaxHealth;
+
         public void TakeDamage(float damage)
         {
-            Current -= Mathf.Max(damage, 0f);
-            Current = Mathf.Clamp(Current, 0f, _maxHealth);
+            if (CurrentHealth <= 0)
+                return;
+            
+            CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
             OnHealthChanged?.Invoke();
         }
     }

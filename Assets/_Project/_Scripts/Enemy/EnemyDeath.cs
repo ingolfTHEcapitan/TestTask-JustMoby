@@ -27,7 +27,7 @@ namespace _Project._Scripts.Enemy
 
         private void OnOnHealthChanged()
         {
-            if (_health.Current <= 0)
+            if (_health.CurrentHealth <= 0)
                 Die();
         }
 

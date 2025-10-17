@@ -14,6 +14,7 @@ namespace _Project._Scripts.Infrastructure
     public class GameBootstrapper: MonoBehaviour
     {
         [SerializeField] private GameObject _playerPrefab;
+        [SerializeField] private GameObject _hudPrefab;
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
         [SerializeField] private UpgradeStatsWindow _upgradeStatsWindow;
         [SerializeField] private Transform _dynamicObjectsRoot;
@@ -34,8 +35,12 @@ namespace _Project._Scripts.Infrastructure
             _upgradeStatsWindow.Initialize();
             
             PlayerHealth playerHealth = _playerPrefab.GetComponent<PlayerHealth>();
-            playerHealth.Construct(playerStatsSystem);
+            playerHealth.Construct(playerStatsSystem);  
             playerHealth.Initialize();
+            
+            HealthBarView playerHealthBarView = _hudPrefab.GetComponentInChildren<HealthBarView>();
+            playerHealthBarView.Construct(playerHealth);
+            playerHealthBarView.Initialize();
             
             PlayerCameraLook playerCameraLook = _playerPrefab.GetComponent<PlayerCameraLook>();
             playerCameraLook.Construct(pauseService, inputService);
