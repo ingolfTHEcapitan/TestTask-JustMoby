@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Data;
-using _Project._Scripts.SaveLoad;
-using _Project._Scripts.Services.SaveLoad;
+using _Project._Scripts.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
-namespace _Project._Scripts.Player.StatSystem
+namespace _Project._Scripts.StatSystem
 {
     public class PlayerStatsSystem: MonoBehaviour
     {

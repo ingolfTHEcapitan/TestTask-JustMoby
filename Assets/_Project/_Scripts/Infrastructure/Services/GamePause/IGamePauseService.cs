@@ -1,4 +1,4 @@
-namespace _Project._Scripts.Services.GamePause
+namespace _Project._Scripts.Infrastructure.Services.GamePause
 {
     public interface IGamePauseService
     {

@@ -1,4 +1,4 @@
-using _Project._Scripts.Services.GamePause;
+using _Project._Scripts.Infrastructure.Services.GamePause;
 using UnityEngine;
 
 namespace _Project._Scripts.Player

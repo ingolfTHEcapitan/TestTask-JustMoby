@@ -1,5 +1,5 @@
-using _Project._Scripts.Player.StatSystem;
-using _Project._Scripts.Services.GamePause;
+using _Project._Scripts.Infrastructure.Services.GamePause;
+using _Project._Scripts.StatSystem;
 using UnityEngine;
 
 namespace _Project._Scripts.Weapon

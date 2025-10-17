@@ -1,9 +1,8 @@
 using System.IO;
 using _Project._Scripts.Data;
-using _Project._Scripts.SaveLoad;
 using UnityEngine;
 
-namespace _Project._Scripts.Services.SaveLoad
+namespace _Project._Scripts.Infrastructure.Services.SaveLoad
 {
     public class SaveLoadService : ISaveLoadService
     {
@@ -26,6 +25,7 @@ namespace _Project._Scripts.Services.SaveLoad
             
             string json = JsonUtility.ToJson(playerProgress, prettyPrint: true);
             File.WriteAllText(SavePath, json);
+            Debug.Log("Progress saved to " + SavePath);
         }
 
         public PlayerProgress LoadProgress()
@@ -36,6 +36,7 @@ namespace _Project._Scripts.Services.SaveLoad
             {
                 string json = File.ReadAllText(SavePath);
                 playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
+                Debug.Log("Progress loaded from " + SavePath);
                 return playerProgress;
             }
             

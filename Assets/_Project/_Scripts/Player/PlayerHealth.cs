@@ -1,5 +1,5 @@
 using System;
-using _Project._Scripts.Player.StatSystem;
+using _Project._Scripts.StatSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

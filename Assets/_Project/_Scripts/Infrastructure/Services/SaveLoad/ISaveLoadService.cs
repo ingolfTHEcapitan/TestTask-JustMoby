@@ -1,6 +1,6 @@
 using _Project._Scripts.Data;
 
-namespace _Project._Scripts.SaveLoad
+namespace _Project._Scripts.Infrastructure.Services.SaveLoad
 {
     public interface ISaveLoadService
     {

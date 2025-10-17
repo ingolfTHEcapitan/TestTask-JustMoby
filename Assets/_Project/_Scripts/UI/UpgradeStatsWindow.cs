@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using _Project._Scripts.Player.StatSystem;
-using _Project._Scripts.Services.GamePause;
+using _Project._Scripts.Infrastructure.Services.GamePause;
+using _Project._Scripts.StatSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

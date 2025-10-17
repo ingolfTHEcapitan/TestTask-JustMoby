@@ -1,4 +1,4 @@
-namespace _Project._Scripts.Player.StatSystem
+namespace _Project._Scripts.StatSystem
 {
     public enum StatName
     {
