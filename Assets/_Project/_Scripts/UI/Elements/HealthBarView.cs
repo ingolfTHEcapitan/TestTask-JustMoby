@@ -1,9 +1,9 @@
-using _Project._Scripts.Enemy;
+using _Project._Scripts.Logic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project._Scripts.UI
+namespace _Project._Scripts.UI.Elements
 {
     public class HealthBarView: MonoBehaviour
     {

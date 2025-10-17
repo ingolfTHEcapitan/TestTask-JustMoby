@@ -1,4 +1,4 @@
-using _Project._Scripts.Utility;
+using _Project._Scripts.Logic;
 
 namespace _Project._Scripts.Infrastructure.Services.GamePause
 {

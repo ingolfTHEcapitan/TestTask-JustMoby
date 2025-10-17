@@ -239,7 +239,7 @@ PrefabInstance:
     - target: {fileID: 8190528577398675157, guid: f5690ec389786384984df95b40be4241,
         type: 3}
       propertyPath: m_Name
-      value: StatsWindow
+      value: UpgradeStatsWindow
       objectReference: {fileID: 0}
     - target: {fileID: 8190528577398675157, guid: f5690ec389786384984df95b40be4241,
         type: 3}

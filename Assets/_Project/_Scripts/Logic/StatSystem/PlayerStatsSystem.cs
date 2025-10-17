@@ -5,7 +5,7 @@ using _Project._Scripts.Data;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
-namespace _Project._Scripts.StatSystem
+namespace _Project._Scripts.Logic.StatSystem
 {
     public class PlayerStatsSystem: MonoBehaviour
     {

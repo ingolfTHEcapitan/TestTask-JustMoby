@@ -1,12 +1,13 @@
 using _Project._Scripts.Configs;
-using _Project._Scripts.Enemy;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
+using _Project._Scripts.Logic;
+using _Project._Scripts.Logic.StatSystem;
+using _Project._Scripts.Logic.Weapon;
 using _Project._Scripts.Player;
-using _Project._Scripts.StatSystem;
-using _Project._Scripts.UI;
-using _Project._Scripts.Utility;
+using _Project._Scripts.UI.Elements;
+using _Project._Scripts.UI.Windows.UpgradeStats;
 using UnityEngine;
 
 namespace _Project._Scripts.Infrastructure
@@ -48,7 +49,7 @@ namespace _Project._Scripts.Infrastructure
             PlayerMovement playerMovement = _playerPrefab.GetComponent<PlayerMovement>();
             playerMovement.Construct(playerStatsSystem, pauseService, inputService);
             
-            Weapon.Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon.Weapon>();
+            Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon>();
             weapon.Construct(playerStatsSystem, pauseService, inputService, _dynamicObjectsRoot);
             
             EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig, playerStatsSystem, pauseService, _dynamicObjectsRoot);

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project._Scripts.Utility
+namespace _Project._Scripts.Logic
 {
     public static class CursorController
     {

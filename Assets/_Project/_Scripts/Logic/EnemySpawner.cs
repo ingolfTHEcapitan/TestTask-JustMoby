@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using _Project._Scripts.Configs;
+using _Project._Scripts.Enemy;
 using _Project._Scripts.Infrastructure.Services.GamePause;
-using _Project._Scripts.StatSystem;
-using _Project._Scripts.UI;
+using _Project._Scripts.Logic.StatSystem;
+using _Project._Scripts.UI.Elements;
 using UnityEngine;
 
-namespace _Project._Scripts.Enemy
+namespace _Project._Scripts.Logic
 {
     public class EnemySpawner
     {

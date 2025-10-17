@@ -1,7 +1,6 @@
-using _Project._Scripts.Enemy;
 using UnityEngine;
 
-namespace _Project._Scripts.Weapon
+namespace _Project._Scripts.Logic.Weapon
 {
     internal class Bullet: MonoBehaviour
     {

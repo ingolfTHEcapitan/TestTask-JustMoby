@@ -1,6 +1,6 @@
 using System;
 
-namespace _Project._Scripts.Enemy
+namespace _Project._Scripts.Logic
 {
     public interface IHealth
     {

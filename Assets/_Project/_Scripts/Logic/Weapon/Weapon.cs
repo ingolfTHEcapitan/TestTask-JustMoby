@@ -1,9 +1,9 @@
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
-using _Project._Scripts.StatSystem;
+using _Project._Scripts.Logic.StatSystem;
 using UnityEngine;
 
-namespace _Project._Scripts.Weapon
+namespace _Project._Scripts.Logic.Weapon
 {
     public class Weapon : MonoBehaviour
     {

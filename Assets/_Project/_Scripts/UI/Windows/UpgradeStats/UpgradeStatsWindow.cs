@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using _Project._Scripts.Infrastructure.Services.GamePause;
-using _Project._Scripts.StatSystem;
+using _Project._Scripts.Logic.StatSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project._Scripts.UI
+namespace _Project._Scripts.UI.Windows.UpgradeStats
 {
     public class UpgradeStatsWindow: MonoBehaviour
     {

@@ -2,7 +2,7 @@ using System;
 using _Project._Scripts.Configs;
 using UnityEngine;
 
-namespace _Project._Scripts.StatSystem
+namespace _Project._Scripts.Logic.StatSystem
 {
     public class PlayerStat
     {

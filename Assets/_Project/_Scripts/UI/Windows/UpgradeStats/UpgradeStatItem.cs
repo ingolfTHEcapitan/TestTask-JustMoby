@@ -1,9 +1,9 @@
-using _Project._Scripts.StatSystem;
+using _Project._Scripts.Logic.StatSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project._Scripts.UI
+namespace _Project._Scripts.UI.Windows.UpgradeStats
 {
     internal class UpgradeStatItem: MonoBehaviour
     {
@@ -30,12 +30,9 @@ namespace _Project._Scripts.UI
         private void OnDestroy() => 
             _upgradeButton.onClick.RemoveListener(TryUpgradeStat);
 
-        public void ToggleUpgradeButton(bool enable) => 
-            _upgradeButton.interactable = enable;
-
         public void HandleUpgradeButton() =>
             ToggleUpgradeButton(_statsSystem.CanUpgrade(_stat.Name));
-        
+
         public void ResetStatLevel() => 
             _levelText.SetText(_stat.Level.ToString());
 
@@ -47,5 +44,8 @@ namespace _Project._Scripts.UI
             if (!_statsSystem.CanUpgrade(statName: _stat.Name)) 
                 ToggleUpgradeButton(enable: false);
         }
+
+        private void ToggleUpgradeButton(bool enable) => 
+            _upgradeButton.interactable = enable;
     }
 }
