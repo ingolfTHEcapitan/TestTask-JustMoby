@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Data;
 using _Project._Scripts.SaveLoad;
+using _Project._Scripts.Services.SaveLoad;
 using UnityEngine;
 
 namespace _Project._Scripts.Player.StatSystem
@@ -13,13 +14,13 @@ namespace _Project._Scripts.Player.StatSystem
         
         [SerializeField] private List<PlayerStatConfig> _statConfigs;
         
-        private SaveLoadService _saveLoadService;
+        private ISaveLoadService _saveLoadService;
         
         public Dictionary<StatName, PlayerStat> Stats { get; private set; } = new Dictionary<StatName, PlayerStat>();
         public int UpgradePoints { get; private set; }
         
         
-        public void Construct(SaveLoadService saveLoadService)
+        public void Construct(ISaveLoadService saveLoadService)
         {
             _saveLoadService = saveLoadService;
         }

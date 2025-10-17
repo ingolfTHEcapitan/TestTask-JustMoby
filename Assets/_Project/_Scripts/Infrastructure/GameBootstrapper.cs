@@ -2,6 +2,7 @@ using _Project._Scripts.Configs;
 using _Project._Scripts.Enemy;
 using _Project._Scripts.Player;
 using _Project._Scripts.Player.StatSystem;
+using _Project._Scripts.SaveLoad;
 using _Project._Scripts.Services.GamePause;
 using _Project._Scripts.Services.SaveLoad;
 using _Project._Scripts.UI;
@@ -20,7 +21,7 @@ namespace _Project._Scripts.Infrastructure
             CursorController.SetCursorVisible(visible: false);
             
             IGamePauseService pauseService = new GamePauseService();
-            SaveLoadService saveLoadService = new SaveLoadService();
+            ISaveLoadService saveLoadService = new SaveLoadService();
             
             PlayerStatsSystem playerStatsSystem = _playerPrefab.GetComponent<PlayerStatsSystem>();
             playerStatsSystem.Construct(saveLoadService);

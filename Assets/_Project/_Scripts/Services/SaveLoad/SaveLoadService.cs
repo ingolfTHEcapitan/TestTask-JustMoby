@@ -1,10 +1,11 @@
 using System.IO;
 using _Project._Scripts.Data;
+using _Project._Scripts.SaveLoad;
 using UnityEngine;
 
-namespace _Project._Scripts.SaveLoad
+namespace _Project._Scripts.Services.SaveLoad
 {
-    public class SaveLoadService
+    public class SaveLoadService : ISaveLoadService
     {
         private const string FolderName = "Saves";
         private const string FileName = "Save.json";
