@@ -49,7 +49,6 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 2016706838199318848, guid: fc5b0a1421768624ea6623df9835e99c,
     type: 3}
   _shootPoint: {fileID: 5504319550492987190}
-  _bulletParent: {fileID: 0}
   _fireRate: 8
 --- !u!1 &3660840105126695811
 GameObject:
