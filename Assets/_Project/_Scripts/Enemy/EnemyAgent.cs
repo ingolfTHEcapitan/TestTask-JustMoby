@@ -1,3 +1,4 @@
+using _Project._Scripts.Services.GamePause;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,10 +15,19 @@ namespace _Project._Scripts.Enemy
         private float _roamingTime;
         private Vector3 _currentPosition;
         private Vector3 _roamingPosition;
-        
-        private void Update() => 
-            Roaming();
+        private IGamePauseService _pauseService;
 
+        public void Construct(IGamePauseService pauseService) => 
+            _pauseService = pauseService;
+        
+        private void Update()
+        {
+            if(_pauseService.IsPaused)
+                return;
+            
+            Roaming();
+        }
+        
         private void Roaming()
         {
             _roamingTime -= Time.deltaTime;
@@ -35,6 +45,6 @@ namespace _Project._Scripts.Enemy
             currentPosition + GetRandomDirection() * Random.Range(_minRoamingDistance, _maxRoamingDistance);
 
         private Vector3 GetRandomDirection() => 
-            new(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+            new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
     }
 }

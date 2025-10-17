@@ -1,3 +1,4 @@
+using _Project._Scripts.Services.GamePause;
 using UnityEngine;
 
 namespace _Project._Scripts.Player
@@ -15,13 +16,11 @@ namespace _Project._Scripts.Player
 
         private float _verticalRotation;
         private Transform _playerTransform;
+        private IGamePauseService _pauseService;
 
-
-        private void Awake()
-        {
-            CursorController.HideCursor();
-        }
-
+        public void Construct(IGamePauseService pauseService) => 
+            _pauseService = pauseService;
+        
         private void Start()
         {
             _cameraTransform = _camera.transform;
@@ -30,6 +29,9 @@ namespace _Project._Scripts.Player
         
         private void Update()
         {
+            if (_pauseService.IsPaused)
+                return;
+            
             _playerTransform.Rotate(0, Input.GetAxis("Mouse X") * _sensitivity, 0);
             
             _verticalRotation -= Input.GetAxis("Mouse Y") * _sensitivity;

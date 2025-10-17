@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using _Project._Scripts.Player.StatSystem;
+using _Project._Scripts.Services.GamePause;
 using TMPro;
-using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,6 +21,7 @@ namespace _Project._Scripts.UI
         
         private bool _isOpen;
         private PlayerStatsSystem _statsSystem;
+        private IGamePauseService _pauseService;
 
         private void Start()
         {
@@ -38,9 +39,10 @@ namespace _Project._Scripts.UI
             _statsSystem.OnStatsChanged -= OnStatsChanged;
         }
 
-        public void Construct(PlayerStatsSystem statsSystem)
+        public void Construct(PlayerStatsSystem statsSystem, IGamePauseService gamePauseService)
         {
             _statsSystem = statsSystem;
+            _pauseService = gamePauseService;
         }
 
         public void Initialize()
@@ -69,7 +71,7 @@ namespace _Project._Scripts.UI
             
             _isOpen = true;
             _statsPanel.SetActive(true);
-            CursorController.ShowCursor();
+            _pauseService.SetPaused(true);
             OnOpen();
         }
 
@@ -90,7 +92,7 @@ namespace _Project._Scripts.UI
         {
             _isOpen = false;
             _statsPanel.SetActive(false);
-            CursorController.HideCursor();
+            _pauseService.SetPaused(false);
             _statsSystem.DiscardPreviewChanges();
         }
 

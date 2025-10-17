@@ -4,16 +4,10 @@ namespace _Project._Scripts
 {
     public static class CursorController
     {
-        public static void HideCursor()
+        public static void SetCursorVisible(bool visible)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-
-        public static void ShowCursor()
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
+            Cursor.visible = visible;
         }
     }
 }

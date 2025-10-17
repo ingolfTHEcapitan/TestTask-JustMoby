@@ -1,4 +1,5 @@
 using _Project._Scripts.Player.StatSystem;
+using _Project._Scripts.Services.GamePause;
 using UnityEngine;
 
 namespace _Project._Scripts.Weapon
@@ -15,10 +16,12 @@ namespace _Project._Scripts.Weapon
         private float _nextTimeToFire;
         private Camera _camera;
         private PlayerStatsSystem _playerStatsSystem;
+        private IGamePauseService _pauseService;
 
-        public void Construct(PlayerStatsSystem playerStatsSystem)
+        public void Construct(PlayerStatsSystem playerStatsSystem, IGamePauseService pauseService)
         {
             _playerStatsSystem = playerStatsSystem;
+            _pauseService = pauseService;
         }
 
         private void Start() => 
@@ -26,6 +29,9 @@ namespace _Project._Scripts.Weapon
 
         private void Update()
         {
+            if (_pauseService.IsPaused)
+                return;
+            
             if (Input.GetButton("Fire1") && CanShoot()) 
                 Shoot();
         }
