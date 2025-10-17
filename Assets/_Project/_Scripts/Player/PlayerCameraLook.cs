@@ -1,4 +1,5 @@
 using _Project._Scripts.Infrastructure.Services.GamePause;
+using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using UnityEngine;
 
 namespace _Project._Scripts.Player
@@ -8,19 +9,21 @@ namespace _Project._Scripts.Player
         [SerializeField] private Camera _camera;
         [SerializeField] private CharacterController _characterController;
         
-        [Header("Settings")]
-        [SerializeField] private float _sensitivity;
+        [SerializeField, Space] private float _sensitivity;
         [SerializeField] private float _verticalRotationLimit;
 
         private Transform _cameraTransform;
-
-        private float _verticalRotation;
         private Transform _playerTransform;
+        private float _verticalRotation;
         private IGamePauseService _pauseService;
+        private IInputService _inputService;
 
-        public void Construct(IGamePauseService pauseService) => 
+        public void Construct(IGamePauseService pauseService, IInputService inputService)
+        {
             _pauseService = pauseService;
-        
+            _inputService = inputService;
+        }
+
         private void Start()
         {
             _cameraTransform = _camera.transform;
@@ -32,9 +35,15 @@ namespace _Project._Scripts.Player
             if (_pauseService.IsPaused)
                 return;
             
-            _playerTransform.Rotate(0, Input.GetAxis("Mouse X") * _sensitivity, 0);
+            Vector2 lookInput = _inputService.GetLookAxis();
+            RotateCamera(lookInput);
+        }
+
+        private void RotateCamera(Vector2 axis)
+        {
+            _playerTransform.Rotate(0, axis.x * _sensitivity, 0);
             
-            _verticalRotation -= Input.GetAxis("Mouse Y") * _sensitivity;
+            _verticalRotation -= axis.y * _sensitivity;
             _verticalRotation = Mathf.Clamp(_verticalRotation, -_verticalRotationLimit, _verticalRotationLimit);
             _cameraTransform.localEulerAngles = new Vector3(_verticalRotation, 0, 0);
         }

@@ -1,6 +1,7 @@
 using _Project._Scripts.Configs;
 using _Project._Scripts.Enemy;
 using _Project._Scripts.Infrastructure.Services.GamePause;
+using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
 using _Project._Scripts.Player;
 using _Project._Scripts.StatSystem;
@@ -19,7 +20,8 @@ namespace _Project._Scripts.Infrastructure
         private void Awake()
         {
             CursorController.SetCursorVisible(visible: false);
-            
+
+            IInputService inputService = new DesktopInputService();
             IGamePauseService pauseService = new GamePauseService();
             ISaveLoadService saveLoadService = new SaveLoadService();
             
@@ -35,13 +37,13 @@ namespace _Project._Scripts.Infrastructure
             playerHealth.Initialize();
             
             PlayerCameraLook playerCameraLook = _playerPrefab.GetComponent<PlayerCameraLook>();
-            playerCameraLook.Construct(pauseService);
+            playerCameraLook.Construct(pauseService, inputService);
             
             PlayerMovement playerMovement = _playerPrefab.GetComponent<PlayerMovement>();
-            playerMovement.Construct(playerStatsSystem, pauseService);
+            playerMovement.Construct(playerStatsSystem, pauseService, inputService);
             
             Weapon.Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon.Weapon>();
-            weapon.Construct(playerStatsSystem, pauseService);
+            weapon.Construct(playerStatsSystem, pauseService, inputService);
             
             EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig, playerStatsSystem, pauseService);
             StartCoroutine(enemySpawner.SpawnAround(_playerPrefab.transform));

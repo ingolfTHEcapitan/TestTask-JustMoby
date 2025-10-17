@@ -726,7 +726,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1709303259}
   m_Layer: 0
-  m_Name: _Dynamic
+  m_Name: DynamicObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2224,16 +2224,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5716258568239746599}
     m_Modifications:
-    - target: {fileID: 1419964725942866314, guid: ad6c1faf97898304db73b4868485c003,
-        type: 3}
-      propertyPath: _bulletParent
-      value: 
-      objectReference: {fileID: 1709303259}
     - target: {fileID: 2833171956725550516, guid: ad6c1faf97898304db73b4868485c003,
         type: 3}
       propertyPath: m_Name
       value: Weapon
       objectReference: {fileID: 0}
+    - target: {fileID: 3621390097066815705, guid: ad6c1faf97898304db73b4868485c003,
+        type: 3}
+      propertyPath: _bulletParent
+      value: 
+      objectReference: {fileID: 1709303259}
     - target: {fileID: 6282456053860665614, guid: ad6c1faf97898304db73b4868485c003,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2342,5 +2342,5 @@ SceneRoots:
   - {fileID: 298778739627418108}
   - {fileID: 1200374733921522278}
   - {fileID: 1709303259}
-  - {fileID: 2128914101}
   - {fileID: 2125096223}
+  - {fileID: 2128914101}

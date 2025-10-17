@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6282456053860665614}
-  - component: {fileID: 1419964725942866314}
+  - component: {fileID: 3621390097066815705}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 5504319550492987190}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1419964725942866314
+--- !u!114 &3621390097066815705
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,14 +43,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 2833171956725550516}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57bbe2a84c824e529268bd73f92a14a8, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a818618438158c46a99939f4f647d20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _bulletPrefab: {fileID: 2016706838199318848, guid: fc5b0a1421768624ea6623df9835e99c,
     type: 3}
   _shootPoint: {fileID: 5504319550492987190}
   _bulletParent: {fileID: 0}
-  _fireRate: 4
+  _fireRate: 8
 --- !u!1 &3660840105126695811
 GameObject:
   m_ObjectHideFlags: 0

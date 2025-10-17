@@ -1,4 +1,5 @@
 using _Project._Scripts.Infrastructure.Services.GamePause;
+using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.StatSystem;
 using UnityEngine;
 
@@ -11,17 +12,19 @@ namespace _Project._Scripts.Weapon
         [SerializeField] private Bullet _bulletPrefab;
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private Transform _bulletParent;
-        [SerializeField, Header("Settings")] private float _fireRate;
+        [SerializeField, Space] private float _fireRate;
         
         private float _nextTimeToFire;
         private Camera _camera;
         private PlayerStatsSystem _playerStatsSystem;
         private IGamePauseService _pauseService;
+        private IInputService _inputService;
 
-        public void Construct(PlayerStatsSystem playerStatsSystem, IGamePauseService pauseService)
+        public void Construct(PlayerStatsSystem playerStatsSystem, IGamePauseService pauseService, IInputService inputService)
         {
             _playerStatsSystem = playerStatsSystem;
             _pauseService = pauseService;
+            _inputService = inputService;
         }
 
         private void Start() => 
@@ -32,7 +35,7 @@ namespace _Project._Scripts.Weapon
             if (_pauseService.IsPaused)
                 return;
             
-            if (Input.GetButton("Fire1") && CanShoot()) 
+            if (_inputService.IsFireButtonPressed() && CanShoot()) 
                 Shoot();
         }
 
