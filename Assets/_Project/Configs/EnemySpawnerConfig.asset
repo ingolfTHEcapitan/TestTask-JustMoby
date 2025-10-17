@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 4217187639714539394, guid: aa3f944a796a411408a412504ecdc45a,
     type: 3}
-  <EnemiesAtTime>k__BackingField: 5
+  <EnemiesAtTime>k__BackingField: 10
   <SpawnDistance>k__BackingField: 10
+  <SpawnDelay>k__BackingField: 3

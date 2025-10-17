@@ -15,7 +15,7 @@ namespace _Project._Scripts.Enemy
 
         private const float _destroyDelay = 2f;
 
-        public event Action OnDied;
+        public event Action<EnemyDeath> OnDied;
 
         private void Start() => 
             _health.OnHealthChanged += OnOnHealthChanged;
@@ -38,7 +38,7 @@ namespace _Project._Scripts.Enemy
             _animator.SetTrigger(Death);
 
             StartCoroutine(DestroyTimer(_destroyDelay));
-            OnDied?.Invoke();
+            OnDied?.Invoke(this);
         }
 
         private IEnumerator DestroyTimer(float delay)
