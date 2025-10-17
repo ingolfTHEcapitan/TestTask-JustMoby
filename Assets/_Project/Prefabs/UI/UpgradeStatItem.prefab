@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1050495087958034686}
   - component: {fileID: 7427554435421742044}
+  - component: {fileID: 2864862097691887430}
   m_Layer: 5
-  m_Name: Palyer_Stat
+  m_Name: UpgradeStatItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,6 +66,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &2864862097691887430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793729835088024643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60fc1aeba0dc4bdf98af2065ea1a268e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _nameText: {fileID: 7031121704646661090}
+  _levelText: {fileID: 2853114530539808909}
+  _upgradeButton: {fileID: 8073588825548077377}
 --- !u!1 &4959361252135093169
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,7 +94,7 @@ GameObject:
   - component: {fileID: 7785348629692467085}
   - component: {fileID: 8073588825548077377}
   m_Layer: 5
-  m_Name: UpgradeStat_Button
+  m_Name: Upgrade_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -198,7 +214,7 @@ GameObject:
   - component: {fileID: 6659898601789670655}
   - component: {fileID: 2853114530539808909}
   m_Layer: 5
-  m_Name: Stat_level
+  m_Name: Level_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -332,7 +348,7 @@ GameObject:
   - component: {fileID: 4361142831719473330}
   - component: {fileID: 7031121704646661090}
   m_Layer: 5
-  m_Name: Stat_Text
+  m_Name: Name_Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

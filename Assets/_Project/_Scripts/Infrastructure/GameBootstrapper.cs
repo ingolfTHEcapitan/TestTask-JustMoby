@@ -3,6 +3,7 @@ using _Project._Scripts.Enemy;
 using _Project._Scripts.Player;
 using _Project._Scripts.Player.StatSystem;
 using _Project._Scripts.SaveLoad;
+using _Project._Scripts.UI;
 using UnityEngine;
 
 namespace _Project._Scripts.Infrastructure
@@ -11,7 +12,8 @@ namespace _Project._Scripts.Infrastructure
     {
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
-
+        [SerializeField] private UpgradeStatsWindow _upgradeStatsWindow;
+        
         private void Awake()
         {
             SaveLoadService saveLoadService = new SaveLoadService();
@@ -20,6 +22,9 @@ namespace _Project._Scripts.Infrastructure
             playerStatsSystem.Construct(saveLoadService);
             playerStatsSystem.Initialize();
 
+            _upgradeStatsWindow.Construct(playerStatsSystem);
+            _upgradeStatsWindow.Initialize();
+            
             PlayerHealth playerHealth = _playerPrefab.GetComponent<PlayerHealth>();
             playerHealth.Construct(playerStatsSystem);
             playerHealth.Initialize();
