@@ -16,6 +16,7 @@ namespace _Project._Scripts.Infrastructure
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
         [SerializeField] private UpgradeStatsWindow _upgradeStatsWindow;
+        [SerializeField] private Transform _dynamicObjectsRoot;
         
         private void Awake()
         {
@@ -43,9 +44,9 @@ namespace _Project._Scripts.Infrastructure
             playerMovement.Construct(playerStatsSystem, pauseService, inputService);
             
             Weapon.Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon.Weapon>();
-            weapon.Construct(playerStatsSystem, pauseService, inputService);
+            weapon.Construct(playerStatsSystem, pauseService, inputService, _dynamicObjectsRoot);
             
-            EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig, playerStatsSystem, pauseService);
+            EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig, playerStatsSystem, pauseService, _dynamicObjectsRoot);
             StartCoroutine(enemySpawner.SpawnAround(_playerPrefab.transform));
         }
     }

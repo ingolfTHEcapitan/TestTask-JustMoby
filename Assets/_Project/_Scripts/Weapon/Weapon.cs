@@ -11,20 +11,22 @@ namespace _Project._Scripts.Weapon
         
         [SerializeField] private Bullet _bulletPrefab;
         [SerializeField] private Transform _shootPoint;
-        [SerializeField] private Transform _bulletParent;
         [SerializeField, Space] private float _fireRate;
         
         private float _nextTimeToFire;
         private Camera _camera;
+        private Transform _bulletParent;
         private PlayerStatsSystem _playerStatsSystem;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
 
-        public void Construct(PlayerStatsSystem playerStatsSystem, IGamePauseService pauseService, IInputService inputService)
+        public void Construct(PlayerStatsSystem playerStatsSystem, IGamePauseService pauseService,
+            IInputService inputService, Transform bulletParent)
         {
             _playerStatsSystem = playerStatsSystem;
             _pauseService = pauseService;
             _inputService = inputService;
+            _bulletParent = bulletParent;
         }
 
         private void Start() => 
