@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using _Project._Scripts.Configs;
+using _Project._Scripts.Player.StatSystem;
 using UnityEngine;
 
 namespace _Project._Scripts.Enemy
@@ -8,11 +9,15 @@ namespace _Project._Scripts.Enemy
     public class EnemySpawner
     {
         private readonly EnemySpawnerConfig _config;
+        private readonly PlayerStatsSystem _playerStatsSystem;
         private readonly List<GameObject> _spawnedEnemies = new List<GameObject>();
 
-        public EnemySpawner(EnemySpawnerConfig config) => 
+        public EnemySpawner(EnemySpawnerConfig config, PlayerStatsSystem playerStatsSystem)
+        {
             _config = config;
-        
+            _playerStatsSystem = playerStatsSystem;
+        }
+
         public IEnumerator SpawnAround(Transform target)
         {
             while (true)
@@ -35,6 +40,7 @@ namespace _Project._Scripts.Enemy
                         void OnEnemyDeath()
                         {
                             _spawnedEnemies.Remove(enemy);
+                            _playerStatsSystem.AddUpgradePoint();
                             enemyDeath.OnDied -= OnEnemyDeath;
                         }
                     }

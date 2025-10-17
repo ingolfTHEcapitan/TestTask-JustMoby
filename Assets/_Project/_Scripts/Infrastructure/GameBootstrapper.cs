@@ -30,7 +30,7 @@ namespace _Project._Scripts.Infrastructure
             Weapon.Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon.Weapon>();
             weapon.Construct(playerStatsSystem);
             
-            EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig);
+            EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig, playerStatsSystem);
             StartCoroutine(enemySpawner.SpawnAround(_playerPrefab.transform));
         }
     }
