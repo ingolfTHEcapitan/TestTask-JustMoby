@@ -50,7 +50,7 @@ namespace _Project._Scripts.Player.StatSystem
             SaveStats();
         }
 
-        public void DiscardChanges()
+        public void DiscardPreviewChanges()
         {
             int returnedPoints = 0;
 
@@ -60,7 +60,7 @@ namespace _Project._Scripts.Player.StatSystem
                 stat.DiscardPreviewLevel();
             }
                
-            UpgradePoints = returnedPoints;
+            UpgradePoints += returnedPoints;
             OnStatsChanged?.Invoke();
         }
 
