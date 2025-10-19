@@ -1,5 +1,3 @@
-using System;
-using _Project._Scripts.Configs;
 using _Project._Scripts.Infrastructure.Services.AssetManagement;
 using _Project._Scripts.Infrastructure.Services.ConfigsManagement;
 using _Project._Scripts.Infrastructure.Services.Factory;
@@ -13,16 +11,14 @@ using _Project._Scripts.Player;
 using _Project._Scripts.UI.Elements;
 using _Project._Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project._Scripts.Infrastructure
 {
     public class GameBootstrapper: MonoBehaviour
     {
-        [SerializeField] private GameObject _playerPrefab;
-        [SerializeField] private GameObject _hudPrefab;
-        [SerializeField] private PlayerStatsView playerStatsView;
         [SerializeField] private Transform _dynamicObjectsParent;
+        [SerializeField] private Transform _UIParent;
+        [SerializeField] private Transform _gameParent;
         
         private PlayerStatsModel _playerStatsModel;
         private PlayerStatsPresenter _playerStatsPresenter;
@@ -35,39 +31,38 @@ namespace _Project._Scripts.Infrastructure
             IGamePauseService pauseService = new GamePauseService();
             ISaveLoadService saveLoadService = new SaveLoadService();
             IAssetProvider assets = new AssetProvider();
-            IConfigsProvider configs = InitializeConfigsProvider();
+            IConfigsProvider configsProvider = InitializeConfigsProvider();
             
             _playerStatsModel = new PlayerStatsModel();
-            _playerStatsModel.Construct(saveLoadService, configs);
+            _playerStatsModel.Construct(saveLoadService, configsProvider);
             _playerStatsModel.Initialize();
             
-            IGameFactory factory = new GameFactory(assets, pauseService, _playerStatsModel, _dynamicObjectsParent);
+            IGameFactory factory = new GameFactory(assets, pauseService, inputService, _playerStatsModel, _dynamicObjectsParent);
 
+            GameObject popUpLayer = factory.CreatePopUpLayer(_UIParent);
+            GameObject hud = factory.CreateHud(_UIParent);
+            OpenWindowButton openButton = hud.GetComponentInChildren<OpenWindowButton>();
+            
+            PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
             _playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, _playerStatsModel, pauseService);
-            playerStatsView.Construct(_playerStatsPresenter);
+            playerStatsView.Construct(_playerStatsPresenter, openButton);
             _playerStatsPresenter.Initialize(_playerStatsModel.GetStats());
-            
-            PlayerHealth playerHealth = _playerPrefab.GetComponent<PlayerHealth>();
-            playerHealth.Construct(_playerStatsModel);  
-            playerHealth.Initialize();
-            
-            HealthBarView playerHealthBarView = _hudPrefab.GetComponentInChildren<HealthBarView>();
+
+            PlayerSpawner playerSpawner = new PlayerSpawner(factory, configsProvider);
+            GameObject Player = playerSpawner.Spawn(_gameParent);
+            PlayerHealth playerHealth = Player.GetComponent<PlayerHealth>();
+
+            HealthBarView playerHealthBarView = hud.GetComponentInChildren<HealthBarView>();
             playerHealthBarView.Construct(playerHealth);
             playerHealthBarView.Initialize();
-            
-            PlayerCameraLook playerCameraLook = _playerPrefab.GetComponent<PlayerCameraLook>();
-            playerCameraLook.Construct(pauseService, inputService);
-            
-            PlayerMovement playerMovement = _playerPrefab.GetComponent<PlayerMovement>();
-            playerMovement.Construct(_playerStatsModel, pauseService, inputService);
-            
-            Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon>();
+
+            Weapon weapon = Player.GetComponentInChildren<Weapon>();
             weapon.Construct(pauseService, inputService, factory);
             
-            EnemySpawner enemySpawner = new EnemySpawner(configs, pauseService, factory);
-            StartCoroutine(enemySpawner.SpawnAround(_playerPrefab.transform));
+            EnemySpawner enemySpawner = new EnemySpawner(configsProvider, pauseService, factory);
+            StartCoroutine(enemySpawner.SpawnAround(Player.transform));
         }
-
+        
         private void OnDestroy()
         {
             _playerStatsModel.Dispose();
@@ -79,6 +74,7 @@ namespace _Project._Scripts.Infrastructure
             ConfigsProvider configsProvider = new ConfigsProvider();
             configsProvider.LoadEnemySpawner();
             configsProvider.LoadPlayerStats();
+            configsProvider.LoadPlayerSpawner();
             return configsProvider;
         }
     }

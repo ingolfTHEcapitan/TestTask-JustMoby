@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project._Scripts.Logic.PlayerStats;
+using _Project._Scripts.UI.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,6 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
     public class PlayerStatsView: MonoBehaviour
     {
         [SerializeField] private GameObject _statsPanel;
-        [SerializeField] private Button _openButton;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
         [SerializeField] private Transform _statsContainer;
@@ -19,9 +19,13 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
         private readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
         
         private PlayerStatsPresenter _presenter;
+        private OpenWindowButton _openButton;
         
-        public void Construct(PlayerStatsPresenter presenter) => 
+        public void Construct(PlayerStatsPresenter presenter, OpenWindowButton openButton)
+        {
             _presenter = presenter;
+            _openButton = openButton;
+        }
 
         private void Start()
         {

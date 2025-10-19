@@ -7,5 +7,6 @@ namespace _Project._Scripts.Infrastructure.Services.ConfigsManagement
     {
         List<PlayerStatConfig> GetPlayerStats();
         EnemySpawnerConfig GetEnemySpawner();
+        PlayerSpawnerConfig GetPlayerSpawner();
     }
 }

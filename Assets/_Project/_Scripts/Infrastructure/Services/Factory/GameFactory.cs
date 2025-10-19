@@ -2,8 +2,10 @@ using _Project._Scripts.Configs;
 using _Project._Scripts.Enemy;
 using _Project._Scripts.Infrastructure.Services.AssetManagement;
 using _Project._Scripts.Infrastructure.Services.GamePause;
+using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.Logic.PlayerStats;
 using _Project._Scripts.Logic.Weapon;
+using _Project._Scripts.Player;
 using _Project._Scripts.UI.Elements;
 using UnityEngine;
 
@@ -13,14 +15,16 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
     {
         private readonly IGamePauseService _pauseService;
         private readonly IAssetProvider _assets;
+        private readonly IInputService _inputService;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly Transform _dynamicObjectsParent;
 
-        public GameFactory(IAssetProvider assets, IGamePauseService pauseService, PlayerStatsModel playerStatsModel,
+        public GameFactory(IAssetProvider assets, IGamePauseService pauseService, IInputService inputService, PlayerStatsModel playerStatsModel,
             Transform dynamicObjectsParent)
         {
             _assets = assets;
             _pauseService = pauseService;
+            _inputService = inputService;
             _playerStatsModel = playerStatsModel;
             _dynamicObjectsParent = dynamicObjectsParent;
         }
@@ -38,6 +42,25 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
             healthBar.Initialize();
             return enemy;
         }
+
+        public GameObject CreatePlayer(GameObject prefab, Vector3 at, Transform parent)
+        {
+            GameObject player = Object.Instantiate(prefab, at, Quaternion.identity, parent.transform);
+            
+            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            playerHealth.Construct(_playerStatsModel);  
+            playerHealth.Initialize();
+            
+            player.GetComponent<PlayerCameraLook>().Construct(_pauseService, _inputService);
+            player.GetComponent<PlayerMovement>().Construct(_playerStatsModel, _pauseService, _inputService);
+            return player;
+        }
+
+        public GameObject CreateHud(Transform parent) => 
+            _assets.Instantiate(AssetPath.Hud, parent);
+        
+        public GameObject CreatePopUpLayer(Transform parent) => 
+            _assets.Instantiate(AssetPath.PopUpLayer, parent);
 
         public Bullet CreateBullet(Vector3 at, Vector3 shootDirection)
         {
