@@ -2,34 +2,31 @@ using System;
 using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Data;
+using _Project._Scripts.Infrastructure.Services.ConfigsManagement;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
 namespace _Project._Scripts.Logic.PlayerStats
 {
-    public class PlayerStatsModel: MonoBehaviour
+    public class PlayerStatsModel: IDisposable
     {
         public event Action OnStatsChanged;
         
-        [SerializeField] private List<PlayerStatConfig> _statConfigs;
-        
         private ISaveLoadService _saveLoadService;
-        
+        private IConfigsProvider _configs;
+
         public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }
         
-        public void Construct(ISaveLoadService saveLoadService) => 
-            _saveLoadService = saveLoadService;
-
-        private void OnDestroy()
+        public void Construct(ISaveLoadService saveLoadService, IConfigsProvider configs)
         {
-            foreach (PlayerStatData stat in Stats.Values)
-                stat.OnStatChanged -= InvokeStatChanged;
+            _saveLoadService = saveLoadService;
+            _configs = configs;
         }
 
         public void Initialize()
         {
-            foreach (PlayerStatConfig config in _statConfigs)
+            foreach (PlayerStatConfig config in _configs.GetPlayerStats())
             {
                 PlayerStatData statData = new PlayerStatData(config);
                 statData.OnStatChanged += InvokeStatChanged;
@@ -37,6 +34,12 @@ namespace _Project._Scripts.Logic.PlayerStats
             }
 
             LoadStats();
+        }
+
+        public void Dispose()
+        {
+            foreach (PlayerStatData stat in Stats.Values)
+                stat.OnStatChanged -= InvokeStatChanged;
         }
 
         public void ApplyChanges()

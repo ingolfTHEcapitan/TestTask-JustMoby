@@ -8,28 +8,32 @@ namespace _Project._Scripts.Player
 {
     public class PlayerHealth: MonoBehaviour, IHealth
     {
+        public event Action OnHealthChanged;
+        
         private PlayerStatsModel _playerStatsModel;
         private float _currentHealth;
 
-        public float MaxHealth => _playerStatsModel.GetStatValue(StatName.Health);
+        public float MaxHealth => 
+            _playerStatsModel.GetStatValue(StatName.Health);
 
         public float CurrentHealth
         {
             get => MaxHealth;
             private set => _currentHealth = value;
         }
-
-        public event Action OnHealthChanged;
         
         public void Construct(PlayerStatsModel playerStatsModel) => 
             _playerStatsModel = playerStatsModel;
-        
+
+        private void OnDestroy() => 
+            _playerStatsModel.OnStatsChanged -= InvokeOnHealthChanged;
+
         public void Initialize()
         {
             CurrentHealth = MaxHealth;
             _playerStatsModel.OnStatsChanged += InvokeOnHealthChanged;
         }
-        
+
         public void TakeDamage(float damage)
         {
             if (CurrentHealth <= 0)

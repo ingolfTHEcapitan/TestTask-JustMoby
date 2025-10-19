@@ -1,3 +1,4 @@
+using System;
 using _Project._Scripts.Logic;
 using TMPro;
 using UnityEngine;
@@ -16,7 +17,10 @@ namespace _Project._Scripts.UI.Elements
         {
             _health = health;
         }
-        
+
+        private void OnDestroy() => 
+            _health.OnHealthChanged -= UpdateHealthBar;
+
         public void Initialize()
         {
             _health.OnHealthChanged += UpdateHealthBar;

@@ -7,9 +7,9 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
 {
     public class PlayerStatsPresenter: IDisposable
     {
-        private PlayerStatsView _view;
-        private PlayerStatsModel _model;
-        private IGamePauseService _pauseService;
+        private readonly PlayerStatsView _view;
+        private readonly PlayerStatsModel _model;
+        private readonly IGamePauseService _pauseService;
         private bool _isOpen;
 
         public PlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model, IGamePauseService pauseService)

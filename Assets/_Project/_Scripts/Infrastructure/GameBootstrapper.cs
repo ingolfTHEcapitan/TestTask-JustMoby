@@ -1,3 +1,4 @@
+using System;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Infrastructure.Services.AssetManagement;
 using _Project._Scripts.Infrastructure.Services.ConfigsManagement;
@@ -23,6 +24,9 @@ namespace _Project._Scripts.Infrastructure
         [SerializeField] private PlayerStatsView playerStatsView;
         [SerializeField] private Transform _dynamicObjectsParent;
         
+        private PlayerStatsModel _playerStatsModel;
+        private PlayerStatsPresenter _playerStatsPresenter;
+
         private void Awake()
         {
             CursorController.SetCursorVisible(visible: false);
@@ -33,18 +37,18 @@ namespace _Project._Scripts.Infrastructure
             IAssetProvider assets = new AssetProvider();
             IConfigsProvider configs = InitializeConfigsProvider();
             
-            PlayerStatsModel playerStatsModel = _playerPrefab.GetComponent<PlayerStatsModel>();
-            playerStatsModel.Construct(saveLoadService);
-            playerStatsModel.Initialize();
+            _playerStatsModel = new PlayerStatsModel();
+            _playerStatsModel.Construct(saveLoadService, configs);
+            _playerStatsModel.Initialize();
             
-            IGameFactory factory = new GameFactory(assets, pauseService, playerStatsModel, _dynamicObjectsParent);
+            IGameFactory factory = new GameFactory(assets, pauseService, _playerStatsModel, _dynamicObjectsParent);
 
-            PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, playerStatsModel, pauseService);
-            playerStatsView.Construct(playerStatsPresenter);
-            playerStatsPresenter.Initialize(playerStatsModel.GetStats());
+            _playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, _playerStatsModel, pauseService);
+            playerStatsView.Construct(_playerStatsPresenter);
+            _playerStatsPresenter.Initialize(_playerStatsModel.GetStats());
             
             PlayerHealth playerHealth = _playerPrefab.GetComponent<PlayerHealth>();
-            playerHealth.Construct(playerStatsModel);  
+            playerHealth.Construct(_playerStatsModel);  
             playerHealth.Initialize();
             
             HealthBarView playerHealthBarView = _hudPrefab.GetComponentInChildren<HealthBarView>();
@@ -55,13 +59,19 @@ namespace _Project._Scripts.Infrastructure
             playerCameraLook.Construct(pauseService, inputService);
             
             PlayerMovement playerMovement = _playerPrefab.GetComponent<PlayerMovement>();
-            playerMovement.Construct(playerStatsModel, pauseService, inputService);
+            playerMovement.Construct(_playerStatsModel, pauseService, inputService);
             
             Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon>();
             weapon.Construct(pauseService, inputService, factory);
             
             EnemySpawner enemySpawner = new EnemySpawner(configs, pauseService, factory);
             StartCoroutine(enemySpawner.SpawnAround(_playerPrefab.transform));
+        }
+
+        private void OnDestroy()
+        {
+            _playerStatsModel.Dispose();
+            _playerStatsPresenter.Dispose();
         }
 
         private static ConfigsProvider InitializeConfigsProvider()
