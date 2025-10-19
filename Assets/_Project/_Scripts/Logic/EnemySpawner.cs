@@ -2,29 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Enemy;
+using _Project._Scripts.Infrastructure.Services.ConfigsManagement;
+using _Project._Scripts.Infrastructure.Services.Factory;
 using _Project._Scripts.Infrastructure.Services.GamePause;
-using _Project._Scripts.Logic.PlayerStats;
-using _Project._Scripts.UI.Elements;
 using UnityEngine;
 
 namespace _Project._Scripts.Logic
 {
     public class EnemySpawner
     {
-        private readonly EnemySpawnerConfig _config;
-        private readonly PlayerStatsModel _playerStatsModel;
         private readonly IGamePauseService _pauseService;
-        private readonly Transform _enemyParent;
+        private readonly IGameFactory _factory;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
+        private readonly EnemySpawnerConfig _config;
 
-        public EnemySpawner(EnemySpawnerConfig config, PlayerStatsModel playerStatsModel,
-            IGamePauseService pauseService, Transform enemyParent)
+        public EnemySpawner(IConfigsProvider configs, IGamePauseService pauseService, IGameFactory factory)
         {
-            _config = config;
-            _playerStatsModel = playerStatsModel;
             _pauseService = pauseService;
-            _enemyParent = enemyParent;
+            _factory = factory;
+            _config = configs.GetEnemySpawner();
         }
+        
 
         public IEnumerator SpawnAround(Transform target)
         {
@@ -34,8 +32,7 @@ namespace _Project._Scripts.Logic
                 
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime)
                 {
-                    CreateEnemy(target);
-                    
+                    InitEnemy(target);
                     yield return new WaitForSeconds(_config.SpawnDelay);
                 }
                 
@@ -43,22 +40,12 @@ namespace _Project._Scripts.Logic
             }
         }
 
-        private void CreateEnemy(Transform target)
+        private void InitEnemy(Transform target)
         {
-            GameObject enemy = Object.Instantiate(_config.Prefab, GetSpawnPosition(target), Quaternion.identity, _enemyParent);
-            
-            EnemyAgent enemyAgent = enemy.GetComponent<EnemyAgent>();
-            enemyAgent.Construct(_pauseService);
-
-            EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-            
-            HealthBarView playerHealthBarView = enemy.GetComponentInChildren<HealthBarView>();
-            playerHealthBarView.Construct(enemyHealth);
-            playerHealthBarView.Initialize();
-            
+            GameObject enemy = _factory.CreateEnemy(_config, at: GetSpawnPosition(target));
             EnemyDeath enemyDeath = enemy.GetComponent<EnemyDeath>();
-            _spawnedEnemies.Add(enemyDeath);
             enemyDeath.OnDied += OnEnemyDeath;
+            _spawnedEnemies.Add(enemyDeath);
         }
 
         private Vector3 GetSpawnPosition(Transform target)
@@ -73,7 +60,6 @@ namespace _Project._Scripts.Logic
         {
             enemyDeath.OnDied -= OnEnemyDeath;
             _spawnedEnemies.Remove(enemyDeath);
-            _playerStatsModel.AddUpgradePoint();
         }
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _Project._Scripts.Logic.Weapon
 {
-    internal class Bullet: MonoBehaviour
+    public class Bullet: MonoBehaviour
     {
         [SerializeField] private float _speed = 8f;
         [SerializeField] private float _lifeTime = 5f;

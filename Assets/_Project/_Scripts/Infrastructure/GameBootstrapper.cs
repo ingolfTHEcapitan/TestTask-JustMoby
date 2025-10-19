@@ -1,4 +1,7 @@
 using _Project._Scripts.Configs;
+using _Project._Scripts.Infrastructure.Services.AssetManagement;
+using _Project._Scripts.Infrastructure.Services.ConfigsManagement;
+using _Project._Scripts.Infrastructure.Services.Factory;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
@@ -9,6 +12,7 @@ using _Project._Scripts.Player;
 using _Project._Scripts.UI.Elements;
 using _Project._Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project._Scripts.Infrastructure
 {
@@ -16,9 +20,8 @@ namespace _Project._Scripts.Infrastructure
     {
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private GameObject _hudPrefab;
-        [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
         [SerializeField] private PlayerStatsView playerStatsView;
-        [SerializeField] private Transform _dynamicObjectsRoot;
+        [SerializeField] private Transform _dynamicObjectsParent;
         
         private void Awake()
         {
@@ -27,10 +30,14 @@ namespace _Project._Scripts.Infrastructure
             IInputService inputService = new DesktopInputService();
             IGamePauseService pauseService = new GamePauseService();
             ISaveLoadService saveLoadService = new SaveLoadService();
+            IAssetProvider assets = new AssetProvider();
+            IConfigsProvider configs = InitializeConfigsProvider();
             
             PlayerStatsModel playerStatsModel = _playerPrefab.GetComponent<PlayerStatsModel>();
             playerStatsModel.Construct(saveLoadService);
             playerStatsModel.Initialize();
+            
+            IGameFactory factory = new GameFactory(assets, pauseService, playerStatsModel, _dynamicObjectsParent);
 
             PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, playerStatsModel, pauseService);
             playerStatsView.Construct(playerStatsPresenter);
@@ -51,10 +58,18 @@ namespace _Project._Scripts.Infrastructure
             playerMovement.Construct(playerStatsModel, pauseService, inputService);
             
             Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon>();
-            weapon.Construct(playerStatsModel, pauseService, inputService, _dynamicObjectsRoot);
+            weapon.Construct(pauseService, inputService, factory);
             
-            EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig, playerStatsModel, pauseService, _dynamicObjectsRoot);
+            EnemySpawner enemySpawner = new EnemySpawner(configs, pauseService, factory);
             StartCoroutine(enemySpawner.SpawnAround(_playerPrefab.transform));
+        }
+
+        private static ConfigsProvider InitializeConfigsProvider()
+        {
+            ConfigsProvider configsProvider = new ConfigsProvider();
+            configsProvider.LoadEnemySpawner();
+            configsProvider.LoadPlayerStats();
+            return configsProvider;
         }
     }
 }

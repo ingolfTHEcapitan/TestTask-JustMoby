@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using _Project._Scripts.Logic.PlayerStats;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,13 +10,17 @@ namespace _Project._Scripts.Enemy
     {
         private static readonly int Death = Animator.StringToHash("Die");
         
+        public event Action<EnemyDeath> OnDied;
+        
         [SerializeField] private EnemyHealth _health;
         [SerializeField] private Animator _animator;
         [SerializeField] private NavMeshAgent _agent;
-
-        private const float _destroyDelay = 2f;
-
-        public event Action<EnemyDeath> OnDied;
+        [SerializeField] private float _destroyDelay = 2f;
+        
+        private PlayerStatsModel _playerStatsModel;
+        
+        public void Construct(PlayerStatsModel playerStatsModel) => 
+            _playerStatsModel = playerStatsModel;
 
         private void Start() => 
             _health.OnHealthChanged += OnOnHealthChanged;
@@ -36,7 +41,8 @@ namespace _Project._Scripts.Enemy
             _health.OnHealthChanged -= OnOnHealthChanged;
             _agent.speed = 0f;
             _animator.SetTrigger(Death);
-
+            _playerStatsModel.AddUpgradePoint();
+            
             StartCoroutine(DestroyTimer(_destroyDelay));
             OnDied?.Invoke(this);
         }
