@@ -2,9 +2,9 @@ using System;
 using _Project._Scripts.Configs;
 using UnityEngine;
 
-namespace _Project._Scripts.Logic.StatSystem
+namespace _Project._Scripts.Logic.PlayerStats
 {
-    public class PlayerStat
+    public class PlayerStatData
     {
         public event Action OnStatChanged;
         
@@ -18,7 +18,7 @@ namespace _Project._Scripts.Logic.StatSystem
         public int PreviewLevel { get; private set; }
         public int MaxLevel => Mathf.FloorToInt((MaxMultiplier - 1) / IncrementPerLevel);
 
-        public PlayerStat(PlayerStatConfig config)
+        public PlayerStatData(PlayerStatConfig config)
         {
             Name = config.Name;
             BaseValue = config.BaseValue;

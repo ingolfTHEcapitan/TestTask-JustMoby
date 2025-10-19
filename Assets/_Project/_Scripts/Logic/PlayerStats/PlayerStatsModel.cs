@@ -5,9 +5,9 @@ using _Project._Scripts.Data;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
 using UnityEngine;
 
-namespace _Project._Scripts.Logic.StatSystem
+namespace _Project._Scripts.Logic.PlayerStats
 {
-    public class PlayerStatsSystem: MonoBehaviour
+    public class PlayerStatsModel: MonoBehaviour
     {
         public event Action OnStatsChanged;
         
@@ -15,36 +15,33 @@ namespace _Project._Scripts.Logic.StatSystem
         
         private ISaveLoadService _saveLoadService;
         
-        public Dictionary<StatName, PlayerStat> Stats { get; private set; } = new Dictionary<StatName, PlayerStat>();
+        public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }
         
-        
-        public void Construct(ISaveLoadService saveLoadService)
-        {
+        public void Construct(ISaveLoadService saveLoadService) => 
             _saveLoadService = saveLoadService;
+
+        private void OnDestroy()
+        {
+            foreach (PlayerStatData stat in Stats.Values)
+                stat.OnStatChanged -= InvokeStatChanged;
         }
 
         public void Initialize()
         {
             foreach (PlayerStatConfig config in _statConfigs)
             {
-                PlayerStat stat = new PlayerStat(config);
-                stat.OnStatChanged += InvokeStatChanged;
-                Stats[config.Name] = stat;
+                PlayerStatData statData = new PlayerStatData(config);
+                statData.OnStatChanged += InvokeStatChanged;
+                Stats[config.Name] = statData;
             }
 
             LoadStats();
         }
 
-        private void OnDestroy()
-        {
-            foreach (PlayerStat stat in Stats.Values)
-                stat.OnStatChanged -= InvokeStatChanged;
-        }
-
         public void ApplyChanges()
         {
-            foreach (PlayerStat stat in Stats.Values) 
+            foreach (PlayerStatData stat in Stats.Values) 
                 stat.ApplyPreviewLevel();
             
             SaveStats();
@@ -54,7 +51,7 @@ namespace _Project._Scripts.Logic.StatSystem
         {
             int returnedPoints = 0;
 
-            foreach (PlayerStat stat in Stats.Values)
+            foreach (PlayerStatData stat in Stats.Values)
             {
                 returnedPoints += stat.PreviewLevel - stat.Level;
                 stat.DiscardPreviewLevel();
@@ -83,12 +80,17 @@ namespace _Project._Scripts.Logic.StatSystem
 
         public float GetStatValue(StatName statName)
         {
-            if (Stats.TryGetValue(statName, out PlayerStat stat))
+            if (Stats.TryGetValue(statName, out PlayerStatData stat))
                 return stat.CurrentValue;
             
             return 0;
         }
-        
+
+        public List<PlayerStatData> GetStats()
+        {
+            return new List<PlayerStatData>(Stats.Values);
+        }
+
         public bool CanUpgrade(StatName statName)
         {
             if (UpgradePoints <=0 || !Stats.ContainsKey(statName))
@@ -96,14 +98,13 @@ namespace _Project._Scripts.Logic.StatSystem
 
             return Stats[statName].PreviewLevel < Stats[statName].MaxLevel;
         }
-
-
+        
         private void LoadStats()
         {
             PlayerProgress progress = _saveLoadService.LoadProgress();
             if (progress == null)
             {
-                foreach (PlayerStat stat in Stats.Values)
+                foreach (PlayerStatData stat in Stats.Values)
                     stat.RecalculateCurrentValue();
 
                 UpgradePoints = 0;
@@ -129,15 +130,14 @@ namespace _Project._Scripts.Logic.StatSystem
             PlayerProgress progress = new PlayerProgress
             {
                 UpgradePoints = UpgradePoints,
-                HealthLevel = Stats.TryGetValue(StatName.Health, out PlayerStat health) ? health.Level : 0,
-                SpeedLevel = Stats.TryGetValue(StatName.Speed, out PlayerStat speed) ? speed.Level : 0,
-                DamageLevel = Stats.TryGetValue(StatName.Damage, out PlayerStat damage) ? damage.Level : 0
+                HealthLevel = Stats.TryGetValue(StatName.Health, out PlayerStatData health) ? health.Level : 0,
+                SpeedLevel = Stats.TryGetValue(StatName.Speed, out PlayerStatData speed) ? speed.Level : 0,
+                DamageLevel = Stats.TryGetValue(StatName.Damage, out PlayerStatData damage) ? damage.Level : 0
             };
             
             _saveLoadService.SaveProgress(progress);
         }
-
-
+        
         private void InvokeStatChanged() => 
             OnStatsChanged?.Invoke();
     }

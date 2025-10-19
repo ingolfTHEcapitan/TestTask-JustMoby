@@ -121,7 +121,7 @@ MonoBehaviour:
   _applyButton: {fileID: 2456998913822999490}
   _statsContainer: {fileID: 6249833191391747955}
   _pointsText: {fileID: 2005844479828220313}
-  _upgradeStatItemPrefab: {fileID: 2864862097691887430, guid: 35a21673b24503f41ab67b8582fcc3ad,
+  playerStatItemPrefab: {fileID: 2864862097691887430, guid: 35a21673b24503f41ab67b8582fcc3ad,
     type: 3}
 --- !u!1001 &8771982260359225068
 PrefabInstance:

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Enemy;
 using _Project._Scripts.Infrastructure.Services.GamePause;
-using _Project._Scripts.Logic.StatSystem;
+using _Project._Scripts.Logic.PlayerStats;
 using _Project._Scripts.UI.Elements;
 using UnityEngine;
 
@@ -12,16 +12,16 @@ namespace _Project._Scripts.Logic
     public class EnemySpawner
     {
         private readonly EnemySpawnerConfig _config;
-        private readonly PlayerStatsSystem _playerStatsSystem;
+        private readonly PlayerStatsModel _playerStatsModel;
         private readonly IGamePauseService _pauseService;
         private readonly Transform _enemyParent;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
 
-        public EnemySpawner(EnemySpawnerConfig config, PlayerStatsSystem playerStatsSystem,
+        public EnemySpawner(EnemySpawnerConfig config, PlayerStatsModel playerStatsModel,
             IGamePauseService pauseService, Transform enemyParent)
         {
             _config = config;
-            _playerStatsSystem = playerStatsSystem;
+            _playerStatsModel = playerStatsModel;
             _pauseService = pauseService;
             _enemyParent = enemyParent;
         }
@@ -73,7 +73,7 @@ namespace _Project._Scripts.Logic
         {
             enemyDeath.OnDied -= OnEnemyDeath;
             _spawnedEnemies.Remove(enemyDeath);
-            _playerStatsSystem.AddUpgradePoint();
+            _playerStatsModel.AddUpgradePoint();
         }
     }
 }

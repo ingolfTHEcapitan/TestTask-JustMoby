@@ -867,7 +867,7 @@ GameObject:
   - component: {fileID: 3771288992004914000}
   - component: {fileID: 3316747325789330273}
   m_Layer: 5
-  m_Name: UpgradeStatsWindow
+  m_Name: PlayerStatsWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,4 +1,4 @@
-using _Project._Scripts.Logic.StatSystem;
+using _Project._Scripts.Logic.PlayerStats;
 using UnityEngine;
 
 namespace _Project._Scripts.Configs

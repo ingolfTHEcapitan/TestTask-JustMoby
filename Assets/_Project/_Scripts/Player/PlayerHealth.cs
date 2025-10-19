@@ -1,17 +1,17 @@
 using System;
 using _Project._Scripts.Enemy;
 using _Project._Scripts.Logic;
-using _Project._Scripts.Logic.StatSystem;
+using _Project._Scripts.Logic.PlayerStats;
 using UnityEngine;
 
 namespace _Project._Scripts.Player
 {
     public class PlayerHealth: MonoBehaviour, IHealth
     {
-        private PlayerStatsSystem _playerStatsSystem;
+        private PlayerStatsModel _playerStatsModel;
         private float _currentHealth;
 
-        public float MaxHealth => _playerStatsSystem.GetStatValue(StatName.Health);
+        public float MaxHealth => _playerStatsModel.GetStatValue(StatName.Health);
 
         public float CurrentHealth
         {
@@ -21,13 +21,13 @@ namespace _Project._Scripts.Player
 
         public event Action OnHealthChanged;
         
-        public void Construct(PlayerStatsSystem playerStatsSystem) => 
-            _playerStatsSystem = playerStatsSystem;
+        public void Construct(PlayerStatsModel playerStatsModel) => 
+            _playerStatsModel = playerStatsModel;
         
         public void Initialize()
         {
             CurrentHealth = MaxHealth;
-            _playerStatsSystem.OnStatsChanged += InvokeOnHealthChanged;
+            _playerStatsModel.OnStatsChanged += InvokeOnHealthChanged;
         }
         
         public void TakeDamage(float damage)

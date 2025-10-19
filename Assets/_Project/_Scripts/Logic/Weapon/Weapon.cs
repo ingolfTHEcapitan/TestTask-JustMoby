@@ -1,6 +1,6 @@
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
-using _Project._Scripts.Logic.StatSystem;
+using _Project._Scripts.Logic.PlayerStats;
 using UnityEngine;
 
 namespace _Project._Scripts.Logic.Weapon
@@ -16,14 +16,14 @@ namespace _Project._Scripts.Logic.Weapon
         private float _nextTimeToFire;
         private Camera _camera;
         private Transform _bulletParent;
-        private PlayerStatsSystem _playerStatsSystem;
+        private PlayerStatsModel _playerStatsModel;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
 
-        public void Construct(PlayerStatsSystem playerStatsSystem, IGamePauseService pauseService,
+        public void Construct(PlayerStatsModel playerStatsModel, IGamePauseService pauseService,
             IInputService inputService, Transform bulletParent)
         {
-            _playerStatsSystem = playerStatsSystem;
+            _playerStatsModel = playerStatsModel;
             _pauseService = pauseService;
             _inputService = inputService;
             _bulletParent = bulletParent;
@@ -49,7 +49,7 @@ namespace _Project._Scripts.Logic.Weapon
             _nextTimeToFire = Time.time + 1 / _fireRate;
             
             Bullet bullet = Instantiate(_bulletPrefab, _shootPoint.position, Quaternion.identity);
-            float damage = _playerStatsSystem.GetStatValue(StatName.Damage);
+            float damage = _playerStatsModel.GetStatValue(StatName.Damage);
             bullet.Initialize(shootDirection, damage, _bulletParent);
         }
 

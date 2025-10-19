@@ -3,11 +3,11 @@ using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
 using _Project._Scripts.Logic;
-using _Project._Scripts.Logic.StatSystem;
+using _Project._Scripts.Logic.PlayerStats;
 using _Project._Scripts.Logic.Weapon;
 using _Project._Scripts.Player;
 using _Project._Scripts.UI.Elements;
-using _Project._Scripts.UI.Windows.UpgradeStats;
+using _Project._Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
 
 namespace _Project._Scripts.Infrastructure
@@ -17,7 +17,7 @@ namespace _Project._Scripts.Infrastructure
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private GameObject _hudPrefab;
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
-        [SerializeField] private UpgradeStatsWindow _upgradeStatsWindow;
+        [SerializeField] private PlayerStatsView playerStatsView;
         [SerializeField] private Transform _dynamicObjectsRoot;
         
         private void Awake()
@@ -28,15 +28,16 @@ namespace _Project._Scripts.Infrastructure
             IGamePauseService pauseService = new GamePauseService();
             ISaveLoadService saveLoadService = new SaveLoadService();
             
-            PlayerStatsSystem playerStatsSystem = _playerPrefab.GetComponent<PlayerStatsSystem>();
-            playerStatsSystem.Construct(saveLoadService);
-            playerStatsSystem.Initialize();
+            PlayerStatsModel playerStatsModel = _playerPrefab.GetComponent<PlayerStatsModel>();
+            playerStatsModel.Construct(saveLoadService);
+            playerStatsModel.Initialize();
 
-            _upgradeStatsWindow.Construct(playerStatsSystem, pauseService);
-            _upgradeStatsWindow.Initialize();
+            PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, playerStatsModel, pauseService);
+            playerStatsView.Construct(playerStatsPresenter);
+            playerStatsPresenter.Initialize(playerStatsModel.GetStats());
             
             PlayerHealth playerHealth = _playerPrefab.GetComponent<PlayerHealth>();
-            playerHealth.Construct(playerStatsSystem);  
+            playerHealth.Construct(playerStatsModel);  
             playerHealth.Initialize();
             
             HealthBarView playerHealthBarView = _hudPrefab.GetComponentInChildren<HealthBarView>();
@@ -47,12 +48,12 @@ namespace _Project._Scripts.Infrastructure
             playerCameraLook.Construct(pauseService, inputService);
             
             PlayerMovement playerMovement = _playerPrefab.GetComponent<PlayerMovement>();
-            playerMovement.Construct(playerStatsSystem, pauseService, inputService);
+            playerMovement.Construct(playerStatsModel, pauseService, inputService);
             
             Weapon weapon = _playerPrefab.GetComponentInChildren<Weapon>();
-            weapon.Construct(playerStatsSystem, pauseService, inputService, _dynamicObjectsRoot);
+            weapon.Construct(playerStatsModel, pauseService, inputService, _dynamicObjectsRoot);
             
-            EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig, playerStatsSystem, pauseService, _dynamicObjectsRoot);
+            EnemySpawner enemySpawner = new EnemySpawner(_enemySpawnerConfig, playerStatsModel, pauseService, _dynamicObjectsRoot);
             StartCoroutine(enemySpawner.SpawnAround(_playerPrefab.transform));
         }
     }
