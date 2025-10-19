@@ -36,8 +36,11 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
             enemy.GetComponent<EnemyAgent>().Construct(_pauseService);
             enemy.GetComponent<EnemyDeath>().Construct(_playerStatsModel);;
             
-            HealthBarView healthBar = enemy.GetComponentInChildren<HealthBarView>();
             EnemyHealth health = enemy.GetComponent<EnemyHealth>();
+            health.Construct(_playerStatsModel);
+            health.Initialize();
+            
+            HealthBarView healthBar = enemy.GetComponentInChildren<HealthBarView>();
             healthBar.Construct(health);
             healthBar.Initialize();
             return enemy;
