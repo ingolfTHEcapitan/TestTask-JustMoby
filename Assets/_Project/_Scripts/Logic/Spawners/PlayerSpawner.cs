@@ -3,22 +3,22 @@ using _Project._Scripts.Infrastructure.Services.ConfigsManagement;
 using _Project._Scripts.Infrastructure.Services.Factory;
 using UnityEngine;
 
-namespace _Project._Scripts.Logic
+namespace _Project._Scripts.Logic.Spawners
 {
     public class PlayerSpawner
     {
         private readonly IGameFactory _factory;
-        private readonly IConfigsProvider _configsProvider;
+        private readonly IConfigsProvider _configs;
 
-        public PlayerSpawner(IGameFactory factory, IConfigsProvider configsProvider)
+        public PlayerSpawner(IGameFactory factory, IConfigsProvider configs)
         {
             _factory = factory;
-            _configsProvider = configsProvider;
+            _configs = configs;
         }
 
         public GameObject Spawn(Transform parent)
         {
-            PlayerSpawnerConfig config = _configsProvider.GetPlayerSpawner();
+            PlayerSpawnerConfig config = _configs.PlayerSpawner;
             return _factory.CreatePlayer(config.Prefab, config.SpawnPosition, parent);
         }
     }

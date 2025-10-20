@@ -7,18 +7,12 @@ namespace _Project._Scripts.Enemy
 {
     public class EnemyHealth : MonoBehaviour, IHealth
     {
-        [SerializeField] private float _maxHealth = 100f;
-        private PlayerStatsModel _playerStatsModel;
-
         public event Action OnHealthChanged;
         
+        private PlayerStatsModel _playerStatsModel;
+        
         public float CurrentHealth {get; private set;}
-
-        public float MaxHealth
-        {
-            get => _maxHealth;
-            private set => _maxHealth = value;
-        }
+        public float MaxHealth { get; private set; }
 
         public void Construct(PlayerStatsModel playerStatsModel) => 
             _playerStatsModel = playerStatsModel;

@@ -25,10 +25,8 @@ namespace _Project._Scripts.Enemy
         private void Start() => 
             _health.OnHealthChanged += OnOnHealthChanged;
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() => 
             _health.OnHealthChanged -= OnOnHealthChanged;
-        }
 
         private void OnOnHealthChanged()
         {

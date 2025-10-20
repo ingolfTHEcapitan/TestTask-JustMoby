@@ -7,7 +7,7 @@ using _Project._Scripts.Infrastructure.Services.Factory;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using UnityEngine;
 
-namespace _Project._Scripts.Logic
+namespace _Project._Scripts.Logic.Spawners
 {
     public class EnemySpawner
     {
@@ -20,10 +20,9 @@ namespace _Project._Scripts.Logic
         {
             _pauseService = pauseService;
             _factory = factory;
-            _config = configs.GetEnemySpawner();
+            _config = configs.EnemySpawner;
         }
         
-
         public IEnumerator SpawnAround(Transform target)
         {
             while (true)

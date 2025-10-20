@@ -26,7 +26,7 @@ namespace _Project._Scripts.Logic.PlayerStats
 
         public void Initialize()
         {
-            foreach (PlayerStatConfig config in _configs.GetPlayerStats())
+            foreach (PlayerStatConfig config in _configs.PlayerStats)
             {
                 PlayerStatData statData = new PlayerStatData(config);
                 statData.OnStatChanged += InvokeStatChanged;
@@ -89,10 +89,8 @@ namespace _Project._Scripts.Logic.PlayerStats
             return 0;
         }
 
-        public List<PlayerStatData> GetStats()
-        {
-            return new List<PlayerStatData>(Stats.Values);
-        }
+        public List<PlayerStatData> GetStats() => 
+            new List<PlayerStatData>(Stats.Values);
 
         public bool CanUpgrade(StatName statName)
         {
