@@ -6,6 +6,7 @@ using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
 using _Project._Scripts.Logic;
 using _Project._Scripts.Logic.PlayerStats;
+using _Project._Scripts.Logic.Spawners;
 using _Project._Scripts.Logic.Weapon;
 using _Project._Scripts.Player;
 using _Project._Scripts.UI.Elements;
@@ -31,50 +32,81 @@ namespace _Project._Scripts.Infrastructure
             IGamePauseService pauseService = new GamePauseService();
             ISaveLoadService saveLoadService = new SaveLoadService();
             IAssetProvider assets = new AssetProvider();
-            IConfigsProvider configsProvider = InitializeConfigsProvider();
-            
-            _playerStatsModel = new PlayerStatsModel();
-            _playerStatsModel.Construct(saveLoadService, configsProvider);
-            _playerStatsModel.Initialize();
-            
+            IConfigsProvider configs = InitConfigsProvider();
+
+            _playerStatsModel = InitPlayerStatsModel(saveLoadService, configs);
             IGameFactory factory = new GameFactory(assets, pauseService, inputService, _playerStatsModel, _dynamicObjectsParent);
 
-            GameObject popUpLayer = factory.CreatePopUpLayer(_UIParent);
-            GameObject hud = factory.CreateHud(_UIParent);
-            OpenWindowButton openButton = hud.GetComponentInChildren<OpenWindowButton>();
+            GameObject Player = InitPlayer(factory, configs);
+            GameObject hud = InitHud(factory, Player);
+            GameObject popUpLayer = InitPopUpLayer(factory);
             
-            PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
-            _playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, _playerStatsModel, pauseService);
-            playerStatsView.Construct(_playerStatsPresenter, openButton);
-            _playerStatsPresenter.Initialize(_playerStatsModel.GetStats());
-
-            PlayerSpawner playerSpawner = new PlayerSpawner(factory, configsProvider);
-            GameObject Player = playerSpawner.Spawn(_gameParent);
-            PlayerHealth playerHealth = Player.GetComponent<PlayerHealth>();
-
-            HealthBarView playerHealthBarView = hud.GetComponentInChildren<HealthBarView>();
-            playerHealthBarView.Construct(playerHealth);
-            playerHealthBarView.Initialize();
-
-            Weapon weapon = Player.GetComponentInChildren<Weapon>();
-            weapon.Construct(pauseService, inputService, factory);
-            
-            EnemySpawner enemySpawner = new EnemySpawner(configsProvider, pauseService, factory);
-            StartCoroutine(enemySpawner.SpawnAround(Player.transform));
+            InitWeapon(Player, pauseService, inputService, factory);
+            InitPlayerStatsWindow(popUpLayer, hud, pauseService);
+            InitEnemySpawner(configs, pauseService, factory, Player);
         }
-        
+
         private void OnDestroy()
         {
             _playerStatsModel.Dispose();
             _playerStatsPresenter.Dispose();
         }
 
-        private static ConfigsProvider InitializeConfigsProvider()
+        private PlayerStatsModel InitPlayerStatsModel(ISaveLoadService saveLoadService, IConfigsProvider configsProvider)
+        {
+            PlayerStatsModel playerStatsModel = new PlayerStatsModel();
+            playerStatsModel.Construct(saveLoadService, configsProvider);
+            playerStatsModel.Initialize();
+            return playerStatsModel;
+        }
+
+        private GameObject InitPlayer(IGameFactory factory, IConfigsProvider configs)
+        {
+            PlayerSpawner playerSpawner = new PlayerSpawner(factory, configs);
+            return playerSpawner.Spawn(_gameParent);
+        }
+
+        private GameObject InitHud(IGameFactory factory, GameObject Player)
+        {
+            GameObject hud = factory.CreateHud(_UIParent);
+            
+            HealthBarView playerHealthBarView = hud.GetComponentInChildren<HealthBarView>();
+            playerHealthBarView.Construct(Player.GetComponent<PlayerHealth>());
+            playerHealthBarView.Initialize();
+            return hud;
+        }
+
+        private GameObject InitPopUpLayer(IGameFactory factory) => 
+            factory.CreatePopUpLayer(_UIParent);
+
+        private static void InitWeapon(GameObject Player, IGamePauseService pauseService, 
+            IInputService inputService, IGameFactory factory)
+        {
+            Weapon weapon = Player.GetComponentInChildren<Weapon>();
+            weapon.Construct(pauseService, inputService, factory);
+        }
+
+        private void InitPlayerStatsWindow(GameObject popUpLayer, GameObject hud, IGamePauseService pauseService)
+        {
+            PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
+            OpenWindowButton openButton = hud.GetComponentInChildren<OpenWindowButton>();
+            
+            _playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, _playerStatsModel, pauseService);
+            playerStatsView.Construct(_playerStatsPresenter, openButton);
+            _playerStatsPresenter.Initialize(_playerStatsModel.GetStats());
+        }
+
+        private void InitEnemySpawner(IConfigsProvider configs, IGamePauseService pauseService, 
+            IGameFactory factory, GameObject Player)
+        {
+            EnemySpawner enemySpawner = new EnemySpawner(configs, pauseService, factory);
+            StartCoroutine(enemySpawner.SpawnAround(Player.transform));
+        }
+
+        private static ConfigsProvider InitConfigsProvider()
         {
             ConfigsProvider configsProvider = new ConfigsProvider();
-            configsProvider.LoadEnemySpawner();
-            configsProvider.LoadPlayerStats();
-            configsProvider.LoadPlayerSpawner();
+            configsProvider.Initialize();
             return configsProvider;
         }
     }

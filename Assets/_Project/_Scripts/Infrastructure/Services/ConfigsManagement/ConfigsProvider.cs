@@ -10,27 +10,25 @@ namespace _Project._Scripts.Infrastructure.Services.ConfigsManagement
         private const string EnemySpawnerConfigPath = "Configs/Spawners/EnemySpawnerConfig";
         private const string PlayerSpawnerConfigPath = "Configs/Spawners/PlayerSpawnerConfig";
         private const string PlayerStatsPath = "Configs/PlayerStats";
-        
-        private List<PlayerStatConfig> _playerStats = new List<PlayerStatConfig>();
-        private EnemySpawnerConfig _enemySpawnerConfig;
-        private PlayerSpawnerConfig _playerSpawnerConfig;
-        
-        public void LoadEnemySpawner() => 
-            _enemySpawnerConfig = Resources.Load<EnemySpawnerConfig>(EnemySpawnerConfigPath);
-        
-        public void LoadPlayerSpawner() => 
-            _playerSpawnerConfig = Resources.Load<PlayerSpawnerConfig>(PlayerSpawnerConfigPath);
 
-        public void LoadPlayerStats() => 
-            _playerStats = Resources.LoadAll<PlayerStatConfig>(PlayerStatsPath).ToList();
+        public EnemySpawnerConfig EnemySpawner { get; private set; }
+        public PlayerSpawnerConfig PlayerSpawner { get; private set; }
+        public List<PlayerStatConfig> PlayerStats { get; private set; } = new List<PlayerStatConfig>();
 
-        public List<PlayerStatConfig> GetPlayerStats() => 
-            _playerStats;
-
-        public EnemySpawnerConfig GetEnemySpawner() =>
-            _enemySpawnerConfig;
+        public void Initialize()
+        {
+            LoadEnemySpawner();
+            LoadPlayerStats();
+            LoadPlayerSpawner();
+        }
         
-        public PlayerSpawnerConfig GetPlayerSpawner() =>
-            _playerSpawnerConfig;
+        private void LoadEnemySpawner() => 
+            EnemySpawner = Resources.Load<EnemySpawnerConfig>(EnemySpawnerConfigPath);
+
+        private void LoadPlayerSpawner() => 
+            PlayerSpawner = Resources.Load<PlayerSpawnerConfig>(PlayerSpawnerConfigPath);
+
+        private void LoadPlayerStats() => 
+            PlayerStats = Resources.LoadAll<PlayerStatConfig>(PlayerStatsPath).ToList();
     }
 }

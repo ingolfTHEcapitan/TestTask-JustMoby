@@ -5,8 +5,8 @@ namespace _Project._Scripts.Infrastructure.Services.ConfigsManagement
 {
     public interface IConfigsProvider
     {
-        List<PlayerStatConfig> GetPlayerStats();
-        EnemySpawnerConfig GetEnemySpawner();
-        PlayerSpawnerConfig GetPlayerSpawner();
+        EnemySpawnerConfig EnemySpawner { get; }
+        PlayerSpawnerConfig PlayerSpawner { get; }
+        List<PlayerStatConfig> PlayerStats { get; }
     }
 }
