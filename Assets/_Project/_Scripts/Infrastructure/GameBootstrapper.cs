@@ -79,7 +79,7 @@ namespace _Project._Scripts.Infrastructure
         private GameObject InitPopUpLayer(IGameFactory factory) => 
             factory.CreatePopUpLayer(_UIParent);
 
-        private static void InitWeapon(GameObject Player, IGamePauseService pauseService, 
+        private void InitWeapon(GameObject Player, IGamePauseService pauseService, 
             IInputService inputService, IGameFactory factory)
         {
             Weapon weapon = Player.GetComponentInChildren<Weapon>();
@@ -103,7 +103,7 @@ namespace _Project._Scripts.Infrastructure
             StartCoroutine(enemySpawner.SpawnAround(Player.transform));
         }
 
-        private static ConfigsProvider InitConfigsProvider()
+        private ConfigsProvider InitConfigsProvider()
         {
             ConfigsProvider configsProvider = new ConfigsProvider();
             configsProvider.Initialize();
