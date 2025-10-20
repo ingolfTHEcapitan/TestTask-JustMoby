@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using _Project._Scripts.Logic.PlayerStats;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,14 +42,11 @@ namespace _Project._Scripts.Enemy
             _animator.SetTrigger(Death);
             _playerStatsModel.AddUpgradePoint();
             
-            StartCoroutine(DestroyTimer(_destroyDelay));
             OnDied?.Invoke(this);
         }
 
-        private IEnumerator DestroyTimer(float delay)
-        {
-            yield return new WaitForSeconds(delay);
+        [UsedImplicitly]
+        public void OnDie() => 
             Destroy(gameObject);
-        }
     }
 }
