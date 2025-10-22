@@ -20,7 +20,7 @@ namespace _Project._Scripts.Infrastructure
         [SerializeField] private Transform _dynamicObjectsParent;
         [SerializeField] private Transform _UIParent;
         [SerializeField] private Transform _gameParent;
-        [SerializeField] private Transform _enemyMoveAreaCenter;
+        [SerializeField] private Transform _enemySpawnPoint;
         
         private PlayerStatsModel _playerStatsModel;
         private PlayerStatsPresenter _playerStatsPresenter;
@@ -37,7 +37,7 @@ namespace _Project._Scripts.Infrastructure
 
             _playerStatsModel = InitPlayerStatsModel(saveLoadService, configs);
             IGameFactory factory = new GameFactory(assets, pauseService, inputService, 
-                _playerStatsModel, _dynamicObjectsParent, _enemyMoveAreaCenter);
+                _playerStatsModel, _dynamicObjectsParent, _enemySpawnPoint);
 
             GameObject Player = InitPlayer(factory, configs);
             GameObject hud = InitHud(factory, Player);
@@ -45,7 +45,7 @@ namespace _Project._Scripts.Infrastructure
             
             InitWeapon(Player, pauseService, inputService, factory);
             InitPlayerStatsWindow(popUpLayer, hud, pauseService);
-            InitEnemySpawner(configs, pauseService, factory, Player);
+            InitEnemySpawner(configs, pauseService, factory, _enemySpawnPoint);
         }
 
         private void OnDestroy()
@@ -99,10 +99,10 @@ namespace _Project._Scripts.Infrastructure
         }
 
         private void InitEnemySpawner(IConfigsProvider configs, IGamePauseService pauseService, 
-            IGameFactory factory, GameObject Player)
+            IGameFactory factory, Transform target)
         {
             EnemySpawner enemySpawner = new EnemySpawner(configs, pauseService, factory);
-            StartCoroutine(enemySpawner.SpawnAround(Player.transform));
+            StartCoroutine(enemySpawner.SpawnAround(target));
         }
 
         private ConfigsProvider InitConfigsProvider()

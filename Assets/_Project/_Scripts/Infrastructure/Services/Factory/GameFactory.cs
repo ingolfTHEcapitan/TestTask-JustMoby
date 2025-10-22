@@ -18,17 +18,17 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
         private readonly IInputService _inputService;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly Transform _dynamicObjectsParent;
-        private readonly Transform _moveAreaCenter;
+        private readonly Transform _enemySpawnPoint;
 
         public GameFactory(IAssetProvider assets, IGamePauseService pauseService, IInputService inputService,
-            PlayerStatsModel playerStatsModel, Transform dynamicObjectsParent, Transform moveAreaCenter)
+            PlayerStatsModel playerStatsModel, Transform dynamicObjectsParent, Transform enemySpawnPoint)
         {
             _assets = assets;
             _pauseService = pauseService;
             _inputService = inputService;
             _playerStatsModel = playerStatsModel;
             _dynamicObjectsParent = dynamicObjectsParent;
-            _moveAreaCenter = moveAreaCenter;
+            _enemySpawnPoint = enemySpawnPoint;
         }
 
         public GameObject CreateEnemy(EnemySpawnerConfig config, Vector3 at)
@@ -39,7 +39,7 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
             
             EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
             enemyMovement.Construct(_pauseService);
-            enemyMovement.Initialize(_moveAreaCenter);
+            enemyMovement.Initialize(_enemySpawnPoint);
                 
             EnemyHealth health = enemy.GetComponent<EnemyHealth>();
             health.Construct(_playerStatsModel);

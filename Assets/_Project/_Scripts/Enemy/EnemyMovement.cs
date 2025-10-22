@@ -1,7 +1,7 @@
 using _Project._Scripts.Infrastructure.Services.GamePause;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 namespace _Project._Scripts.Enemy
 {
@@ -13,37 +13,37 @@ namespace _Project._Scripts.Enemy
         [SerializeField] private float _minMoveDistance = 7f;
         [SerializeField] private float _maxMoveDistance = 15f;
         
-        private Transform _moveAreaCenter;
+        private Transform _spawnPoint;
         private IGamePauseService _pauseService;
+        private bool IsSpawnAnimationEnded;
 
         public void Construct(IGamePauseService pauseService) => 
             _pauseService = pauseService;
 
-        public void Initialize(Transform moveAreaCenter) => 
-            _moveAreaCenter = moveAreaCenter;
+        public void Initialize(Transform spawnPoint) => 
+            _spawnPoint = spawnPoint;
 
         private void Update()
         {
-            if(_pauseService.IsPaused)
+            if(_pauseService.IsPaused || !IsSpawnAnimationEnded)
                 return;
             
             Move();
         }
-        
+
+        [UsedImplicitly]
+        public void OnSpawnAnimationEnded() => 
+            IsSpawnAnimationEnded = true;
+
         private void Move()
         {
             if (_agent.remainingDistance <= _agent.stoppingDistance)
             {
-                SetDestination();
+                Vector3 targetPosition = GetRandomPosition(_spawnPoint.position);
+                _agent.SetDestination(targetPosition);
             }
         }
-
-        private void SetDestination()
-        {
-            Vector3 targetPosition = GetRandomPosition(_moveAreaCenter.position);
-            _agent.SetDestination(targetPosition);
-        }
-
+        
         private Vector3 GetRandomPosition(Vector3 moveAreaCenter)
         {
             Vector3 randomPoint = GetRandomPoint(moveAreaCenter);

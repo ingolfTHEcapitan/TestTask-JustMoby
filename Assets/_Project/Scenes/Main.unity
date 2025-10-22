@@ -5355,7 +5355,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1760856298}
   m_Layer: 0
-  m_Name: EnemyMoveAreaCenter
+  m_Name: EnemySpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -6673,7 +6673,7 @@ MonoBehaviour:
   _dynamicObjectsParent: {fileID: 1709303259}
   _UIParent: {fileID: 2046716228}
   _gameParent: {fileID: 1485497335}
-  _enemyMoveAreaCenter: {fileID: 1760856298}
+  _enemySpawnPoint: {fileID: 1760856298}
 --- !u!4 &2125096223
 Transform:
   m_ObjectHideFlags: 0

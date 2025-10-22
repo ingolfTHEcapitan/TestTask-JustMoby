@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using _Project._Scripts.Logic.PlayerStats;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,14 +8,14 @@ namespace _Project._Scripts.Enemy
 {
     public class EnemyDeath: MonoBehaviour
     {
-        private static readonly int Death = Animator.StringToHash("Die");
+        private readonly int DieHash = Animator.StringToHash("Die");
         
         public event Action<EnemyDeath> OnDied;
         
         [SerializeField] private EnemyHealth _health;
         [SerializeField] private Animator _animator;
         [SerializeField] private NavMeshAgent _agent;
-        [SerializeField] private float _destroyDelay = 2f;
+        [SerializeField] private float _destroyDelay = 1.5f;
         
         private PlayerStatsModel _playerStatsModel;
         
@@ -39,14 +38,17 @@ namespace _Project._Scripts.Enemy
         {
             _health.OnHealthChanged -= OnOnHealthChanged;
             _agent.speed = 0f;
-            _animator.SetTrigger(Death);
+            _animator.SetTrigger(DieHash);
             _playerStatsModel.AddUpgradePoint();
             
+            StartCoroutine(DestroyTimer(_destroyDelay));
+        }
+        
+        private IEnumerator DestroyTimer(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            Destroy(gameObject);
             OnDied?.Invoke(this);
         }
-
-        [UsedImplicitly]
-        public void OnDie() => 
-            Destroy(gameObject);
     }
 }

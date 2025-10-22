@@ -7,6 +7,9 @@ namespace _Project._Scripts.Enemy
 {
     public class EnemyHealth : MonoBehaviour, IHealth
     {
+        private readonly int HitHash = Animator.StringToHash("Hit");
+        
+        [SerializeField] private Animator _animator;
         public event Action OnHealthChanged;
         
         private PlayerStatsModel _playerStatsModel;
@@ -30,6 +33,7 @@ namespace _Project._Scripts.Enemy
             
             CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
             OnHealthChanged?.Invoke();
+            _animator.SetTrigger(HitHash);
         }
 
         private float CalculateMaxHealth()
