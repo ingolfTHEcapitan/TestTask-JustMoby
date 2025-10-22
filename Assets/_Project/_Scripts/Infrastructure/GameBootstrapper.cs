@@ -20,6 +20,7 @@ namespace _Project._Scripts.Infrastructure
         [SerializeField] private Transform _dynamicObjectsParent;
         [SerializeField] private Transform _UIParent;
         [SerializeField] private Transform _gameParent;
+        [SerializeField] private Transform _enemyMoveAreaCenter;
         
         private PlayerStatsModel _playerStatsModel;
         private PlayerStatsPresenter _playerStatsPresenter;
@@ -35,7 +36,8 @@ namespace _Project._Scripts.Infrastructure
             IConfigsProvider configs = InitConfigsProvider();
 
             _playerStatsModel = InitPlayerStatsModel(saveLoadService, configs);
-            IGameFactory factory = new GameFactory(assets, pauseService, inputService, _playerStatsModel, _dynamicObjectsParent);
+            IGameFactory factory = new GameFactory(assets, pauseService, inputService, 
+                _playerStatsModel, _dynamicObjectsParent, _enemyMoveAreaCenter);
 
             GameObject Player = InitPlayer(factory, configs);
             GameObject hud = InitHud(factory, Player);

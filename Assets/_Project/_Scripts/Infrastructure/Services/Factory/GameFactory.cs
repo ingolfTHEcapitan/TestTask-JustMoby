@@ -18,24 +18,29 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
         private readonly IInputService _inputService;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly Transform _dynamicObjectsParent;
+        private readonly Transform _moveAreaCenter;
 
-        public GameFactory(IAssetProvider assets, IGamePauseService pauseService, IInputService inputService, PlayerStatsModel playerStatsModel,
-            Transform dynamicObjectsParent)
+        public GameFactory(IAssetProvider assets, IGamePauseService pauseService, IInputService inputService,
+            PlayerStatsModel playerStatsModel, Transform dynamicObjectsParent, Transform moveAreaCenter)
         {
             _assets = assets;
             _pauseService = pauseService;
             _inputService = inputService;
             _playerStatsModel = playerStatsModel;
             _dynamicObjectsParent = dynamicObjectsParent;
+            _moveAreaCenter = moveAreaCenter;
         }
 
         public GameObject CreateEnemy(EnemySpawnerConfig config, Vector3 at)
         {
             GameObject enemy = Object.Instantiate(config.Prefab, at, Quaternion.identity, _dynamicObjectsParent);
+
+            enemy.GetComponent<EnemyDeath>().Construct(_playerStatsModel);
             
-            enemy.GetComponent<EnemyAgent>().Construct(_pauseService);
-            enemy.GetComponent<EnemyDeath>().Construct(_playerStatsModel);;
-            
+            EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
+            enemyMovement.Construct(_pauseService);
+            enemyMovement.Initialize(_moveAreaCenter);
+                
             EnemyHealth health = enemy.GetComponent<EnemyHealth>();
             health.Construct(_playerStatsModel);
             health.Initialize();

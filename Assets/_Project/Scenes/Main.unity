@@ -4599,6 +4599,7 @@ Transform:
   m_Children:
   - {fileID: 1929621777}
   - {fileID: 1709303259}
+  - {fileID: 1760856298}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1496553626
@@ -5344,6 +5345,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1745557644}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1760856297
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1760856298}
+  m_Layer: 0
+  m_Name: EnemyMoveAreaCenter
+  m_TagString: Untagged
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1760856298
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760856297}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1485497335}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1826788634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6641,6 +6673,7 @@ MonoBehaviour:
   _dynamicObjectsParent: {fileID: 1709303259}
   _UIParent: {fileID: 2046716228}
   _gameParent: {fileID: 1485497335}
+  _enemyMoveAreaCenter: {fileID: 1760856298}
 --- !u!4 &2125096223
 Transform:
   m_ObjectHideFlags: 0
