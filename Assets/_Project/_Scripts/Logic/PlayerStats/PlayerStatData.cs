@@ -17,6 +17,9 @@ namespace _Project._Scripts.Logic.PlayerStats
         public int Level { get; private set; }
         public int PreviewLevel { get; private set; }
         public int MaxLevel => Mathf.FloorToInt((MaxMultiplier - 1) / IncrementPerLevel);
+        
+        public Sprite IconFrame { get; private set; }
+        public Sprite Icon { get; private set; }
 
         public PlayerStatData(PlayerStatConfig config)
         {
@@ -26,6 +29,8 @@ namespace _Project._Scripts.Logic.PlayerStats
             MaxMultiplier = config.MaxMultiplier;
             Level = 0;
             PreviewLevel = 0;
+            IconFrame = config.IconFrame;
+            Icon = config.Icon;
             RecalculateCurrentValue();
         }
 

@@ -16,3 +16,7 @@ MonoBehaviour:
   <BaseValue>k__BackingField: 50
   <IncrementPerLevel>k__BackingField: 0.5
   <MaxMultiplier>k__BackingField: 10
+  <IconFrame>k__BackingField: {fileID: 21300000, guid: af5cab4be50a64b4ba5d2d40b2e9a260,
+    type: 3}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 5df367024fd9a42d993d65056dbf8944,
+    type: 3}

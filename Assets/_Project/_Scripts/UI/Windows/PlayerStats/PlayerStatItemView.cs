@@ -9,6 +9,8 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
     {
         [SerializeField] private TextMeshProUGUI _nameText;
         [SerializeField] private TextMeshProUGUI _levelText;
+        [SerializeField] private Image _iconFrame;
+        [SerializeField] private Image _icon;
         [SerializeField] private Button _upgradeButton;
         
         private StatName _statName;
@@ -20,10 +22,12 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
         private void OnDestroy() => 
             _upgradeButton.onClick.RemoveListener(OnUpgradeButtonClick);
 
-        public void Initialize(StatName statName)
+        public void Initialize(PlayerStatData stat)
         {
-            _statName = statName;
+            _statName = stat.Name;
             _nameText.SetText(_statName.ToString());
+            _iconFrame.sprite = stat.IconFrame;
+            _icon.sprite = stat.Icon;
             _upgradeButton.onClick.AddListener(OnUpgradeButtonClick);
         }
 

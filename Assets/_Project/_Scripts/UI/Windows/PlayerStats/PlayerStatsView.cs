@@ -48,7 +48,7 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
         }
 
         public void UpdatePointsText(string points) => 
-            _pointsText.SetText(points);
+            _pointsText.SetText($"Points {points}");
 
         public void CreateStatItems(List<PlayerStatData> stats)
         {
@@ -58,7 +58,7 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
             {
                 PlayerStatItemView statItem = Instantiate(playerStatItemPrefab, _statsContainer);
                 statItem.Construct(_presenter);
-                statItem.Initialize(stat.Name);
+                statItem.Initialize(stat);
                 _statItems[stat.Name] = statItem;
             }
         }
