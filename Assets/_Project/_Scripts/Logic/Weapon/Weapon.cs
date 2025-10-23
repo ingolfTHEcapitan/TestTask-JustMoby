@@ -42,7 +42,7 @@ namespace _Project._Scripts.Logic.Weapon
         private void Shoot()
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
-            _factory.CreateBullet(_shootPoint.position, GetShootDirection());
+            _factory.CreateBullet(_shootPoint, GetShootDirection());
         }
 
         private Vector3 GetShootDirection()

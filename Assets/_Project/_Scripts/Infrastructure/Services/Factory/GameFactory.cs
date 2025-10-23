@@ -70,7 +70,7 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
         public GameObject CreatePopUpLayer(Transform parent) => 
             _assets.Instantiate(AssetPath.PopUpLayer, parent);
 
-        public Bullet CreateBullet(Vector3 at, Vector3 shootDirection)
+        public Bullet CreateBullet(Transform at, Vector3 shootDirection)
         {
             float damage = _playerStatsModel.GetStatValue(StatName.Damage);
             

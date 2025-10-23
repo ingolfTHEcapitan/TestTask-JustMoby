@@ -6,7 +6,7 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
 {
     public interface IGameFactory
     {
-        Bullet CreateBullet(Vector3 at, Vector3 shootDirection);
+        Bullet CreateBullet(Transform at, Vector3 shootDirection);
         GameObject CreateEnemy(EnemySpawnerConfig config, Vector3 at);
         GameObject CreatePlayer(GameObject prefab, Vector3 at, Transform parent);
         GameObject CreateHud(Transform parent);
