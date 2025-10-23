@@ -46,10 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a818618438158c46a99939f4f647d20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bulletPrefab: {fileID: 2016706838199318848, guid: fc5b0a1421768624ea6623df9835e99c,
-    type: 3}
   _shootPoint: {fileID: 5504319550492987190}
-  _fireRate: 8
+  _fireRate: 1
 --- !u!1 &3660840105126695811
 GameObject:
   m_ObjectHideFlags: 0
