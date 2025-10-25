@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Logic.PlayerStats;
 
@@ -19,16 +18,37 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
             _pauseService = pauseService;
         }
 
-        public void Initialize(List<PlayerStatData> stats)
+        public void Initialize()
         {
             _model.OnStatsChanged += OnStatsChanged;
-            _view.CreateStatItems(stats);
+            _view.OnOpenButtonClicked += Open;
+            _view.OnCloseButtonClicked += Close;
+            _view.OnApplyChangesButtonClicked += ApplyChanges;
+            
+            _view.CreateStatItems(_model.GetStats());
+            
+            foreach (PlayerStatItemView statItemView in _view.StatItems.Values) 
+                statItemView.OnUpgradeButtonClicked += UpgradeStatItem;
         }
 
-        public void Dispose() => 
+        public void Dispose()
+        {
             _model.OnStatsChanged -= OnStatsChanged;
+            _view.OnOpenButtonClicked -= Open;
+            _view.OnCloseButtonClicked -= Close;
+            _view.OnApplyChangesButtonClicked -= ApplyChanges;
+            
+            foreach (PlayerStatItemView statItemView in _view.StatItems.Values) 
+                statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;
+        }
 
-        public void Open()
+        private void UpgradeStatItem(StatName statName)
+        {
+            _model.UpgradeStat(statName);
+            UpdateStatItem(statName);
+        }
+
+        private void Open()
         {
             if(_isOpen)
                 return;
@@ -39,7 +59,7 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
             OnStatsChanged();
         }
 
-        public void Close()
+        private void Close()
         {
             _isOpen = false;
             _view.HidePanel();
@@ -47,16 +67,10 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
             _model.DiscardPreviewChanges();
         }
 
-        public void ApplyChanges()
+        private void ApplyChanges()
         {
             _model.ApplyChanges();
             Close();
-        }
-
-        public void UpgradeStat(StatName statName)
-        {
-            _model.UpgradeStat(statName);
-            UpdateStatItem(statName);
         }
 
         private void OnStatsChanged()

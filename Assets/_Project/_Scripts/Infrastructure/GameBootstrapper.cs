@@ -44,8 +44,10 @@ namespace _Project._Scripts.Infrastructure
             GameObject hud = InitHud(factory, Player);
             GameObject popUpLayer = InitPopUpLayer(factory);
             
+            PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hud);
+            _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, pauseService);
+            
             InitWeapon(Player, pauseService, inputService, factory);
-            InitPlayerStatsWindow(popUpLayer, hud, pauseService);
             InitEnemySpawner(configs, pauseService, factory, _enemySpawnPoint);
         }
 
@@ -89,14 +91,21 @@ namespace _Project._Scripts.Infrastructure
             weapon.Construct(pauseService, inputService, factory);
         }
 
-        private void InitPlayerStatsWindow(GameObject popUpLayer, GameObject hud, IGamePauseService pauseService)
+        private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, GameObject hud)
         {
-            PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
             Button openButton = hud.GetComponentInChildren<Button>();
             
-            _playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, _playerStatsModel, pauseService);
-            playerStatsView.Construct(_playerStatsPresenter, openButton);
-            _playerStatsPresenter.Initialize(_playerStatsModel.GetStats());
+            PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
+            playerStatsView.Construct(openButton);
+            playerStatsView.Initialize();
+            return playerStatsView;
+        }
+
+        private PlayerStatsPresenter InitPlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model , IGamePauseService pauseService)
+        {
+            PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(view, model, pauseService);
+            playerStatsPresenter.Initialize();
+            return playerStatsPresenter;
         }
 
         private void InitEnemySpawner(IConfigsProvider configs, IGamePauseService pauseService, 
