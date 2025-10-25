@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using _Project._Scripts.Logic.PlayerStats;
-using _Project._Scripts.UI.Elements;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,9 +18,9 @@ namespace _Project._Scripts.UI.Windows.PlayerStats
         private readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
         
         private PlayerStatsPresenter _presenter;
-        private OpenWindowButton _openButton;
+        private Button _openButton;
         
-        public void Construct(PlayerStatsPresenter presenter, OpenWindowButton openButton)
+        public void Construct(PlayerStatsPresenter presenter, Button openButton)
         {
             _presenter = presenter;
             _openButton = openButton;

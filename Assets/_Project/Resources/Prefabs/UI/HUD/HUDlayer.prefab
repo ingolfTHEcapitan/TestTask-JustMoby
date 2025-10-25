@@ -325,7 +325,7 @@ GameObject:
   - component: {fileID: 3257011229268685948}
   - component: {fileID: 3257011229268685936}
   - component: {fileID: 3257011229268685937}
-  - component: {fileID: 7504037080980601932}
+  - component: {fileID: 6307871234210620041}
   - component: {fileID: 3257011229268685951}
   m_Layer: 0
   m_Name: Open_button
@@ -392,7 +392,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7504037080980601932
+--- !u!114 &6307871234210620041
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -401,11 +401,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3257011229268685949}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c6596e47feb4490a6660a6034448e75, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

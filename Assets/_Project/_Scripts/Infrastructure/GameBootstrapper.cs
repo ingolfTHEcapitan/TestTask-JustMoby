@@ -12,6 +12,7 @@ using _Project._Scripts.Player;
 using _Project._Scripts.UI.Elements;
 using _Project._Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _Project._Scripts.Infrastructure
 {
@@ -91,7 +92,7 @@ namespace _Project._Scripts.Infrastructure
         private void InitPlayerStatsWindow(GameObject popUpLayer, GameObject hud, IGamePauseService pauseService)
         {
             PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
-            OpenWindowButton openButton = hud.GetComponentInChildren<OpenWindowButton>();
+            Button openButton = hud.GetComponentInChildren<Button>();
             
             _playerStatsPresenter = new PlayerStatsPresenter(playerStatsView, _playerStatsModel, pauseService);
             playerStatsView.Construct(_playerStatsPresenter, openButton);
