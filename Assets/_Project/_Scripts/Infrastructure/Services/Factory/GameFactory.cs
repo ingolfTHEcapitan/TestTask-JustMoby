@@ -3,6 +3,7 @@ using _Project._Scripts.Enemy;
 using _Project._Scripts.Infrastructure.Services.AssetManagement;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
+using _Project._Scripts.Logic;
 using _Project._Scripts.Logic.PlayerStats;
 using _Project._Scripts.Logic.Weapon;
 using _Project._Scripts.Player;
@@ -16,16 +17,20 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
         private readonly IGamePauseService _pauseService;
         private readonly IAssetProvider _assets;
         private readonly IInputService _inputService;
+        private readonly HealthCalculator _healthCalculator;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly Transform _dynamicObjectsParent;
         private readonly Transform _enemySpawnPoint;
+        
 
-        public GameFactory(IAssetProvider assets, IGamePauseService pauseService, IInputService inputService,
-            PlayerStatsModel playerStatsModel, Transform dynamicObjectsParent, Transform enemySpawnPoint)
+        public GameFactory(IAssetProvider assets, IGamePauseService pauseService, IInputService inputService, 
+            HealthCalculator healthCalculator, PlayerStatsModel playerStatsModel, 
+            Transform dynamicObjectsParent, Transform enemySpawnPoint)
         {
             _assets = assets;
             _pauseService = pauseService;
             _inputService = inputService;
+            _healthCalculator = healthCalculator;
             _playerStatsModel = playerStatsModel;
             _dynamicObjectsParent = dynamicObjectsParent;
             _enemySpawnPoint = enemySpawnPoint;
@@ -41,9 +46,9 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
             enemyMovement.Construct(_pauseService);
             enemyMovement.Initialize(_enemySpawnPoint);
                 
-            EnemyHealth health = enemy.GetComponent<EnemyHealth>();
-            health.Construct(_playerStatsModel);
-            health.Initialize();
+            float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
+            Health health = enemy.GetComponent<Health>();
+            health.Initialize(maxHealth);
             
             HealthBarView healthBar = enemy.GetComponentInChildren<HealthBarView>();
             healthBar.Construct(health);
@@ -55,9 +60,9 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
         {
             GameObject player = Object.Instantiate(prefab, at, Quaternion.identity, parent.transform);
             
-            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-            playerHealth.Construct(_playerStatsModel);  
-            playerHealth.Initialize();
+            float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
+            Health health = player.GetComponent<Health>();
+            health.Initialize(maxHealth);
             
             player.GetComponent<PlayerCameraLook>().Construct(_pauseService, _inputService);
             player.GetComponent<PlayerMovement>().Construct(_playerStatsModel, _pauseService, _inputService);

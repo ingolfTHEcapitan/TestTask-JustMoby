@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 4082514023670906441}
   - component: {fileID: 6797133231648955068}
   - component: {fileID: 7492125484674939793}
-  - component: {fileID: 847168013526919733}
+  - component: {fileID: 3373863833424226122}
   - component: {fileID: 1388457686687828344}
   m_Layer: 0
   m_Name: Enemy
@@ -263,7 +263,7 @@ MonoBehaviour:
   _agent: {fileID: 3117825465392412960}
   _minMoveDistance: 7
   _maxMoveDistance: 15
---- !u!114 &847168013526919733
+--- !u!114 &3373863833424226122
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -272,10 +272,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4217187639714539394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62e111f8ae0d98e4ebccd59dc9065a9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e050b2eb5dc432ca3ab0f515127b6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animator: {fileID: 1784392016738993417}
 --- !u!114 &1388457686687828344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ddef16759a34fa1ad9f7271c0c5665a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: {fileID: 847168013526919733}
+  _health: {fileID: 3373863833424226122}
   _animator: {fileID: 1784392016738993417}
   _agent: {fileID: 3117825465392412960}
   _destroyDelay: 1.5

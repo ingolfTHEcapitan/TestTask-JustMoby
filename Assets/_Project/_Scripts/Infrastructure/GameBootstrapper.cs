@@ -8,7 +8,6 @@ using _Project._Scripts.Logic;
 using _Project._Scripts.Logic.PlayerStats;
 using _Project._Scripts.Logic.Spawners;
 using _Project._Scripts.Logic.Weapon;
-using _Project._Scripts.Player;
 using _Project._Scripts.UI.Elements;
 using _Project._Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
@@ -25,6 +24,8 @@ namespace _Project._Scripts.Infrastructure
         
         private PlayerStatsModel _playerStatsModel;
         private PlayerStatsPresenter _playerStatsPresenter;
+        private HealthCalculator _healthCalculator;
+        private Health _playerHealth;
 
         private void Awake()
         {
@@ -37,7 +38,8 @@ namespace _Project._Scripts.Infrastructure
             IConfigsProvider configs = InitConfigsProvider();
 
             _playerStatsModel = InitPlayerStatsModel(saveLoadService, configs);
-            IGameFactory factory = new GameFactory(assets, pauseService, inputService, 
+            _healthCalculator = new HealthCalculator(_playerStatsModel);
+            IGameFactory factory = new GameFactory(assets, pauseService, inputService, _healthCalculator, 
                 _playerStatsModel, _dynamicObjectsParent, _enemySpawnPoint);
 
             GameObject Player = InitPlayer(factory, configs);
@@ -55,6 +57,7 @@ namespace _Project._Scripts.Infrastructure
         {
             _playerStatsModel.Dispose();
             _playerStatsPresenter.Dispose();
+            _playerStatsModel.OnStatsChanged -= UpdatePlayerMaxHealth;
         }
 
         private PlayerStatsModel InitPlayerStatsModel(ISaveLoadService saveLoadService, IConfigsProvider configsProvider)
@@ -68,7 +71,18 @@ namespace _Project._Scripts.Infrastructure
         private GameObject InitPlayer(IGameFactory factory, IConfigsProvider configs)
         {
             PlayerSpawner playerSpawner = new PlayerSpawner(factory, configs);
-            return playerSpawner.Spawn(_gameParent);
+            GameObject player = playerSpawner.Spawn(_gameParent);
+            
+            _playerHealth = player.GetComponent<Health>();
+            _playerStatsModel.OnStatsChanged += UpdatePlayerMaxHealth;
+            return player;
+        }
+
+        private void UpdatePlayerMaxHealth()
+        {
+            float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
+            _playerHealth.Initialize(maxHealth);
+            _playerHealth.InvokeOnHealthChanged();
         }
 
         private GameObject InitHud(IGameFactory factory, GameObject Player)
@@ -76,7 +90,7 @@ namespace _Project._Scripts.Infrastructure
             GameObject hud = factory.CreateHud(_UIParent);
             
             HealthBarView playerHealthBarView = hud.GetComponentInChildren<HealthBarView>();
-            playerHealthBarView.Construct(Player.GetComponent<PlayerHealth>());
+            playerHealthBarView.Construct(Player.GetComponent<Health>());
             playerHealthBarView.Initialize();
             return hud;
         }

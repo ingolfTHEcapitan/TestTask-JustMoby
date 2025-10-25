@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using _Project._Scripts.Logic;
 using _Project._Scripts.Logic.PlayerStats;
 using UnityEngine;
 using UnityEngine.AI;
@@ -9,10 +10,10 @@ namespace _Project._Scripts.Enemy
     public class EnemyDeath: MonoBehaviour
     {
         private readonly int DieHash = Animator.StringToHash("Die");
-        
+        private readonly int HitHash = Animator.StringToHash("Hit");
         public event Action<EnemyDeath> OnDied;
         
-        [SerializeField] private EnemyHealth _health;
+        [SerializeField] private Health _health;
         [SerializeField] private Animator _animator;
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private float _destroyDelay = 1.5f;
@@ -32,6 +33,8 @@ namespace _Project._Scripts.Enemy
         {
             if (_health.CurrentHealth <= 0)
                 Die();
+            
+            _animator.SetTrigger(HitHash);
         }
 
         private void Die()
