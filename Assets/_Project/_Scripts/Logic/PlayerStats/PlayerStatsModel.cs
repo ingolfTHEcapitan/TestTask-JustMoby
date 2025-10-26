@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Data;
-using _Project._Scripts.Infrastructure.Services.ConfigsManagement;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
-using UnityEngine;
 
 namespace _Project._Scripts.Logic.PlayerStats
 {
@@ -13,20 +11,18 @@ namespace _Project._Scripts.Logic.PlayerStats
         public event Action OnStatsChanged;
         
         private ISaveLoadService _saveLoadService;
-        private IConfigsProvider _configs;
 
         public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }
         
-        public void Construct(ISaveLoadService saveLoadService, IConfigsProvider configs)
+        public void Construct(ISaveLoadService saveLoadService)
         {
             _saveLoadService = saveLoadService;
-            _configs = configs;
         }
 
-        public void Initialize()
+        public void Initialize(List<PlayerStatConfig> configs)
         {
-            foreach (PlayerStatConfig config in _configs.PlayerStats)
+            foreach (PlayerStatConfig config in configs)
             {
                 PlayerStatData statData = new PlayerStatData(config);
                 statData.OnStatChanged += InvokeStatChanged;

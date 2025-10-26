@@ -1,3 +1,4 @@
+using _Project._Scripts.Configs.Weapon;
 using _Project._Scripts.Infrastructure.Services.Factory;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
@@ -10,14 +11,15 @@ namespace _Project._Scripts.Logic.Weapon
         private const float MaxRayDistance = 100f;
         
         [SerializeField] private Transform _shootPoint;
-        [SerializeField, Space] private float _fireRate;
         
+        private float _fireRate;
         private float _nextTimeToFire;
-        private Camera _camera;
+        private Camera _playerCamera;
         private Transform _bulletParent;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
         private IGameFactory _factory;
+        private WeaponConfig _config;
 
         public void Construct(IGamePauseService pauseService,
             IInputService inputService, IGameFactory factory)
@@ -26,9 +28,13 @@ namespace _Project._Scripts.Logic.Weapon
             _inputService = inputService;
             _factory = factory;
         }
-
-        private void Start() => 
-            _camera = Camera.main;
+        
+        public void Initialize(WeaponConfig config, Camera playerCamera)
+        {
+            _config = config;
+            _playerCamera = playerCamera;
+            _fireRate = config.FireRate;
+        }
 
         private void Update()
         {
@@ -42,12 +48,12 @@ namespace _Project._Scripts.Logic.Weapon
         private void Shoot()
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
-            _factory.CreateBullet(_shootPoint, GetShootDirection());
+            _factory.CreateBullet(_config.BulletConfig, _shootPoint, GetShootDirection());
         }
 
         private Vector3 GetShootDirection()
         {
-            Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            Ray ray = _playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
             Vector3 shootDirection = (GetTargetPoint(ray) - _shootPoint.position).normalized;
             return shootDirection;
         }

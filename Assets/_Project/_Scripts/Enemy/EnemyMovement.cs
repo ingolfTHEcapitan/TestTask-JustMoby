@@ -13,14 +13,14 @@ namespace _Project._Scripts.Enemy
         [SerializeField] private float _minMoveDistance = 7f;
         [SerializeField] private float _maxMoveDistance = 15f;
         
-        private Transform _spawnPoint;
+        private Vector3 _spawnPoint;
         private IGamePauseService _pauseService;
         private bool IsSpawnAnimationEnded;
 
         public void Construct(IGamePauseService pauseService) => 
             _pauseService = pauseService;
 
-        public void Initialize(Transform spawnPoint) => 
+        public void Initialize(Vector3 spawnPoint) => 
             _spawnPoint = spawnPoint;
 
         private void Update()
@@ -39,7 +39,7 @@ namespace _Project._Scripts.Enemy
         {
             if (_agent.remainingDistance <= _agent.stoppingDistance)
             {
-                Vector3 targetPosition = GetRandomPosition(_spawnPoint.position);
+                Vector3 targetPosition = GetRandomPosition(_spawnPoint);
                 _agent.SetDestination(targetPosition);
             }
         }

@@ -1,6 +1,6 @@
 using _Project._Scripts.Configs;
+using _Project._Scripts.Configs.Weapon;
 using _Project._Scripts.Enemy;
-using _Project._Scripts.Infrastructure.Services.AssetManagement;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.Logic;
@@ -15,36 +15,36 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
     public class GameFactory : IGameFactory
     {
         private readonly IGamePauseService _pauseService;
-        private readonly IAssetProvider _assets;
         private readonly IInputService _inputService;
         private readonly HealthCalculator _healthCalculator;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly Transform _dynamicObjectsParent;
-        private readonly Transform _enemySpawnPoint;
+        private readonly GameObject _hudPrefab;
+        private readonly GameObject _popUpLayerPrefab;
         
-
-        public GameFactory(IAssetProvider assets, IGamePauseService pauseService, IInputService inputService, 
+        public GameFactory(IGamePauseService pauseService, IInputService inputService, 
             HealthCalculator healthCalculator, PlayerStatsModel playerStatsModel, 
-            Transform dynamicObjectsParent, Transform enemySpawnPoint)
+            Transform dynamicObjectsParent, GameObject hudPrefab, GameObject popUpLayerPrefab)
         {
-            _assets = assets;
+            _hudPrefab = hudPrefab;
+            _popUpLayerPrefab = popUpLayerPrefab;
             _pauseService = pauseService;
             _inputService = inputService;
             _healthCalculator = healthCalculator;
             _playerStatsModel = playerStatsModel;
             _dynamicObjectsParent = dynamicObjectsParent;
-            _enemySpawnPoint = enemySpawnPoint;
         }
+        
 
-        public GameObject CreateEnemy(EnemySpawnerConfig config, Vector3 at)
+        public GameObject CreateEnemy(EnemySpawnerConfig config, Vector3 spawnPoint)
         {
-            GameObject enemy = Object.Instantiate(config.Prefab, at, Quaternion.identity, _dynamicObjectsParent);
+            GameObject enemy = Object.Instantiate(config.Prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
 
             enemy.GetComponent<EnemyDeath>().Construct(_playerStatsModel);
             
             EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
             enemyMovement.Construct(_pauseService);
-            enemyMovement.Initialize(_enemySpawnPoint);
+            enemyMovement.Initialize(spawnPoint);
                 
             float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
             Health health = enemy.GetComponent<Health>();
@@ -68,19 +68,19 @@ namespace _Project._Scripts.Infrastructure.Services.Factory
             player.GetComponent<PlayerMovement>().Construct(_playerStatsModel, _pauseService, _inputService);
             return player;
         }
-
+        
         public GameObject CreateHud(Transform parent) => 
-            _assets.Instantiate(AssetPath.Hud, parent);
+            Object.Instantiate(_hudPrefab, parent);
         
         public GameObject CreatePopUpLayer(Transform parent) => 
-            _assets.Instantiate(AssetPath.PopUpLayer, parent);
+            Object.Instantiate(_popUpLayerPrefab, parent);
 
-        public Bullet CreateBullet(Transform at, Vector3 shootDirection)
+        public Bullet CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection)
         {
             float damage = _playerStatsModel.GetStatValue(StatName.Damage);
             
-            Bullet bullet = _assets.Instantiate(AssetPath.Bullet, at).GetComponent<Bullet>();
-            bullet.Initialize(shootDirection, damage, _dynamicObjectsParent);
+            Bullet bullet = Object.Instantiate(config.Prefab, at).GetComponent<Bullet>();
+            bullet.Initialize(config, shootDirection, damage, _dynamicObjectsParent);
             return bullet;
         }
     }

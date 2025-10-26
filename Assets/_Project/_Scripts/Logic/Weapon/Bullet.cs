@@ -1,19 +1,21 @@
+using _Project._Scripts.Configs.Weapon;
 using UnityEngine;
 
 namespace _Project._Scripts.Logic.Weapon
 {
     public class Bullet: MonoBehaviour
     {
-        [SerializeField] private float _speed = 8f;
-        [SerializeField] private float _lifeTime = 5f;
-        
         private Vector3 _direction;
         private float _damage;
-        
-        public void Initialize(Vector3 direction, float damage, Transform parent)
+        private float _speed;
+        private float _lifeTime;
+
+        public void Initialize(BulletConfig config, Vector3 direction, float damage, Transform parent)
         {
             _direction = direction;
             _damage = damage;
+            _speed = config.Speed;
+            _lifeTime = config.LifeTime;
             transform.SetParent(parent);
             
             DestroyBullet(_lifeTime);

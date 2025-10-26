@@ -6772,6 +6772,19 @@ MonoBehaviour:
   _UIParent: {fileID: 2046716228}
   _gameParent: {fileID: 1485497335}
   _enemySpawnPoint: {fileID: 1760856298}
+  _playerStatConfigs:
+  - {fileID: 11400000, guid: 7b67e48dccb96854892bfaa0d7b9e1d0, type: 2}
+  - {fileID: 11400000, guid: 56b76fe7ab86a9d419e987247a9386d4, type: 2}
+  - {fileID: 11400000, guid: 228f39a19fba867499ab3ec50c6ad556, type: 2}
+  _playerSpawnerConfig: {fileID: 11400000, guid: 16a72136f6ff50b4c9f9695edcaa3db0,
+    type: 2}
+  _enemySpawnerConfig: {fileID: 11400000, guid: 933f3bec94b4e0d4386f91891b231689,
+    type: 2}
+  _weaponConfig: {fileID: 11400000, guid: 7947ff2b6613a9d4e989df917bc5edef, type: 2}
+  _hudPrefab: {fileID: 1141723362487091947, guid: ecbf2fb2ff8b13745b205ce0fa330f95,
+    type: 3}
+  _popUpLayerPrefab: {fileID: 5689436522609719468, guid: 077389f1b4018714ba97c6db32662b95,
+    type: 3}
 --- !u!4 &2125096223
 Transform:
   m_ObjectHideFlags: 0

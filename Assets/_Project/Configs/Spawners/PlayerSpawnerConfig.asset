@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 257879639715284881, guid: 190b92b937a550d46b8fa508667be085,
     type: 3}
-  <SpawnPosition>k__BackingField: {x: 0, y: 1, z: 0}
+  <SpawnPosition>k__BackingField: {x: 1, y: 1, z: 4}
