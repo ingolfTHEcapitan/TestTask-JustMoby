@@ -1,12 +1,14 @@
 using _Project._Scripts.Logic.PlayerStats;
+using JetBrains.Annotations;
 
-namespace _Project._Scripts.Logic
+namespace _Project._Scripts.Infrastructure.Services.HealthCalculator
 {
-    public class HealthCalculator
+    [UsedImplicitly]
+    public class HealthCalculatorService : IHealthCalculatorService
     {
         private readonly PlayerStatsModel _playerStatsModel;
 
-        public HealthCalculator(PlayerStatsModel playerStatsModel) => 
+        public HealthCalculatorService(PlayerStatsModel playerStatsModel) => 
             _playerStatsModel = playerStatsModel;
 
         public float CalculateEnemyMaxHealth()

@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using _Project._Scripts.Configs;
-using _Project._Scripts.Configs.Weapon;
 using _Project._Scripts.Infrastructure.Services.Factory;
 using _Project._Scripts.Infrastructure.Services.GamePause;
-using _Project._Scripts.Infrastructure.Services.PlayerInput;
+using _Project._Scripts.Infrastructure.Services.HealthCalculator;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
 using _Project._Scripts.Logic;
 using _Project._Scripts.Logic.PlayerStats;
@@ -13,52 +10,55 @@ using _Project._Scripts.UI.Elements;
 using _Project._Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace _Project._Scripts.Infrastructure
 {
     public class GameBootstrapper: MonoBehaviour
     {
-        [Header("Transforms")]
-        [SerializeField] private Transform _dynamicObjectsParent;
-        [SerializeField] private Transform _UIParent;
-        [SerializeField] private Transform _gameParent;
         [SerializeField] private Transform _enemySpawnPoint;
-        [Header("Configs")]
-        [SerializeField] private List<PlayerStatConfig> _playerStatConfigs;
-        [SerializeField] private PlayerSpawnerConfig _playerSpawnerConfig;
-        [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
-        [SerializeField] private WeaponConfig _weaponConfig;
         [Header("Prefabs")]
         [SerializeField] private GameObject _hudPrefab;
         [SerializeField] private GameObject _popUpLayerPrefab;
-        
+
+        private IGamePauseService _pauseService;
+        private IGameFactory _factory;
+        private IHealthCalculatorService _healthCalculator;
         private PlayerStatsModel _playerStatsModel;
         private PlayerStatsPresenter _playerStatsPresenter;
-        private HealthCalculator _healthCalculator;
+        private PlayerSpawner _playerSpawner;
+        private EnemySpawner _enemySpawner;
         private Health _playerHealth;
-
+        
+        [Inject]
+        public void Construct(IGamePauseService pauseService, ISaveLoadService saveLoadService, 
+            IGameFactory factory, IHealthCalculatorService healthCalculator, PlayerStatsModel playerStatsModel, 
+            PlayerSpawner playerSpawner, EnemySpawner enemySpawner)
+        {
+            _pauseService = pauseService;
+            _factory = factory;
+            _healthCalculator = healthCalculator;
+            _playerStatsModel = playerStatsModel;
+            _playerSpawner = playerSpawner;
+            _enemySpawner = enemySpawner;
+        }
+        
         private void Awake()
         {
             CursorController.SetCursorVisible(visible: false);
-
-            IInputService inputService = new DesktopInputService();
-            IGamePauseService pauseService = new GamePauseService();
-            ISaveLoadService saveLoadService = new SaveLoadService();
-
-            _playerStatsModel = InitPlayerStatsModel(saveLoadService, _playerStatConfigs);
-            _healthCalculator = new HealthCalculator(_playerStatsModel);
-            IGameFactory factory = new GameFactory(pauseService, inputService, _healthCalculator, _playerStatsModel,
-                _dynamicObjectsParent, _hudPrefab, _popUpLayerPrefab);
-
-            GameObject Player = InitPlayer(factory, _playerSpawnerConfig);
-            GameObject hud = InitHud(factory, Player);
-            GameObject popUpLayer = InitPopUpLayer(factory);
             
+            GameObject hud = _factory.CreateHud(_hudPrefab);
+            GameObject popUpLayer = _factory.CreatePopUpLayer(_popUpLayerPrefab);
+            
+            _playerStatsModel.Initialize();
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hud);
-            _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, pauseService);
+            _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService);
             
-            InitWeapon(Player, pauseService, inputService, factory);
-            InitEnemySpawner(_enemySpawnerConfig, pauseService, factory, _enemySpawnPoint);
+            GameObject Player = InitPlayer(_playerSpawner);
+            InitPlayerHealthBarView(hud);
+            InitWeapon(Player);
+            
+            InitEnemySpawner(_enemySpawner, _enemySpawnPoint);
         }
 
         private void OnDestroy()
@@ -67,19 +67,10 @@ namespace _Project._Scripts.Infrastructure
             _playerStatsPresenter.Dispose();
             _playerStatsModel.OnStatsChanged -= UpdatePlayerMaxHealth;
         }
-
-        private PlayerStatsModel InitPlayerStatsModel(ISaveLoadService saveLoadService, List<PlayerStatConfig> configs)
+        
+        private GameObject InitPlayer(PlayerSpawner playerSpawner)
         {
-            PlayerStatsModel playerStatsModel = new PlayerStatsModel();
-            playerStatsModel.Construct(saveLoadService);
-            playerStatsModel.Initialize(configs);
-            return playerStatsModel;
-        }
-
-        private GameObject InitPlayer(IGameFactory factory, PlayerSpawnerConfig config)
-        {
-            PlayerSpawner playerSpawner = new PlayerSpawner(factory, config);
-            GameObject player = playerSpawner.Spawn(_gameParent);
+            GameObject player = playerSpawner.Spawn();
             
             _playerHealth = player.GetComponent<Health>();
             _playerStatsModel.OnStatsChanged += UpdatePlayerMaxHealth;
@@ -93,27 +84,22 @@ namespace _Project._Scripts.Infrastructure
             _playerHealth.InvokeOnHealthChanged();
         }
 
-        private GameObject InitHud(IGameFactory factory, GameObject Player)
+        private void InitPlayerHealthBarView(GameObject hud)
         {
-            GameObject hud = factory.CreateHud(_UIParent);
-            
             HealthBarView playerHealthBarView = hud.GetComponentInChildren<HealthBarView>();
-            playerHealthBarView.Construct(Player.GetComponent<Health>());
+            playerHealthBarView.Construct(_playerHealth);
             playerHealthBarView.Initialize();
-            return hud;
         }
-
-        private GameObject InitPopUpLayer(IGameFactory factory) => 
-            factory.CreatePopUpLayer(_UIParent);
-
-        private void InitWeapon(GameObject Player, IGamePauseService pauseService, 
-            IInputService inputService, IGameFactory factory)
+        
+        private void InitWeapon(GameObject Player)
         {
             Weapon weapon = Player.GetComponentInChildren<Weapon>();
             Camera playerCamera = Player.GetComponentInChildren<Camera>();
-            weapon.Construct(pauseService, inputService, factory);
-            weapon.Initialize(_weaponConfig, playerCamera);
+            weapon.Initialize(playerCamera);
         }
+
+        private void InitEnemySpawner(EnemySpawner enemySpawner, Transform target) => 
+            StartCoroutine(enemySpawner.SpawnAround(target));
 
         private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, GameObject hud)
         {
@@ -130,13 +116,6 @@ namespace _Project._Scripts.Infrastructure
             PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(view, model, pauseService);
             playerStatsPresenter.Initialize();
             return playerStatsPresenter;
-        }
-
-        private void InitEnemySpawner(EnemySpawnerConfig config, IGamePauseService pauseService, 
-            IGameFactory factory, Transform target)
-        {
-            EnemySpawner enemySpawner = new EnemySpawner(config, pauseService, factory);
-            StartCoroutine(enemySpawner.SpawnAround(target));
         }
     }
 }

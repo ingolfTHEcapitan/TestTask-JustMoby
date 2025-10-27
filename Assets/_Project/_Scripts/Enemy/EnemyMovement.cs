@@ -2,6 +2,7 @@ using _Project._Scripts.Infrastructure.Services.GamePause;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
+using Zenject;
 
 namespace _Project._Scripts.Enemy
 {
@@ -17,6 +18,7 @@ namespace _Project._Scripts.Enemy
         private IGamePauseService _pauseService;
         private bool IsSpawnAnimationEnded;
 
+        [Inject]
         public void Construct(IGamePauseService pauseService) => 
             _pauseService = pauseService;
 

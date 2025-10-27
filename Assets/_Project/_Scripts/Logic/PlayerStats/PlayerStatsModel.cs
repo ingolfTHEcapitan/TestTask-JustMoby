@@ -3,26 +3,30 @@ using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Data;
 using _Project._Scripts.Infrastructure.Services.SaveLoad;
+using JetBrains.Annotations;
 
 namespace _Project._Scripts.Logic.PlayerStats
 {
+    [UsedImplicitly]
     public class PlayerStatsModel: IDisposable
     {
         public event Action OnStatsChanged;
         
-        private ISaveLoadService _saveLoadService;
+        private readonly ISaveLoadService _saveLoadService;
+        private List<PlayerStatConfig> _configs;
 
         public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }
-        
-        public void Construct(ISaveLoadService saveLoadService)
+
+        public PlayerStatsModel(ISaveLoadService saveLoadService, List<PlayerStatConfig> configs)
         {
             _saveLoadService = saveLoadService;
+            _configs = configs;
         }
 
-        public void Initialize(List<PlayerStatConfig> configs)
+        public void Initialize()
         {
-            foreach (PlayerStatConfig config in configs)
+            foreach (PlayerStatConfig config in _configs)
             {
                 PlayerStatData statData = new PlayerStatData(config);
                 statData.OnStatChanged += InvokeStatChanged;

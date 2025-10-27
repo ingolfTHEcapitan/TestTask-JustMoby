@@ -3,6 +3,7 @@ using _Project._Scripts.Infrastructure.Services.Factory;
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using UnityEngine;
+using Zenject;
 
 namespace _Project._Scripts.Logic.Weapon
 {
@@ -15,25 +16,25 @@ namespace _Project._Scripts.Logic.Weapon
         private float _fireRate;
         private float _nextTimeToFire;
         private Camera _playerCamera;
-        private Transform _bulletParent;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
         private IGameFactory _factory;
         private WeaponConfig _config;
-
+        
+        [Inject]
         public void Construct(IGamePauseService pauseService,
-            IInputService inputService, IGameFactory factory)
+            IInputService inputService, IGameFactory factory, WeaponConfig config)
         {
             _pauseService = pauseService;
             _inputService = inputService;
             _factory = factory;
+            _config = config;
         }
         
-        public void Initialize(WeaponConfig config, Camera playerCamera)
+        public void Initialize(Camera playerCamera)
         {
-            _config = config;
             _playerCamera = playerCamera;
-            _fireRate = config.FireRate;
+            _fireRate = _config.FireRate;
         }
 
         private void Update()

@@ -4,6 +4,7 @@ using _Project._Scripts.Logic;
 using _Project._Scripts.Logic.PlayerStats;
 using UnityEngine;
 using UnityEngine.AI;
+using Zenject;
 
 namespace _Project._Scripts.Enemy
 {
@@ -20,6 +21,7 @@ namespace _Project._Scripts.Enemy
         
         private PlayerStatsModel _playerStatsModel;
         
+        [Inject]
         public void Construct(PlayerStatsModel playerStatsModel) => 
             _playerStatsModel = playerStatsModel;
 

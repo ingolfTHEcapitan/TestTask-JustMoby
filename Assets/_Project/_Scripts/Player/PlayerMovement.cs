@@ -2,6 +2,7 @@ using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using _Project._Scripts.Logic.PlayerStats;
 using UnityEngine;
+using Zenject;
 
 namespace _Project._Scripts.Player
 {
@@ -17,6 +18,7 @@ namespace _Project._Scripts.Player
 
         private float Speed => _playerStatsModel.GetStatValue(StatName.Speed);
         
+        [Inject]
         public void Construct(PlayerStatsModel playerStats, IGamePauseService pauseService, IInputService inputService)
         {
             _playerStatsModel = playerStats;

@@ -1,6 +1,7 @@
 using _Project._Scripts.Infrastructure.Services.GamePause;
 using _Project._Scripts.Infrastructure.Services.PlayerInput;
 using UnityEngine;
+using Zenject;
 
 namespace _Project._Scripts.Player
 {
@@ -18,6 +19,7 @@ namespace _Project._Scripts.Player
         private IGamePauseService _pauseService;
         private IInputService _inputService;
 
+        [Inject]
         public void Construct(IGamePauseService pauseService, IInputService inputService)
         {
             _pauseService = pauseService;
