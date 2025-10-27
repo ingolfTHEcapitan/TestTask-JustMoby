@@ -1,13 +1,17 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using _Project._Scripts.Configs;
 using _Project._Scripts.Enemy;
 using _Project._Scripts.Infrastructure.Services.Factory;
 using _Project._Scripts.Infrastructure.Services.GamePause;
+using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _Project._Scripts.Logic.Spawners
 {
+    [UsedImplicitly]
     public class EnemySpawner
     {
         private readonly IGamePauseService _pauseService;
@@ -22,19 +26,19 @@ namespace _Project._Scripts.Logic.Spawners
             _config = config;
         }
         
-        public IEnumerator SpawnAround(Transform target)
+        public async UniTaskVoid SpawnAround(Transform target)
         {
             while (true)
             {
-                yield return new WaitWhile(() => _pauseService.IsPaused);
+                await UniTask.WaitWhile(() => _pauseService.IsPaused);
                 
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime)
                 {
                     InitEnemy(target);
-                    yield return new WaitForSeconds(_config.SpawnDelay);
+                    await UniTask.Delay(TimeSpan.FromSeconds(_config.SpawnDelay));
                 }
                 
-                yield return new WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime);
+                await UniTask.WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime);
             }
         }
 

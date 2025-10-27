@@ -8,6 +8,7 @@ using _Project._Scripts.Logic.Spawners;
 using _Project._Scripts.Logic.Weapon;
 using _Project._Scripts.UI.Elements;
 using _Project._Scripts.UI.Windows.PlayerStats;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -99,7 +100,7 @@ namespace _Project._Scripts.Infrastructure
         }
 
         private void InitEnemySpawner(EnemySpawner enemySpawner, Transform target) => 
-            StartCoroutine(enemySpawner.SpawnAround(target));
+            enemySpawner.SpawnAround(target).Forget();
 
         private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, GameObject hud)
         {
