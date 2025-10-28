@@ -9,8 +9,8 @@ namespace _Project.Scripts.Player
     {
         [SerializeField] private Camera _camera;
         [SerializeField] private CharacterController _characterController;
-        
-        [SerializeField, Space] private float _sensitivity;
+        [Header("Settings")]
+        [SerializeField] private float _sensitivity;
         [SerializeField] private float _verticalRotationLimit;
 
         private Transform _cameraTransform;

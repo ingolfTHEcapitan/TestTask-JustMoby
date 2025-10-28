@@ -17,7 +17,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factory
         private readonly IHealthCalculatorService _healthCalculator;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly Transform _dynamicObjectsParent;
-        private readonly Transform _UIParent;
+        private readonly Transform _uiParent;
         private readonly Transform _gameParent;
 
         public GameFactory(DiContainer container, IHealthCalculatorService healthCalculator, PlayerStatsModel playerStatsModel,
@@ -27,7 +27,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factory
             _playerStatsModel = playerStatsModel;
             _healthCalculator = healthCalculator;
             _dynamicObjectsParent = dynamicObjectsParent;
-            _UIParent = uiParent;
+            _uiParent = uiParent;
             _gameParent = gameParent;
         }
         
@@ -60,10 +60,10 @@ namespace _Project.Scripts.Infrastructure.Services.Factory
         }
         
         public GameObject CreateHud(GameObject prefab) => 
-            _container.InstantiatePrefab(prefab, _UIParent);
+            _container.InstantiatePrefab(prefab, _uiParent);
         
         public GameObject CreatePopUpLayer(GameObject prefab) => 
-            _container.InstantiatePrefab(prefab, _UIParent);
+            _container.InstantiatePrefab(prefab, _uiParent);
 
         public Bullet CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection)
         {

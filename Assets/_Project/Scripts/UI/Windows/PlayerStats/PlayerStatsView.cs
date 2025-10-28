@@ -13,8 +13,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public event Action OnCloseButtonClicked;
         public event Action OnApplyChangesButtonClicked;
         
-        public readonly Dictionary<StatName, PlayerStatItemView> StatItems = new Dictionary<StatName, PlayerStatItemView>();
-        
         [SerializeField] private GameObject _statsPanel;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
@@ -22,6 +20,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [SerializeField] private TextMeshProUGUI _pointsText;
         [SerializeField] private PlayerStatItemView playerStatItemPrefab;
         
+        public readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
         private Button _openButton;
         
         public void Construct(Button openButton) => 
@@ -58,13 +57,13 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             {
                 PlayerStatItemView statItem = Instantiate(playerStatItemPrefab, _statsContainer);
                 statItem.Initialize(stat);
-                StatItems[stat.Name] = statItem;
+                _statItems[stat.Name] = statItem;
             }
         }
 
         public void UpdateStatItem(StatName statName, int level, bool canUpgrade)
         {
-            if (StatItems.TryGetValue(statName, out PlayerStatItemView statItem))
+            if (_statItems.TryGetValue(statName, out PlayerStatItemView statItem))
             {
                 statItem.UpdateLevelText(level);
                 statItem.ToggleUpgradeButton(canUpgrade);
@@ -79,10 +78,10 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void ClearStatItems()
         {
-            foreach (PlayerStatItemView item in StatItems.Values) 
+            foreach (PlayerStatItemView item in _statItems.Values) 
                 Destroy(item.gameObject);
             
-            StatItems.Clear();
+            _statItems.Clear();
         }
 
         private void InvokeOnOpenButtonClicked() => 

@@ -11,7 +11,7 @@ namespace _Project.Scripts.Logic.PlayerStats
         public event Action OnStatsChanged;
         
         private readonly ISaveLoadService _saveLoadService;
-        private List<PlayerStatConfig> _configs;
+        private readonly List<PlayerStatConfig> _configs;
 
         public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }

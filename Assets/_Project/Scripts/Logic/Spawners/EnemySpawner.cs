@@ -5,7 +5,6 @@ using _Project.Scripts.Enemy;
 using _Project.Scripts.Infrastructure.Services.Factory;
 using _Project.Scripts.Infrastructure.Services.GamePause;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -53,8 +52,8 @@ namespace _Project.Scripts.Logic.Spawners
         {
             Vector2 spawnDirection = Random.insideUnitCircle * _config.SpawnDistance;
             Vector3 offset = new Vector3(spawnDirection.x, 0, spawnDirection.y);
-            Vector3 SpawnPosition = target.position + offset;
-            return SpawnPosition;
+            Vector3 spawnPosition = target.position + offset;
+            return spawnPosition;
         }
 
         private void OnEnemyDeath(EnemyDeath enemyDeath)

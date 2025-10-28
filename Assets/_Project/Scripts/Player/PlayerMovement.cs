@@ -9,7 +9,8 @@ namespace _Project.Scripts.Player
     public class PlayerMovement: MonoBehaviour
     {
         [SerializeField] private CharacterController _characterController;
-        [SerializeField, Space] private float _gravity = 21f;
+        [Header("Settings")]
+        [SerializeField] private float _gravity = 21f;
 
         private Vector3 _movementDirection;
         private PlayerStatsModel _playerStatsModel;

@@ -18,7 +18,7 @@ namespace _Project.Scripts.Infrastructure
     {
         [Header("Transforms")]
         [SerializeField] private Transform _dynamicObjectsParent;
-        [SerializeField] private Transform _UIParent;
+        [SerializeField] private Transform _uiParent;
         [SerializeField] private Transform _gameParent;
         [Header("Configs")]
         [SerializeField] private List<PlayerStatConfig> _playerStatConfigs;
@@ -43,7 +43,7 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInterfacesAndSelfTo<SaveLoadService>().AsSingle();
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameFactory>().AsSingle()
-                .WithArguments(_dynamicObjectsParent, _UIParent, _gameParent);
+                .WithArguments(_dynamicObjectsParent, _uiParent, _gameParent);
         }
 
         private void BindPlayer()

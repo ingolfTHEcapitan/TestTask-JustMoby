@@ -9,34 +9,34 @@ namespace _Project.Scripts.Infrastructure.Services.SaveLoad
         private const string FolderName = "Saves";
         private const string FileName = "Save.json";
 
-        private readonly string SaveDirectoryPath;
-        private readonly string SavePath;
+        private readonly string _saveDirectoryPath;
+        private readonly string _savePath;
 
         public SaveLoadService()
         {
-            SaveDirectoryPath = Path.Combine(Application.dataPath, FolderName);
-            SavePath = Path.Combine(SaveDirectoryPath, FileName);
+            _saveDirectoryPath = Path.Combine(Application.dataPath, FolderName);
+            _savePath = Path.Combine(_saveDirectoryPath, FileName);
         }
         
         public void SaveProgress(PlayerProgress playerProgress)
         {
-            if (!Directory.Exists(SaveDirectoryPath)) 
-                Directory.CreateDirectory(SaveDirectoryPath);
+            if (!Directory.Exists(_saveDirectoryPath)) 
+                Directory.CreateDirectory(_saveDirectoryPath);
             
             string json = JsonUtility.ToJson(playerProgress, prettyPrint: true);
-            File.WriteAllText(SavePath, json);
-            Debug.Log("Progress saved to " + SavePath);
+            File.WriteAllText(_savePath, json);
+            Debug.Log("Progress saved to " + _savePath);
         }
 
         public PlayerProgress LoadProgress()
         {
             PlayerProgress playerProgress = new PlayerProgress();
             
-            if (File.Exists(SavePath))
+            if (File.Exists(_savePath))
             {
-                string json = File.ReadAllText(SavePath);
+                string json = File.ReadAllText(_savePath);
                 playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
-                Debug.Log("Progress loaded from " + SavePath);
+                Debug.Log("Progress loaded from " + _savePath);
                 return playerProgress;
             }
             
