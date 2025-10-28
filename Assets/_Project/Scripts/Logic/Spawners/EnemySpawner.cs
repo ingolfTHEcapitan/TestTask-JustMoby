@@ -42,8 +42,7 @@ namespace _Project.Scripts.Logic.Spawners
 
         private void InitEnemy(Transform target)
         {
-            GameObject enemy = _factory.CreateEnemy(_config, GetSpawnPosition(target));
-            EnemyDeath enemyDeath = enemy.GetComponent<EnemyDeath>();
+            EnemyDeath enemyDeath = _factory.CreateEnemy(_config, GetSpawnPosition(target));
             enemyDeath.OnDied += OnEnemyDeath;
             _spawnedEnemies.Add(enemyDeath);
         }

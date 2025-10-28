@@ -32,38 +32,33 @@ namespace _Project.Scripts.Infrastructure.Services.Factory
         }
         
 
-        public GameObject CreateEnemy(EnemySpawnerConfig config, Vector3 spawnPoint)
+        public EnemyDeath CreateEnemy(EnemySpawnerConfig config, Vector3 spawnPoint)
         {
-            GameObject enemy = _container.InstantiatePrefab(config.Prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
+            EnemyDeath enemyDeath = 
+                _container.InstantiatePrefabForComponent<EnemyDeath>(config.Prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
             
-            EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
+            EnemyMovement enemyMovement = enemyDeath.GetComponent<EnemyMovement>();
             enemyMovement.Initialize(spawnPoint);
                 
             float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
-            Health health = enemy.GetComponent<Health>();
+            Health health = enemyDeath.GetComponent<Health>();
             health.Initialize(maxHealth);
             
-            HealthBarView healthBar = enemy.GetComponentInChildren<HealthBarView>();
+            HealthBarView healthBar = enemyDeath.GetComponentInChildren<HealthBarView>();
             healthBar.Construct(health);
             healthBar.Initialize();
-            return enemy;
+            return enemyDeath;
         }
 
-        public GameObject CreatePlayer(GameObject prefab, Vector3 at)
+        public Health CreatePlayer(GameObject prefab, Vector3 at)
         {
-            GameObject player = _container.InstantiatePrefab(prefab, at, Quaternion.identity, _gameParent);
+            Health playerHealth = 
+                _container.InstantiatePrefabForComponent<Health>(prefab, at, Quaternion.identity, _gameParent);
             
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
-            Health health = player.GetComponent<Health>();
-            health.Initialize(maxHealth);
-            return player;
+            playerHealth.Initialize(maxHealth);
+            return playerHealth;
         }
-        
-        public GameObject CreateHud(GameObject prefab) => 
-            _container.InstantiatePrefab(prefab, _uiParent);
-        
-        public GameObject CreatePopUpLayer(GameObject prefab) => 
-            _container.InstantiatePrefab(prefab, _uiParent);
 
         public Bullet CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection)
         {
@@ -73,5 +68,11 @@ namespace _Project.Scripts.Infrastructure.Services.Factory
             bullet.Initialize(config, shootDirection, damage, _dynamicObjectsParent);
             return bullet;
         }
+
+        public GameObject CreateHud(GameObject prefab) => 
+            _container.InstantiatePrefab(prefab, _uiParent);
+
+        public GameObject CreatePopUpLayer(GameObject prefab) => 
+            _container.InstantiatePrefab(prefab, _uiParent);
     }
 }

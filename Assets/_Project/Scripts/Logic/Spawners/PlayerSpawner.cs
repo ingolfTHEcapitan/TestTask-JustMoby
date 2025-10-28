@@ -1,5 +1,6 @@
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Infrastructure.Services.Factory;
+using _Project.Scripts.Logic.Common;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.Spawners
@@ -15,7 +16,7 @@ namespace _Project.Scripts.Logic.Spawners
             _config = config;
         }
 
-        public GameObject Spawn() => 
+        public Health Spawn() => 
             _factory.CreatePlayer(_config.Prefab, _config.SpawnPosition);
     }
 }

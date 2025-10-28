@@ -55,9 +55,9 @@ namespace _Project.Scripts.Infrastructure
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hud);
             _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService);
             
-            GameObject Player = InitPlayer(_playerSpawner);
+            _playerHealth = InitPlayer(_playerSpawner);
             InitPlayerHealthBarView(hud);
-            InitWeapon(Player);
+            InitWeapon(_playerHealth.gameObject);
             
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint);
         }
@@ -69,13 +69,11 @@ namespace _Project.Scripts.Infrastructure
             _playerStatsModel.OnStatsChanged -= UpdatePlayerMaxHealth;
         }
         
-        private GameObject InitPlayer(PlayerSpawner playerSpawner)
+        private Health InitPlayer(PlayerSpawner playerSpawner)
         {
-            GameObject player = playerSpawner.Spawn();
-            
-            _playerHealth = player.GetComponent<Health>();
+            Health playerHealth = playerSpawner.Spawn();
             _playerStatsModel.OnStatsChanged += UpdatePlayerMaxHealth;
-            return player;
+            return playerHealth;
         }
 
         private void UpdatePlayerMaxHealth()
