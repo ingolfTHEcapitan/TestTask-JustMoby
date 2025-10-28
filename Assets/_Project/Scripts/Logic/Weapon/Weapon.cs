@@ -1,5 +1,5 @@
 using _Project.Scripts.Configs.Weapon;
-using _Project.Scripts.Infrastructure.Services.Factory;
+using _Project.Scripts.Infrastructure.Services.Factory.BulletFactory;
 using _Project.Scripts.Infrastructure.Services.GamePause;
 using _Project.Scripts.Infrastructure.Services.PlayerInput;
 using UnityEngine;
@@ -18,12 +18,12 @@ namespace _Project.Scripts.Logic.Weapon
         private Camera _playerCamera;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
-        private IGameFactory _factory;
+        private IBulletFactory _factory;
         private WeaponConfig _config;
         
         [Inject]
-        public void Construct(IGamePauseService pauseService,
-            IInputService inputService, IGameFactory factory, WeaponConfig config)
+        public void Construct(IGamePauseService pauseService, IInputService inputService, 
+            IBulletFactory factory, WeaponConfig config)
         {
             _pauseService = pauseService;
             _inputService = inputService;

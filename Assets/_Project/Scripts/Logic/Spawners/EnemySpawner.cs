@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Enemy;
-using _Project.Scripts.Infrastructure.Services.Factory;
+using _Project.Scripts.Infrastructure.Services.Factory.EnemyFactory;
 using _Project.Scripts.Infrastructure.Services.GamePause;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -13,11 +13,11 @@ namespace _Project.Scripts.Logic.Spawners
     public class EnemySpawner
     {
         private readonly IGamePauseService _pauseService;
-        private readonly IGameFactory _factory;
+        private readonly IEnemyFactory _factory;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
         private readonly EnemySpawnerConfig _config;
 
-        public EnemySpawner(EnemySpawnerConfig config, IGamePauseService pauseService, IGameFactory factory)
+        public EnemySpawner(EnemySpawnerConfig config, IGamePauseService pauseService, IEnemyFactory factory)
         {
             _pauseService = pauseService;
             _factory = factory;

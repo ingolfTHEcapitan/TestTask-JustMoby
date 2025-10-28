@@ -1,7 +1,6 @@
 using System;
-using _Project.Scripts.Infrastructure.Services.Factory;
+using _Project.Scripts.Infrastructure.Services.Factory.UIFactory;
 using _Project.Scripts.Infrastructure.Services.GamePause;
-using _Project.Scripts.Infrastructure.Services.HealthCalculator;
 using _Project.Scripts.Logic;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
@@ -18,8 +17,7 @@ namespace _Project.Scripts.Infrastructure
     public class GameBootstrapper: IInitializable, IDisposable
     {
         private readonly IGamePauseService _pauseService;
-        private readonly IGameFactory _factory;
-        private readonly IHealthCalculatorService _healthCalculator;
+        private readonly IUIFactory _uiFactory;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly PlayerSpawner _playerSpawner;
         private readonly EnemySpawner _enemySpawner;
@@ -29,13 +27,12 @@ namespace _Project.Scripts.Infrastructure
         private PlayerStatsPresenter _playerStatsPresenter;
         private Health _playerHealth;
 
-        public GameBootstrapper(IGamePauseService pauseService, IGameFactory factory, IHealthCalculatorService healthCalculator, 
-            PlayerStatsModel playerStatsModel, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            GameObject hudLayerPrefab, GameObject popUpLayerPrefab, Transform enemySpawnPoint)
+        public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, PlayerStatsModel playerStatsModel, 
+            PlayerSpawner playerSpawner, EnemySpawner enemySpawner, GameObject hudLayerPrefab, 
+            GameObject popUpLayerPrefab, Transform enemySpawnPoint)
         {
             _pauseService = pauseService;
-            _factory = factory;
-            _healthCalculator = healthCalculator;
+            _uiFactory = uiFactory;
             _playerStatsModel = playerStatsModel;
             _playerSpawner = playerSpawner;
             _enemySpawner = enemySpawner;
@@ -48,8 +45,8 @@ namespace _Project.Scripts.Infrastructure
         {
             CursorController.SetCursorVisible(visible: false);
             
-            GameObject hud = _factory.CreateHudLayer(_hudLayerPrefab);
-            GameObject popUpLayer = _factory.CreatePopUpLayer(_popUpLayerPrefab);
+            GameObject hud = _uiFactory.CreateHudLayer(_hudLayerPrefab);
+            GameObject popUpLayer = _uiFactory.CreatePopUpLayer(_popUpLayerPrefab);
             
             _playerStatsModel.Initialize();
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hud);
@@ -62,27 +59,15 @@ namespace _Project.Scripts.Infrastructure
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint);
         }
 
-        public void Dispose()
-        {
-            _playerStatsModel.Dispose();
+        public void Dispose() => 
             _playerStatsPresenter.Dispose();
-            _playerStatsModel.OnStatsChanged -= UpdatePlayerMaxHealth;
-        }
 
         private Health InitPlayer(PlayerSpawner playerSpawner)
         {
             Health playerHealth = playerSpawner.Spawn();
-            _playerStatsModel.OnStatsChanged += UpdatePlayerMaxHealth;
             return playerHealth;
         }
-
-        private void UpdatePlayerMaxHealth()
-        {
-            float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
-            _playerHealth.Initialize(maxHealth);
-            _playerHealth.InvokeOnHealthChanged();
-        }
-
+        
         private void InitPlayerHealthBarView(GameObject hud)
         {
             HealthBarView playerHealthBarView = hud.GetComponentInChildren<HealthBarView>();

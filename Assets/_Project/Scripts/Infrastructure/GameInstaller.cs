@@ -2,7 +2,10 @@ using System.Collections.Generic;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Configs.Weapon;
-using _Project.Scripts.Infrastructure.Services.Factory;
+using _Project.Scripts.Infrastructure.Services.Factory.BulletFactory;
+using _Project.Scripts.Infrastructure.Services.Factory.EnemyFactory;
+using _Project.Scripts.Infrastructure.Services.Factory.PlayerFactory;
+using _Project.Scripts.Infrastructure.Services.Factory.UIFactory;
 using _Project.Scripts.Infrastructure.Services.GamePause;
 using _Project.Scripts.Infrastructure.Services.HealthCalculator;
 using _Project.Scripts.Infrastructure.Services.PlayerInput;
@@ -36,7 +39,7 @@ namespace _Project.Scripts.Infrastructure
             BindPlayer();
             BindPlayerStats();
             BindEnemy();
-            BindWeaponConfig();
+            BindWeapon();
             BindGameBootstrapper();
         }
 
@@ -46,12 +49,12 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<SaveLoadService>().AsSingle();
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<GameFactory>().AsSingle()
-                .WithArguments(_dynamicObjectsParent, _uiParent, _gameParent);
+            Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle().WithArguments(_uiParent);
         }
 
         private void BindPlayer()
         {
+            Container.BindInterfacesAndSelfTo<PlayerFactory>().AsSingle().WithArguments(_gameParent);
             Container.Bind<PlayerSpawnerConfig>().FromInstance(_playerSpawnerConfig).AsSingle();
             Container.Bind<PlayerSpawner>().AsSingle();
         }
@@ -64,17 +67,21 @@ namespace _Project.Scripts.Infrastructure
 
         private void BindEnemy()
         {
+            Container.BindInterfacesAndSelfTo<EnemyFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
             Container.Bind<EnemySpawnerConfig>().FromInstance(_enemySpawnerConfig).AsSingle();
             Container.Bind<EnemySpawner>().AsSingle();
         }
 
-        private void BindWeaponConfig() => 
+        private void BindWeapon()
+        {
+            Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
             Container.Bind<WeaponConfig>().FromInstance(_weaponConfig).AsSingle();
+        }
 
         private void BindGameBootstrapper()
         {
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle()
-                .WithArguments(_hudPrefab, _popUpLayerPrefab, _enemySpawnPoint);
+                .WithArguments(_hudPrefab, _popUpLayerPrefab, _enemySpawnPoint).NonLazy();
         }
     }
 }
