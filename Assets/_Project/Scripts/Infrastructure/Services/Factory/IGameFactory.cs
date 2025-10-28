@@ -12,7 +12,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factory
         Bullet CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection);
         EnemyDeath CreateEnemy(EnemySpawnerConfig config, Vector3 spawnPoint);
         Health CreatePlayer(GameObject prefab, Vector3 at);
-        GameObject CreateHud(GameObject prefab);
+        GameObject CreateHudLayer(GameObject prefab);
         GameObject CreatePopUpLayer(GameObject prefab);
     }
 }

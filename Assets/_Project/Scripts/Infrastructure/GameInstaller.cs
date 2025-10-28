@@ -20,11 +20,15 @@ namespace _Project.Scripts.Infrastructure
         [SerializeField] private Transform _dynamicObjectsParent;
         [SerializeField] private Transform _uiParent;
         [SerializeField] private Transform _gameParent;
+        [SerializeField] private Transform _enemySpawnPoint;
         [Header("Configs")]
         [SerializeField] private List<PlayerStatConfig> _playerStatConfigs;
         [SerializeField] private PlayerSpawnerConfig _playerSpawnerConfig;
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
         [SerializeField] private WeaponConfig _weaponConfig;
+        [Header("Prefabs")]
+        [SerializeField] private GameObject _hudPrefab;
+        [SerializeField] private GameObject _popUpLayerPrefab;
         
         public override void InstallBindings()
         {
@@ -32,8 +36,8 @@ namespace _Project.Scripts.Infrastructure
             BindPlayer();
             BindPlayerStats();
             BindEnemy();
-
-            Container.Bind<WeaponConfig>().FromInstance(_weaponConfig).AsSingle();
+            BindWeaponConfig();
+            BindGameBootstrapper();
         }
 
         private void BindServices()
@@ -62,6 +66,15 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.Bind<EnemySpawnerConfig>().FromInstance(_enemySpawnerConfig).AsSingle();
             Container.Bind<EnemySpawner>().AsSingle();
+        }
+
+        private void BindWeaponConfig() => 
+            Container.Bind<WeaponConfig>().FromInstance(_weaponConfig).AsSingle();
+
+        private void BindGameBootstrapper()
+        {
+            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle()
+                .WithArguments(_hudPrefab, _popUpLayerPrefab, _enemySpawnPoint);
         }
     }
 }

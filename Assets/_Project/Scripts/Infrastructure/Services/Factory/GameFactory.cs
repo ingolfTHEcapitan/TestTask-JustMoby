@@ -69,7 +69,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factory
             return bullet;
         }
 
-        public GameObject CreateHud(GameObject prefab) => 
+        public GameObject CreateHudLayer(GameObject prefab) => 
             _container.InstantiatePrefab(prefab, _uiParent);
 
         public GameObject CreatePopUpLayer(GameObject prefab) => 

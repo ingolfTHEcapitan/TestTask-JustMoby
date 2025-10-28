@@ -1,7 +1,7 @@
+using System;
 using _Project.Scripts.Infrastructure.Services.Factory;
 using _Project.Scripts.Infrastructure.Services.GamePause;
 using _Project.Scripts.Infrastructure.Services.HealthCalculator;
-using _Project.Scripts.Infrastructure.Services.SaveLoad;
 using _Project.Scripts.Logic;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
@@ -15,26 +15,23 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure
 {
-    public class GameBootstrapper: MonoBehaviour
+    public class GameBootstrapper: IInitializable, IDisposable
     {
-        [SerializeField] private Transform _enemySpawnPoint;
-        [Header("Prefabs")]
-        [SerializeField] private GameObject _hudPrefab;
-        [SerializeField] private GameObject _popUpLayerPrefab;
-
-        private IGamePauseService _pauseService;
-        private IGameFactory _factory;
-        private IHealthCalculatorService _healthCalculator;
-        private PlayerStatsModel _playerStatsModel;
+        private readonly IGamePauseService _pauseService;
+        private readonly IGameFactory _factory;
+        private readonly IHealthCalculatorService _healthCalculator;
+        private readonly PlayerStatsModel _playerStatsModel;
+        private readonly PlayerSpawner _playerSpawner;
+        private readonly EnemySpawner _enemySpawner;
+        private readonly GameObject _hudLayerPrefab;
+        private readonly GameObject _popUpLayerPrefab;
+        private readonly Transform _enemySpawnPoint;
         private PlayerStatsPresenter _playerStatsPresenter;
-        private PlayerSpawner _playerSpawner;
-        private EnemySpawner _enemySpawner;
         private Health _playerHealth;
-        
-        [Inject]
-        public void Construct(IGamePauseService pauseService, ISaveLoadService saveLoadService, 
-            IGameFactory factory, IHealthCalculatorService healthCalculator, PlayerStatsModel playerStatsModel, 
-            PlayerSpawner playerSpawner, EnemySpawner enemySpawner)
+
+        public GameBootstrapper(IGamePauseService pauseService, IGameFactory factory, IHealthCalculatorService healthCalculator, 
+            PlayerStatsModel playerStatsModel, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
+            GameObject hudLayerPrefab, GameObject popUpLayerPrefab, Transform enemySpawnPoint)
         {
             _pauseService = pauseService;
             _factory = factory;
@@ -42,13 +39,16 @@ namespace _Project.Scripts.Infrastructure
             _playerStatsModel = playerStatsModel;
             _playerSpawner = playerSpawner;
             _enemySpawner = enemySpawner;
+            _hudLayerPrefab = hudLayerPrefab;
+            _popUpLayerPrefab = popUpLayerPrefab;
+            _enemySpawnPoint = enemySpawnPoint;
         }
-        
-        private void Awake()
+
+        public void Initialize()
         {
             CursorController.SetCursorVisible(visible: false);
             
-            GameObject hud = _factory.CreateHud(_hudPrefab);
+            GameObject hud = _factory.CreateHudLayer(_hudLayerPrefab);
             GameObject popUpLayer = _factory.CreatePopUpLayer(_popUpLayerPrefab);
             
             _playerStatsModel.Initialize();
@@ -62,13 +62,13 @@ namespace _Project.Scripts.Infrastructure
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint);
         }
 
-        private void OnDestroy()
+        public void Dispose()
         {
             _playerStatsModel.Dispose();
             _playerStatsPresenter.Dispose();
             _playerStatsModel.OnStatsChanged -= UpdatePlayerMaxHealth;
         }
-        
+
         private Health InitPlayer(PlayerSpawner playerSpawner)
         {
             Health playerHealth = playerSpawner.Spawn();
@@ -89,7 +89,7 @@ namespace _Project.Scripts.Infrastructure
             playerHealthBarView.Construct(_playerHealth);
             playerHealthBarView.Initialize();
         }
-        
+
         private void InitWeapon(GameObject Player)
         {
             Weapon weapon = Player.GetComponentInChildren<Weapon>();
