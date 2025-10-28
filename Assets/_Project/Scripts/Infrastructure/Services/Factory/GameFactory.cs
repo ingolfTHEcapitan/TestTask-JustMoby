@@ -6,13 +6,11 @@ using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Weapon;
 using _Project.Scripts.UI.Elements;
-using JetBrains.Annotations;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Services.Factory
 {
-    [UsedImplicitly]
     public class GameFactory : IGameFactory
     {
         private readonly DiContainer _container;

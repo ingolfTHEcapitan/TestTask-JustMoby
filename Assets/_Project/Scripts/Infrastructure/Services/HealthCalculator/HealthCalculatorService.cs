@@ -1,9 +1,7 @@
 using _Project.Scripts.Logic.PlayerStats;
-using JetBrains.Annotations;
 
 namespace _Project.Scripts.Infrastructure.Services.HealthCalculator
 {
-    [UsedImplicitly]
     public class HealthCalculatorService : IHealthCalculatorService
     {
         private readonly PlayerStatsModel _playerStatsModel;

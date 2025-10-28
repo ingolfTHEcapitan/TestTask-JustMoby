@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Data;
 using _Project.Scripts.Infrastructure.Services.SaveLoad;
-using JetBrains.Annotations;
 
 namespace _Project.Scripts.Logic.PlayerStats
 {
-    [UsedImplicitly]
     public class PlayerStatsModel: IDisposable
     {
         public event Action OnStatsChanged;

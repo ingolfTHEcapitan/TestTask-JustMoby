@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using _Project.Scripts.Configs;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Enemy;
 using _Project.Scripts.Infrastructure.Services.Factory;
@@ -12,7 +11,6 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Logic.Spawners
 {
-    [UsedImplicitly]
     public class EnemySpawner
     {
         private readonly IGamePauseService _pauseService;
