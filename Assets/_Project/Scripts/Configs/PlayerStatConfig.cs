@@ -1,0 +1,16 @@
+using _Project.Scripts.Logic.PlayerStats;
+using UnityEngine;
+
+namespace _Project.Scripts.Configs
+{
+    [CreateAssetMenu(fileName = "PlayerStatConfig", menuName = "Configs/PlayerStatConfig")]
+    public class PlayerStatConfig : ScriptableObject
+    {
+        [field: SerializeField] public StatName Name { get; private set; }
+        [field: SerializeField] public float BaseValue { get; private set; }
+        [field: SerializeField] public float IncrementPerLevel { get; private set; }
+        [field: SerializeField] public float MaxMultiplier { get; private set; }
+        [field: SerializeField] public Sprite IconFrame { get; private set; }
+        [field: SerializeField] public Sprite Icon { get; private set; }
+    }
+}
