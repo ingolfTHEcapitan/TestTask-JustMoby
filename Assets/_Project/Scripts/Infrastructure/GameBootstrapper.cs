@@ -83,7 +83,7 @@ namespace _Project.Scripts.Infrastructure
         }
 
         private void InitEnemySpawner(EnemySpawner enemySpawner, Transform target) => 
-            enemySpawner.SpawnAround(target).Forget();
+            enemySpawner.SpawnAround(target);
 
         private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, GameObject hud)
         {

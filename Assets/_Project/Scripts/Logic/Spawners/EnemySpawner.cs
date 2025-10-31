@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Enemy;
 using _Project.Scripts.Infrastructure.Services.Factory.EnemyFactory;
@@ -10,12 +11,13 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Logic.Spawners
 {
-    public class EnemySpawner
+    public class EnemySpawner: IDisposable
     {
         private readonly IGamePauseService _pauseService;
         private readonly IEnemyFactory _factory;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
         private readonly EnemySpawnerConfig _config;
+        private CancellationTokenSource _cancellationTokenSource;
 
         public EnemySpawner(EnemySpawnerConfig config, IGamePauseService pauseService, IEnemyFactory factory)
         {
@@ -24,19 +26,38 @@ namespace _Project.Scripts.Logic.Spawners
             _config = config;
         }
         
-        public async UniTaskVoid SpawnAround(Transform target)
+        public void SpawnAround(Transform target)
+        {
+            StopSpawning();
+            _cancellationTokenSource = new CancellationTokenSource();
+            SpawnAroundAsync(target, _cancellationTokenSource.Token).Forget();
+        }
+
+        public void StopSpawning()
+        {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
+        }
+
+        public void Dispose() => 
+            StopSpawning();
+
+        private async UniTaskVoid SpawnAroundAsync(Transform target, CancellationToken token)
         {
             while (true)
             {
-                await UniTask.WaitWhile(() => _pauseService.IsPaused);
+                token.ThrowIfCancellationRequested();
+                
+                await UniTask.WaitWhile(() => _pauseService.IsPaused, cancellationToken: token);
                 
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime)
                 {
                     InitEnemy(target);
-                    await UniTask.Delay(TimeSpan.FromSeconds(_config.SpawnDelay));
+                    await UniTask.Delay(TimeSpan.FromSeconds(_config.SpawnDelay), cancellationToken: token);
                 }
                 
-                await UniTask.WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime);
+                await UniTask.WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime, cancellationToken: token);
             }
         }
 

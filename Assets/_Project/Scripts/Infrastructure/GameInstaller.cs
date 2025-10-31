@@ -62,14 +62,14 @@ namespace _Project.Scripts.Infrastructure
         private void BindPlayerStats()
         {
             Container.Bind<List<PlayerStatConfig>>().FromInstance(_playerStatConfigs).AsSingle();
-            Container.Bind<PlayerStatsModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
         }
 
         private void BindEnemy()
         {
             Container.BindInterfacesAndSelfTo<EnemyFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
             Container.Bind<EnemySpawnerConfig>().FromInstance(_enemySpawnerConfig).AsSingle();
-            Container.Bind<EnemySpawner>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EnemySpawner>().AsSingle();
         }
 
         private void BindWeapon()
