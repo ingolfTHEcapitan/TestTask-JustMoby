@@ -45,15 +45,15 @@ namespace _Project.Scripts.Infrastructure
         {
             CursorController.SetCursorVisible(visible: false);
             
-            GameObject hud = _uiFactory.CreateHudLayer(_hudLayerPrefab);
+            GameObject hudLayer = _uiFactory.CreateHudLayer(_hudLayerPrefab);
             GameObject popUpLayer = _uiFactory.CreatePopUpLayer(_popUpLayerPrefab);
             
             _playerStatsModel.Initialize();
-            PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hud);
+            PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer);
             _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService);
             
             _playerHealth = InitPlayer(_playerSpawner);
-            InitPlayerHealthBarView(hud);
+            InitPlayerHealthBarView(hudLayer);
             InitWeapon(_playerHealth.gameObject);
             
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint);
@@ -75,10 +75,10 @@ namespace _Project.Scripts.Infrastructure
             playerHealthBarView.Initialize();
         }
 
-        private void InitWeapon(GameObject Player)
+        private void InitWeapon(GameObject player)
         {
-            Weapon weapon = Player.GetComponentInChildren<Weapon>();
-            Camera playerCamera = Player.GetComponentInChildren<Camera>();
+            Weapon weapon = player.GetComponentInChildren<Weapon>();
+            Camera playerCamera = player.GetComponentInChildren<Camera>();
             weapon.Initialize(playerCamera);
         }
 
