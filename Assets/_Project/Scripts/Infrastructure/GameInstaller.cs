@@ -47,7 +47,7 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<SaveLoadService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerPrefsSaveLoadService>().AsSingle();
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
             Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle().WithArguments(_uiParent);
         }
