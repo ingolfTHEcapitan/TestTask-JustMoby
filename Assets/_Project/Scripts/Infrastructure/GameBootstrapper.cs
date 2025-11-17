@@ -56,7 +56,7 @@ namespace _Project.Scripts.Infrastructure
             InitPlayerHealthBarView(hudLayer);
             InitWeapon(_playerHealth.gameObject);
             
-            InitEnemySpawner(_enemySpawner, _enemySpawnPoint);
+            InitEnemySpawner(_enemySpawner, _enemySpawnPoint, _playerHealth.transform);
         }
 
         public void Dispose() => 
@@ -82,8 +82,8 @@ namespace _Project.Scripts.Infrastructure
             weapon.Initialize(playerCamera);
         }
 
-        private void InitEnemySpawner(EnemySpawner enemySpawner, Transform target) => 
-            enemySpawner.SpawnAround(target);
+        private void InitEnemySpawner(EnemySpawner enemySpawner, Transform target, Transform playerTransform) => 
+            enemySpawner.SpawnAround(target, playerTransform);
 
         private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, GameObject hud)
         {

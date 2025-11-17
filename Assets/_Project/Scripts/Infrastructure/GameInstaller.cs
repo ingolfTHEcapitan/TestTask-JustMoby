@@ -29,6 +29,7 @@ namespace _Project.Scripts.Infrastructure
         [SerializeField] private PlayerSpawnerConfig _playerSpawnerConfig;
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
         [SerializeField] private WeaponConfig _weaponConfig;
+        [SerializeField] private EnemyConfig _enemyConfig;
         [Header("Prefabs")]
         [SerializeField] private GameObject _hudPrefab;
         [SerializeField] private GameObject _popUpLayerPrefab;
@@ -69,6 +70,7 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.BindInterfacesAndSelfTo<EnemyFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
             Container.Bind<EnemySpawnerConfig>().FromInstance(_enemySpawnerConfig).AsSingle();
+            Container.Bind<EnemyConfig>().FromInstance(_enemyConfig).AsSingle();
             Container.BindInterfacesAndSelfTo<EnemySpawner>().AsSingle();
         }
 

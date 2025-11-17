@@ -21,7 +21,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factory.EnemyFactory
             _dynamicObjectsParent = dynamicObjectsParent;
         }
 
-        public EnemyDeath CreateEnemy(EnemySpawnerConfig config, Vector3 spawnPoint)
+        public EnemyDeath CreateEnemy(EnemySpawnerConfig config, Vector3 spawnPoint, Transform playerTransform)
         {
             EnemyDeath enemyDeath = 
                 _container.InstantiatePrefabForComponent<EnemyDeath>(config.Prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
@@ -29,6 +29,8 @@ namespace _Project.Scripts.Infrastructure.Services.Factory.EnemyFactory
             EnemyMovement enemyMovement = enemyDeath.GetComponent<EnemyMovement>();
             enemyMovement.Initialize(spawnPoint);
                 
+            enemyDeath.GetComponent<EnemyAttack>().Initialize(playerTransform);
+            
             float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
             Health health = enemyDeath.GetComponent<Health>();
             health.Initialize(maxHealth);

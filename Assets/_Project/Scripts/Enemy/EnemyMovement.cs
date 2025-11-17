@@ -17,25 +17,36 @@ namespace _Project.Scripts.Enemy
         private Vector3 _spawnPoint;
         private IGamePauseService _pauseService;
         private bool IsSpawnAnimationEnded;
+        private bool _movementIsActive;
 
         [Inject]
         public void Construct(IGamePauseService pauseService) => 
             _pauseService = pauseService;
 
-        public void Initialize(Vector3 spawnPoint) => 
+        public void Initialize(Vector3 spawnPoint)
+        {
             _spawnPoint = spawnPoint;
+            EnableMovement();
+        }
 
         private void Update()
         {
             if(_pauseService.IsPaused || !IsSpawnAnimationEnded)
                 return;
             
-            Move();
+            if (_movementIsActive)
+                Move();
         }
 
         [UsedImplicitly]
         public void OnSpawnAnimationEnded() => 
             IsSpawnAnimationEnded = true;
+
+        public void DisableMovement() => 
+            _movementIsActive = false;
+        
+        public void EnableMovement() => 
+            _movementIsActive = true;
 
         private void Move()
         {

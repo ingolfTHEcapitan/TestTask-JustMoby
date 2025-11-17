@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8216705233117684019}
   - component: {fileID: 7795851549087658766}
   - component: {fileID: 5731431232808421805}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -477,6 +477,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Weapon
       objectReference: {fileID: 0}
+    - target: {fileID: 2833171956725550516, guid: ad6c1faf97898304db73b4868485c003,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3660840105126695811, guid: ad6c1faf97898304db73b4868485c003,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5420378285549324090, guid: ad6c1faf97898304db73b4868485c003,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5420378285549324090, guid: ad6c1faf97898304db73b4868485c003,
         type: 3}
       propertyPath: m_IsActive
@@ -499,7 +514,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5797183422743388245, guid: ad6c1faf97898304db73b4868485c003,
         type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5797183422743388245, guid: ad6c1faf97898304db73b4868485c003,
+        type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6075093467481672074, guid: ad6c1faf97898304db73b4868485c003,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6282456053860665614, guid: ad6c1faf97898304db73b4868485c003,
@@ -550,6 +575,16 @@ PrefabInstance:
     - target: {fileID: 6282456053860665614, guid: ad6c1faf97898304db73b4868485c003,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7142274603965072911, guid: ad6c1faf97898304db73b4868485c003,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799113370084683044, guid: ad6c1faf97898304db73b4868485c003,
+        type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -640,6 +675,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: crossbow_2handed
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 11d1500a6f9d18240a491a0e7c87e867,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -713,6 +753,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: arrow
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d23301c95cb53d0448f202b29432482e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1469,6 +1469,7 @@ MonoBehaviour:
   _enemySpawnerConfig: {fileID: 11400000, guid: 933f3bec94b4e0d4386f91891b231689,
     type: 2}
   _weaponConfig: {fileID: 11400000, guid: 7947ff2b6613a9d4e989df917bc5edef, type: 2}
+  _enemyConfig: {fileID: 11400000, guid: 77ef4c35738ccfc4a8f1c4f92bf681e5, type: 2}
   _hudPrefab: {fileID: 1141723362487091947, guid: ecbf2fb2ff8b13745b205ce0fa330f95,
     type: 3}
   _popUpLayerPrefab: {fileID: 5689436522609719468, guid: 077389f1b4018714ba97c6db32662b95,
