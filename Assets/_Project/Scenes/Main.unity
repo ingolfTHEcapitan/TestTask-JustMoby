@@ -1457,8 +1457,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dynamicObjectsParent: {fileID: 1709303259}
-  _uiParent: {fileID: 1485497335}
-  _gameParent: {fileID: 2046716228}
+  _uiParent: {fileID: 2046716228}
+  _gameParent: {fileID: 1485497335}
   _enemySpawnPoint: {fileID: 1760856298}
   _playerStatConfigs:
   - {fileID: 11400000, guid: 7b67e48dccb96854892bfaa0d7b9e1d0, type: 2}
