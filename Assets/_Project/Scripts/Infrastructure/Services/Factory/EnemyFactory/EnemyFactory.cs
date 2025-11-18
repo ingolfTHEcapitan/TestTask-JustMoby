@@ -23,21 +23,20 @@ namespace _Project.Scripts.Infrastructure.Services.Factory.EnemyFactory
 
         public EnemyDeath CreateEnemy(EnemySpawnerConfig config, Vector3 spawnPoint, Transform playerTransform)
         {
-            EnemyDeath enemyDeath = 
-                _container.InstantiatePrefabForComponent<EnemyDeath>(config.Prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
-            
-            EnemyMovement enemyMovement = enemyDeath.GetComponent<EnemyMovement>();
-            enemyMovement.Initialize(spawnPoint);
-                
-            enemyDeath.GetComponent<EnemyAttack>().Initialize(playerTransform);
+            EnemyStateMachine enemyStateMachine = 
+                _container.InstantiatePrefabForComponent<EnemyStateMachine>(config.Prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
+            enemyStateMachine.Initialize(spawnPoint, playerTransform);
             
             float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
-            Health health = enemyDeath.GetComponent<Health>();
+            Health health = enemyStateMachine.GetComponent<Health>();
             health.Initialize(maxHealth);
             
-            HealthBarView healthBar = enemyDeath.GetComponentInChildren<HealthBarView>();
+            HealthBarView healthBar = enemyStateMachine.GetComponentInChildren<HealthBarView>();
             healthBar.Construct(health);
             healthBar.Initialize();
+
+            EnemyDeath enemyDeath = enemyStateMachine.GetComponent<EnemyDeath>();
+            enemyDeath.Initialize();
             return enemyDeath;
         }
     }

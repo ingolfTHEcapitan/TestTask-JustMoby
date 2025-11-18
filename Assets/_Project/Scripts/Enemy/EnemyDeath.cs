@@ -25,7 +25,7 @@ namespace _Project.Scripts.Enemy
         public void Construct(PlayerStatsModel playerStatsModel) => 
             _playerStatsModel = playerStatsModel;
 
-        private void Start() => 
+        public void Initialize() => 
             _health.OnHealthChanged += OnOnHealthChanged;
 
         private void OnDestroy() => 

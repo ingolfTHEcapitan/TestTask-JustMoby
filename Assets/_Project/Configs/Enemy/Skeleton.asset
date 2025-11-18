@@ -16,4 +16,6 @@ MonoBehaviour:
   <AttackCooldown>k__BackingField: 1.5
   <AttackRadius>k__BackingField: 0.5
   <AttackDistance>k__BackingField: 1.5
+  <MinPatrolDistance>k__BackingField: 7
+  <MaxPatrolDistance>k__BackingField: 15
   <MoveSpeed>k__BackingField: 2.5

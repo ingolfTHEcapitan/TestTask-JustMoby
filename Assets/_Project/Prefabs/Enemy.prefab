@@ -194,11 +194,9 @@ GameObject:
   - component: {fileID: 3117825465392412960}
   - component: {fileID: 4082514023670906441}
   - component: {fileID: 6797133231648955068}
-  - component: {fileID: 7492125484674939793}
   - component: {fileID: 3373863833424226122}
-  - component: {fileID: 1388457686687828344}
   - component: {fileID: 666391151365057433}
-  - component: {fileID: 8445625875220667731}
+  - component: {fileID: 1388457686687828344}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -317,21 +315,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &7492125484674939793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4217187639714539394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f629dba61a4d48f78aed8dce16ff66b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _agent: {fileID: 3117825465392412960}
-  _minMoveDistance: 7
-  _maxMoveDistance: 15
 --- !u!114 &3373863833424226122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,6 +327,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e050b2eb5dc432ca3ab0f515127b6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &666391151365057433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4217187639714539394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32dd991ab1e24d7daa8623e7e9c35ab0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _triggerObserver: {fileID: 9181539531574850646}
+  _agent: {fileID: 3117825465392412960}
+  _animator: {fileID: 1784392016738993417}
 --- !u!114 &1388457686687828344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,35 +358,6 @@ MonoBehaviour:
   _animator: {fileID: 1784392016738993417}
   _agent: {fileID: 3117825465392412960}
   _destroyDelay: 1.5
---- !u!114 &666391151365057433
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4217187639714539394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32dd991ab1e24d7daa8623e7e9c35ab0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _triggerObserver: {fileID: 9181539531574850646}
-  _enemyAttack: {fileID: 8445625875220667731}
-  _enemyMovement: {fileID: 7492125484674939793}
---- !u!114 &8445625875220667731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4217187639714539394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d395e9c6a13a4750b0b7b77f271ec867, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animator: {fileID: 1784392016738993417}
-  _agent: {fileID: 3117825465392412960}
 --- !u!1 &7049452954211621582
 GameObject:
   m_ObjectHideFlags: 0

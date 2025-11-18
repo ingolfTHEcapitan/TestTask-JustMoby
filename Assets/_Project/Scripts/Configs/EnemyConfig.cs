@@ -16,8 +16,14 @@ namespace _Project.Scripts.Configs
 
         [field: SerializeField, Range(0.5f, 5f)]
         public float AttackDistance { get; private set; } = 0.5f;
-        
-        [field: SerializeField, Range(1f, 5f)]
+
+        [field: SerializeField, Range(0.5f, 20f)]
+        public float MinPatrolDistance { get; private set; } = 7f;
+
+        [field: SerializeField, Range(0.5f, 20f)]
+        public float MaxPatrolDistance { get; private set; } = 15f;
+
+        [field: SerializeField, Range(0.5f, 5f)]
         public float MoveSpeed { get; private set; } = 2.5f;
     }
 }
