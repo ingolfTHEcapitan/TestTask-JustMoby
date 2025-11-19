@@ -10,7 +10,8 @@ namespace _Project.Scripts.Logic.Weapon
     public class Weapon : MonoBehaviour
     {
         private const float MaxRayDistance = 100f;
-        
+        private const int AllLayers = -1;
+
         [SerializeField] private Transform _shootPoint;
         
         private float _fireRate;
@@ -62,7 +63,9 @@ namespace _Project.Scripts.Logic.Weapon
         private Vector3 GetTargetPoint(Ray ray)
         {
             Vector3 targetPoint;
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            
+            // используем QueryTriggerInteraction, что бы луч при выстреле игнорировал триггеры.
+            if (Physics.Raycast(ray, out RaycastHit hit, MaxRayDistance ,AllLayers, QueryTriggerInteraction.Ignore))
                 targetPoint = hit.point;
             else
                 targetPoint = ray.GetPoint(MaxRayDistance);
