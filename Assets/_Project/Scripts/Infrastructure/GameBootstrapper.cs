@@ -27,7 +27,6 @@ namespace _Project.Scripts.Infrastructure
         private readonly GameObject _popUpLayerPrefab;
         private readonly Transform _enemySpawnPoint;
         private PlayerStatsPresenter _playerStatsPresenter;
-        private Health _playerHealth;
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, PlayerStatsModel playerStatsModel, 
             PlayerSpawner playerSpawner, EnemySpawner enemySpawner, GameObject hudLayerPrefab, 
@@ -51,15 +50,16 @@ namespace _Project.Scripts.Infrastructure
             GameObject popUpLayer = _uiFactory.CreatePopUpLayer(_popUpLayerPrefab);
             
             _playerStatsModel.Initialize();
+            
+            Health playerHealth = InitPlayer(_playerSpawner);
+            InitPlayerHealthBarView(hudLayer, playerHealth);
+            InitWeapon(playerHealth);
+
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer);
-            _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService);
+            _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService, playerHealth);
             
-            _playerHealth = InitPlayer(_playerSpawner);
-            InitPlayerHealthBarView(hudLayer);
-            InitWeapon(_playerHealth.gameObject);
-            
-            InitEnemySpawner(_enemySpawner, _enemySpawnPoint, _playerHealth.transform);
-            InitGameOverWindow(popUpLayer, _playerHealth);
+            InitEnemySpawner(_enemySpawner, _enemySpawnPoint, playerHealth.transform);
+            InitGameOverWindow(popUpLayer, playerHealth);
         }
 
         private void InitGameOverWindow(GameObject popUpLayer, Health player)
@@ -78,14 +78,14 @@ namespace _Project.Scripts.Infrastructure
             return playerHealth;
         }
         
-        private void InitPlayerHealthBarView(GameObject hud)
+        private void InitPlayerHealthBarView(GameObject hud, Health playerHealth)
         {
             HealthBarView playerHealthBarView = hud.GetComponentInChildren<HealthBarView>();
-            playerHealthBarView.Construct(_playerHealth);
+            playerHealthBarView.Construct(playerHealth);
             playerHealthBarView.Initialize();
         }
 
-        private void InitWeapon(GameObject player)
+        private void InitWeapon(Health player)
         {
             Weapon weapon = player.GetComponentInChildren<Weapon>();
             Camera playerCamera = player.GetComponentInChildren<Camera>();
@@ -104,9 +104,12 @@ namespace _Project.Scripts.Infrastructure
             return playerStatsView;
         }
 
-        private PlayerStatsPresenter InitPlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model , IGamePauseService pauseService)
+        private PlayerStatsPresenter InitPlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model,
+            IGamePauseService pauseService, Health player)
         {
-            PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(view, model, pauseService);
+            PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
+            
+            PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(view, model, pauseService, playerDeath);
             playerStatsPresenter.Initialize();
             return playerStatsPresenter;
         }

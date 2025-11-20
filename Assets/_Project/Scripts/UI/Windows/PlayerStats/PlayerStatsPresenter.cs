@@ -1,21 +1,25 @@
 using System;
 using _Project.Scripts.Infrastructure.Services.GamePause;
 using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Player;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
-    public class PlayerStatsPresenter: IDisposable
+    public class PlayerStatsPresenter : IDisposable
     {
         private readonly PlayerStatsView _view;
         private readonly PlayerStatsModel _model;
         private readonly IGamePauseService _pauseService;
+        private readonly PlayerDeath _playerDeath;
         private bool _isOpen;
 
-        public PlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model, IGamePauseService pauseService)
+        public PlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model, IGamePauseService pauseService,
+            PlayerDeath playerDeath)
         {
             _view = view;
             _model = model;
             _pauseService = pauseService;
+            _playerDeath = playerDeath;
         }
 
         public void Initialize()
@@ -27,7 +31,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             
             _view.CreateStatItems(_model.GetStats());
             
-            foreach (PlayerStatItemView statItemView in _view.GetStatItems()) 
+            foreach (PlayerStatItemView statItemView in _view.GetStatItems())
                 statItemView.OnUpgradeButtonClicked += UpgradeStatItem;
         }
 
@@ -38,7 +42,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
             
-            foreach (PlayerStatItemView statItemView in _view.GetStatItems()) 
+            foreach (PlayerStatItemView statItemView in _view.GetStatItems())
                 statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;
         }
 
@@ -50,7 +54,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void Open()
         {
-            if(_isOpen)
+            if (_isOpen || _playerDeath.IsDead)
                 return;
             
             _isOpen = true;

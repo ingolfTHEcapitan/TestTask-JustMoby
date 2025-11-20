@@ -2,7 +2,6 @@ using System;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Weapon;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Player
 {
@@ -17,7 +16,7 @@ namespace _Project.Scripts.Player
         [SerializeField] private PlayerMovement _playerMovement;
         [SerializeField] private Weapon _weapon;
         
-        private bool _isDeath;
+        public bool IsDead { get; private set; }
         
         public void Initialize() => 
             _health.OnHealthChanged += OnOnHealthChanged;
@@ -27,20 +26,20 @@ namespace _Project.Scripts.Player
 
         public void Revive()
         {
-            _isDeath = false;
+            IsDead = false;
             _health.TakeHeal(_health.MaxHealth * HealPercent);
             EnablePlayerComponents(true);
         }
         
         private void OnOnHealthChanged()
         {
-            if (!_isDeath && _health.CurrentHealth <= 0) 
+            if (!IsDead && _health.CurrentHealth <= 0) 
                 Die();
         }
 
         private void Die()
         {
-            _isDeath = true;
+            IsDead = true;
             EnablePlayerComponents(false);
             OnDied?.Invoke();
         }
