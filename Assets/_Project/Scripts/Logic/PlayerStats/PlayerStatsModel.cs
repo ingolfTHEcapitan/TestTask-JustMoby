@@ -89,6 +89,9 @@ namespace _Project.Scripts.Logic.PlayerStats
 
         public List<PlayerStatData> GetStats() => 
             new List<PlayerStatData>(Stats.Values);
+        
+        public PlayerStatData GetStat(StatName statName) => 
+            Stats[statName];
 
         public bool CanUpgrade(StatName statName)
         {

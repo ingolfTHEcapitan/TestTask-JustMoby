@@ -30,7 +30,8 @@ namespace _Project.Scripts.Infrastructure.Services.Factory.PlayerFactory
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
             _playerHealth.Initialize(maxHealth);
             
-            _playerStatsModel.OnStatsChanged += UpdatePlayerMaxHealth;
+            PlayerStatData healthStat = _playerStatsModel.GetStat(StatName.Health); 
+            healthStat.OnStatChanged += UpdatePlayerMaxHealth;
             return _playerHealth;
         }
 
@@ -40,8 +41,7 @@ namespace _Project.Scripts.Infrastructure.Services.Factory.PlayerFactory
         private void UpdatePlayerMaxHealth()
         {
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
-            _playerHealth.Initialize(maxHealth);
-            _playerHealth.InvokeOnHealthChanged();
+            _playerHealth.SetMaxHealth(maxHealth);
         }
     }
 }

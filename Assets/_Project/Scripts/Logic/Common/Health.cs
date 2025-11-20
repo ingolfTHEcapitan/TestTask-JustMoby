@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Player;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.Common
@@ -12,7 +13,7 @@ namespace _Project.Scripts.Logic.Common
         
         public void Initialize(float maxHealth)
         {
-            MaxHealth = maxHealth;
+            SetMaxHealth(maxHealth);
             CurrentHealth = MaxHealth;
         }
 
@@ -22,10 +23,13 @@ namespace _Project.Scripts.Logic.Common
                 return;
             
             CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
-            InvokeOnHealthChanged();
+            OnHealthChanged?.Invoke();
         }
 
-        public void InvokeOnHealthChanged() => 
+        public void SetMaxHealth(float maxHealth)
+        {
+            MaxHealth = maxHealth;
             OnHealthChanged?.Invoke();
+        }
     }
 }
