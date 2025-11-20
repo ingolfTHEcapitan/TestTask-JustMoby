@@ -6,7 +6,9 @@ using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Logic.Weapon;
+using _Project.Scripts.Player;
 using _Project.Scripts.UI.Elements;
+using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
 using UnityEngine.UI;
@@ -57,6 +59,14 @@ namespace _Project.Scripts.Infrastructure
             InitWeapon(_playerHealth.gameObject);
             
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint, _playerHealth.transform);
+            InitGameOverWindow(popUpLayer, _playerHealth);
+        }
+
+        private void InitGameOverWindow(GameObject popUpLayer, Health player)
+        {
+            PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
+            GameOverWindow gameOverWindow = popUpLayer.GetComponentInChildren<GameOverWindow>();
+            gameOverWindow.Initialize(playerDeath);
         }
 
         public void Dispose() => 

@@ -8,5 +8,7 @@ namespace _Project.Scripts.Logic.Common
         float MaxHealth { get; }
         float CurrentHealth { get; }
         void TakeDamage(float damage);
+        void SetMaxHealth(float maxHealth);
+        void TakeHeal(float amount);
     }
 }

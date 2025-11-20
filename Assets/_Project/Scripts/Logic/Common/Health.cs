@@ -17,6 +17,12 @@ namespace _Project.Scripts.Logic.Common
             CurrentHealth = MaxHealth;
         }
 
+        public void SetMaxHealth(float maxHealth)
+        {
+            MaxHealth = Mathf.Max(CurrentHealth, maxHealth);
+            OnHealthChanged?.Invoke();
+        }
+
         public void TakeDamage(float damage)
         {
             if (CurrentHealth <= 0)
@@ -26,9 +32,9 @@ namespace _Project.Scripts.Logic.Common
             OnHealthChanged?.Invoke();
         }
 
-        public void SetMaxHealth(float maxHealth)
+        public void TakeHeal(float amount)
         {
-            MaxHealth = maxHealth;
+            CurrentHealth = Mathf.Min(MaxHealth, CurrentHealth + amount);
             OnHealthChanged?.Invoke();
         }
     }

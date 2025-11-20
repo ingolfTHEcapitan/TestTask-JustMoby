@@ -30,6 +30,9 @@ namespace _Project.Scripts.Enemy
 
         private void OnDestroy() => 
             _health.OnHealthChanged -= OnOnHealthChanged;
+        
+        public void KillEnemy() => 
+            _health.TakeDamage(_health.MaxHealth);
 
         private void OnOnHealthChanged()
         {

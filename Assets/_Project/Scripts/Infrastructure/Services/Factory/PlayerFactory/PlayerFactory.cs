@@ -2,6 +2,7 @@ using System;
 using _Project.Scripts.Infrastructure.Services.HealthCalculator;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Player;
 using UnityEngine;
 using Zenject;
 
@@ -32,6 +33,9 @@ namespace _Project.Scripts.Infrastructure.Services.Factory.PlayerFactory
             
             PlayerStatData healthStat = _playerStatsModel.GetStat(StatName.Health); 
             healthStat.OnStatChanged += UpdatePlayerMaxHealth;
+            
+            _playerHealth.GetComponent<PlayerDeath>().Initialize();
+            
             return _playerHealth;
         }
 

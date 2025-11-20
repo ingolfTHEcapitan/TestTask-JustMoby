@@ -33,6 +33,12 @@ namespace _Project.Scripts.Logic.Spawners
             SpawnAroundAsync(target, playerTransform, _cancellationTokenSource.Token).Forget();
         }
 
+        public void KillAllEnemies()
+        {
+            foreach (EnemyDeath enemy in _spawnedEnemies) 
+                enemy.KillEnemy();
+        }
+        
         public void StopSpawning()
         {
             _cancellationTokenSource?.Cancel();
