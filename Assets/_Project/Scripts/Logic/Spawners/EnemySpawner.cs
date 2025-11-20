@@ -53,8 +53,8 @@ namespace _Project.Scripts.Logic.Spawners
                 
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime)
                 {
-                    InitEnemy(target, playerTransform);
                     await UniTask.Delay(TimeSpan.FromSeconds(_config.SpawnDelay), cancellationToken: token);
+                    InitEnemy(target, playerTransform);
                 }
                 
                 await UniTask.WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime, cancellationToken: token);
