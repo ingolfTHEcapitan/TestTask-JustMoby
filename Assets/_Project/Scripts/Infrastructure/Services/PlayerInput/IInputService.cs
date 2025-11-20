@@ -7,5 +7,6 @@ namespace _Project.Scripts.Infrastructure.Services.PlayerInput
         Vector2 GetMovementAxis();
         Vector2 GetLookAxis();
         bool IsFireButtonPressed();
+        bool IsOpenStatsButtonPressed();
     }
 }

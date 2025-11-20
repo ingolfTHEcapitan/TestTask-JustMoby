@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using _Project.Scripts.Infrastructure.Services.PlayerInput;
 using _Project.Scripts.Logic.PlayerStats;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
@@ -20,14 +23,17 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [SerializeField] private TextMeshProUGUI _pointsText;
         [SerializeField] private PlayerStatItemView playerStatItemPrefab;
         
-        public readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
+        private readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
+        private IInputService _inputService;
         private Button _openButton;
         
-        public void Construct(Button openButton) => 
-            _openButton = openButton;
+        [Inject]
+        public void Construct(IInputService inputService) => 
+            _inputService = inputService;
 
-        public void Initialize()
+        public void Initialize(Button openButton)
         {
+            _openButton = openButton;
             _openButton.onClick.AddListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.AddListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.AddListener(InvokeOnApplyChangesButtonClicked);
@@ -42,7 +48,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         private void Update()
         {
-            if (Input.GetKey(KeyCode.Tab)) 
+            if (_inputService.IsOpenStatsButtonPressed()) 
                 InvokeOnOpenButtonClicked();
         }
 
@@ -70,6 +76,9 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             }
         }
 
+        public List<PlayerStatItemView> GetStatItems() => 
+            _statItems.Values.ToList();
+        
         public void ShowPanel() => 
             _statsPanel.SetActive(true);
 

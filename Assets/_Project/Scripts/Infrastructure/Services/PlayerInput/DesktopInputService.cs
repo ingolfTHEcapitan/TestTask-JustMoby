@@ -12,5 +12,8 @@ namespace _Project.Scripts.Infrastructure.Services.PlayerInput
 
         public bool IsFireButtonPressed() => 
             Input.GetButton("Fire1");
+        
+        public bool IsOpenStatsButtonPressed() => 
+            Input.GetKeyDown(KeyCode.Tab);
     }
 }

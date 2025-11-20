@@ -90,8 +90,7 @@ namespace _Project.Scripts.Infrastructure
             Button openButton = hud.GetComponentInChildren<Button>();
             
             PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
-            playerStatsView.Construct(openButton);
-            playerStatsView.Initialize();
+            playerStatsView.Initialize(openButton);
             return playerStatsView;
         }
 

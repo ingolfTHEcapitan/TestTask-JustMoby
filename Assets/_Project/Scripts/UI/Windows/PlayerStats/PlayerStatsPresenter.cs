@@ -27,7 +27,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             
             _view.CreateStatItems(_model.GetStats());
             
-            foreach (PlayerStatItemView statItemView in _view._statItems.Values) 
+            foreach (PlayerStatItemView statItemView in _view.GetStatItems()) 
                 statItemView.OnUpgradeButtonClicked += UpgradeStatItem;
         }
 
@@ -38,7 +38,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
             
-            foreach (PlayerStatItemView statItemView in _view._statItems.Values) 
+            foreach (PlayerStatItemView statItemView in _view.GetStatItems()) 
                 statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;
         }
 
