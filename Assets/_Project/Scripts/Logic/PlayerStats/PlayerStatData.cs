@@ -17,7 +17,8 @@ namespace _Project.Scripts.Logic.PlayerStats
         public int Level { get; private set; }
         public int PreviewLevel { get; private set; }
         public int MaxLevel => Mathf.FloorToInt((MaxMultiplier - 1) / IncrementPerLevel);
-        
+        public bool PreviewLevelHasChanged => PreviewLevel != Level;
+
         public Sprite IconFrame { get; private set; }
         public Sprite Icon { get; private set; }
 

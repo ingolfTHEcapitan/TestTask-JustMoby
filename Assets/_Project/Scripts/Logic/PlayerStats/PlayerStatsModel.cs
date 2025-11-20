@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Data;
 using _Project.Scripts.Infrastructure.Services.SaveLoad;
@@ -42,6 +43,9 @@ namespace _Project.Scripts.Logic.PlayerStats
 
         public void ApplyChanges()
         {
+            if (!HasAnyChanges()) 
+                return;
+            
             foreach (PlayerStatData stat in Stats.Values) 
                 stat.ApplyPreviewLevel();
             
@@ -50,6 +54,9 @@ namespace _Project.Scripts.Logic.PlayerStats
 
         public void DiscardPreviewChanges()
         {
+            if (!HasAnyChanges()) 
+                return;
+            
             int returnedPoints = 0;
 
             foreach (PlayerStatData stat in Stats.Values)
@@ -101,6 +108,9 @@ namespace _Project.Scripts.Logic.PlayerStats
             return Stats[statName].PreviewLevel < Stats[statName].MaxLevel;
         }
         
+        private bool HasAnyChanges() =>
+            Stats.Values.Any(stat => stat.PreviewLevelHasChanged);
+
         private void LoadStats()
         {
             PlayerProgress progress = _saveLoadService.LoadProgress();
