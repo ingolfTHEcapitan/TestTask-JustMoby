@@ -11,10 +11,12 @@ namespace _Project.Scripts.Enemy
     public class EnemyDeath: MonoBehaviour
     {
         public event Action<EnemyDeath> OnDied;
-        
+
         [SerializeField] private Health _health;
         [SerializeField] private Animator _animator;
         [SerializeField] private NavMeshAgent _agent;
+        [SerializeField] private EnemyStateMachine _enemyStateMachine;
+        [SerializeField] private EnemyRotateToPlayer _enemyRotateToPlayer;
         [SerializeField] private float _destroyDelay = 1.5f;
 
         private readonly int _dieHash = Animator.StringToHash("Die");
@@ -45,18 +47,25 @@ namespace _Project.Scripts.Enemy
         private void Die()
         {
             _health.OnHealthChanged -= OnOnHealthChanged;
-            _agent.speed = 0f;
+            DisableEnemyComponents();
             _animator.SetTrigger(_dieHash);
             _playerStatsModel.AddUpgradePoint();
             
             StartCoroutine(DestroyTimer(_destroyDelay));
         }
-        
+
         private IEnumerator DestroyTimer(float delay)
         {
             yield return new WaitForSeconds(delay);
             Destroy(gameObject);
             OnDied?.Invoke(this);
+        }
+
+        private void DisableEnemyComponents()
+        {
+            _enemyStateMachine.enabled = false;
+            _enemyRotateToPlayer.enabled = false;
+            _agent.enabled = false;
         }
     }
 }

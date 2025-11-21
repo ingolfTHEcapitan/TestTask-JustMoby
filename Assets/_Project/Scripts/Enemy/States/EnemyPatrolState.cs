@@ -35,13 +35,24 @@ namespace _Project.Scripts.Enemy.States
             Initialize();
         }
 
+        private void Initialize()
+        {
+            _enemy.SpawnAnimationEnded += OnSpawnAnimationEnded;
+            _triggerObserver.TriggerEnter += OnTriggerEnter;
+        }
+
+        public void Dispose()
+        {
+            _enemy.SpawnAnimationEnded -= OnSpawnAnimationEnded;
+            _triggerObserver.TriggerEnter -= OnTriggerEnter;
+        }
+
         public override void Enter()
         {
             if (!IsSpawnAnimationEnded)
                 return;
             
             PatrolRandomPoint();
-            _agent.ResetPath();
         }
 
         public override void Update()
@@ -53,21 +64,8 @@ namespace _Project.Scripts.Enemy.States
                 PatrolRandomPoint();
         }
 
-        public void Dispose()
-        {
-            _enemy.SpawnAnimationEnded -= OnSpawnAnimationEnded;
-            _triggerObserver.TriggerEnter -= OnTriggerEnter;
-        }
-
-        private void Initialize()
-        {
-            _enemy.SpawnAnimationEnded += OnSpawnAnimationEnded;
-            _triggerObserver.TriggerEnter += OnTriggerEnter;
-            _agent.speed = _config.MoveSpeed;
-        }
-
         private void OnTriggerEnter(Collider other) => 
-            _stateMachine.SetState<EnemyAttackState>();
+            _stateMachine.SetState<EnemyChaseState>();
 
         private void PatrolRandomPoint()
         {

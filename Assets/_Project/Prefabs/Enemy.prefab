@@ -154,6 +154,7 @@ GameObject:
   - component: {fileID: 6797133231648955068}
   - component: {fileID: 3373863833424226122}
   - component: {fileID: 666391151365057433}
+  - component: {fileID: 8941394685515629623}
   - component: {fileID: 1388457686687828344}
   m_Layer: 7
   m_Name: Enemy
@@ -300,6 +301,19 @@ MonoBehaviour:
   _triggerObserver: {fileID: 9181539531574850646}
   _agent: {fileID: 3117825465392412960}
   _animator: {fileID: 1784392016738993417}
+--- !u!114 &8941394685515629623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4217187639714539394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8aa89699eb8686498ec19018462c88c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _speed: 5
 --- !u!114 &1388457686687828344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +329,8 @@ MonoBehaviour:
   _health: {fileID: 3373863833424226122}
   _animator: {fileID: 1784392016738993417}
   _agent: {fileID: 3117825465392412960}
+  _enemyStateMachine: {fileID: 666391151365057433}
+  _enemyRotateToPlayer: {fileID: 8941394685515629623}
   _destroyDelay: 1.5
 --- !u!1 &7049452954211621582
 GameObject:

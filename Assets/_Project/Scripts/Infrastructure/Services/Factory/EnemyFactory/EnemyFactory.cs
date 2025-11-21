@@ -25,7 +25,11 @@ namespace _Project.Scripts.Infrastructure.Services.Factory.EnemyFactory
         {
             EnemyStateMachine enemyStateMachine = 
                 _container.InstantiatePrefabForComponent<EnemyStateMachine>(config.Prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
-            enemyStateMachine.Initialize(spawnPoint, playerTransform);
+
+            EnemyRotateToPlayer enemyRotateToPlayer = enemyStateMachine.GetComponent<EnemyRotateToPlayer>();
+            enemyRotateToPlayer.Initialize(playerTransform);
+            
+            enemyStateMachine.Initialize(spawnPoint, playerTransform, enemyRotateToPlayer);
             
             float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
             Health health = enemyStateMachine.GetComponent<Health>();

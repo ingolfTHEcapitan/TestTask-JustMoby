@@ -21,16 +21,17 @@ namespace _Project.Scripts.Enemy.States
         private readonly NavMeshAgent _agent;
         private readonly TriggerObserver _triggerObserver;
         private readonly Transform _playerTransform;
+        private readonly EnemyRotateToPlayer _enemyRotateToPlayer;
 
         private readonly Collider[] _hits = new Collider[1];
         private readonly int _attackHash = Animator.StringToHash("Attack");
 
-        private float _currentCooldown;
         private bool _isAttacking;
         private int _layerMask;
 
-        public EnemyAttackState(IStateMachine stateMachine, EnemyStateMachine enemy, NavMeshAgent agent, EnemyConfig config, 
-            Transform playerTransform, TriggerObserver triggerObserver, Animator animator) : base(stateMachine)
+        public EnemyAttackState(IStateMachine stateMachine, EnemyStateMachine enemy, NavMeshAgent agent,
+            EnemyConfig config, Transform playerTransform, TriggerObserver triggerObserver,
+            EnemyRotateToPlayer enemyRotateToPlayer, Animator animator) : base(stateMachine)
         {
             _stateMachine = stateMachine;
             _enemy = enemy;
@@ -38,30 +39,10 @@ namespace _Project.Scripts.Enemy.States
             _config = config;
             _playerTransform = playerTransform;
             _triggerObserver = triggerObserver;
+            _enemyRotateToPlayer = enemyRotateToPlayer;
             _animator = animator;
 
             Initialize();
-        }
-
-        public override void Enter() =>
-            _agent.ResetPath();
-
-        public override void Update()
-        {
-            if (_agent.remainingDistance <= _agent.stoppingDistance)
-                _agent.SetDestination(_playerTransform.position);
-            
-            UpdateCoolDown();
-
-            if (CanAttack())
-                StartAttack();
-        }
-
-        public void Dispose()
-        {
-            _enemy.Attack -= OnAttack;
-            _enemy.AttackEnded -= OnAttackEnded;
-            _triggerObserver.TriggerExit -= OnTriggerExit;
         }
 
         private void Initialize()
@@ -72,9 +53,33 @@ namespace _Project.Scripts.Enemy.States
             _layerMask = LayerMask.GetMask(PlayerLayer);
         }
 
-        private void OnTriggerExit(Collider obj) =>
-            _stateMachine.SetState<EnemyPatrolState>();
+        public void Dispose()
+        {
+            _enemy.Attack -= OnAttack;
+            _enemy.AttackEnded -= OnAttackEnded;
+            _triggerObserver.TriggerExit -= OnTriggerExit;
+        }
 
+        public override void Enter()
+        {
+            _agent.ResetPath();
+            _enemyRotateToPlayer.enabled = true;
+        }
+
+        public override void Update()
+        {
+            if (CanAttack())
+                StartAttack();
+
+            if (!IsPlayerInAttackRange())
+                _stateMachine.SetState<EnemyChaseState>();
+        }
+
+        private void OnTriggerExit(Collider obj)
+        {
+            _stateMachine.SetState<EnemyPatrolState>();
+            _enemyRotateToPlayer.enabled = false;
+        }
 
         private void StartAttack()
         {
@@ -95,11 +100,8 @@ namespace _Project.Scripts.Enemy.States
             }
         }
         
-        private void OnAttackEnded()
-        {
-            _currentCooldown = _config.AttackCooldown;
+        private void OnAttackEnded() =>
             _isAttacking = false;
-        }
 
         private bool Hit(out Collider hit)
         {
@@ -115,16 +117,13 @@ namespace _Project.Scripts.Enemy.States
                    _enemy.transform.forward * _config.AttackDistance;
         }
 
-        private void UpdateCoolDown()
+        private bool IsPlayerInAttackRange()
         {
-            if (!CooldownIsUp())
-                _currentCooldown -= Time.deltaTime;
+            float distanceToPlayer = Vector3.Distance(_enemy.transform.position, _playerTransform.position);
+            return distanceToPlayer <= _config.AttackDistance;
         }
 
         private bool CanAttack() =>
-            !_isAttacking && CooldownIsUp();
-
-        private bool CooldownIsUp() =>
-            _currentCooldown <= 0f;
+            !_isAttacking && _enemy.AttackCooldownIsUp;
     }
 }
