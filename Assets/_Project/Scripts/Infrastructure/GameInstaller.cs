@@ -30,6 +30,7 @@ namespace _Project.Scripts.Infrastructure
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
         [SerializeField] private WeaponConfig _weaponConfig;
         [SerializeField] private EnemyConfig _enemyConfig;
+        [SerializeField] private SaveLoadServiceConfig _saveLoadServiceConfig;
         [Header("Prefabs")]
         [SerializeField] private GameObject _hudPrefab;
         [SerializeField] private GameObject _popUpLayerPrefab;
@@ -46,9 +47,9 @@ namespace _Project.Scripts.Infrastructure
 
         private void BindServices()
         {
+            Container.BindInterfacesAndSelfTo<ISaveLoadService>().FromInstance(_saveLoadServiceConfig.GetInstance()).AsSingle();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerPrefsSaveLoadService>().AsSingle();
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
             Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle().WithArguments(_uiParent);
         }
