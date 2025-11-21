@@ -14,10 +14,12 @@ namespace _Project.Scripts.Enemy
 
         [SerializeField] private Health _health;
         [SerializeField] private Animator _animator;
+        [SerializeField] private float _destroyDelay = 1.5f;
+        [Header("Components To Disable On Death")]
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private EnemyStateMachine _enemyStateMachine;
         [SerializeField] private EnemyRotateToPlayer _enemyRotateToPlayer;
-        [SerializeField] private float _destroyDelay = 1.5f;
+        [SerializeField] private SphereCollider _attackZoneTrigger;
 
         private readonly int _dieHash = Animator.StringToHash("Die");
         private readonly int _hitHash = Animator.StringToHash("Hit");
@@ -63,6 +65,7 @@ namespace _Project.Scripts.Enemy
 
         private void DisableEnemyComponents()
         {
+            _attackZoneTrigger.enabled = false;
             _enemyStateMachine.enabled = false;
             _enemyRotateToPlayer.enabled = false;
             _agent.enabled = false;
