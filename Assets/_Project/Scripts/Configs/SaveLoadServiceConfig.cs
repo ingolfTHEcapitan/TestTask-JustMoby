@@ -1,5 +1,5 @@
 using System;
-using _Project.Scripts.Infrastructure.Services.SaveLoad;
+using _Project.Scripts.Services.SaveLoad;
 using UnityEngine;
 
 namespace _Project.Scripts.Configs

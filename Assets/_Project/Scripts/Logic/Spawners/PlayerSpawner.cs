@@ -1,6 +1,6 @@
 using _Project.Scripts.Configs.Spawners;
-using _Project.Scripts.Infrastructure.Services.Factory.PlayerFactory;
 using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Services.Factory.PlayerFactory;
 
 namespace _Project.Scripts.Logic.Spawners
 {

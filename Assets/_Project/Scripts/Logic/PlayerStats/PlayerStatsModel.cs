@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Data;
-using _Project.Scripts.Infrastructure.Services.SaveLoad;
+using _Project.Scripts.Services.SaveLoad;
 
 namespace _Project.Scripts.Logic.PlayerStats
 {

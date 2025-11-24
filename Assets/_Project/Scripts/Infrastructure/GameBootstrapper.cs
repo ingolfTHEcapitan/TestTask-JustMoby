@@ -1,12 +1,12 @@
 using System;
-using _Project.Scripts.Infrastructure.Services.Factory.UIFactory;
-using _Project.Scripts.Infrastructure.Services.GamePause;
 using _Project.Scripts.Logic;
 using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Logic.Weapon;
-using _Project.Scripts.Player;
+using _Project.Scripts.Services.Factory.UIFactory;
+using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.UI.Elements;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;

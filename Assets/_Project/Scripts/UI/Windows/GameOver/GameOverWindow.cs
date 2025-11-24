@@ -1,6 +1,6 @@
-using _Project.Scripts.Infrastructure.Services.GamePause;
+using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.Spawners;
-using _Project.Scripts.Player;
+using _Project.Scripts.Services.GamePause;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;

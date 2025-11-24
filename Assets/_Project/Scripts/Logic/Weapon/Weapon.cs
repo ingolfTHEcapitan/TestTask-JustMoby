@@ -1,7 +1,7 @@
 using _Project.Scripts.Configs.Weapon;
-using _Project.Scripts.Infrastructure.Services.Factory.BulletFactory;
-using _Project.Scripts.Infrastructure.Services.GamePause;
-using _Project.Scripts.Infrastructure.Services.PlayerInput;
+using _Project.Scripts.Services.Factory.BulletFactory;
+using _Project.Scripts.Services.GamePause;
+using _Project.Scripts.Services.PlayerInput;
 using UnityEngine;
 using Zenject;
 

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Infrastructure.Services.PlayerInput;
 using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Services.PlayerInput;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
