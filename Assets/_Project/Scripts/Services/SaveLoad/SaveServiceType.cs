@@ -1,8 +1,8 @@
 namespace _Project.Scripts.Services.SaveLoad
 {
-    public enum SaveLoadServiceType
+    public enum SaveServiceType
     {
-        Json,
+        File,
         PlayerPrefs,
     }
 }

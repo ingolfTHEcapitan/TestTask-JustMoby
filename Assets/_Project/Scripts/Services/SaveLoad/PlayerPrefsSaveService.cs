@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Services.SaveLoad
 {
-    public class PlayerPrefsSaveLoadService: ISaveLoadService
+    public class PlayerPrefsSaveService: ISaveLoadService
     {
         private const string PlayerProgressKey = "PlayerProgress";
         

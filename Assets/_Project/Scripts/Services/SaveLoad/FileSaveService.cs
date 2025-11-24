@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Services.SaveLoad
 {
-    public class JsonSaveLoadService : ISaveLoadService
+    public class FileSaveService : ISaveLoadService
     {
         private const string FolderName = "Saves";
         private const string FileName = "Save.json";
@@ -12,7 +12,7 @@ namespace _Project.Scripts.Services.SaveLoad
         private readonly string _saveDirectoryPath;
         private readonly string _savePath;
 
-        public JsonSaveLoadService()
+        public FileSaveService()
         {
             _saveDirectoryPath = Path.Combine(Application.dataPath, FolderName);
             _savePath = Path.Combine(_saveDirectoryPath, FileName);
@@ -25,7 +25,7 @@ namespace _Project.Scripts.Services.SaveLoad
             
             string json = JsonUtility.ToJson(playerProgress, prettyPrint: true);
             File.WriteAllText(_savePath, json);
-            Debug.Log("Progress saved to Json, save path: " + _savePath);
+            Debug.Log("Progress saved to File, save path: " + _savePath);
         }
 
         public PlayerProgress LoadProgress()
@@ -36,7 +36,7 @@ namespace _Project.Scripts.Services.SaveLoad
             {
                 string json = File.ReadAllText(_savePath);
                 playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
-                Debug.Log("Progress loaded from Json, save path: " + _savePath);
+                Debug.Log("Progress loaded from File, save path: " + _savePath);
                 return playerProgress;
             }
             

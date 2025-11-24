@@ -13,6 +13,7 @@ using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.SaveLoad;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure
@@ -30,7 +31,7 @@ namespace _Project.Scripts.Infrastructure
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
         [SerializeField] private WeaponConfig _weaponConfig;
         [SerializeField] private EnemyConfig _enemyConfig;
-        [SerializeField] private SaveLoadServiceConfig _saveLoadServiceConfig;
+        [SerializeField] private SaveServiceConfig _saveServiceConfig;
         [Header("Prefabs")]
         [SerializeField] private GameObject _hudPrefab;
         [SerializeField] private GameObject _popUpLayerPrefab;
@@ -47,7 +48,7 @@ namespace _Project.Scripts.Infrastructure
 
         private void BindServices()
         {
-            Container.BindInterfacesAndSelfTo<ISaveLoadService>().FromInstance(_saveLoadServiceConfig.GetInstance()).AsSingle();
+            Container.BindInterfacesAndSelfTo<ISaveLoadService>().FromInstance(_saveServiceConfig.GetInstance()).AsSingle();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
