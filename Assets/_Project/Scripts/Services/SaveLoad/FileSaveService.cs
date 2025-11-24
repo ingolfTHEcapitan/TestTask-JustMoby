@@ -14,7 +14,7 @@ namespace _Project.Scripts.Services.SaveLoad
 
         public FileSaveService()
         {
-            _saveDirectoryPath = Path.Combine(Application.dataPath, FolderName);
+            _saveDirectoryPath = Path.Combine(Application.persistentDataPath, FolderName);
             _savePath = Path.Combine(_saveDirectoryPath, FileName);
         }
         
