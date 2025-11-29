@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id">
+  <string name="gcm_defaultSenderId" translatable="false">388970494950</string>
+  <string name="google_storage_bucket" translatable="false">testtask-justmoby.firebasestorage.app</string>
+  <string name="project_id" translatable="false">testtask-justmoby</string>
+  <string name="google_api_key" translatable="false">AIzaSyD9WfTY97XNHShnFWe3N42gjUadFgD7OAQ</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyD9WfTY97XNHShnFWe3N42gjUadFgD7OAQ</string>
+  <string name="google_app_id" translatable="false">1:388970494950:android:bf2c8433793f28c8f83427</string>
+</resources>

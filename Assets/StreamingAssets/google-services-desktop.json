@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "388970494950",
+    "project_id": "testtask-justmoby",
+    "storage_bucket": "testtask-justmoby.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:388970494950:android:bf2c8433793f28c8f83427",
+        "android_client_info": {
+          "package_name": "com.defaultCompany.TestTaskJustMoby"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9WfTY97XNHShnFWe3N42gjUadFgD7OAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
