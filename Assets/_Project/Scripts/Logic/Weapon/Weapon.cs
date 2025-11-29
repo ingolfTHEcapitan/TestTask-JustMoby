@@ -1,7 +1,9 @@
+using System;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Services.Factory.BulletFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
+using _Project.Scripts.Services.Statistics;
 using UnityEngine;
 using Zenject;
 
@@ -20,15 +22,17 @@ namespace _Project.Scripts.Logic.Weapon
         private IGamePauseService _pauseService;
         private IInputService _inputService;
         private IBulletFactory _factory;
+        private IGameStatistics _statistics;
         private WeaponConfig _config;
         
         [Inject]
         public void Construct(IGamePauseService pauseService, IInputService inputService, 
-            IBulletFactory factory, WeaponConfig config)
+            IBulletFactory factory, IGameStatistics statistics, WeaponConfig config)
         {
             _pauseService = pauseService;
             _inputService = inputService;
             _factory = factory;
+            _statistics = statistics;
             _config = config;
         }
         
@@ -51,6 +55,7 @@ namespace _Project.Scripts.Logic.Weapon
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
             _factory.CreateBullet(_config.BulletConfig, _shootPoint, GetShootDirection());
+            _statistics.RecordShot();
         }
 
         private Vector3 GetShootDirection()

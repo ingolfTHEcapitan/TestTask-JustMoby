@@ -4,6 +4,7 @@ using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Logic.Weapon;
+using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.UI.Elements;
@@ -19,6 +20,7 @@ namespace _Project.Scripts.Infrastructure
     {
         private readonly IGamePauseService _pauseService;
         private readonly IUIFactory _uiFactory;
+        private readonly IAnalyticsService _analyticsService;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly PlayerSpawner _playerSpawner;
         private readonly EnemySpawner _enemySpawner;
@@ -29,10 +31,11 @@ namespace _Project.Scripts.Infrastructure
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, PlayerStatsModel playerStatsModel, 
             PlayerSpawner playerSpawner, EnemySpawner enemySpawner, GameObject hudLayerPrefab, 
-            GameObject popUpLayerPrefab, Transform enemySpawnPoint)
+            GameObject popUpLayerPrefab, Transform enemySpawnPoint, IAnalyticsService analyticsService)
         {
             _pauseService = pauseService;
             _uiFactory = uiFactory;
+            _analyticsService = analyticsService;
             _playerStatsModel = playerStatsModel;
             _playerSpawner = playerSpawner;
             _enemySpawner = enemySpawner;
@@ -59,6 +62,8 @@ namespace _Project.Scripts.Infrastructure
             
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint, playerHealth.transform);
             InitGameOverWindow(popUpLayer, playerHealth);
+            
+            _analyticsService.LogGameStart();
         }
 
         private void InitGameOverWindow(GameObject popUpLayer, Health player)

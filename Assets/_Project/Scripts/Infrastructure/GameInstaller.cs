@@ -4,6 +4,7 @@ using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
+using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Factory.BulletFactory;
 using _Project.Scripts.Services.Factory.EnemyFactory;
 using _Project.Scripts.Services.Factory.PlayerFactory;
@@ -12,8 +13,8 @@ using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.Services.Statistics;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure
@@ -53,6 +54,8 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
             Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle().WithArguments(_uiParent);
+            Container.BindInterfacesAndSelfTo<FirebaseAnalyticsService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameStatistics>().AsSingle();
         }
 
         private void BindPlayer()
