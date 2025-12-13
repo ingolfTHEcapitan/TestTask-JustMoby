@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Services.Factory.EnemyFactory;
@@ -64,16 +65,16 @@ namespace _Project.Scripts.Logic.Spawners
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime)
                 {
                     await UniTask.Delay(TimeSpan.FromSeconds(_config.SpawnDelay), cancellationToken: token);
-                    InitEnemy(target, playerTransform);
+                    await InitEnemy(target, playerTransform);
                 }
                 
                 await UniTask.WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime, cancellationToken: token);
             }
         }
 
-        private void InitEnemy(Transform target, Transform playerTransform)
+        private async Task InitEnemy(Transform target, Transform playerTransform)
         {
-            EnemyDeath enemyDeath = _factory.CreateEnemy(_config, GetSpawnPosition(target), playerTransform);
+            EnemyDeath enemyDeath = await _factory.CreateEnemy(_config, GetSpawnPosition(target), playerTransform);
             enemyDeath.OnDied += OnEnemyDeath;
             _spawnedEnemies.Add(enemyDeath);
         }

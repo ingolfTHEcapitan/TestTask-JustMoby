@@ -1,4 +1,6 @@
 using System;
+using System.Threading.Tasks;
+using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
@@ -16,44 +18,42 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure
 {
-    public class GameBootstrapper: IInitializable, IDisposable
+    public class GameBootstrapper : IInitializable, IDisposable
     {
         private readonly IGamePauseService _pauseService;
         private readonly IUIFactory _uiFactory;
         private readonly IAnalyticsService _analyticsService;
+        private readonly IAssetProvider _assetProvider;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly PlayerSpawner _playerSpawner;
         private readonly EnemySpawner _enemySpawner;
-        private readonly GameObject _hudLayerPrefab;
-        private readonly GameObject _popUpLayerPrefab;
         private readonly Transform _enemySpawnPoint;
         private PlayerStatsPresenter _playerStatsPresenter;
 
-        public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, PlayerStatsModel playerStatsModel, 
-            PlayerSpawner playerSpawner, EnemySpawner enemySpawner, GameObject hudLayerPrefab, 
-            GameObject popUpLayerPrefab, Transform enemySpawnPoint, IAnalyticsService analyticsService)
+        public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
+            PlayerStatsModel playerStatsModel, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
+            Transform enemySpawnPoint, IAnalyticsService analyticsService)
         {
             _pauseService = pauseService;
             _uiFactory = uiFactory;
+            _assetProvider = assetProvider;
             _analyticsService = analyticsService;
             _playerStatsModel = playerStatsModel;
             _playerSpawner = playerSpawner;
             _enemySpawner = enemySpawner;
-            _hudLayerPrefab = hudLayerPrefab;
-            _popUpLayerPrefab = popUpLayerPrefab;
             _enemySpawnPoint = enemySpawnPoint;
         }
 
-        public void Initialize()
+        public async void Initialize()
         {
             CursorController.SetCursorVisible(visible: false);
             
-            GameObject hudLayer = _uiFactory.CreateHudLayer(_hudLayerPrefab);
-            GameObject popUpLayer = _uiFactory.CreatePopUpLayer(_popUpLayerPrefab);
+            GameObject hudLayer = await _uiFactory.CreateHudLayer();
+            GameObject popUpLayer = await _uiFactory.CreatePopUpLayer();
             
             _playerStatsModel.Initialize();
             
-            Health playerHealth = InitPlayer(_playerSpawner);
+            Health playerHealth = await InitPlayer(_playerSpawner);
             InitPlayerHealthBarView(hudLayer, playerHealth);
             InitWeapon(playerHealth);
 
@@ -73,12 +73,15 @@ namespace _Project.Scripts.Infrastructure
             gameOverWindow.Initialize(playerDeath);
         }
 
-        public void Dispose() => 
-            _playerStatsPresenter.Dispose();
-
-        private Health InitPlayer(PlayerSpawner playerSpawner)
+        public void Dispose()
         {
-            Health playerHealth = playerSpawner.Spawn();
+            _playerStatsPresenter.Dispose();
+            _assetProvider.CleanUp();
+        }
+
+        private async Task<Health> InitPlayer(PlayerSpawner playerSpawner)
+        {
+            Health playerHealth = await playerSpawner.Spawn();
             return playerHealth;
         }
         

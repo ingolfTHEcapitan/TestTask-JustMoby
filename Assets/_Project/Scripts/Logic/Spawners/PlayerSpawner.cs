@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.Factory.PlayerFactory;
@@ -15,7 +16,7 @@ namespace _Project.Scripts.Logic.Spawners
             _config = config;
         }
 
-        public Health Spawn() => 
-            _factory.CreatePlayer(_config.Prefab, _config.SpawnPosition);
+        public async Task<Health> Spawn() => 
+            await _factory.CreatePlayer(_config.PrefabReference, _config.SpawnPosition);
     }
 }

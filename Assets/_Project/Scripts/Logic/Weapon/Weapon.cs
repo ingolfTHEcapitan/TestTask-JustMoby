@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Services.Factory.BulletFactory;
 using _Project.Scripts.Services.GamePause;
@@ -51,10 +52,10 @@ namespace _Project.Scripts.Logic.Weapon
                 Shoot();
         }
 
-        private void Shoot()
+        private async Task Shoot()
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
-            _factory.CreateBullet(_config.BulletConfig, _shootPoint, GetShootDirection());
+            await _factory.CreateBullet(_config.BulletConfig, _shootPoint, GetShootDirection());
             _statistics.RecordShot();
         }
 

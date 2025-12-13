@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 053d6dfced14433c89f72d06b3d23e46, type: 3}
   m_Name: EnemySpawnerConfig
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 4217187639714539394, guid: aa3f944a796a411408a412504ecdc45a,
-    type: 3}
+  <PrefabReference>k__BackingField:
+    m_AssetGUID: aa3f944a796a411408a412504ecdc45a
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   <EnemiesAtTime>k__BackingField: 6
   <SpawnDistance>k__BackingField: 6
   <SpawnDelay>k__BackingField: 3

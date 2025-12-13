@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64f2dc80116f410d89b14944ed91aff4, type: 3}
   m_Name: BulletConfig
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 2016706838199318848, guid: fc5b0a1421768624ea6623df9835e99c,
-    type: 3}
+  <PrefabReference>k__BackingField:
+    m_AssetGUID: fc5b0a1421768624ea6623df9835e99c
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
   <Speed>k__BackingField: 20
   <LifeTime>k__BackingField: 5

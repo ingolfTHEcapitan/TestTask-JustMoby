@@ -1,10 +1,11 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Services.Factory.UIFactory
 {
     public interface IUIFactory
     {
-        GameObject CreateHudLayer(GameObject prefab);
-        GameObject CreatePopUpLayer(GameObject prefab);
+        Task<GameObject> CreateHudLayer();
+        Task<GameObject> CreatePopUpLayer();
     }
 }
