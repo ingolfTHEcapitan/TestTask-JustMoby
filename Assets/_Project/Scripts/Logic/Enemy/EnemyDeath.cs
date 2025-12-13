@@ -50,7 +50,6 @@ namespace _Project.Scripts.Logic.Enemy
         {
             DisableEnemyComponents();
             _animator.SetTrigger(_dieHash);
-            _playerStatsModel.AddUpgradePoint();
             
             StartCoroutine(DestroyTimer(_destroyDelay));
         }

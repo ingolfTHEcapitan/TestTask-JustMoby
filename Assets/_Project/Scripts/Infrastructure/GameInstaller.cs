@@ -14,6 +14,7 @@ using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.Services.Score;
 using _Project.Scripts.Services.Statistics;
 using UnityEngine;
 using Zenject;
@@ -40,6 +41,7 @@ namespace _Project.Scripts.Infrastructure
             BindServices();
             BindPlayer();
             BindPlayerStats();
+            BindScoreService();
             BindEnemy();
             BindWeapon();
             BindGameBootstrapper();
@@ -69,6 +71,9 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<List<PlayerStatConfig>>().FromInstance(_playerStatConfigs).AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
         }
+
+        private void BindScoreService() => 
+            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
 
         private void BindEnemy()
         {

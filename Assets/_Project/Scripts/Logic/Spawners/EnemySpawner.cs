@@ -6,6 +6,7 @@ using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Services.Factory.EnemyFactory;
 using _Project.Scripts.Services.GamePause;
+using _Project.Scripts.Services.Score;
 using _Project.Scripts.Services.Statistics;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -18,16 +19,18 @@ namespace _Project.Scripts.Logic.Spawners
         private readonly IGamePauseService _pauseService;
         private readonly IEnemyFactory _factory;
         private readonly IGameStatistics _statistics;
+        private readonly IScoreService _scoreService;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
         private readonly EnemySpawnerConfig _config;
         private CancellationTokenSource _cancellationTokenSource;
 
         public EnemySpawner(EnemySpawnerConfig config, IGamePauseService pauseService, IEnemyFactory factory, 
-            IGameStatistics statistics)
+            IGameStatistics statistics, IScoreService scoreService)
         {
             _pauseService = pauseService;
             _factory = factory;
             _statistics = statistics;
+            _scoreService = scoreService;
             _config = config;
         }
         
@@ -92,6 +95,7 @@ namespace _Project.Scripts.Logic.Spawners
             enemyDeath.OnDied -= OnEnemyDeath;
             _spawnedEnemies.Remove(enemyDeath);
             _statistics.RecordEnemyKilled();
+            _scoreService.AddScore();
         }
     }
 }
