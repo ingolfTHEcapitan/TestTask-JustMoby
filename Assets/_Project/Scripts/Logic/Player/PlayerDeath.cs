@@ -31,10 +31,10 @@ namespace _Project.Scripts.Logic.Player
         }
         
         public void Initialize() => 
-            _health.OnHealthChanged += OnOnHealthChanged;
+            _health.OnHealthChanged += PlayerDie;
 
         private void OnDestroy() => 
-            _health.OnHealthChanged -= OnOnHealthChanged;
+            _health.OnHealthChanged -= PlayerDie;
 
         public void Revive()
         {
@@ -45,7 +45,7 @@ namespace _Project.Scripts.Logic.Player
             _analyticsService.LogPlayerRevive(_statistics.ReviveCount);
         }
         
-        private void OnOnHealthChanged()
+        private void PlayerDie()
         {
             if (!IsDead && _health.CurrentHealth <= 0) 
                 Die();

@@ -48,7 +48,7 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         private void Initialize()
         {
-            _enemy.Attack += OnAttack;
+            _enemy.Attack += DealDamage;
             _enemy.AttackEnded += OnAttackEnded;
             _triggerObserver.TriggerExit += OnTriggerExit;
             _layerMask = LayerMask.GetMask(PlayerLayer);
@@ -56,7 +56,7 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         public void Dispose()
         {
-            _enemy.Attack -= OnAttack;
+            _enemy.Attack -= DealDamage;
             _enemy.AttackEnded -= OnAttackEnded;
             _triggerObserver.TriggerExit -= OnTriggerExit;
         }
@@ -89,7 +89,7 @@ namespace _Project.Scripts.Logic.Enemy.States
             _isAttacking = true;
         }
 
-        private void OnAttack()
+        private void DealDamage()
         {
             PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.red);
             if (Hit(out Collider hit))

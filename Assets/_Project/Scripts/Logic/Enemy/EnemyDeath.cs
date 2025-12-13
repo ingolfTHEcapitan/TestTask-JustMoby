@@ -30,15 +30,15 @@ namespace _Project.Scripts.Logic.Enemy
             _playerStatsModel = playerStatsModel;
 
         public void Initialize() => 
-            _health.OnHealthChanged += OnOnHealthChanged;
+            _health.OnHealthChanged += EnemyDie;
 
         private void OnDestroy() => 
-            _health.OnHealthChanged -= OnOnHealthChanged;
+            _health.OnHealthChanged -= EnemyDie;
         
         public void KillEnemy() => 
             _health.TakeDamage(_health.MaxHealth);
 
-        private void OnOnHealthChanged()
+        private void EnemyDie()
         {
             if (_health.CurrentHealth <= 0)
                 Die();
@@ -48,7 +48,6 @@ namespace _Project.Scripts.Logic.Enemy
 
         private void Die()
         {
-            _health.OnHealthChanged -= OnOnHealthChanged;
             DisableEnemyComponents();
             _animator.SetTrigger(_dieHash);
             _playerStatsModel.AddUpgradePoint();

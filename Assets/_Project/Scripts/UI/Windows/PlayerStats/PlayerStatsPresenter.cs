@@ -24,7 +24,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public void Initialize()
         {
-            _model.OnStatsChanged += OnStatsChanged;
+            _model.OnStatsChanged += UpdateStatItems;
             _view.OnOpenButtonClicked += Open;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
@@ -37,7 +37,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public void Dispose()
         {
-            _model.OnStatsChanged -= OnStatsChanged;
+            _model.OnStatsChanged -= UpdateStatItems;
             _view.OnOpenButtonClicked -= Open;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
@@ -60,7 +60,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _isOpen = true;
             _view.ShowPanel();
             _pauseService.SetPaused(true);
-            OnStatsChanged();
+            UpdateStatItems();
         }
 
         private void Close()
@@ -77,7 +77,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             Close();
         }
 
-        private void OnStatsChanged()
+        private void UpdateStatItems()
         {
             _view.UpdatePointsText(_model.UpgradePoints.ToString());
             UpdateAllStatItems();
