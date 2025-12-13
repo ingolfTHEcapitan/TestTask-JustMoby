@@ -29,6 +29,7 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         private bool _isAttacking;
         private int _layerMask;
+        private float _attackDistanceSquared;
 
         public EnemyAttackState(IStateMachine stateMachine, EnemyStateMachine enemy, NavMeshAgent agent,
             EnemyConfig config, Transform playerTransform, TriggerObserver triggerObserver,
@@ -52,6 +53,7 @@ namespace _Project.Scripts.Logic.Enemy.States
             _enemy.AttackEnded += OnAttackEnded;
             _triggerObserver.TriggerExit += OnTriggerExit;
             _layerMask = LayerMask.GetMask(PlayerLayer);
+            _attackDistanceSquared = _config.AttackDistance * _config.AttackDistance;
         }
 
         public void Dispose()
@@ -120,8 +122,8 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         private bool IsPlayerInAttackRange()
         {
-            float distanceToPlayer = Vector3.Distance(_enemy.transform.position, _playerTransform.position);
-            return distanceToPlayer <= _config.AttackDistance;
+            float distanceToPlayerSquared = (_enemy.transform.position - _playerTransform.position).sqrMagnitude;
+            return distanceToPlayerSquared <= _attackDistanceSquared;
         }
 
         private bool CanAttack() =>

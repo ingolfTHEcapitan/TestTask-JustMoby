@@ -16,6 +16,7 @@ namespace _Project.Scripts.Logic.Enemy.States
         private readonly Transform _playerTransform;
         private readonly TriggerObserver _triggerObserver;
         private readonly EnemyRotateToPlayer _enemyRotateToPlayer;
+        private float _attackDistanceSquared;
 
         public EnemyChaseState(IStateMachine stateMachine, EnemyStateMachine enemy, NavMeshAgent agent,
             EnemyConfig config, Transform playerTransform, TriggerObserver triggerObserver,
@@ -32,8 +33,11 @@ namespace _Project.Scripts.Logic.Enemy.States
             Initialize();
         }
 
-        private void Initialize() => 
+        private void Initialize()
+        {
             _triggerObserver.TriggerExit += OnTriggerExit;
+            _attackDistanceSquared = _config.AttackDistance * _config.AttackDistance;
+        }
 
         public void Dispose() => 
             _triggerObserver.TriggerExit -= OnTriggerExit;
@@ -60,8 +64,8 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         private bool IsPlayerInAttackRange()
         {
-            float distanceToPlayer = Vector3.Distance(_enemy.transform.position, _playerTransform.position);
-            return distanceToPlayer <= _config.AttackDistance;
+            float distanceToPlayerSquared = (_enemy.transform.position - _playerTransform.position).sqrMagnitude;
+            return distanceToPlayerSquared <= _attackDistanceSquared;
         }
     }
 }
