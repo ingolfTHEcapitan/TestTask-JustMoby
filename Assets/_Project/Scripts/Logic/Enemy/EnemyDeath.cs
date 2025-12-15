@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
 using UnityEngine;
 using UnityEngine.AI;
+using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy
 {
@@ -11,13 +13,17 @@ namespace _Project.Scripts.Logic.Enemy
         public event Action<EnemyDeath> OnDied;
 
         [SerializeField] private Health _health;
-        [SerializeField] private float _destroyDelay = 1.5f;
         [Header("Components To Disable On Death")]
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private EnemyStateMachine _enemyStateMachine;
         [SerializeField] private EnemyRotateToPlayer _enemyRotateToPlayer;
 
         private bool _isDead;
+        private EnemyConfig _config;
+
+        [Inject]
+        public void Construct(EnemyConfig config) => 
+            _config = config;
 
         public void Initialize() => 
             _health.OnZeroHealth += EnemyDie;
@@ -38,7 +44,7 @@ namespace _Project.Scripts.Logic.Enemy
         {
             _isDead = true;
             DisableEnemyComponents();
-            StartCoroutine(DestroyTimer(_destroyDelay));
+            StartCoroutine(DestroyTimer(_config.DestroyDelay));
         }
 
         private IEnumerator DestroyTimer(float delay)

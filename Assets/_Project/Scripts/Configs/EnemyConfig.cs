@@ -31,5 +31,8 @@ namespace _Project.Scripts.Configs
         
         [field: SerializeField, Range(0.5f, 10f)]
         public float RotationSpeed { get; private set; } = 2.5f;
+
+        [field: SerializeField, Range(0.5f, 5f)]
+        public float DestroyDelay { get; set; } = 1.5f;
     }
 }
