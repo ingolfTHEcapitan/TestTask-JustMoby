@@ -1,69 +1,45 @@
-using System;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.States;
+using _Project.Scripts.Logic.Common.StateMachine.Transitions;
 using _Project.Scripts.Logic.Tools;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace _Project.Scripts.Logic.Enemy.States
 {
-    public class EnemyAttackState : State, IDisposable
+    public class EnemyAttackState : EnemyBaseState
     {
         private const string PlayerLayer = "Player";
         private const float AttackYOffset = 0.5f;
         private const float DebugLifeTime = 3;
 
-        private readonly IStateMachine _stateMachine;
-        private readonly EnemyStateMachine _enemy;
-        private readonly EnemyConfig _config;
         private readonly Animator _animator;
-        private readonly NavMeshAgent _agent;
-        private readonly TriggerObserver _triggerObserver;
         private readonly Transform _playerTransform;
+        private readonly Transform _enemyTransform;
         private readonly EnemyRotateToPlayer _enemyRotateToPlayer;
 
         private readonly Collider[] _hits = new Collider[1];
+        private readonly int _layerMask;
         private readonly int _attackHash = Animator.StringToHash("Attack");
 
         private bool _isAttacking;
-        private int _layerMask;
-        private float _attackDistanceSquared;
+        private EnemyStateMachine _enemy;
+        private readonly IPredicate _attackCooldownIsUp;
 
-        public EnemyAttackState(IStateMachine stateMachine, EnemyStateMachine enemy, NavMeshAgent agent,
-            EnemyConfig config, Transform playerTransform, TriggerObserver triggerObserver,
-            EnemyRotateToPlayer enemyRotateToPlayer, Animator animator) : base(stateMachine)
+        public EnemyAttackState(NavMeshAgent agent, EnemyConfig config, IPredicate attackCooldownIsUp, Transform playerTransform, 
+            Transform enemyTransform, EnemyRotateToPlayer enemyRotateToPlayer, Animator animator) : base(agent, config)
         {
-            _stateMachine = stateMachine;
-            _enemy = enemy;
-            _agent = agent;
-            _config = config;
+            _attackCooldownIsUp = attackCooldownIsUp;
             _playerTransform = playerTransform;
-            _triggerObserver = triggerObserver;
             _enemyRotateToPlayer = enemyRotateToPlayer;
             _animator = animator;
+            _enemyTransform = enemyTransform;
 
-            Initialize();
-        }
-
-        private void Initialize()
-        {
-            _enemy.Attack += DealDamage;
-            _enemy.AttackEnded += OnAttackEnded;
-            _triggerObserver.TriggerExit += OnTriggerExit;
             _layerMask = LayerMask.GetMask(PlayerLayer);
-            _attackDistanceSquared = _config.AttackDistance * _config.AttackDistance;
         }
 
-        public void Dispose()
-        {
-            _enemy.Attack -= DealDamage;
-            _enemy.AttackEnded -= OnAttackEnded;
-            _triggerObserver.TriggerExit -= OnTriggerExit;
-        }
-
-        public override void Enter()
+        public override void OnEnter()
         {
             _agent.ResetPath();
             _enemyRotateToPlayer.enabled = true;
@@ -73,25 +49,19 @@ namespace _Project.Scripts.Logic.Enemy.States
         {
             if (CanAttack())
                 StartAttack();
-
-            if (!IsPlayerInAttackRange())
-                _stateMachine.SetState<EnemyChaseState>();
         }
 
-        private void OnTriggerExit(Collider obj)
-        {
-            _stateMachine.SetState<EnemyPatrolState>();
+        public override void OnExit() => 
             _enemyRotateToPlayer.enabled = false;
-        }
 
         private void StartAttack()
         {
-            _enemy.transform.LookAt(_playerTransform);
+            _enemyTransform.LookAt(_playerTransform);
             _animator.SetTrigger(_attackHash);
             _isAttacking = true;
         }
 
-        private void DealDamage()
+        public void DealDamage()
         {
             PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.red);
             if (Hit(out Collider hit))
@@ -103,7 +73,7 @@ namespace _Project.Scripts.Logic.Enemy.States
             }
         }
         
-        private void OnAttackEnded() =>
+        public void AttackEnded() =>
             _isAttacking = false;
 
         private bool Hit(out Collider hit)
@@ -115,18 +85,11 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         private Vector3 GetStartPoint()
         {
-            return new Vector3(_enemy.transform.position.x, _enemy.transform.position.y + AttackYOffset,
-                       _enemy.transform.position.z) +
-                   _enemy.transform.forward * _config.AttackDistance;
-        }
-
-        private bool IsPlayerInAttackRange()
-        {
-            float distanceToPlayerSquared = (_enemy.transform.position - _playerTransform.position).sqrMagnitude;
-            return distanceToPlayerSquared <= _attackDistanceSquared;
+            return new Vector3(_enemyTransform.position.x, _enemyTransform.position.y + AttackYOffset, _enemyTransform.position.z)
+                   + _enemyTransform.forward * _config.AttackDistance;
         }
 
         private bool CanAttack() =>
-            !_isAttacking && _enemy.AttackCooldownIsUp;
+            !_isAttacking && _attackCooldownIsUp.Evaluate();
     }
 }

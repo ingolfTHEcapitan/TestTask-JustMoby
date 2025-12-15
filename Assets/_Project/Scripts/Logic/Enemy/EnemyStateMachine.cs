@@ -1,7 +1,6 @@
-using System;
 using _Project.Scripts.Configs;
-using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.States;
+using _Project.Scripts.Logic.Common.StateMachine;
+using _Project.Scripts.Logic.Common.StateMachine.Transitions;
 using _Project.Scripts.Logic.Enemy.States;
 using _Project.Scripts.Services.GamePause;
 using JetBrains.Annotations;
@@ -15,22 +14,22 @@ namespace _Project.Scripts.Logic.Enemy
     {
         private const float StoppingDistanceOffset = 0.5f;
         
-        public event Action AttackEnded;
-        public event Action Attack;
-        public event Action SpawnAnimationEnded;
-
-        [SerializeField] private TriggerObserver _triggerObserver;
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private Animator _animator;
-
-        private IStateMachine _stateMachine;
+        
         private IGamePauseService _pauseService;
         private EnemyConfig _config;
         private EnemyRotateToPlayer _enemyRotateToPlayer;
-        private float _currentAttackCooldown;
-
-        public bool AttackCooldownIsUp => _currentAttackCooldown <= 0f;
+        private Transform _playerTransform;
+        private StateMachine _stateMachine;
         
+        private float _currentAttackCooldown;
+        private float _attackDistanceSquared;
+        private float _chaseDistanceSquared;
+        private bool _isSpawnAnimationEnded;
+        
+        private bool AttackCooldownIsUp => _currentAttackCooldown <= 0f;
+
         [Inject]
         public void Construct(IGamePauseService pauseService, EnemyConfig config)
         {
@@ -40,17 +39,28 @@ namespace _Project.Scripts.Logic.Enemy
         
         public void Initialize(Vector3 spawnPoint, Transform playerTransform, EnemyRotateToPlayer enemyRotateToPlayer)
         {
+            _playerTransform = playerTransform;
             _agent.speed = _config.MoveSpeed;
             _agent.stoppingDistance = _config.AttackDistance - StoppingDistanceOffset;
             
-            _stateMachine = new StateMachine();
-            _stateMachine.RegisterState( new EnemyPatrolState(_stateMachine, enemy: this, _agent, _config, spawnPoint, _triggerObserver));
-            _stateMachine.RegisterState( new EnemyAttackState(_stateMachine, enemy: this, _agent, _config, playerTransform, _triggerObserver, enemyRotateToPlayer, _animator));
-            _stateMachine.RegisterState( new EnemyChaseState(_stateMachine, enemy: this, _agent, _config, playerTransform, _triggerObserver, enemyRotateToPlayer));
+            _attackDistanceSquared = _config.AttackDistance * _config.AttackDistance;
+            _chaseDistanceSquared = _config.ChaseDistance * _config.ChaseDistance;
             
-            _stateMachine.SetState<EnemyPatrolState>();
+            _stateMachine = new StateMachine();
+            
+            EnemyPatrolState patrolState = new EnemyPatrolState(_agent, _config, spawnPoint, new FuncPredicate(() => _isSpawnAnimationEnded));
+            EnemyAttackState attackState = new EnemyAttackState(_agent, _config, new FuncPredicate(() => AttackCooldownIsUp), playerTransform, transform, enemyRotateToPlayer, _animator);
+            EnemyChaseState chaseState = new EnemyChaseState(_agent, _config, playerTransform, enemyRotateToPlayer);
+            
+            _stateMachine.AddTransition(attackState, chaseState, new FuncPredicate(() => !IsPlayerInAttackRange()));
+            _stateMachine.AddTransition(attackState, patrolState, new FuncPredicate(IsPlayerOutOfChaseRange));
+            _stateMachine.AddTransition(chaseState, attackState, new FuncPredicate(IsPlayerInAttackRange));
+            _stateMachine.AddTransition(chaseState, patrolState, new FuncPredicate(IsPlayerOutOfChaseRange));
+            _stateMachine.AddTransition(patrolState, chaseState, new FuncPredicate(IsPlayerInChaseRange));
+            
+            _stateMachine.SetState(patrolState);
         }
-
+        
         private void Update()
         { 
             if (_pauseService.IsPaused)
@@ -59,29 +69,46 @@ namespace _Project.Scripts.Logic.Enemy
             _stateMachine.Update();
             UpdateAttackCoolDown();
         }
-
-        private void OnDestroy() => 
-            _stateMachine.InvokeDisposeOnStates();
-
+        
         [UsedImplicitly]
         public void OnAttackEnded()
         {
-            AttackEnded?.Invoke();
+            if (_stateMachine.CurrentState is EnemyAttackState attackState) 
+                attackState.AttackEnded();
+            
             _currentAttackCooldown = _config.AttackCooldown;
         }
 
         [UsedImplicitly]
-        public void OnAttack() => 
-            Attack?.Invoke();
-        
+        public void OnAttack()
+        {
+            if (_stateMachine.CurrentState is EnemyAttackState attackState) 
+                attackState.DealDamage();
+        }
+
         [UsedImplicitly]
         public void OnSpawnAnimationEnded() => 
-            SpawnAnimationEnded?.Invoke();
+            _isSpawnAnimationEnded = true;
         
         private void UpdateAttackCoolDown()
         {
             if (!AttackCooldownIsUp)
                 _currentAttackCooldown -= Time.deltaTime;
         }
+        
+        private bool IsPlayerInAttackRange() => 
+            GetSqrDistanceToPlayer() <= _attackDistanceSquared;
+
+        private bool IsPlayerInChaseRange()
+        {
+            float sqrDistance = GetSqrDistanceToPlayer();
+            return sqrDistance > _attackDistanceSquared && sqrDistance <= _chaseDistanceSquared;
+        }
+
+        private bool IsPlayerOutOfChaseRange() => 
+            GetSqrDistanceToPlayer() > _chaseDistanceSquared;
+        
+        private float GetSqrDistanceToPlayer() => 
+            (transform.position - _playerTransform.position).sqrMagnitude;
     }
 }

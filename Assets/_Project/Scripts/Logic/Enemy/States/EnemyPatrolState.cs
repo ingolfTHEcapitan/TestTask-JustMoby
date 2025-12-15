@@ -1,55 +1,29 @@
-using System;
 using _Project.Scripts.Configs;
-using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.States;
+using _Project.Scripts.Logic.Common.StateMachine.Transitions;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Logic.Enemy.States
 {
-    public class EnemyPatrolState: State, IDisposable
+    public class EnemyPatrolState: EnemyBaseState
     {
         private const float MaxSampleDistance = 4f;
 
-        private readonly IStateMachine _stateMachine;
-        private readonly EnemyStateMachine _enemy;
-        private readonly NavMeshAgent _agent;
-        private readonly EnemyConfig _config;
         private readonly Vector3 _spawnPoint;
-        private readonly TriggerObserver _triggerObserver;
+        private readonly EnemyStateMachine _enemy;
+        private readonly IPredicate _isSpawnAnimationEnded;
 
-        private bool IsSpawnAnimationEnded;
-        private bool _movementIsActive;
-
-        public EnemyPatrolState(IStateMachine stateMachine, EnemyStateMachine enemy, NavMeshAgent agent,
-            EnemyConfig config, Vector3 spawnPoint, TriggerObserver triggerObserver) : base(stateMachine)
+        public EnemyPatrolState(NavMeshAgent agent, EnemyConfig config, Vector3 spawnPoint, 
+            IPredicate isSpawnAnimationEnded) : base(agent, config)
         {
-            _stateMachine = stateMachine;
-            _enemy = enemy;
-            _agent = agent;
-            _config = config;
+            _isSpawnAnimationEnded = isSpawnAnimationEnded;
             _spawnPoint = spawnPoint;
-            _triggerObserver = triggerObserver;
-
-            Initialize();
         }
 
-        private void Initialize()
+        public override void OnEnter()
         {
-            _enemy.SpawnAnimationEnded += OnSpawnAnimationEnded;
-            _triggerObserver.TriggerEnter += OnTriggerEnter;
-        }
-
-        public void Dispose()
-        {
-            _enemy.SpawnAnimationEnded -= OnSpawnAnimationEnded;
-            _triggerObserver.TriggerEnter -= OnTriggerEnter;
-        }
-
-        public override void Enter()
-        {
-            if (!IsSpawnAnimationEnded)
+            if (!_isSpawnAnimationEnded.Evaluate())
                 return;
             
             PatrolRandomPoint();
@@ -57,15 +31,12 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         public override void Update()
         {
-            if (!IsSpawnAnimationEnded)
+            if (!_isSpawnAnimationEnded.Evaluate())
                 return;
             
             if (_agent.remainingDistance <= _agent.stoppingDistance) 
                 PatrolRandomPoint();
         }
-
-        private void OnTriggerEnter(Collider other) => 
-            _stateMachine.SetState<EnemyChaseState>();
 
         private void PatrolRandomPoint()
         {
@@ -89,8 +60,5 @@ namespace _Project.Scripts.Logic.Enemy.States
             Vector3 offset = new Vector3(randomDirection.x, 0, randomDirection.y);
             return centerPoint + offset;
         }
-
-        private void OnSpawnAnimationEnded() => 
-            IsSpawnAnimationEnded = true;
     }
 }
