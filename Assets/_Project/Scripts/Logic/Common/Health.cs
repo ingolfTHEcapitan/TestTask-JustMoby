@@ -6,6 +6,9 @@ namespace _Project.Scripts.Logic.Common
     public class Health: MonoBehaviour, IHealth
     {
         public event Action OnHealthChanged;
+        public event Action OnZeroHealth;
+
+        private bool _isDead;
         
         public float CurrentHealth {get; private set;}
         public float MaxHealth { get; private set; }
@@ -29,6 +32,9 @@ namespace _Project.Scripts.Logic.Common
             
             CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
             OnHealthChanged?.Invoke();
+
+            if (CurrentHealth <= 0) 
+                OnZeroHealth?.Invoke();
         }
 
         public void TakeHeal(float amount)

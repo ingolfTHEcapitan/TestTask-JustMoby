@@ -15,7 +15,6 @@ namespace _Project.Scripts.Logic.Enemy
         private const float StoppingDistanceOffset = 0.5f;
         
         [SerializeField] private NavMeshAgent _agent;
-        [SerializeField] private Animator _animator;
         
         private IGamePauseService _pauseService;
         private EnemyConfig _config;
@@ -49,7 +48,7 @@ namespace _Project.Scripts.Logic.Enemy
             _stateMachine = new StateMachine();
             
             EnemyPatrolState patrolState = new EnemyPatrolState(_agent, _config, spawnPoint, new FuncPredicate(() => _isSpawnAnimationEnded));
-            EnemyAttackState attackState = new EnemyAttackState(_agent, _config, new FuncPredicate(() => AttackCooldownIsUp), playerTransform, transform, enemyRotateToPlayer, _animator);
+            EnemyAttackState attackState = new EnemyAttackState(_agent, _config, new FuncPredicate(() => AttackCooldownIsUp), playerTransform, transform, enemyRotateToPlayer);
             EnemyChaseState chaseState = new EnemyChaseState(_agent, _config, playerTransform, enemyRotateToPlayer);
             
             _stateMachine.AddTransition(attackState, chaseState, new FuncPredicate(() => !IsPlayerInAttackRange()));
@@ -89,6 +88,9 @@ namespace _Project.Scripts.Logic.Enemy
         [UsedImplicitly]
         public void OnSpawnAnimationEnded() => 
             _isSpawnAnimationEnded = true;
+        
+        public TState GetState<TState>() where TState: EnemyBaseState => 
+            _stateMachine.GetState<TState>() as TState;
         
         private void UpdateAttackCoolDown()
         {

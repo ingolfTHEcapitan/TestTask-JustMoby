@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
@@ -14,26 +15,25 @@ namespace _Project.Scripts.Logic.Enemy.States
         private const float AttackYOffset = 0.5f;
         private const float DebugLifeTime = 3;
 
-        private readonly Animator _animator;
+        public event Action OnAttackStarted;
+
         private readonly Transform _playerTransform;
         private readonly Transform _enemyTransform;
         private readonly EnemyRotateToPlayer _enemyRotateToPlayer;
 
         private readonly Collider[] _hits = new Collider[1];
         private readonly int _layerMask;
-        private readonly int _attackHash = Animator.StringToHash("Attack");
 
         private bool _isAttacking;
         private EnemyStateMachine _enemy;
         private readonly IPredicate _attackCooldownIsUp;
 
         public EnemyAttackState(NavMeshAgent agent, EnemyConfig config, IPredicate attackCooldownIsUp, Transform playerTransform, 
-            Transform enemyTransform, EnemyRotateToPlayer enemyRotateToPlayer, Animator animator) : base(agent, config)
+            Transform enemyTransform, EnemyRotateToPlayer enemyRotateToPlayer) : base(agent, config)
         {
             _attackCooldownIsUp = attackCooldownIsUp;
             _playerTransform = playerTransform;
             _enemyRotateToPlayer = enemyRotateToPlayer;
-            _animator = animator;
             _enemyTransform = enemyTransform;
 
             _layerMask = LayerMask.GetMask(PlayerLayer);
@@ -57,8 +57,8 @@ namespace _Project.Scripts.Logic.Enemy.States
         private void StartAttack()
         {
             _enemyTransform.LookAt(_playerTransform);
-            _animator.SetTrigger(_attackHash);
             _isAttacking = true;
+            OnAttackStarted?.Invoke();
         }
 
         public void DealDamage()

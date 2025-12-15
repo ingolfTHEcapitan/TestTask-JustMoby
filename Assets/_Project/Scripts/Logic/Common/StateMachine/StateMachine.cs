@@ -29,6 +29,9 @@ namespace _Project.Scripts.Logic.Common.StateMachine
             _currentStateNode.State.OnEnter();
         }
         
+        public IState GetState<TState>() where TState: class, IState => 
+            _nodes[typeof(TState)].State as TState;
+        
         private void ChangeState(IState state)
         {
             if (_currentStateNode.State == state)

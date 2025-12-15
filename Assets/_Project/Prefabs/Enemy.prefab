@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 3117825465392412960}
   - component: {fileID: 4082514023670906441}
   - component: {fileID: 6797133231648955068}
+  - component: {fileID: 3726465050056379465}
   - component: {fileID: 3373863833424226122}
   - component: {fileID: 666391151365057433}
   - component: {fileID: 8941394685515629623}
@@ -207,6 +208,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &3726465050056379465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4217187639714539394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17bb6dd1e20849028b6acb41c893326f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1784392016738993417}
+  _health: {fileID: 3373863833424226122}
+  _death: {fileID: 1388457686687828344}
 --- !u!114 &3373863833424226122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,7 +247,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32dd991ab1e24d7daa8623e7e9c35ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerObserver: {fileID: 0}
   _agent: {fileID: 3117825465392412960}
   _animator: {fileID: 1784392016738993417}
 --- !u!114 &8941394685515629623
@@ -259,12 +274,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: {fileID: 3373863833424226122}
-  _animator: {fileID: 1784392016738993417}
   _destroyDelay: 1.5
   _agent: {fileID: 3117825465392412960}
   _enemyStateMachine: {fileID: 666391151365057433}
   _enemyRotateToPlayer: {fileID: 8941394685515629623}
-  _attackZoneTrigger: {fileID: 0}
 --- !u!1 &7049452954211621582
 GameObject:
   m_ObjectHideFlags: 0

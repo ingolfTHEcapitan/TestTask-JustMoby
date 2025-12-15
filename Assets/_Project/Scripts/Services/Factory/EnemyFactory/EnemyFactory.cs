@@ -3,6 +3,7 @@ using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy;
+using _Project.Scripts.Logic.Enemy.States;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.UI.Elements;
 using UnityEngine;
@@ -48,6 +49,10 @@ namespace _Project.Scripts.Services.Factory.EnemyFactory
 
             EnemyDeath enemyDeath = enemyStateMachine.GetComponent<EnemyDeath>();
             enemyDeath.Initialize();
+            
+            EnemyAnimator enemyAnimator = enemyStateMachine.GetComponent<EnemyAnimator>();
+            enemyAnimator.Construct(enemyStateMachine.GetState<EnemyAttackState>());
+            enemyAnimator.Initialize();
             return enemyDeath;
         }
     }

@@ -11,38 +11,33 @@ namespace _Project.Scripts.Logic.Enemy
         public event Action<EnemyDeath> OnDied;
 
         [SerializeField] private Health _health;
-        [SerializeField] private Animator _animator;
         [SerializeField] private float _destroyDelay = 1.5f;
         [Header("Components To Disable On Death")]
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private EnemyStateMachine _enemyStateMachine;
         [SerializeField] private EnemyRotateToPlayer _enemyRotateToPlayer;
 
-        private readonly int _dieHash = Animator.StringToHash("Die");
-        private readonly int _hitHash = Animator.StringToHash("Hit");
+        private bool _isDead;
 
         public void Initialize() => 
-            _health.OnHealthChanged += EnemyDie;
+            _health.OnZeroHealth += EnemyDie;
 
         private void OnDestroy() => 
-            _health.OnHealthChanged -= EnemyDie;
+            _health.OnZeroHealth -= EnemyDie;
         
         public void KillEnemy() => 
             _health.TakeDamage(_health.MaxHealth);
 
         private void EnemyDie()
         {
-            if (_health.CurrentHealth <= 0)
+            if (!_isDead)
                 Die();
-            
-            _animator.SetTrigger(_hitHash);
         }
 
         private void Die()
         {
+            _isDead = true;
             DisableEnemyComponents();
-            _animator.SetTrigger(_dieHash);
-            
             StartCoroutine(DestroyTimer(_destroyDelay));
         }
 
