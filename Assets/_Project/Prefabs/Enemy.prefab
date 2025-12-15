@@ -73,72 +73,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1a45b68cc3b428e88d2a7acc4a4bc13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &986770264108589208
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2394412309726646731}
-  - component: {fileID: 8425400847437139004}
-  - component: {fileID: 9181539531574850646}
-  m_Layer: 8
-  m_Name: AttackZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2394412309726646731
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 986770264108589208}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6182135594549081300}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8425400847437139004
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 986770264108589208}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 3.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9181539531574850646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 986770264108589208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 760910cf762243488ba201c141c7165e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4217187639714539394
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +111,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7621047937287476822}
-  - {fileID: 2394412309726646731}
   - {fileID: 387859320207253729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -298,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32dd991ab1e24d7daa8623e7e9c35ab0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerObserver: {fileID: 9181539531574850646}
+  _triggerObserver: {fileID: 0}
   _agent: {fileID: 3117825465392412960}
   _animator: {fileID: 1784392016738993417}
 --- !u!114 &8941394685515629623
@@ -331,7 +264,7 @@ MonoBehaviour:
   _agent: {fileID: 3117825465392412960}
   _enemyStateMachine: {fileID: 666391151365057433}
   _enemyRotateToPlayer: {fileID: 8941394685515629623}
-  _attackZoneTrigger: {fileID: 8425400847437139004}
+  _attackZoneTrigger: {fileID: 0}
 --- !u!1 &7049452954211621582
 GameObject:
   m_ObjectHideFlags: 0

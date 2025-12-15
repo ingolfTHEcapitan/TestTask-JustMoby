@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.PlayerStats;
 using UnityEngine;
 using UnityEngine.AI;
-using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy
 {
@@ -19,15 +17,9 @@ namespace _Project.Scripts.Logic.Enemy
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private EnemyStateMachine _enemyStateMachine;
         [SerializeField] private EnemyRotateToPlayer _enemyRotateToPlayer;
-        [SerializeField] private SphereCollider _attackZoneTrigger;
 
         private readonly int _dieHash = Animator.StringToHash("Die");
         private readonly int _hitHash = Animator.StringToHash("Hit");
-        private PlayerStatsModel _playerStatsModel;
-        
-        [Inject]
-        public void Construct(PlayerStatsModel playerStatsModel) => 
-            _playerStatsModel = playerStatsModel;
 
         public void Initialize() => 
             _health.OnHealthChanged += EnemyDie;
@@ -63,7 +55,6 @@ namespace _Project.Scripts.Logic.Enemy
 
         private void DisableEnemyComponents()
         {
-            _attackZoneTrigger.enabled = false;
             _enemyStateMachine.enabled = false;
             _enemyRotateToPlayer.enabled = false;
             _agent.enabled = false;
