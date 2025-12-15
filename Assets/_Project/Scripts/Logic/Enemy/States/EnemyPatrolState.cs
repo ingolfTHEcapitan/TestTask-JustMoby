@@ -11,7 +11,6 @@ namespace _Project.Scripts.Logic.Enemy.States
         private const float MaxSampleDistance = 4f;
 
         private readonly Vector3 _spawnPoint;
-        private readonly EnemyStateMachine _enemy;
         private readonly IPredicate _isSpawnAnimationEnded;
 
         public EnemyPatrolState(NavMeshAgent agent, EnemyConfig config, Vector3 spawnPoint, 

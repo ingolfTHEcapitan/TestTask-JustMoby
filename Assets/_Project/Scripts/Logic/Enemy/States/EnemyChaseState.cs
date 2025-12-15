@@ -9,8 +9,8 @@ namespace _Project.Scripts.Logic.Enemy.States
         private readonly Transform _playerTransform;
         private readonly EnemyRotateToPlayer _enemyRotateToPlayer;
 
-        public EnemyChaseState(NavMeshAgent agent, EnemyConfig config, Transform playerTransform, 
-            EnemyRotateToPlayer enemyRotateToPlayer) : base(agent, config)
+        public EnemyChaseState(NavMeshAgent agent, EnemyConfig config, EnemyRotateToPlayer enemyRotateToPlayer, 
+            Transform playerTransform) : base(agent, config)
         {
             _playerTransform = playerTransform;
             _enemyRotateToPlayer = enemyRotateToPlayer;

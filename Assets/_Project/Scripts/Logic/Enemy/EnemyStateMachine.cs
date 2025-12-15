@@ -27,8 +27,6 @@ namespace _Project.Scripts.Logic.Enemy
         private float _chaseDistanceSquared;
         private bool _isSpawnAnimationEnded;
         
-        private bool AttackCooldownIsUp => _currentAttackCooldown <= 0f;
-
         [Inject]
         public void Construct(IGamePauseService pauseService, EnemyConfig config)
         {
@@ -48,8 +46,8 @@ namespace _Project.Scripts.Logic.Enemy
             _stateMachine = new StateMachine();
             
             EnemyPatrolState patrolState = new EnemyPatrolState(_agent, _config, spawnPoint, new FuncPredicate(() => _isSpawnAnimationEnded));
-            EnemyAttackState attackState = new EnemyAttackState(_agent, _config, new FuncPredicate(() => AttackCooldownIsUp), playerTransform, transform, enemyRotateToPlayer);
-            EnemyChaseState chaseState = new EnemyChaseState(_agent, _config, playerTransform, enemyRotateToPlayer);
+            EnemyAttackState attackState = new EnemyAttackState(_agent, _config, enemyRotateToPlayer, new FuncPredicate(AttackCooldownIsUp), transform);
+            EnemyChaseState chaseState = new EnemyChaseState(_agent, _config, enemyRotateToPlayer, playerTransform);
             
             _stateMachine.AddTransition(attackState, chaseState, new FuncPredicate(() => !IsPlayerInAttackRange()));
             _stateMachine.AddTransition(attackState, patrolState, new FuncPredicate(IsPlayerOutOfChaseRange));
@@ -94,7 +92,7 @@ namespace _Project.Scripts.Logic.Enemy
         
         private void UpdateAttackCoolDown()
         {
-            if (!AttackCooldownIsUp)
+            if (!AttackCooldownIsUp())
                 _currentAttackCooldown -= Time.deltaTime;
         }
         
@@ -109,7 +107,10 @@ namespace _Project.Scripts.Logic.Enemy
 
         private bool IsPlayerOutOfChaseRange() => 
             GetSqrDistanceToPlayer() > _chaseDistanceSquared;
-        
+
+        private bool AttackCooldownIsUp() 
+            => _currentAttackCooldown <= 0f;
+
         private float GetSqrDistanceToPlayer() => 
             (transform.position - _playerTransform.position).sqrMagnitude;
     }

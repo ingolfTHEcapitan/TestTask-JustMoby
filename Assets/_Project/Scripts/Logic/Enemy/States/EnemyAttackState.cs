@@ -17,22 +17,19 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         public event Action OnAttackStarted;
 
-        private readonly Transform _playerTransform;
         private readonly Transform _enemyTransform;
         private readonly EnemyRotateToPlayer _enemyRotateToPlayer;
-
+        private readonly IPredicate _attackCooldownIsUp;
+        
         private readonly Collider[] _hits = new Collider[1];
         private readonly int _layerMask;
 
         private bool _isAttacking;
-        private EnemyStateMachine _enemy;
-        private readonly IPredicate _attackCooldownIsUp;
 
-        public EnemyAttackState(NavMeshAgent agent, EnemyConfig config, IPredicate attackCooldownIsUp, Transform playerTransform, 
-            Transform enemyTransform, EnemyRotateToPlayer enemyRotateToPlayer) : base(agent, config)
+        public EnemyAttackState(NavMeshAgent agent, EnemyConfig config, EnemyRotateToPlayer enemyRotateToPlayer, 
+            IPredicate attackCooldownIsUp,Transform enemyTransform) : base(agent, config)
         {
             _attackCooldownIsUp = attackCooldownIsUp;
-            _playerTransform = playerTransform;
             _enemyRotateToPlayer = enemyRotateToPlayer;
             _enemyTransform = enemyTransform;
 
@@ -56,7 +53,6 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         private void StartAttack()
         {
-            _enemyTransform.LookAt(_playerTransform);
             _isAttacking = true;
             OnAttackStarted?.Invoke();
         }
