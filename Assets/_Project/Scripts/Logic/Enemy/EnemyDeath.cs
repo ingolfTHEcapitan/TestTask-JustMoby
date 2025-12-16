@@ -21,6 +21,8 @@ namespace _Project.Scripts.Logic.Enemy
         private bool _isDead;
         private EnemyConfig _config;
 
+        public bool IsForcedKilling { get; private set; }
+
         [Inject]
         public void Construct(EnemyConfig config) => 
             _config = config;
@@ -31,8 +33,11 @@ namespace _Project.Scripts.Logic.Enemy
         private void OnDestroy() => 
             _health.OnZeroHealth -= EnemyDie;
         
-        public void KillEnemy() => 
+        public void KillEnemy()
+        {
             _health.TakeDamage(_health.MaxHealth);
+            IsForcedKilling = true;
+        }
 
         private void EnemyDie()
         {

@@ -94,6 +94,10 @@ namespace _Project.Scripts.Logic.Spawners
         {
             enemyDeath.OnDied -= OnEnemyDeath;
             _spawnedEnemies.Remove(enemyDeath);
+            
+            if(enemyDeath.IsForcedKilling)
+                return;
+            
             _statistics.RecordEnemyKilled();
             _scoreService.AddScore();
         }
