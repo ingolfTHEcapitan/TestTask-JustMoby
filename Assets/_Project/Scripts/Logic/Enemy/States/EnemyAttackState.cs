@@ -24,7 +24,7 @@ namespace _Project.Scripts.Logic.Enemy.States
         private readonly Collider[] _hits = new Collider[1];
         private readonly int _layerMask;
 
-        private bool _isAttacking;
+        public bool IsAttacking {get; private set;}
 
         public EnemyAttackState(NavMeshAgent agent, EnemyConfig config, EnemyRotateToPlayer enemyRotateToPlayer, 
             IPredicate attackCooldownIsUp,Transform enemyTransform) : base(agent, config)
@@ -48,12 +48,15 @@ namespace _Project.Scripts.Logic.Enemy.States
                 StartAttack();
         }
 
-        public override void OnExit() => 
+        public override void OnExit()
+        {
+            IsAttacking = false;
             _enemyRotateToPlayer.enabled = false;
+        }
 
         private void StartAttack()
         {
-            _isAttacking = true;
+            IsAttacking = true;
             OnAttackStarted?.Invoke();
         }
 
@@ -70,7 +73,7 @@ namespace _Project.Scripts.Logic.Enemy.States
         }
         
         public void AttackEnded() =>
-            _isAttacking = false;
+            IsAttacking = false;
 
         private bool Hit(out Collider hit)
         {
@@ -86,6 +89,6 @@ namespace _Project.Scripts.Logic.Enemy.States
         }
 
         private bool CanAttack() =>
-            !_isAttacking && _attackCooldownIsUp.Evaluate();
+            !IsAttacking && _attackCooldownIsUp.Evaluate();
     }
 }

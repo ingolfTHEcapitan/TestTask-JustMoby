@@ -2205,7 +2205,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.9473094
+      - time: 0.77911365
         functionName: OnSpawnAnimationEnded
         data: 
         objectReferenceParameter: {instanceID: 0}

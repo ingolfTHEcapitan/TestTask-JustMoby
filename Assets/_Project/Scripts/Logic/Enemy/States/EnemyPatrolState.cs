@@ -1,5 +1,4 @@
 using _Project.Scripts.Configs;
-using _Project.Scripts.Logic.Common.StateMachine.Transitions;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -11,27 +10,19 @@ namespace _Project.Scripts.Logic.Enemy.States
         private const float MaxSampleDistance = 4f;
 
         private readonly Vector3 _spawnPoint;
-        private readonly IPredicate _isSpawnAnimationEnded;
 
-        public EnemyPatrolState(NavMeshAgent agent, EnemyConfig config, Vector3 spawnPoint, 
-            IPredicate isSpawnAnimationEnded) : base(agent, config)
-        {
-            _isSpawnAnimationEnded = isSpawnAnimationEnded;
+        public EnemyPatrolState(NavMeshAgent agent, EnemyConfig config, Vector3 spawnPoint) : base(agent, config) => 
             _spawnPoint = spawnPoint;
-        }
 
         public override void OnEnter()
         {
-            if (!_isSpawnAnimationEnded.Evaluate())
-                return;
-            
+            base.OnEnter();
             PatrolRandomPoint();
         }
 
         public override void Update()
         {
-            if (!_isSpawnAnimationEnded.Evaluate())
-                return;
+            base.Update();
             
             if (_agent.remainingDistance <= _agent.stoppingDistance) 
                 PatrolRandomPoint();
