@@ -12,8 +12,6 @@ namespace _Project.Scripts.Logic.Enemy
 {
     public class EnemyStateMachine: MonoBehaviour
     {
-        private const float StoppingDistanceOffset = 0.5f;
-        
         [SerializeField] private NavMeshAgent _agent;
         
         private IGamePauseService _pauseService;
@@ -39,7 +37,7 @@ namespace _Project.Scripts.Logic.Enemy
         {
             _playerTransform = playerTransform;
             _agent.speed = _config.MoveSpeed;
-            _agent.stoppingDistance = _config.AttackDistance - StoppingDistanceOffset;
+            _agent.stoppingDistance = _config.AttackDistance;
             
             _attackDistanceSquared = _config.AttackDistance * _config.AttackDistance;
             _chaseDistanceSquared = _config.ChaseDistance * _config.ChaseDistance;
