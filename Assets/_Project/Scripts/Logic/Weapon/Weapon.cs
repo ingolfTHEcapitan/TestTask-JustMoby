@@ -25,7 +25,8 @@ namespace _Project.Scripts.Logic.Weapon
         private IBulletFactory _factory;
         private IGameStatistics _statistics;
         private WeaponConfig _config;
-        
+        private readonly Vector3 _screenCenter = new Vector3(0.5f, 0.5f, 0f);
+
         [Inject]
         public void Construct(IGamePauseService pauseService, IInputService inputService, 
             IBulletFactory factory, IGameStatistics statistics, WeaponConfig config)
@@ -61,7 +62,7 @@ namespace _Project.Scripts.Logic.Weapon
 
         private Vector3 GetShootDirection()
         {
-            Ray ray = _playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+            Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
             Vector3 shootDirection = (GetTargetPoint(ray) - _shootPoint.position).normalized;
             return shootDirection;
         }

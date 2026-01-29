@@ -12,20 +12,18 @@ namespace _Project.Scripts.UI.Elements
         
         private IHealth _health;
 
-        public void Construct(IHealth health)
-        {
+        public void Construct(IHealth health) => 
             _health = health;
-        }
-
-        private void OnDestroy() => 
-            _health.OnHealthChanged -= UpdateHealthBar;
 
         public void Initialize()
         {
             _health.OnHealthChanged += UpdateHealthBar;
             UpdateHealthBar();
         }
-        
+
+        private void OnDestroy() => 
+            _health.OnHealthChanged -= UpdateHealthBar;
+
         private void UpdateHealthBar()
         {
             _healthSlider.value = _health.CurrentHealth / _health.MaxHealth;

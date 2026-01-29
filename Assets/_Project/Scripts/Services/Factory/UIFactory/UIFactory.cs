@@ -9,7 +9,7 @@ namespace _Project.Scripts.Services.Factory.UIFactory
     {
         private readonly DiContainer _container;
         private readonly Transform _uiParent;
-        private IAssetProvider _assetProvider;
+        private readonly IAssetProvider _assetProvider;
 
         public UIFactory(DiContainer container, Transform uiParent, IAssetProvider assetProvider)
         {

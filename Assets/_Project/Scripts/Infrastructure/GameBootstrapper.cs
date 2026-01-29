@@ -66,17 +66,17 @@ namespace _Project.Scripts.Infrastructure
             _analyticsService.LogGameStart();
         }
 
+        public void Dispose()
+        {
+            _playerStatsPresenter.Dispose();
+            _assetProvider.CleanUp();
+        }
+
         private void InitGameOverWindow(GameObject popUpLayer, Health player)
         {
             PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
             GameOverWindow gameOverWindow = popUpLayer.GetComponentInChildren<GameOverWindow>();
             gameOverWindow.Initialize(playerDeath);
-        }
-
-        public void Dispose()
-        {
-            _playerStatsPresenter.Dispose();
-            _assetProvider.CleanUp();
         }
 
         private async Task<Health> InitPlayer(PlayerSpawner playerSpawner)
