@@ -21,8 +21,11 @@ namespace _Project.Scripts.UI.Elements
             UpdateHealthBar();
         }
 
-        private void OnDestroy() => 
-            _health.OnHealthChanged -= UpdateHealthBar;
+        private void OnDestroy()
+        {
+            if (_health != null)
+                _health.OnHealthChanged -= UpdateHealthBar;
+        }
 
         private void UpdateHealthBar()
         {
