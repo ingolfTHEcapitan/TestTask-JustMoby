@@ -5,6 +5,7 @@ using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
+using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Factory.BulletFactory;
 using _Project.Scripts.Services.Factory.EnemyFactory;
@@ -50,6 +51,7 @@ namespace _Project.Scripts.Infrastructure
         private void BindServices()
         {
             Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ISaveLoadService>().FromInstance(_saveServiceConfig.GetInstance()).AsSingle();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
