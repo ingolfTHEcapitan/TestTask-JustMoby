@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Configs.Spawners;
@@ -39,6 +40,7 @@ namespace _Project.Scripts.Infrastructure
         
         public override void InstallBindings()
         {
+            BindRemoteConfig();
             BindServices();
             BindPlayer();
             BindPlayerStats();
@@ -46,6 +48,11 @@ namespace _Project.Scripts.Infrastructure
             BindEnemy();
             BindWeapon();
             BindGameBootstrapper();
+        }
+
+        private void BindRemoteConfig()
+        {
+            Container.BindInterfacesAndSelfTo<RemoteConfig>().AsSingle().NonLazy();
         }
 
         private void BindServices()
