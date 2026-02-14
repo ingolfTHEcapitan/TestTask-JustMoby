@@ -6,6 +6,5 @@ namespace _Project.Scripts.Configs.Weapon
     public class WeaponConfig : ScriptableObject
     {
         [field: SerializeField] public float FireRate { get; private set; } = 1f;
-        [field: SerializeField] public BulletConfig BulletConfig { get; private set; }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Services.Factory.BulletFactory;
@@ -24,24 +23,26 @@ namespace _Project.Scripts.Logic.Weapon
         private IInputService _inputService;
         private IBulletFactory _factory;
         private IGameStatistics _statistics;
-        private WeaponConfig _config;
+        private WeaponConfig _weaponConfig;
+        private BulletConfig _bulletConfig;
         private readonly Vector3 _screenCenter = new Vector3(0.5f, 0.5f, 0f);
 
         [Inject]
         public void Construct(IGamePauseService pauseService, IInputService inputService, 
-            IBulletFactory factory, IGameStatistics statistics, WeaponConfig config)
+            IBulletFactory factory, IGameStatistics statistics, WeaponConfig weaponConfig, BulletConfig bulletConfig)
         {
             _pauseService = pauseService;
             _inputService = inputService;
             _factory = factory;
             _statistics = statistics;
-            _config = config;
+            _weaponConfig = weaponConfig;
+            _bulletConfig = bulletConfig;
         }
         
         public void Initialize(Camera playerCamera)
         {
             _playerCamera = playerCamera;
-            _fireRate = _config.FireRate;
+            _fireRate = _weaponConfig.FireRate;
         }
 
         private void Update()
@@ -56,7 +57,7 @@ namespace _Project.Scripts.Logic.Weapon
         private async Task Shoot()
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
-            await _factory.CreateBullet(_config.BulletConfig, _shootPoint, GetShootDirection());
+            await _factory.CreateBullet(_bulletConfig, _shootPoint, GetShootDirection());
             _statistics.RecordShot();
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using _Project.Scripts.Configs;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
@@ -28,11 +29,12 @@ namespace _Project.Scripts.Infrastructure
         private readonly PlayerSpawner _playerSpawner;
         private readonly EnemySpawner _enemySpawner;
         private readonly Transform _enemySpawnPoint;
+        private readonly RemoteConfigService _remoteConfigService;
         private PlayerStatsPresenter _playerStatsPresenter;
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
             PlayerStatsModel playerStatsModel, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            Transform enemySpawnPoint, IAnalyticsService analyticsService)
+            Transform enemySpawnPoint, IAnalyticsService analyticsService, RemoteConfigService remoteConfigService)
         {
             _pauseService = pauseService;
             _uiFactory = uiFactory;
@@ -42,10 +44,13 @@ namespace _Project.Scripts.Infrastructure
             _playerSpawner = playerSpawner;
             _enemySpawner = enemySpawner;
             _enemySpawnPoint = enemySpawnPoint;
+            _remoteConfigService = remoteConfigService;
         }
 
         public async void Initialize()
         {
+            await _remoteConfigService.FetchDataAsync();
+            
             CursorController.SetCursorVisible(visible: false);
             
             GameObject hudLayer = await _uiFactory.CreateHudLayer();

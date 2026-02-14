@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Configs.Spawners;
@@ -35,11 +34,13 @@ namespace _Project.Scripts.Infrastructure
         [SerializeField] private PlayerSpawnerConfig _playerSpawnerConfig;
         [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
         [SerializeField] private WeaponConfig _weaponConfig;
+        [SerializeField] private BulletConfig _bulletConfig;
         [SerializeField] private EnemyConfig _enemyConfig;
         [SerializeField] private SaveServiceConfig _saveServiceConfig;
         
         public override void InstallBindings()
         {
+            BindConfigs();
             BindRemoteConfig();
             BindServices();
             BindPlayer();
@@ -50,10 +51,18 @@ namespace _Project.Scripts.Infrastructure
             BindGameBootstrapper();
         }
 
-        private void BindRemoteConfig()
+        private void BindConfigs()
         {
-            Container.BindInterfacesAndSelfTo<RemoteConfig>().AsSingle().NonLazy();
+            Container.Bind<List<PlayerStatConfig>>().FromInstance(_playerStatConfigs).AsSingle();
+            Container.Bind<PlayerSpawnerConfig>().FromInstance(_playerSpawnerConfig).AsSingle();
+            Container.Bind<EnemySpawnerConfig>().FromInstance(_enemySpawnerConfig).AsSingle();
+            Container.Bind<WeaponConfig>().FromInstance(_weaponConfig).AsSingle();
+            Container.Bind<BulletConfig>().FromInstance(_bulletConfig).AsSingle();
+            Container.Bind<EnemyConfig>().FromInstance(_enemyConfig).AsSingle();
         }
+
+        private void BindRemoteConfig() => 
+            Container.BindInterfacesAndSelfTo<RemoteConfigService>().AsSingle().NonLazy();
 
         private void BindServices()
         {
@@ -71,15 +80,11 @@ namespace _Project.Scripts.Infrastructure
         private void BindPlayer()
         {
             Container.BindInterfacesAndSelfTo<PlayerFactory>().AsSingle().WithArguments(_gameParent);
-            Container.Bind<PlayerSpawnerConfig>().FromInstance(_playerSpawnerConfig).AsSingle();
             Container.Bind<PlayerSpawner>().AsSingle();
         }
 
-        private void BindPlayerStats()
-        {
-            Container.Bind<List<PlayerStatConfig>>().FromInstance(_playerStatConfigs).AsSingle();
+        private void BindPlayerStats() => 
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
-        }
 
         private void BindScoreService() => 
             Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
@@ -87,16 +92,11 @@ namespace _Project.Scripts.Infrastructure
         private void BindEnemy()
         {
             Container.BindInterfacesAndSelfTo<EnemyFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
-            Container.Bind<EnemySpawnerConfig>().FromInstance(_enemySpawnerConfig).AsSingle();
-            Container.Bind<EnemyConfig>().FromInstance(_enemyConfig).AsSingle();
             Container.BindInterfacesAndSelfTo<EnemySpawner>().AsSingle();
         }
 
-        private void BindWeapon()
-        {
+        private void BindWeapon() => 
             Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
-            Container.Bind<WeaponConfig>().FromInstance(_weaponConfig).AsSingle();
-        }
 
         private void BindGameBootstrapper()
         {
