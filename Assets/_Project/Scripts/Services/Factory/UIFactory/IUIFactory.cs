@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using _Project.Scripts.UI.Windows;
 using UnityEngine;
 
 namespace _Project.Scripts.Services.Factory.UIFactory
@@ -7,5 +8,6 @@ namespace _Project.Scripts.Services.Factory.UIFactory
     {
         Task<GameObject> CreateHudLayer();
         Task<GameObject> CreatePopUpLayer();
+        Task<LoadingCurtain> CreateLoadingCurtain();
     }
 }

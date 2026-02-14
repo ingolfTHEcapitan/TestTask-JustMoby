@@ -11,6 +11,7 @@ using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.UI.Elements;
+using _Project.Scripts.UI.Windows;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
@@ -49,6 +50,9 @@ namespace _Project.Scripts.Infrastructure
 
         public async void Initialize()
         {
+            LoadingCurtain loadingCurtain = await _uiFactory.CreateLoadingCurtain();
+            loadingCurtain.Show();
+            
             await _remoteConfigService.FetchDataAsync();
             
             CursorController.SetCursorVisible(visible: false);
@@ -61,7 +65,9 @@ namespace _Project.Scripts.Infrastructure
             Health playerHealth = await InitPlayer(_playerSpawner);
             InitPlayerHealthBarView(hudLayer, playerHealth);
             InitWeapon(playerHealth);
-
+            
+            loadingCurtain.Hide();
+            
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer);
             _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService, playerHealth);
             
