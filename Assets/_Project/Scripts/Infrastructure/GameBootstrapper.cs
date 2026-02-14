@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using _Project.Scripts.Configs;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
@@ -10,6 +9,7 @@ using _Project.Scripts.Logic.Weapon;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
+using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.UI.Elements;
 using _Project.Scripts.UI.Windows;
 using _Project.Scripts.UI.Windows.GameOver;
@@ -30,12 +30,12 @@ namespace _Project.Scripts.Infrastructure
         private readonly PlayerSpawner _playerSpawner;
         private readonly EnemySpawner _enemySpawner;
         private readonly Transform _enemySpawnPoint;
-        private readonly RemoteConfigService _remoteConfigService;
+        private readonly IRemoteConfigService _remoteConfigService;
         private PlayerStatsPresenter _playerStatsPresenter;
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
             PlayerStatsModel playerStatsModel, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            Transform enemySpawnPoint, IAnalyticsService analyticsService, RemoteConfigService remoteConfigService)
+            Transform enemySpawnPoint, IAnalyticsService analyticsService, IRemoteConfigService remoteConfigService)
         {
             _pauseService = pauseService;
             _uiFactory = uiFactory;

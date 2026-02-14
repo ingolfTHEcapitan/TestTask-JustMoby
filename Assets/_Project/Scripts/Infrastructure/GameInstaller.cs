@@ -14,6 +14,7 @@ using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.PlayerInput;
+using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.Score;
 using _Project.Scripts.Services.Statistics;

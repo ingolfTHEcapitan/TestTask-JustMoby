@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using _Project.Scripts.Configs;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Configs.Weapon;
 using Firebase.RemoteConfig;
 using UnityEngine;
 
-namespace _Project.Scripts.Configs 
+namespace _Project.Scripts.Services.RemoteConfig 
 {
-    public class RemoteConfigService
+    public class RemoteConfigService : IRemoteConfigService
     {
         private readonly Dictionary<string, ScriptableObject> _firebaseRemoteConfigs;
 
@@ -18,17 +19,15 @@ namespace _Project.Scripts.Configs
             
             _firebaseRemoteConfigs = new Dictionary<string, ScriptableObject>()
             {
-                {"stat_damage_config", playerStatConfigs[0]},
-                {"stat_health_config", playerStatConfigs[1]},
-                {"stat_speed_config", playerStatConfigs[2]},
-                
                 {"player_spawner_config", playerSpawnerConfig},
                 {"enemy_spawner_config", enemySpawnerConfig},
                 {"weapon_config", weaponConfig},
                 {"bullet_config", bulletConfig},
                 {"enemy_skeleton_config", enemyConfig},
-                
             };
+
+            foreach (PlayerStatConfig  playerStatConfig in playerStatConfigs) 
+                _firebaseRemoteConfigs.Add($"stat_{playerStatConfig.name.ToLower()}_config", playerStatConfig);
         }
         
         public async Task FetchDataAsync()
@@ -62,17 +61,9 @@ namespace _Project.Scripts.Configs
         {
             foreach ((string firebaseKey, ScriptableObject configInstance) in _firebaseRemoteConfigs)
             {
-                ConfigValue configValue = remoteConfig.GetValue(firebaseKey);
-
-                if (configValue.Source != ValueSource.RemoteValue && string.IsNullOrEmpty(configValue.StringValue))
-                {
-                    Debug.LogWarning($"RemoteConfig: No remote value for key '{firebaseKey}', keeping local defaults.");
-                    continue;
-                }
+                string configValues = remoteConfig.GetValue(firebaseKey).StringValue;
+                JsonUtility.FromJsonOverwrite(configValues, configInstance);
                 
-                string json = configValue.StringValue;
-                
-                JsonUtility.FromJsonOverwrite(json, configInstance);
                 Debug.Log($"RemoteConfig: Successfully updated {configInstance.name} from key {firebaseKey}");
             }
         }
