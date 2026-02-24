@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Configs.Weapon
 {
-    [CreateAssetMenu(fileName = "WeaponConfig", menuName = "Configs/WeaponConfig")]
-    public class WeaponConfig : ScriptableObject
+    [Serializable]
+    public class WeaponConfig
     {
         [field: SerializeField] public float FireRate { get; private set; } = 1f;
     }

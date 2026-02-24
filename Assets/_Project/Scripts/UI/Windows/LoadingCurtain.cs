@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.UI.Windows
@@ -6,7 +7,10 @@ namespace _Project.Scripts.UI.Windows
     {
         [SerializeField] private GameObject _loadingIndicator;
         [SerializeField] private float _indicatorRotationSpeed = 100f;
-        
+
+        private void Awake() => 
+            DontDestroyOnLoad(gameObject);
+
         public void Show() => 
             gameObject.SetActive(true);
 

@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Configs
 {
-    [CreateAssetMenu(fileName = "EnemyConfig", menuName = "Configs/EnemyConfig")]
-    public class EnemyConfig : ScriptableObject
+    [Serializable]
+    public class EnemyConfig
     {
         [field: SerializeField, Range(1f, 100f)]
         public float AttackDamage { get; private set; } = 25f;

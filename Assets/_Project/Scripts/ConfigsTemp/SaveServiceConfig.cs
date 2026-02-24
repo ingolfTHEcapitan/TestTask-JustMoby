@@ -2,7 +2,7 @@ using System;
 using _Project.Scripts.Services.SaveLoad;
 using UnityEngine;
 
-namespace _Project.Scripts.Configs
+namespace _Project.Scripts.ConfigsTemp
 {
     [CreateAssetMenu(fileName = "SaveServiceConfig", menuName = "Configs/SaveServiceConfig")]
     public class SaveServiceConfig: ScriptableObject

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using _Project.Scripts.Configs.Spawners;
+using _Project.Scripts.ConfigsTemp;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy;
@@ -27,7 +28,7 @@ namespace _Project.Scripts.Services.Factory.EnemyFactory
             _dynamicObjectsParent = dynamicObjectsParent;
         }
 
-        public async Task<EnemyDeath> CreateEnemy(EnemySpawnerConfig config, Vector3 spawnPoint, Transform playerTransform)
+        public async Task<EnemyDeath> CreateEnemy(EnemyPrefabConfig config, Vector3 spawnPoint, Transform playerTransform)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(config.PrefabReference);
             

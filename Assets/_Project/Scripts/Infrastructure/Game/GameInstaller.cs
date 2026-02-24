@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.IO;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Configs.Weapon;
-using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.ConfigsTemp;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Ads;
@@ -10,6 +11,7 @@ using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Factory.BulletFactory;
 using _Project.Scripts.Services.Factory.EnemyFactory;
 using _Project.Scripts.Services.Factory.PlayerFactory;
+using _Project.Scripts.Services.Factory.RemoteConfigFactory;
 using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.HealthCalculator;
@@ -19,9 +21,10 @@ using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.Score;
 using _Project.Scripts.Services.Statistics;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
-namespace _Project.Scripts.Infrastructure
+namespace _Project.Scripts.Infrastructure.Game
 {
     public class GameInstaller: MonoInstaller
     {
@@ -30,19 +33,16 @@ namespace _Project.Scripts.Infrastructure
         [SerializeField] private Transform _uiParent;
         [SerializeField] private Transform _gameParent;
         [SerializeField] private Transform _enemySpawnPoint;
-        [Header("Configs")]
-        [SerializeField] private List<PlayerStatConfig> _playerStatConfigs;
-        [SerializeField] private PlayerSpawnerConfig _playerSpawnerConfig;
-        [SerializeField] private EnemySpawnerConfig _enemySpawnerConfig;
-        [SerializeField] private WeaponConfig _weaponConfig;
-        [SerializeField] private BulletConfig _bulletConfig;
-        [SerializeField] private EnemyConfig _enemyConfig;
-        [SerializeField] private SaveServiceConfig _saveServiceConfig;
         
+        [Header("Configs")]
+        [SerializeField] private List<PlayerStatUIConfig> _playerStatUIConfigs;
+        [SerializeField] private PlayerPrefabConfig playerPrefabConfig;
+        [SerializeField] private EnemyPrefabConfig enemyPrefabConfig;
+        [SerializeField] private BulletPrefabConfig bulletPrefabConfig;
+        [SerializeField] private SaveServiceConfig _saveServiceConfig;
         public override void InstallBindings()
         {
             BindConfigs();
-            BindRemoteConfig();
             BindServices();
             BindPlayer();
             BindPlayerStats();
@@ -54,26 +54,17 @@ namespace _Project.Scripts.Infrastructure
 
         private void BindConfigs()
         {
-            Container.Bind<List<PlayerStatConfig>>().FromInstance(_playerStatConfigs).AsSingle();
-            Container.Bind<PlayerSpawnerConfig>().FromInstance(_playerSpawnerConfig).AsSingle();
-            Container.Bind<EnemySpawnerConfig>().FromInstance(_enemySpawnerConfig).AsSingle();
-            Container.Bind<WeaponConfig>().FromInstance(_weaponConfig).AsSingle();
-            Container.Bind<BulletConfig>().FromInstance(_bulletConfig).AsSingle();
-            Container.Bind<EnemyConfig>().FromInstance(_enemyConfig).AsSingle();
+            Container.Bind<List<PlayerStatUIConfig>>().FromInstance(_playerStatUIConfigs).AsSingle();
+            Container.Bind<PlayerPrefabConfig>().FromInstance(playerPrefabConfig).AsSingle();
+            Container.Bind<EnemyPrefabConfig>().FromInstance(enemyPrefabConfig).AsSingle();
+            Container.Bind<BulletPrefabConfig>().FromInstance(bulletPrefabConfig).AsSingle();
         }
-
-        private void BindRemoteConfig() => 
-            Container.BindInterfacesAndSelfTo<RemoteConfigService>().AsSingle().NonLazy();
-
+        
         private void BindServices()
         {
-            Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle().NonLazy();
-            Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ISaveLoadService>().FromInstance(_saveServiceConfig.GetInstance()).AsSingle();
-            Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle().WithArguments(_uiParent);
             Container.BindInterfacesAndSelfTo<FirebaseAnalyticsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameStatistics>().AsSingle();
         }
@@ -102,7 +93,7 @@ namespace _Project.Scripts.Infrastructure
         private void BindGameBootstrapper()
         {
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle()
-                .WithArguments(_enemySpawnPoint).NonLazy();
+                .WithArguments(_enemySpawnPoint, _uiParent).NonLazy();
         }
     }
 }

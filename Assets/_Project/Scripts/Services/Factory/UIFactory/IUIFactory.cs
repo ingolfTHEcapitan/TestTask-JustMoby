@@ -6,8 +6,7 @@ namespace _Project.Scripts.Services.Factory.UIFactory
 {
     public interface IUIFactory
     {
-        Task<GameObject> CreateHudLayer();
-        Task<GameObject> CreatePopUpLayer();
-        Task<LoadingCurtain> CreateLoadingCurtain();
+        Task<GameObject> CreateHudLayer(Transform uiParent);
+        Task<GameObject> CreatePopUpLayer(Transform uiParent);
     }
 }

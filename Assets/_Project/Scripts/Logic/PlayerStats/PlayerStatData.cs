@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Configs;
+using _Project.Scripts.ConfigsTemp;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.PlayerStats
@@ -22,7 +23,7 @@ namespace _Project.Scripts.Logic.PlayerStats
         public Sprite IconFrame { get; private set; }
         public Sprite Icon { get; private set; }
 
-        public PlayerStatData(PlayerStatConfig config)
+        public PlayerStatData(PlayerStatConfig config, PlayerStatUIConfig uiConfig)
         {
             Name = config.Name;
             BaseValue = config.BaseValue;
@@ -30,8 +31,8 @@ namespace _Project.Scripts.Logic.PlayerStats
             MaxMultiplier = config.MaxMultiplier;
             Level = 0;
             PreviewLevel = 0;
-            IconFrame = config.IconFrame;
-            Icon = config.Icon;
+            IconFrame = uiConfig.IconFrame;
+            Icon = uiConfig.Icon;
             RecalculateCurrentValue();
         }
 

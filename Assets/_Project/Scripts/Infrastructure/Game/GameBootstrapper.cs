@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.IO;
 using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
@@ -9,6 +11,7 @@ using _Project.Scripts.Logic.Weapon;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
+using _Project.Scripts.Services.LoadingScreen;
 using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.UI.Elements;
 using _Project.Scripts.UI.Windows;
@@ -18,7 +21,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts.Infrastructure
+namespace _Project.Scripts.Infrastructure.Game
 {
     public class GameBootstrapper : IInitializable, IDisposable
     {
@@ -30,12 +33,15 @@ namespace _Project.Scripts.Infrastructure
         private readonly PlayerSpawner _playerSpawner;
         private readonly EnemySpawner _enemySpawner;
         private readonly Transform _enemySpawnPoint;
-        private readonly IRemoteConfigService _remoteConfigService;
+        private readonly Transform _uiParent;
+        private readonly LoadingScreenService _loadingScreen;
         private PlayerStatsPresenter _playerStatsPresenter;
+       
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
             PlayerStatsModel playerStatsModel, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            Transform enemySpawnPoint, IAnalyticsService analyticsService, IRemoteConfigService remoteConfigService)
+            Transform enemySpawnPoint, IAnalyticsService analyticsService, 
+            Transform uiParent, LoadingScreenService loadingScreen)
         {
             _pauseService = pauseService;
             _uiFactory = uiFactory;
@@ -45,20 +51,16 @@ namespace _Project.Scripts.Infrastructure
             _playerSpawner = playerSpawner;
             _enemySpawner = enemySpawner;
             _enemySpawnPoint = enemySpawnPoint;
-            _remoteConfigService = remoteConfigService;
+            _uiParent = uiParent;
+            _loadingScreen = loadingScreen;
         }
 
         public async void Initialize()
         {
-            LoadingCurtain loadingCurtain = await _uiFactory.CreateLoadingCurtain();
-            loadingCurtain.Show();
-            
-            await _remoteConfigService.FetchDataAsync();
-            
             CursorController.SetCursorVisible(visible: false);
             
-            GameObject hudLayer = await _uiFactory.CreateHudLayer();
-            GameObject popUpLayer = await _uiFactory.CreatePopUpLayer();
+            GameObject hudLayer = await _uiFactory.CreateHudLayer(_uiParent);
+            GameObject popUpLayer = await _uiFactory.CreatePopUpLayer(_uiParent);
             
             _playerStatsModel.Initialize();
             
@@ -66,13 +68,13 @@ namespace _Project.Scripts.Infrastructure
             InitPlayerHealthBarView(hudLayer, playerHealth);
             InitWeapon(playerHealth);
             
-            loadingCurtain.Hide();
+            _loadingScreen.HideLoading();
             
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer);
             _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService, playerHealth);
             
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint, playerHealth.transform);
-            InitGameOverWindow(popUpLayer, playerHealth);
+            InitGameOverWindow(popUpLayer, playerHealth, _enemySpawner);
             
             _analyticsService.LogGameStart();
         }
@@ -83,11 +85,11 @@ namespace _Project.Scripts.Infrastructure
             _assetProvider.CleanUp();
         }
 
-        private void InitGameOverWindow(GameObject popUpLayer, Health player)
+        private void InitGameOverWindow(GameObject popUpLayer, Health player, EnemySpawner enemySpawner)
         {
             PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
             GameOverWindow gameOverWindow = popUpLayer.GetComponentInChildren<GameOverWindow>();
-            gameOverWindow.Initialize(playerDeath);
+            gameOverWindow.Initialize(playerDeath, enemySpawner);
         }
 
         private async Task<Health> InitPlayer(PlayerSpawner playerSpawner)

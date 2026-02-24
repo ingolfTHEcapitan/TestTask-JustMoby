@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
+using _Project.Scripts.ConfigsTemp;
 using _Project.Scripts.Data;
 using _Project.Scripts.Services.SaveLoad;
 
@@ -13,21 +14,26 @@ namespace _Project.Scripts.Logic.PlayerStats
         
         private readonly ISaveLoadService _saveLoadService;
         private readonly List<PlayerStatConfig> _configs;
+        private readonly List<PlayerStatUIConfig> _uiConfigs;
 
         public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }
 
-        public PlayerStatsModel(ISaveLoadService saveLoadService, List<PlayerStatConfig> configs)
+        public PlayerStatsModel(ISaveLoadService saveLoadService, List<PlayerStatConfig> configs, List<PlayerStatUIConfig> uiConfigs)
         {
             _saveLoadService = saveLoadService;
             _configs = configs;
+            _uiConfigs = uiConfigs;
         }
 
         public void Initialize()
         {
-            foreach (PlayerStatConfig config in _configs)
+            for (int index = 0; index < _configs.Count; index++)
             {
-                PlayerStatData statData = new PlayerStatData(config);
+                PlayerStatConfig config = _configs[index];
+                PlayerStatUIConfig uiConfig = _uiConfigs[index];
+                
+                PlayerStatData statData = new PlayerStatData(config, uiConfig);
                 statData.OnStatChanged += InvokeStatChanged;
                 Stats[config.Name] = statData;
             }

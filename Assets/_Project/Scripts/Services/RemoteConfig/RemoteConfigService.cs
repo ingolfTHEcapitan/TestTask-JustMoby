@@ -11,24 +11,7 @@ namespace _Project.Scripts.Services.RemoteConfig
 {
     public class RemoteConfigService : IRemoteConfigService
     {
-        private readonly Dictionary<string, ScriptableObject> _firebaseRemoteConfigs;
-
-        public RemoteConfigService(List<PlayerStatConfig> playerStatConfigs, PlayerSpawnerConfig playerSpawnerConfig, 
-            EnemySpawnerConfig enemySpawnerConfig, WeaponConfig weaponConfig, BulletConfig bulletConfig, EnemyConfig enemyConfig)
-        {
-            
-            _firebaseRemoteConfigs = new Dictionary<string, ScriptableObject>()
-            {
-                {"player_spawner_config", playerSpawnerConfig},
-                {"enemy_spawner_config", enemySpawnerConfig},
-                {"weapon_config", weaponConfig},
-                {"bullet_config", bulletConfig},
-                {"enemy_skeleton_config", enemyConfig},
-            };
-
-            foreach (PlayerStatConfig  playerStatConfig in playerStatConfigs) 
-                _firebaseRemoteConfigs.Add($"stat_{playerStatConfig.name.ToLower()}_config", playerStatConfig);
-        }
+        public FirebaseRemoteConfig RemoteConfigInstance { get; private set; }
         
         public async Task FetchDataAsync()
         {
@@ -52,20 +35,9 @@ namespace _Project.Scripts.Services.RemoteConfig
             }
 
             await remoteConfig.ActivateAsync();
-            
+
             Debug.Log($"Remote data loaded and ready for use. Last fetch time {info.FetchTime}.");
-            ApplyRemoteSettings(remoteConfig);
-        }
-        
-        private void ApplyRemoteSettings(FirebaseRemoteConfig remoteConfig)
-        {
-            foreach ((string firebaseKey, ScriptableObject configInstance) in _firebaseRemoteConfigs)
-            {
-                string configValues = remoteConfig.GetValue(firebaseKey).StringValue;
-                JsonUtility.FromJsonOverwrite(configValues, configInstance);
-                
-                Debug.Log($"RemoteConfig: Successfully updated {configInstance.name} from key {firebaseKey}");
-            }
+            RemoteConfigInstance = remoteConfig;
         }
     }
 }

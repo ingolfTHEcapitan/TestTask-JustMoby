@@ -23,16 +23,16 @@ namespace _Project.Scripts.UI.Windows.GameOver
         private bool _reviveInThisSession;
 
         [Inject]
-        public void Construct(IGamePauseService pauseService, IAdsService adsService, EnemySpawner enemySpawner)
+        public void Construct(IGamePauseService pauseService, IAdsService adsService)
         {
             _pauseService = pauseService;
             _adsService = adsService;
-            _enemySpawner = enemySpawner;
         }
 
-        public void Initialize(PlayerDeath playerDeath)
+        public void Initialize(PlayerDeath playerDeath, EnemySpawner enemySpawner)
         {
             _playerDeath = playerDeath;
+            _enemySpawner = enemySpawner;
             _playerDeath.OnDied += ShowPanel;
             _adsService.OnRewardedAdLoaded += RefreshReviveButtonState;
             _reviveButton.onClick.AddListener(OnReviveButtonClicked);
