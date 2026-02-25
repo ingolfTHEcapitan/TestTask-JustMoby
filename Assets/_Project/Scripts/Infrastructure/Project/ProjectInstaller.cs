@@ -2,7 +2,6 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Factory.LoadingCurtainFactory;
 using _Project.Scripts.Services.Factory.RemoteConfigFactory;
-using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.LoadingScreen;
 using _Project.Scripts.Services.PlayerInput;

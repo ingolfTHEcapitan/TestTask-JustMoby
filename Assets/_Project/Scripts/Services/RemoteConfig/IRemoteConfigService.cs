@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Firebase.RemoteConfig;
-using UnityEngine;
 
 namespace _Project.Scripts.Services.RemoteConfig
 {

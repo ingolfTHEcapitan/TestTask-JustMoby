@@ -17,11 +17,10 @@ namespace _Project.Scripts.Services.Factory.LoadingCurtainFactory
             _assetProvider = assetProvider;
         }
         
-        
         public async Task<LoadingCurtain> CreateLoadingCurtain()
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.LoadingCurtain);
-            return _container.InstantiatePrefabForComponent<UI.Windows.LoadingCurtain>(prefab);
+            return _container.InstantiatePrefabForComponent<LoadingCurtain>(prefab);
         }
     }
 }
