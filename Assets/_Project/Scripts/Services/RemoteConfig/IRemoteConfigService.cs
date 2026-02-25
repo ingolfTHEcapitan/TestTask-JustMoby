@@ -8,6 +8,6 @@ namespace _Project.Scripts.Services.RemoteConfig
     public interface IRemoteConfigService
     {
         Task FetchDataAsync();
-        FirebaseRemoteConfig RemoteConfigInstance { get; }
+        FirebaseRemoteConfig RemoteConfig { get; }
     }
 }

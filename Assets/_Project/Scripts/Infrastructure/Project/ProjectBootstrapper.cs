@@ -8,7 +8,7 @@ namespace _Project.Scripts.Infrastructure.Project
 {
     public class ProjectBootstrapper: IInitializable
     {
-        private const string Main = "Main";
+        private const string MainSceneName = "Main";
         
         private readonly LoadingScreenService _loadingScreen;
         private readonly IRemoteConfigService _remoteConfigService;
@@ -25,8 +25,8 @@ namespace _Project.Scripts.Infrastructure.Project
         {
             await _loadingScreen.ShowLoading();
             await _remoteConfigService.FetchDataAsync();
-            _remoteConfigFactory.ApplyRemoteSettings();
-            SceneManager.LoadScene(Main);
+            _remoteConfigFactory.ApplyRemoteConfigs();
+            SceneManager.LoadSceneAsync(MainSceneName);
         }
     }
 }

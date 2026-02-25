@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using _Project.Scripts.Configs;
-using _Project.Scripts.Configs.Spawners;
-using _Project.Scripts.Configs.Weapon;
 using Firebase.RemoteConfig;
 using UnityEngine;
 
@@ -11,7 +7,7 @@ namespace _Project.Scripts.Services.RemoteConfig
 {
     public class RemoteConfigService : IRemoteConfigService
     {
-        public FirebaseRemoteConfig RemoteConfigInstance { get; private set; }
+        public FirebaseRemoteConfig RemoteConfig { get; private set; }
         
         public async Task FetchDataAsync()
         {
@@ -37,7 +33,7 @@ namespace _Project.Scripts.Services.RemoteConfig
             await remoteConfig.ActivateAsync();
 
             Debug.Log($"Remote data loaded and ready for use. Last fetch time {info.FetchTime}.");
-            RemoteConfigInstance = remoteConfig;
+            RemoteConfig = remoteConfig;
         }
     }
 }
