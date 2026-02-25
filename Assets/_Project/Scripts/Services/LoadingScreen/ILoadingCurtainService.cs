@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
-using _Project.Scripts.UI.Windows;
 
 namespace _Project.Scripts.Services.LoadingScreen
 {
-    public interface ILoadingScreenService
+    public interface ILoadingCurtainService
     {
-        Task<LoadingCurtain> ShowLoading();
+        Task ShowLoading();
         void HideLoading();
     }
 }

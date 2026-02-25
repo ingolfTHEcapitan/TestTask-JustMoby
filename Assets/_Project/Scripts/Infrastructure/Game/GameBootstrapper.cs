@@ -30,14 +30,14 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly EnemySpawner _enemySpawner;
         private readonly Transform _enemySpawnPoint;
         private readonly Transform _uiParent;
-        private readonly LoadingScreenService _loadingScreen;
+        private readonly LoadingCurtainService _loadingCurtain;
         private PlayerStatsPresenter _playerStatsPresenter;
        
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
             PlayerStatsModel playerStatsModel, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
             Transform enemySpawnPoint, IAnalyticsService analyticsService, 
-            Transform uiParent, LoadingScreenService loadingScreen)
+            Transform uiParent, LoadingCurtainService loadingCurtain)
         {
             _pauseService = pauseService;
             _uiFactory = uiFactory;
@@ -48,7 +48,7 @@ namespace _Project.Scripts.Infrastructure.Game
             _enemySpawner = enemySpawner;
             _enemySpawnPoint = enemySpawnPoint;
             _uiParent = uiParent;
-            _loadingScreen = loadingScreen;
+            _loadingCurtain = loadingCurtain;
         }
 
         public async void Initialize()
@@ -64,15 +64,14 @@ namespace _Project.Scripts.Infrastructure.Game
             InitPlayerHealthBarView(hudLayer, playerHealth);
             InitWeapon(playerHealth);
             
-            _loadingScreen.HideLoading();
-            
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer);
             _playerStatsPresenter = InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService, playerHealth);
-            
+
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint, playerHealth.transform);
             InitGameOverWindow(popUpLayer, playerHealth, _enemySpawner);
-            
+
             _analyticsService.LogGameStart();
+            _loadingCurtain.HideLoading();
         }
 
         public void Dispose()

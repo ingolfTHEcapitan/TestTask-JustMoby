@@ -10,20 +10,20 @@ namespace _Project.Scripts.Infrastructure.Project
     {
         private const string MainSceneName = "Main";
         
-        private readonly LoadingScreenService _loadingScreen;
+        private readonly LoadingCurtainService _loadingCurtain;
         private readonly IRemoteConfigService _remoteConfigService;
         private readonly IRemoteConfigFactory _remoteConfigFactory;
         
-        public ProjectBootstrapper(LoadingScreenService loadingScreen, IRemoteConfigService remoteConfigService, IRemoteConfigFactory remoteConfigFactory)
+        public ProjectBootstrapper(LoadingCurtainService loadingCurtain, IRemoteConfigService remoteConfigService, IRemoteConfigFactory remoteConfigFactory)
         {
-            _loadingScreen = loadingScreen;
+            _loadingCurtain = loadingCurtain;
             _remoteConfigService = remoteConfigService;
             _remoteConfigFactory = remoteConfigFactory;
         }
 
         public async void Initialize()
         {
-            await _loadingScreen.ShowLoading();
+            await _loadingCurtain.ShowLoading();
             await _remoteConfigService.FetchDataAsync();
             _remoteConfigFactory.ApplyRemoteConfigs();
             SceneManager.LoadSceneAsync(MainSceneName);

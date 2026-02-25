@@ -4,23 +4,21 @@ using _Project.Scripts.UI.Windows;
 
 namespace _Project.Scripts.Services.LoadingScreen
 {
-    public class LoadingScreenService : ILoadingScreenService
+    public class LoadingCurtainService : ILoadingCurtainService
     {
         private readonly ILoadingCurtainFactory _curtainFactory;
         
         private LoadingCurtain _loadingCurtain;
 
-        public LoadingScreenService(ILoadingCurtainFactory curtainFactory) => 
+        public LoadingCurtainService(ILoadingCurtainFactory curtainFactory) => 
             _curtainFactory = curtainFactory;
 
-        public async Task<LoadingCurtain> ShowLoading()
+        public async Task ShowLoading()
         {
             if (_loadingCurtain == null) 
                 _loadingCurtain = await _curtainFactory.CreateLoadingCurtain();
             
             _loadingCurtain.Show();
-            
-            return _loadingCurtain;
         }
         
         public void HideLoading()
