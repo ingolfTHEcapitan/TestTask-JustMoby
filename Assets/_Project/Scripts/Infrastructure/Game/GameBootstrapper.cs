@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.IO;
 using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
@@ -12,9 +10,7 @@ using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.LoadingScreen;
-using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.UI.Elements;
-using _Project.Scripts.UI.Windows;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
@@ -62,7 +58,7 @@ namespace _Project.Scripts.Infrastructure.Game
             GameObject hudLayer = await _uiFactory.CreateHudLayer(_uiParent);
             GameObject popUpLayer = await _uiFactory.CreatePopUpLayer(_uiParent);
             
-            _playerStatsModel.Initialize();
+            await _playerStatsModel.Initialize();
             
             Health playerHealth = await InitPlayer(_playerSpawner);
             InitPlayerHealthBarView(hudLayer, playerHealth);

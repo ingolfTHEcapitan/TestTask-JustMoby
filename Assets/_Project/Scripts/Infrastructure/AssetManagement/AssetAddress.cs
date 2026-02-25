@@ -5,5 +5,8 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         public const string PopUpLayer = "PopUpLayer";
         public const string HudLayer = "HudLayer";
         public const string LoadingCurtain = "LoadingCurtain";
+        public const string Player = "Player";
+        public const string Enemy = "Enemy";
+        public const string Bullet = "Bullet";
     }
 }

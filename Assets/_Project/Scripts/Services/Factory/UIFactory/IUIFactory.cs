@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using _Project.Scripts.UI.Windows;
 using UnityEngine;
 
 namespace _Project.Scripts.Services.Factory.UIFactory
@@ -8,5 +7,6 @@ namespace _Project.Scripts.Services.Factory.UIFactory
     {
         Task<GameObject> CreateHudLayer(Transform uiParent);
         Task<GameObject> CreatePopUpLayer(Transform uiParent);
+        Task<Sprite> LoadSprite(string assetAddress);
     }
 }

@@ -1464,10 +1464,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7b67e48dccb96854892bfaa0d7b9e1d0, type: 2}
   - {fileID: 11400000, guid: 56b76fe7ab86a9d419e987247a9386d4, type: 2}
   - {fileID: 11400000, guid: 228f39a19fba867499ab3ec50c6ad556, type: 2}
-  playerPrefabConfig: {fileID: 11400000, guid: 16a72136f6ff50b4c9f9695edcaa3db0, type: 2}
-  enemyPrefabConfig: {fileID: 11400000, guid: 933f3bec94b4e0d4386f91891b231689, type: 2}
-  bulletPrefabConfig: {fileID: 11400000, guid: 5ffe7580db95a934fbd0a532573607ac, type: 2}
   _saveServiceConfig: {fileID: 11400000, guid: f88de02a4468546418a663e724adb15c, type: 2}
+  _scriptableObjects:
+  - {fileID: 11400000, guid: 7b67e48dccb96854892bfaa0d7b9e1d0, type: 2}
+  - {fileID: 11400000, guid: 56b76fe7ab86a9d419e987247a9386d4, type: 2}
+  - {fileID: 11400000, guid: 228f39a19fba867499ab3ec50c6ad556, type: 2}
+  - {fileID: 11400000, guid: f88de02a4468546418a663e724adb15c, type: 2}
 --- !u!4 &422285789
 Transform:
   m_ObjectHideFlags: 0

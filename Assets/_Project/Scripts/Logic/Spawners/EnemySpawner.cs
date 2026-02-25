@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using _Project.Scripts.Configs.Spawners;
-using _Project.Scripts.ConfigsTemp;
 using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Services.Factory.EnemyFactory;
 using _Project.Scripts.Services.GamePause;
@@ -22,12 +21,11 @@ namespace _Project.Scripts.Logic.Spawners
         private readonly IGameStatistics _statistics;
         private readonly IScoreService _scoreService;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
-        private readonly EnemyPrefabConfig _prefabConfig;
         private readonly EnemySpawnerConfig _config;
         
         private CancellationTokenSource _cancellationTokenSource;
 
-        public EnemySpawner(EnemyPrefabConfig prefabConfig, IGamePauseService pauseService, IEnemyFactory factory, 
+        public EnemySpawner(IGamePauseService pauseService, IEnemyFactory factory, 
             IGameStatistics statistics, IScoreService scoreService, EnemySpawnerConfig config)
         {
             _pauseService = pauseService;
@@ -35,7 +33,6 @@ namespace _Project.Scripts.Logic.Spawners
             _statistics = statistics;
             _scoreService = scoreService;
             _config = config;
-            _prefabConfig = prefabConfig;
         }
         
         public void SpawnAround(Transform target, Transform playerTransform)
@@ -81,7 +78,7 @@ namespace _Project.Scripts.Logic.Spawners
 
         private async Task InitEnemy(Transform target, Transform playerTransform)
         {
-            EnemyDeath enemyDeath = await _factory.CreateEnemy(_prefabConfig, GetSpawnPosition(target), playerTransform);
+            EnemyDeath enemyDeath = await _factory.CreateEnemy(GetSpawnPosition(target), playerTransform);
             enemyDeath.OnDied += OnEnemyDeath;
             _spawnedEnemies.Add(enemyDeath);
         }

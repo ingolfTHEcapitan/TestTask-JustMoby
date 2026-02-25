@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using _Project.Scripts.Configs;
-using _Project.Scripts.ConfigsTemp;
 using _Project.Scripts.Data;
+using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.SaveLoad;
 
 namespace _Project.Scripts.Logic.PlayerStats
@@ -14,26 +16,25 @@ namespace _Project.Scripts.Logic.PlayerStats
         
         private readonly ISaveLoadService _saveLoadService;
         private readonly List<PlayerStatConfig> _configs;
-        private readonly List<PlayerStatUIConfig> _uiConfigs;
+        private IAssetProvider _assetProvider;
+        private IUIFactory _uiFactory;
 
         public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }
 
-        public PlayerStatsModel(ISaveLoadService saveLoadService, List<PlayerStatConfig> configs, List<PlayerStatUIConfig> uiConfigs)
+        public PlayerStatsModel(ISaveLoadService saveLoadService, IUIFactory uiFactory, List<PlayerStatConfig> configs)
         {
             _saveLoadService = saveLoadService;
+            _uiFactory = uiFactory;
             _configs = configs;
-            _uiConfigs = uiConfigs;
         }
 
-        public void Initialize()
+        public async Task Initialize()
         {
-            for (int index = 0; index < _configs.Count; index++)
+            foreach (var config in _configs)
             {
-                PlayerStatConfig config = _configs[index];
-                PlayerStatUIConfig uiConfig = _uiConfigs[index];
-                
-                PlayerStatData statData = new PlayerStatData(config, uiConfig);
+                PlayerStatData statData = new PlayerStatData(config);
+                await statData.LoadUIPartsAsync(config, _uiFactory);
                 statData.OnStatChanged += InvokeStatChanged;
                 Stats[config.Name] = statData;
             }

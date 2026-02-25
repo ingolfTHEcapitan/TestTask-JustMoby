@@ -29,6 +29,7 @@ namespace _Project.Scripts.Services.Factory.RemoteConfigFactory
                 {"weapon_config", typeof(WeaponConfig)},
                 {"bullet_config", typeof(BulletConfig)},
                 {"enemy_skeleton_config", typeof(EnemyConfig)},
+                {"save_service_config", typeof(SaveServiceConfig)},
             };
             
             _playerStatConfigKeys = new[] { "stat_damage_config", "stat_health_config", "stat_speed_config" };

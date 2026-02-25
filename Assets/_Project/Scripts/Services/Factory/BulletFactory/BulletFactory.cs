@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using _Project.Scripts.Configs.Weapon;
-using _Project.Scripts.ConfigsTemp;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Weapon;
@@ -25,11 +24,11 @@ namespace _Project.Scripts.Services.Factory.BulletFactory
             _dynamicObjectsParent = dynamicObjectsParent;
         }
 
-        public async Task<Bullet> CreateBullet(BulletPrefabConfig prefabConfig, BulletConfig config, Transform at, Vector3 shootDirection)
+        public async Task<Bullet> CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection)
         {
             float damage = _playerStatsModel.GetStatValue(StatName.Damage);
             
-            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(prefabConfig.PrefabReference);
+            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Bullet);
             Bullet bullet = _container.InstantiatePrefab(prefab, at).GetComponent<Bullet>();
             bullet.Initialize(config, shootDirection, damage, _dynamicObjectsParent);
             return bullet;

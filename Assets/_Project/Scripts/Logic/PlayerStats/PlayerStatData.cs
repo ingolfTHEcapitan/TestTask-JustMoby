@@ -1,6 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using _Project.Scripts.Configs;
-using _Project.Scripts.ConfigsTemp;
+using _Project.Scripts.Services.Factory.UIFactory;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.PlayerStats
@@ -23,7 +24,7 @@ namespace _Project.Scripts.Logic.PlayerStats
         public Sprite IconFrame { get; private set; }
         public Sprite Icon { get; private set; }
 
-        public PlayerStatData(PlayerStatConfig config, PlayerStatUIConfig uiConfig)
+        public PlayerStatData(PlayerStatConfig config)
         {
             Name = config.Name;
             BaseValue = config.BaseValue;
@@ -31,9 +32,13 @@ namespace _Project.Scripts.Logic.PlayerStats
             MaxMultiplier = config.MaxMultiplier;
             Level = 0;
             PreviewLevel = 0;
-            IconFrame = uiConfig.IconFrame;
-            Icon = uiConfig.Icon;
             RecalculateCurrentValue();
+        }
+
+        public async Task LoadUIPartsAsync(PlayerStatConfig config, IUIFactory uiFactory)
+        {
+            IconFrame = await uiFactory.LoadSprite(config.IconFrameAddress);
+            Icon = await uiFactory.LoadSprite(config.IconAddress);
         }
 
         public void RecalculateCurrentValue()

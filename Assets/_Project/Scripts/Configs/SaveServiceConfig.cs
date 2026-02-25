@@ -2,10 +2,10 @@ using System;
 using _Project.Scripts.Services.SaveLoad;
 using UnityEngine;
 
-namespace _Project.Scripts.ConfigsTemp
+namespace _Project.Scripts.Configs
 {
-    [CreateAssetMenu(fileName = "SaveServiceConfig", menuName = "Configs/SaveServiceConfig")]
-    public class SaveServiceConfig: ScriptableObject
+    [Serializable]
+    public class SaveServiceConfig
     {
         [SerializeField] private SaveServiceType saveServiceType = SaveServiceType.PlayerPrefs;
         

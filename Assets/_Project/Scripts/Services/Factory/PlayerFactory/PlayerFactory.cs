@@ -6,7 +6,6 @@ using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.HealthCalculator;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Zenject;
 
 namespace _Project.Scripts.Services.Factory.PlayerFactory
@@ -30,9 +29,9 @@ namespace _Project.Scripts.Services.Factory.PlayerFactory
             _assetProvider = assetProvider;
         }
 
-        public async Task<Health> CreatePlayer(AssetReference assetReference, Vector3 at)
+        public async Task<Health> CreatePlayer(Vector3 at)
         {
-            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(assetReference);
+            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Player);
             _playerHealth = _container.InstantiatePrefabForComponent<Health>(prefab, at, Quaternion.identity, _gameParent);
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
             _playerHealth.Initialize(maxHealth);
