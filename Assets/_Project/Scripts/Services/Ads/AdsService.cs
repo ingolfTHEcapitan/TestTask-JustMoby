@@ -7,7 +7,7 @@ using Application = UnityEngine.Device.Application;
 
 namespace _Project.Scripts.Services.Ads
 {
-    public class AdsService: IInitializable, IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener, IAdsService
+    public class AdsService: IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener, IAdsService
     {
         private const string AndroidGameId = "6036504";
         private const string IOSGameId = "6036505";
@@ -24,7 +24,7 @@ namespace _Project.Scripts.Services.Ads
         public bool IsRewardedAdLoaded { get; private set; }
         public bool IsInterstitialAdLoaded { get; private set; }
         
-        public void Initialize() => 
+        public AdsService() => 
             Advertisement.Initialize(GetGameId(), TestMode, this);
 
         public void OnInitializationComplete()

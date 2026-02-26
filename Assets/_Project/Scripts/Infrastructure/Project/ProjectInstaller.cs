@@ -24,7 +24,7 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private void BindRemoteConfig()
         {
-            Container.BindInterfacesAndSelfTo<RemoteConfigService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<RemoteConfigService>().AsSingle();
             Container.BindInterfacesAndSelfTo<RemoteConfigFactory>().AsSingle();
         }
 
@@ -40,11 +40,11 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private void BindLoadingCurtain()
         {
-            Container.BindInterfacesAndSelfTo<LoadingCurtainFactory>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<LoadingCurtainFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<LoadingCurtainService>().AsSingle();
         }
         
         private void BindProjectBootstrapper() => 
-            Container.BindInterfacesAndSelfTo<ProjectBootstrapper>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<ProjectBootstrapper>().AsSingle();
     }
 }

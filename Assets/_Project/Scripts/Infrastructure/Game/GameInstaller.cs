@@ -40,7 +40,7 @@ namespace _Project.Scripts.Infrastructure.Game
         
         private void BindServices()
         {
-            Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<ISaveLoadService>().FromInstance(_saveServiceConfig.GetInstance()).AsSingle();
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
         }
@@ -69,7 +69,7 @@ namespace _Project.Scripts.Infrastructure.Game
         private void BindGameBootstrapper()
         {
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle()
-                .WithArguments(_enemySpawnPoint, _uiParent).NonLazy();
+                .WithArguments(_enemySpawnPoint, _uiParent);
         }
     }
 }
