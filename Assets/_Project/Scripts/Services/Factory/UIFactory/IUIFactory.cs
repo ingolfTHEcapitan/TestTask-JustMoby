@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Services.Factory.UIFactory
 {
     public interface IUIFactory
     {
-        Task<GameObject> CreateHudLayer(Transform uiParent);
-        Task<GameObject> CreatePopUpLayer(Transform uiParent);
-        Task<Sprite> LoadSprite(string assetAddress);
+        UniTask<GameObject> CreateHudLayer(Transform uiParent);
+        UniTask<GameObject> CreatePopUpLayer(Transform uiParent);
+        UniTask<Sprite> LoadSprite(string assetAddress);
     }
 }

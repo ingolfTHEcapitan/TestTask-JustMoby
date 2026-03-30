@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Services.Factory.BulletFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.Statistics;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -45,16 +45,16 @@ namespace _Project.Scripts.Logic.Weapon
             _fireRate = _weaponConfig.FireRate;
         }
 
-        private void Update()
+        private async void Update()
         {
             if (_pauseService.IsPaused)
                 return;
             
             if (_inputService.IsFireButtonPressed() && CanShoot()) 
-                Shoot();
+                await Shoot();
         }
 
-        private async Task Shoot()
+        private async UniTask Shoot()
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
             await _factory.CreateBullet(_bulletConfig, _shootPoint, GetShootDirection());

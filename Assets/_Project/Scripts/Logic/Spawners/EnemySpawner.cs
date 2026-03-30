@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Services.Factory.EnemyFactory;
@@ -76,7 +75,7 @@ namespace _Project.Scripts.Logic.Spawners
             }
         }
 
-        private async Task InitEnemy(Transform target, Transform playerTransform)
+        private async UniTask InitEnemy(Transform target, Transform playerTransform)
         {
             EnemyDeath enemyDeath = await _factory.CreateEnemy(GetSpawnPosition(target), playerTransform);
             enemyDeath.OnDied += OnEnemyDeath;

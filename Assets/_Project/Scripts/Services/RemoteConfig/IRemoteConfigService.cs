@@ -1,11 +1,11 @@
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Firebase.RemoteConfig;
 
 namespace _Project.Scripts.Services.RemoteConfig
 {
     public interface IRemoteConfigService
     {
-        Task FetchDataAsync();
+        UniTask FetchDataAsync();
         FirebaseRemoteConfig RemoteConfig { get; }
     }
 }

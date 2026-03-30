@@ -1,7 +1,7 @@
 using System;
-using System.Threading.Tasks;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Services.Factory.UIFactory;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.PlayerStats
@@ -35,7 +35,7 @@ namespace _Project.Scripts.Logic.PlayerStats
             RecalculateCurrentValue();
         }
 
-        public async Task LoadUIPartsAsync(PlayerStatConfig config, IUIFactory uiFactory)
+        public async UniTask LoadUIPartsAsync(PlayerStatConfig config, IUIFactory uiFactory)
         {
             IconFrame = await uiFactory.LoadSprite(config.IconFrameAddress);
             Icon = await uiFactory.LoadSprite(config.IconAddress);

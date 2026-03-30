@@ -1,10 +1,10 @@
-using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Logic.Enemy.States;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.UI.Elements;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -26,7 +26,7 @@ namespace _Project.Scripts.Services.Factory.EnemyFactory
             _dynamicObjectsParent = dynamicObjectsParent;
         }
 
-        public async Task<EnemyDeath> CreateEnemy(Vector3 spawnPoint, Transform playerTransform)
+        public async UniTask<EnemyDeath> CreateEnemy(Vector3 spawnPoint, Transform playerTransform)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Enemy);
             

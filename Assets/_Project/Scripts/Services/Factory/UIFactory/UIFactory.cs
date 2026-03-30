@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.AssetManagement;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -16,19 +16,19 @@ namespace _Project.Scripts.Services.Factory.UIFactory
             _assetProvider = assetProvider;
         }
         
-        public async Task<GameObject> CreateHudLayer(Transform uiParent)
+        public async UniTask<GameObject> CreateHudLayer(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.HudLayer);
             return _container.InstantiatePrefab(prefab, uiParent);
         }
 
-        public async Task<GameObject> CreatePopUpLayer(Transform uiParent)
+        public async UniTask<GameObject> CreatePopUpLayer(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.PopUpLayer);
             return _container.InstantiatePrefab(prefab, uiParent);
         }
 
-        public async Task<Sprite> LoadSprite(string assetAddress) => 
+        public async UniTask<Sprite> LoadSprite(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
     }
 }

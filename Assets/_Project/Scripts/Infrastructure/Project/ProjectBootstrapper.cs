@@ -10,11 +10,11 @@ namespace _Project.Scripts.Infrastructure.Project
     {
         private const string MainSceneName = "Main";
         
-        private readonly LoadingCurtainService _loadingCurtain;
+        private readonly ILoadingCurtainService _loadingCurtain;
         private readonly IRemoteConfigService _remoteConfigService;
         private readonly IRemoteConfigFactory _remoteConfigFactory;
         
-        public ProjectBootstrapper(LoadingCurtainService loadingCurtain, IRemoteConfigService remoteConfigService, IRemoteConfigFactory remoteConfigFactory)
+        public ProjectBootstrapper(ILoadingCurtainService loadingCurtain, IRemoteConfigService remoteConfigService, IRemoteConfigFactory remoteConfigFactory)
         {
             _loadingCurtain = loadingCurtain;
             _remoteConfigService = remoteConfigService;

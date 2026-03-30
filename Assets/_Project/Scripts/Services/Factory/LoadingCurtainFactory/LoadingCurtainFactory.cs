@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.UI.Windows;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -17,7 +17,7 @@ namespace _Project.Scripts.Services.Factory.LoadingCurtainFactory
             _assetProvider = assetProvider;
         }
         
-        public async Task<LoadingCurtain> CreateLoadingCurtain()
+        public async UniTask<LoadingCurtain> CreateLoadingCurtain()
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.LoadingCurtain);
             return _container.InstantiatePrefabForComponent<LoadingCurtain>(prefab);

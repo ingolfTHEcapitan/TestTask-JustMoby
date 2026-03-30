@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.SaveLoad;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Logic.PlayerStats
 {
@@ -29,7 +29,7 @@ namespace _Project.Scripts.Logic.PlayerStats
             _configs = configs;
         }
 
-        public async Task Initialize()
+        public async UniTask Initialize()
         {
             foreach (var config in _configs)
             {

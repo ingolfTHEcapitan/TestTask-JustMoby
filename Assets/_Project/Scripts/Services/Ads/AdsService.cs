@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Advertisements;
-using Zenject;
 using Application = UnityEngine.Device.Application;
 
 namespace _Project.Scripts.Services.Ads
@@ -27,12 +27,15 @@ namespace _Project.Scripts.Services.Ads
         public AdsService() => 
             Advertisement.Initialize(GetGameId(), TestMode, this);
 
-        public void OnInitializationComplete()
+        public async void  OnInitializationComplete()
         {
             Debug.Log("Unity Ads Initialization Complete!");
+
+            UniTask rewardedAd = LoadAd(AndroidRewardedAdId);
+            UniTask interstitialAd = LoadAd(AndroidInterstitialAdId);
+            await UniTask.WhenAll(rewardedAd, interstitialAd);
             
-            LoadAd(AndroidRewardedAdId);
-            LoadAd(AndroidInterstitialAdId);
+            
         }
 
         public void OnInitializationFailed(UnityAdsInitializationError error, string message) => 
@@ -64,8 +67,9 @@ namespace _Project.Scripts.Services.Ads
         {
             Debug.Log($"On Unity Ads Show Complete: {showCompletionState.ToString()}");
 
-            await LoadAd(AndroidRewardedAdId);
-            await LoadAd(AndroidInterstitialAdId);
+            UniTask rewardedAd = LoadAd(AndroidRewardedAdId);
+            UniTask interstitialAd = LoadAd(AndroidInterstitialAdId);
+            await UniTask.WhenAll(rewardedAd, interstitialAd);
             
             if (placementId == AndroidRewardedAdId)
             {
@@ -111,11 +115,11 @@ namespace _Project.Scripts.Services.Ads
             return gameId;
         }
 
-        private Task LoadAd(string placementId)
+        private UniTask LoadAd(string placementId)
         {
             Debug.Log($"Loading {placementId} Ad");
             Advertisement.Load(placementId, this);
-            return Task.CompletedTask;
+            return Task.CompletedTask.AsUniTask();
         }
 
         

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Firebase.RemoteConfig;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace _Project.Scripts.Services.RemoteConfig
     {
         public FirebaseRemoteConfig RemoteConfig { get; private set; }
         
-        public async Task FetchDataAsync()
+        public async UniTask FetchDataAsync()
         {
             Debug.Log("Fetching data...");
 

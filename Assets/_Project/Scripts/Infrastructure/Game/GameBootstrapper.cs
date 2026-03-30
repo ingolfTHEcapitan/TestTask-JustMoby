@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
@@ -13,6 +12,7 @@ using _Project.Scripts.Services.LoadingScreen;
 using _Project.Scripts.UI.Elements;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -87,7 +87,7 @@ namespace _Project.Scripts.Infrastructure.Game
             gameOverWindow.Initialize(playerDeath, enemySpawner);
         }
 
-        private async Task<Health> InitPlayer(PlayerSpawner playerSpawner)
+        private async UniTask<Health> InitPlayer(PlayerSpawner playerSpawner)
         {
             Health playerHealth = await playerSpawner.Spawn();
             return playerHealth;

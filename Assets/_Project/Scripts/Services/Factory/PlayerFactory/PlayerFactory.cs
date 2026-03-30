@@ -1,10 +1,10 @@
 using System;
-using System.Threading.Tasks;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.HealthCalculator;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -29,7 +29,7 @@ namespace _Project.Scripts.Services.Factory.PlayerFactory
             _assetProvider = assetProvider;
         }
 
-        public async Task<Health> CreatePlayer(Vector3 at)
+        public async UniTask<Health> CreatePlayer(Vector3 at)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Player);
             _playerHealth = _container.InstantiatePrefabForComponent<Health>(prefab, at, Quaternion.identity, _gameParent);

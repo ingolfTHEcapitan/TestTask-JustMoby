@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -13,7 +13,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         public AssetProvider() => 
             Addressables.InitializeAsync();
 
-        public async Task<T> LoadAsync<T>(AssetReference assetReference) where T : class
+        public async UniTask<T> LoadAsync<T>(AssetReference assetReference) where T : class
         {
             if (_completedCache.TryGetValue(assetReference.AssetGUID, out AsyncOperationHandle completedHandle))
                 return completedHandle.Result as T;
@@ -22,7 +22,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
             return await RunWithCacheOnComplete(handle, assetReference.AssetGUID);
         }
         
-        public async Task<T> LoadAsync<T>(string assetAddress) where T : class
+        public async UniTask<T> LoadAsync<T>(string assetAddress) where T : class
         {
             if (_completedCache.TryGetValue(assetAddress, out AsyncOperationHandle completedHandle))
                 return completedHandle.Result as T;
@@ -41,13 +41,13 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
             _handles.Clear();
         }
 
-        private async Task<T> RunWithCacheOnComplete<T>(AsyncOperationHandle<T> handle, string cacheKey) where T : class
+        private async UniTask<T> RunWithCacheOnComplete<T>(AsyncOperationHandle<T> handle, string cacheKey) where T : class
         {
             handle.Completed += completeHandle => 
                 _completedCache[cacheKey] = completeHandle;
             
             AddHandle(cacheKey, handle);
-            return await handle.Task;
+            return await handle.ToUniTask();
         }
         
         private void AddHandle<T>(string key, AsyncOperationHandle<T> handle) where T : class
