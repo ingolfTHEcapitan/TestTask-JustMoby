@@ -28,7 +28,7 @@ namespace _Project.Scripts.Logic.Weapon
         private readonly Vector3 _screenCenter = new Vector3(0.5f, 0.5f, 0f);
 
         [Inject]
-        public void Construct(IGamePauseService pauseService, IInputService inputService, IBulletFactory factory, 
+        private void Construct(IGamePauseService pauseService, IInputService inputService, IBulletFactory factory, 
             IGameStatistics statistics, WeaponConfig weaponConfig, BulletConfig bulletConfig)
         {
             _pauseService = pauseService;

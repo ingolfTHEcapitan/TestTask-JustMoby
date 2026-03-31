@@ -27,7 +27,7 @@ namespace _Project.Scripts.Logic.Enemy
         private bool _isSpawnAnimationEnded;
 
         [Inject]
-        public void Construct(IGamePauseService pauseService, EnemyConfig config)
+        private void Construct(IGamePauseService pauseService, EnemyConfig config)
         {
             _pauseService = pauseService;
             _config = config;

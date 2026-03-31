@@ -23,7 +23,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
         private bool _reviveInThisSession;
 
         [Inject]
-        public void Construct(IGamePauseService pauseService, IAdsService adsService)
+        private void Construct(IGamePauseService pauseService, IAdsService adsService)
         {
             _pauseService = pauseService;
             _adsService = adsService;

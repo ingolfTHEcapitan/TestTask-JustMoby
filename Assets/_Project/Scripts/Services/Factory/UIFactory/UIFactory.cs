@@ -1,4 +1,5 @@
 using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.UI.Windows.Shop;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -28,6 +29,18 @@ namespace _Project.Scripts.Services.Factory.UIFactory
             return _container.InstantiatePrefab(prefab, uiParent);
         }
 
+        public async UniTask<GameObject> CreateMainMenuLayer(Transform uiParent)
+        {
+            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.MainMenuLayer);
+            return _container.InstantiatePrefab(prefab, uiParent);
+        }
+
+        public async UniTask<ShopItem> CreateShopItem(Transform parent)
+        {
+            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.ShopItem);
+            return _container.InstantiatePrefabForComponent<ShopItem>(prefab, parent);
+        }
+        
         public async UniTask<Sprite> LoadSprite(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
     }

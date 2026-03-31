@@ -1,35 +1,37 @@
-using System;
 using System.Collections.Generic;
 using _Project.Scripts.Configs;
+using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Services.RemoteConfig;
 using Firebase.RemoteConfig;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Scripts.Services.Factory.RemoteConfigFactory
 {
     public class RemoteConfigFactory : IRemoteConfigFactory
     {
-        private readonly DiContainer _container;
-        private readonly Dictionary<string, Type> _configs;
+        private readonly Dictionary<string, object> _configs;
         private readonly string[] _playerStatConfigKeys;
         private readonly IRemoteConfigService _remoteConfigService;
+        private List<PlayerStatConfig> _playerStatConfigs;
 
-        public RemoteConfigFactory(IRemoteConfigService remoteConfigService, DiContainer container)
+        public RemoteConfigFactory(IRemoteConfigService remoteConfigService, PlayerSpawnerConfig playerSpawnerConfig, 
+            EnemySpawnerConfig enemySpawnerConfig, WeaponConfig weaponConfig, BulletConfig bulletConfig, EnemyConfig enemyConfig, 
+            SaveServiceConfig saveServiceConfig, ProductConfigWrapper productConfigWrapper, List<PlayerStatConfig> playerStatConfigs)
         {
+            _playerStatConfigs = playerStatConfigs;
             _remoteConfigService = remoteConfigService;
-            _container = container;
-
-            _configs = new Dictionary<string, Type>()
+            
+            _configs = new Dictionary<string, object>()
             {
-                {"player_spawner_config", typeof(PlayerSpawnerConfig)},
-                {"enemy_spawner_config", typeof(EnemySpawnerConfig)},
-                {"weapon_config", typeof(WeaponConfig)},
-                {"bullet_config", typeof(BulletConfig)},
-                {"enemy_skeleton_config", typeof(EnemyConfig)},
-                {"save_service_config", typeof(SaveServiceConfig)},
+                {"player_spawner_config", playerSpawnerConfig},
+                {"enemy_spawner_config", enemySpawnerConfig},
+                {"weapon_config", weaponConfig},
+                {"bullet_config",bulletConfig},
+                {"enemy_skeleton_config", enemyConfig},
+                {"save_service_config", saveServiceConfig},
+                {"product_config", productConfigWrapper},
             };
             
             _playerStatConfigKeys = new[] { "stat_damage_config", "stat_health_config", "stat_speed_config" };
@@ -39,32 +41,28 @@ namespace _Project.Scripts.Services.Factory.RemoteConfigFactory
         { 
             FirebaseRemoteConfig remoteConfig = _remoteConfigService.RemoteConfig;
 
-            LoadAndBindConfigs(remoteConfig);
-            LoadAndBindPlayerStatConfigs(remoteConfig);
+            LoadConfigs(remoteConfig);
+            LoadPlayerStatConfigs(remoteConfig);
         }
 
-        private void LoadAndBindConfigs(FirebaseRemoteConfig remoteConfigInstance)
+        private void LoadConfigs(FirebaseRemoteConfig remoteConfigInstance)
         {
-            foreach ((string firebaseKey, Type configType) in _configs)
+            foreach ((string firebaseKey, object configObject) in _configs)
             {
                 string json = remoteConfigInstance.GetValue(firebaseKey).StringValue;
-                object config = JsonUtility.FromJson(json, configType);
-                
-                _container.Bind(configType).FromInstance(config).NonLazy();
+                JsonUtility.FromJsonOverwrite(json, configObject);
             }
         }
 
-        private void LoadAndBindPlayerStatConfigs(FirebaseRemoteConfig remoteConfigInstance)
+        private void LoadPlayerStatConfigs(FirebaseRemoteConfig remoteConfigInstance)
         {
-            List<PlayerStatConfig> playerStatConfigs = new List<PlayerStatConfig>();
+            _playerStatConfigs.Clear();
             
             foreach (string configKey in _playerStatConfigKeys)
             {
                 string json =  remoteConfigInstance.GetValue(configKey).StringValue;
-                playerStatConfigs.Add(JsonUtility.FromJson<PlayerStatConfig>(json));
+                _playerStatConfigs.Add(JsonUtility.FromJson<PlayerStatConfig>(json));
             }
-            
-            _container.Bind<List<PlayerStatConfig>>().FromInstance(playerStatConfigs).NonLazy();
         }
     }
 }

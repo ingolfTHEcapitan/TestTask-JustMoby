@@ -28,7 +28,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private Button _openButton;
         
         [Inject]
-        public void Construct(IInputService inputService) => 
+        private void Construct(IInputService inputService) => 
             _inputService = inputService;
 
         public void Initialize(Button openButton)

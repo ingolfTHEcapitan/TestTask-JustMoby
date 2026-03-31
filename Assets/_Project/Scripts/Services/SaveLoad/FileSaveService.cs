@@ -1,5 +1,6 @@
 using System.IO;
 using _Project.Scripts.Data;
+using _Project.Scripts.Services.Progress;
 using UnityEngine;
 
 namespace _Project.Scripts.Services.SaveLoad
@@ -18,30 +19,27 @@ namespace _Project.Scripts.Services.SaveLoad
             _savePath = Path.Combine(_saveDirectoryPath, FileName);
         }
         
-        public void SaveProgress(PlayerProgress playerProgress)
+        public void SaveProgress(IProgressService progressService)
         {
             if (!Directory.Exists(_saveDirectoryPath)) 
                 Directory.CreateDirectory(_saveDirectoryPath);
             
-            string json = JsonUtility.ToJson(playerProgress, prettyPrint: true);
+            string json = JsonUtility.ToJson(progressService.PlayerProgress, prettyPrint: true);
             File.WriteAllText(_savePath, json);
             Debug.Log("Progress saved to File, save path: " + _savePath);
         }
 
         public PlayerProgress LoadProgress()
         {
-            PlayerProgress playerProgress = new PlayerProgress();
-            
             if (File.Exists(_savePath))
             {
                 string json = File.ReadAllText(_savePath);
-                playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
+                PlayerProgress playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
                 Debug.Log("Progress loaded from File, save path: " + _savePath);
                 return playerProgress;
             }
             
-            SaveProgress(playerProgress);
-            return null;
+            return new PlayerProgress();
         }
     }
 }

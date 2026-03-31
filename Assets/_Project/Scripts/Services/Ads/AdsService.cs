@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -21,11 +22,17 @@ namespace _Project.Scripts.Services.Ads
         private Action _onRewardedAdFinished;
         private Action _onInterstitialAdFinished;
         
+        private readonly IProgressService _progressService;
+
         public bool IsRewardedAdLoaded { get; private set; }
         public bool IsInterstitialAdLoaded { get; private set; }
+        public bool IsAdsRemoved => _progressService.PlayerProgress.PurchaseData.IsAdsRemoved;
         
-        public AdsService() => 
+        public AdsService(IProgressService progressService)
+        {
+            _progressService = progressService;
             Advertisement.Initialize(GetGameId(), TestMode, this);
+        }
 
         public async void  OnInitializationComplete()
         {
@@ -34,8 +41,6 @@ namespace _Project.Scripts.Services.Ads
             UniTask rewardedAd = LoadAd(AndroidRewardedAdId);
             UniTask interstitialAd = LoadAd(AndroidInterstitialAdId);
             await UniTask.WhenAll(rewardedAd, interstitialAd);
-            
-            
         }
 
         public void OnInitializationFailed(UnityAdsInitializationError error, string message) => 
@@ -95,6 +100,12 @@ namespace _Project.Scripts.Services.Ads
         
         public void ShowInterstitialAd(Action onInterstitialAdFinished)
         {
+            if (IsAdsRemoved)
+            {
+                onInterstitialAdFinished?.Invoke();
+                return;
+            }
+            
             Advertisement.Show(AndroidInterstitialAdId, this);
             _onInterstitialAdFinished = onInterstitialAdFinished;
         }

@@ -5,6 +5,7 @@ using _Project.Scripts.Configs;
 using _Project.Scripts.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Factory.UIFactory;
+using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
 using Cysharp.Threading.Tasks;
 
@@ -18,13 +19,16 @@ namespace _Project.Scripts.Logic.PlayerStats
         private readonly List<PlayerStatConfig> _configs;
         private IAssetProvider _assetProvider;
         private IUIFactory _uiFactory;
+        private IProgressService _progressService;
 
         public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }
 
-        public PlayerStatsModel(ISaveLoadService saveLoadService, IUIFactory uiFactory, List<PlayerStatConfig> configs)
+        public PlayerStatsModel(ISaveLoadService saveLoadService, IProgressService progressService, 
+            IUIFactory uiFactory, List<PlayerStatConfig> configs)
         {
             _saveLoadService = saveLoadService;
+            _progressService = progressService;
             _uiFactory = uiFactory;
             _configs = configs;
         }
@@ -120,16 +124,7 @@ namespace _Project.Scripts.Logic.PlayerStats
 
         private void LoadStats()
         {
-            PlayerProgress progress = _saveLoadService.LoadProgress();
-            if (progress == null)
-            {
-                foreach (PlayerStatData stat in Stats.Values)
-                    stat.RecalculateCurrentValue();
-
-                UpgradePoints = 0;
-                SaveStats();
-                return;
-            }
+            PlayerStatsData progress = _saveLoadService.LoadProgress().PlayerStatsData;
             
             UpgradePoints = progress.UpgradePoints;
 
@@ -141,20 +136,18 @@ namespace _Project.Scripts.Logic.PlayerStats
             
             if (Stats.ContainsKey(StatName.Damage))
                 Stats[StatName.Damage].SetLevel(progress.DamageLevel);
-            
         }
 
         private void SaveStats()
         {
-            PlayerProgress progress = new PlayerProgress
-            {
-                UpgradePoints = UpgradePoints,
-                HealthLevel = Stats.TryGetValue(StatName.Health, out PlayerStatData health) ? health.Level : 0,
-                SpeedLevel = Stats.TryGetValue(StatName.Speed, out PlayerStatData speed) ? speed.Level : 0,
-                DamageLevel = Stats.TryGetValue(StatName.Damage, out PlayerStatData damage) ? damage.Level : 0
-            };
+            PlayerStatsData progress = _progressService.PlayerProgress.PlayerStatsData;
+
+            progress.UpgradePoints = UpgradePoints;
+            progress.HealthLevel = Stats.TryGetValue(StatName.Health, out PlayerStatData health) ? health.Level : 0;
+            progress.SpeedLevel = Stats.TryGetValue(StatName.Speed, out PlayerStatData speed) ? speed.Level : 0;
+            progress.DamageLevel = Stats.TryGetValue(StatName.Damage, out PlayerStatData damage) ? damage.Level : 0;
             
-            _saveLoadService.SaveProgress(progress);
+            _saveLoadService.SaveProgress(_progressService);
         }
         
         private void InvokeStatChanged() => 

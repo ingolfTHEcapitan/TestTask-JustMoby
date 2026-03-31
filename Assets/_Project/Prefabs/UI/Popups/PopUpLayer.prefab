@@ -686,6 +686,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerStatsWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 4683942711538480718, guid: f5690ec389786384984df95b40be4241,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

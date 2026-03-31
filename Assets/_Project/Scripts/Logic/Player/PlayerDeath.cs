@@ -24,7 +24,7 @@ namespace _Project.Scripts.Logic.Player
         public bool IsDead { get; private set; }
         
         [Inject]
-        public void Construct(IAnalyticsService analyticsService, IGameStatistics statistics)
+        private void Construct(IAnalyticsService analyticsService, IGameStatistics statistics)
         {
             _analyticsService = analyticsService;
             _statistics = statistics;

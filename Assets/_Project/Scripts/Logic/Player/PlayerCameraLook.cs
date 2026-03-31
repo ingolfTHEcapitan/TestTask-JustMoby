@@ -20,7 +20,7 @@ namespace _Project.Scripts.Logic.Player
         private IInputService _inputService;
 
         [Inject]
-        public void Construct(IGamePauseService pauseService, IInputService inputService)
+        private void Construct(IGamePauseService pauseService, IInputService inputService)
         {
             _pauseService = pauseService;
             _inputService = inputService;

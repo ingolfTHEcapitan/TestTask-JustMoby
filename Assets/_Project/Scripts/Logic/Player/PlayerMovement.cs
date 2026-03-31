@@ -20,7 +20,7 @@ namespace _Project.Scripts.Logic.Player
         private float Speed => _playerStatsModel.GetStatValue(StatName.Speed);
         
         [Inject]
-        public void Construct(PlayerStatsModel playerStats, IGamePauseService pauseService, IInputService inputService)
+        private void Construct(PlayerStatsModel playerStats, IGamePauseService pauseService, IInputService inputService)
         {
             _playerStatsModel = playerStats;
             _pauseService = pauseService;

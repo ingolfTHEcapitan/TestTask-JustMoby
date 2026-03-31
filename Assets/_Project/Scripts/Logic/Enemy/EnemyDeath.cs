@@ -24,7 +24,7 @@ namespace _Project.Scripts.Logic.Enemy
         public bool IsForcedKilling { get; private set; }
 
         [Inject]
-        public void Construct(EnemyConfig config) => 
+        private void Construct(EnemyConfig config) => 
             _config = config;
 
         public void Initialize() => 
