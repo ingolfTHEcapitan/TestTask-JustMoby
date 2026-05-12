@@ -11,6 +11,5 @@ namespace _Project.Scripts.Services.IAP
         void Initialize();
         void StartPurchase(string productId);
         List<ProductDescription> GetProducts();
-        void Dispose();
     }
 }
