@@ -42,7 +42,10 @@ namespace _Project.Scripts.Infrastructure.Project
             SceneManager.LoadSceneAsync(MainMenuScene);
         }
 
-        public void Dispose() => 
-            _iapService.Dispose();
+        public void Dispose()
+        {
+            if (_iapService is IDisposable disposable) 
+                disposable.Dispose();
+        }
     }
 }

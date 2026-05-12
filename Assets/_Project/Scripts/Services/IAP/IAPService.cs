@@ -10,7 +10,7 @@ using ProductDescription = _Project.Scripts.Configs.IAP.ProductDescription;
 
 namespace _Project.Scripts.Services.IAP
 {
-    public class IAPService : IIAPService
+    public class IAPService : IIAPService, IDisposable
     {
         private readonly PurchaseData _purchaseData;
         public event Action OnPurchaseInitialized;
