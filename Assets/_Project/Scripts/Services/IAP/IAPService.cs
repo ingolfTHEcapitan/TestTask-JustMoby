@@ -5,6 +5,7 @@ using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Data.IAP;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
+using Cysharp.Threading.Tasks;
 using UnityEngine.Purchasing;
 using ProductDescription = _Project.Scripts.Configs.IAP.ProductDescription;
 
@@ -18,6 +19,7 @@ namespace _Project.Scripts.Services.IAP
         private readonly IAPProvider _iapProvider;
         private readonly IProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
+        private UniTaskCompletionSource<bool> _purchaseTaskCompletionSource;
 
         public bool IsInitialized => _iapProvider.IsInitialized;
         public IAPService(IProgressService progressService, ProductConfigWrapper productConfigWrapper,
@@ -32,6 +34,7 @@ namespace _Project.Scripts.Services.IAP
         {
             _iapProvider.OnPurchaseInitialized += InvokeOnPurchaseInitialized;
             _iapProvider.OnProcessPurchase += ProcessPurchase;
+            _iapProvider.OnPurchaseFailedAction += HandlePurchaseFailed;
             _iapProvider.Initialize();
         }
 
@@ -41,8 +44,19 @@ namespace _Project.Scripts.Services.IAP
             _iapProvider.OnProcessPurchase -= ProcessPurchase;
         }
 
-        public void StartPurchase(string productId) => 
+        public async UniTask<bool> StartPurchase(string productId)
+        {
+            if (_purchaseTaskCompletionSource != null)
+                return false;
+            
+            _purchaseTaskCompletionSource = new UniTaskCompletionSource<bool>();
+            
             _iapProvider.StartPurchase(productId);
+
+            bool result = await _purchaseTaskCompletionSource.Task;
+            _purchaseTaskCompletionSource = null;
+            return result;
+        }
 
         public List<ProductDescription> GetProducts() =>
             GetProductDescriptions().ToList();
@@ -62,6 +76,7 @@ namespace _Project.Scripts.Services.IAP
                     break;
             }
             
+            _purchaseTaskCompletionSource.TrySetResult(true);
             _saveLoadService.SaveProgress(_progressService);
             
             return PurchaseProcessingResult.Complete;
@@ -97,5 +112,8 @@ namespace _Project.Scripts.Services.IAP
 
         private void InvokeOnPurchaseInitialized() => 
             OnPurchaseInitialized?.Invoke();
+
+        private void HandlePurchaseFailed(string obj) => 
+            _purchaseTaskCompletionSource.TrySetResult(false);
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Project.Scripts.Configs.IAP;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Services.IAP
 {
@@ -9,7 +10,7 @@ namespace _Project.Scripts.Services.IAP
         event Action OnPurchaseInitialized;
         bool IsInitialized { get; }
         void Initialize();
-        void StartPurchase(string productId);
+        UniTask<bool> StartPurchase(string productId);
         List<ProductDescription> GetProducts();
     }
 }

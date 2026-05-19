@@ -11,6 +11,7 @@ namespace _Project.Scripts.Services.IAP
     public class IAPProvider: IDetailedStoreListener
     {
         public event Action OnPurchaseInitialized;
+        public event Action<string> OnPurchaseFailedAction;
         public Func<Product, PurchaseProcessingResult> OnProcessPurchase;
 
         public Dictionary<string, ProductConfig> ProductConfigs;
@@ -69,12 +70,14 @@ namespace _Project.Scripts.Services.IAP
         {
             Debug.LogError($"product {product.definition.id} purchase failed, Purchase Failure Reason: {failureReason}," +
                            $" transaction id: {product.transactionID}");
+            OnPurchaseFailedAction?.Invoke(product.definition.id);
         }
 
         public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
         {
             Debug.LogError($"product {product.definition.id} purchase failed, Purchase Failure Description: {failureDescription.message}," +
                            $" transaction id: {product.transactionID}");
+            OnPurchaseFailedAction?.Invoke(product.definition.id);
         }
         
         private void AddProducts(Dictionary<string, ProductConfig> productConfigs, ConfigurationBuilder builder)
