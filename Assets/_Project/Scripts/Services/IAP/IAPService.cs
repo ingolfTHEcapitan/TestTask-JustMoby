@@ -5,8 +5,10 @@ using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Data.IAP;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.Services.SaveLoad.CloudSave;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Purchasing;
+using Zenject;
 using ProductDescription = _Project.Scripts.Configs.IAP.ProductDescription;
 
 namespace _Project.Scripts.Services.IAP
@@ -23,7 +25,7 @@ namespace _Project.Scripts.Services.IAP
 
         public bool IsInitialized => _iapProvider.IsInitialized;
         public IAPService(IProgressService progressService, ProductConfigWrapper productConfigWrapper,
-            ISaveLoadService saveLoadService)
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService)
         {
             _iapProvider = new IAPProvider(productConfigWrapper);
             _progressService = progressService;
@@ -77,7 +79,7 @@ namespace _Project.Scripts.Services.IAP
             }
             
             _purchaseTaskCompletionSource.TrySetResult(true);
-            _saveLoadService.SaveProgress(_progressService);
+            _saveLoadService.SaveProgressAsync(_progressService);
             
             return PurchaseProcessingResult.Complete;
         }

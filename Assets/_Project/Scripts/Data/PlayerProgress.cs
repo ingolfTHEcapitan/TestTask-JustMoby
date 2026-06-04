@@ -8,5 +8,16 @@ namespace _Project.Scripts.Data
     {
         public PlayerStatsData PlayerStatsData = new PlayerStatsData();
         public PurchaseData PurchaseData = new PurchaseData();
+        public long LastSaveTimeUnix;
+
+        public string GetFormatedSaveTime(bool getLocalDateTime = true)
+        {
+            DateTimeOffset unixSaveTime = DateTimeOffset.FromUnixTimeSeconds(LastSaveTimeUnix);
+
+            if (getLocalDateTime) 
+                unixSaveTime = unixSaveTime.LocalDateTime;
+            
+            return unixSaveTime.ToString("yyyy-MM-dd HH:mm:ss");
+        }
     }
 }

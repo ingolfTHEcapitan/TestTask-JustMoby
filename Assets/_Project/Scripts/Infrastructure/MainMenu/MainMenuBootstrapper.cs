@@ -19,7 +19,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly Transform _uiParent;
 
         public MainMenuBootstrapper(ILoadingCurtainService loadingCurtain, IProgressService progressService,
-            ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent)
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent)
         {
             _loadingCurtain = loadingCurtain;
             _progressService = progressService;
@@ -30,7 +30,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         public async void Initialize()
         {
-            _progressService.PlayerProgress = _saveLoadService.LoadProgress();
+            _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
            
             GameObject mainMenuLayer = await _uiFactory.CreateMainMenuLayer(_uiParent);
             
