@@ -1,31 +1,36 @@
+using System;
 using _Project.Scripts.Data;
 using _Project.Scripts.Services.Progress;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace _Project.Scripts.Services.SaveLoad
+namespace _Project.Scripts.Services.SaveLoad.LocalSave
 {
     public class PlayerPrefsSaveService: ISaveLoadService
     {
         private const string PlayerProgressKey = "PlayerProgress";
         
-        public void SaveProgress(IProgressService progressService)
+        public UniTask SaveProgressAsync(IProgressService progressService)
         {
+            progressService.PlayerProgress.LastSaveTimeUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            
             string json = JsonUtility.ToJson(progressService.PlayerProgress, false);
             PlayerPrefs.SetString(PlayerProgressKey, json);
             Debug.Log("Progress saved to PlayerPrefs");
+            return UniTask.CompletedTask;
         }
 
-        public PlayerProgress LoadProgress()
+        public UniTask<PlayerProgress> LoadProgressAsync()
         {
             if (PlayerPrefs.HasKey(PlayerProgressKey))
             {
                 string json = PlayerPrefs.GetString(PlayerProgressKey);
                 PlayerProgress playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
                 Debug.Log("Progress loaded from PlayerPrefs");
-                return  playerProgress;
+                return  UniTask.FromResult(playerProgress);
             }
             
-            return new PlayerProgress();
+            return UniTask.FromResult(new PlayerProgress());
         }
     }
 }

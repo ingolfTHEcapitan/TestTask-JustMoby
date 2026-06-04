@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Services.Authentication;
 using _Project.Scripts.Services.Factory.RemoteConfigFactory;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.Services.LoadingScreen;
@@ -16,18 +17,19 @@ namespace _Project.Scripts.Infrastructure.Project
         private readonly ILoadingCurtainService _loadingCurtain;
         private readonly IRemoteConfigService _remoteConfigService;
         private readonly IRemoteConfigFactory _remoteConfigFactory;
-
-        private ISaveLoadService _saveLoadServiceInstance;
+        
         private LazyInject<IIAPService> _lazyIapService;
         private IIAPService _iapService;
+        private IAuthService _authService;
 
         public ProjectBootstrapper(ILoadingCurtainService loadingCurtain, LazyInject<IIAPService> lazyIapService, 
-            IRemoteConfigService remoteConfigService, IRemoteConfigFactory remoteConfigFactory)
+            IRemoteConfigService remoteConfigService, IRemoteConfigFactory remoteConfigFactory, IAuthService authService)
         {
             _lazyIapService = lazyIapService;
             _loadingCurtain = loadingCurtain;
             _remoteConfigService = remoteConfigService;
             _remoteConfigFactory = remoteConfigFactory;
+            _authService = authService;
         }
 
         public async void Initialize()
@@ -35,6 +37,7 @@ namespace _Project.Scripts.Infrastructure.Project
             await _loadingCurtain.ShowLoading();
             await _remoteConfigService.FetchDataAsync();
             _remoteConfigFactory.ApplyRemoteConfigs();
+            await _authService.SignUpAsync();
             
             _iapService = _lazyIapService.Value;
             _iapService.Initialize();

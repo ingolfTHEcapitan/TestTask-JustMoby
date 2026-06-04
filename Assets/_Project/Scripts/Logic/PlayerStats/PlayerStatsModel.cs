@@ -7,7 +7,9 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.Services.SaveLoad.CloudSave;
 using Cysharp.Threading.Tasks;
+using Zenject;
 
 namespace _Project.Scripts.Logic.PlayerStats
 {
@@ -24,7 +26,7 @@ namespace _Project.Scripts.Logic.PlayerStats
         public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
         public int UpgradePoints { get; private set; }
 
-        public PlayerStatsModel(ISaveLoadService saveLoadService, IProgressService progressService, 
+        public PlayerStatsModel([Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IProgressService progressService, 
             IUIFactory uiFactory, List<PlayerStatConfig> configs)
         {
             _saveLoadService = saveLoadService;
@@ -43,7 +45,7 @@ namespace _Project.Scripts.Logic.PlayerStats
                 Stats[config.Name] = statData;
             }
 
-            LoadStats();
+            await LoadStats();
         }
 
         public void Dispose()
@@ -122,9 +124,10 @@ namespace _Project.Scripts.Logic.PlayerStats
         private bool HasAnyChanges() =>
             Stats.Values.Any(stat => stat.PreviewLevelHasChanged);
 
-        private void LoadStats()
+        private async UniTask LoadStats()
         {
-            PlayerStatsData progress = _saveLoadService.LoadProgress().PlayerStatsData;
+            PlayerProgress playerProgress = await _saveLoadService.LoadProgressAsync();
+            PlayerStatsData progress = playerProgress.PlayerStatsData;
             
             UpgradePoints = progress.UpgradePoints;
 
@@ -138,7 +141,7 @@ namespace _Project.Scripts.Logic.PlayerStats
                 Stats[StatName.Damage].SetLevel(progress.DamageLevel);
         }
 
-        private void SaveStats()
+        private async UniTask SaveStats()
         {
             PlayerStatsData progress = _progressService.PlayerProgress.PlayerStatsData;
 
@@ -147,7 +150,7 @@ namespace _Project.Scripts.Logic.PlayerStats
             progress.SpeedLevel = Stats.TryGetValue(StatName.Speed, out PlayerStatData speed) ? speed.Level : 0;
             progress.DamageLevel = Stats.TryGetValue(StatName.Damage, out PlayerStatData damage) ? damage.Level : 0;
             
-            _saveLoadService.SaveProgress(_progressService);
+            await _saveLoadService.SaveProgressAsync(_progressService);
         }
         
         private void InvokeStatChanged() => 

@@ -92,6 +92,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc2d6471bb2c0ca499ad3175b231c21b
+    m_Address: "Save\u0421onflictResolveWindow"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fc5b0a1421768624ea6623df9835e99c
     m_Address: Bullet
     m_ReadOnly: 0
