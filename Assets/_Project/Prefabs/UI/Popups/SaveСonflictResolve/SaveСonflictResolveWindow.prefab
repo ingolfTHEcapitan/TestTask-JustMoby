@@ -1325,12 +1325,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 084e79ffa9744c79871a510cfd2d37d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _localSaveButton: {fileID: 2997901113903321861}
-  _cloudSaveButton: {fileID: 6581787297898620431}
+  _localSaveButton: {fileID: 6581787297898620431}
+  _cloudSaveButton: {fileID: 2997901113903321861}
   _localDateText: {fileID: 4423123478442232339}
   _cloudDateText: {fileID: 1175491760493368305}
   _newSaveColor: {r: 0.34901962, g: 0.85882354, b: 0.23137255, a: 1}
   _oldSaveColor: {r: 0.85882354, g: 0.28235295, b: 0.23137255, a: 1}
+  _defaultSaveColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &8399786394970473787
 GameObject:
   m_ObjectHideFlags: 0
