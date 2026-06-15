@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using _Project.Scripts.Data;
+using _Project.Scripts.Data.Player;
 using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
 using Unity.Services.CloudSave;

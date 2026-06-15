@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-using _Project.Scripts.Data;
+using _Project.Scripts.Data.Player;
 using _Project.Scripts.Services.Authentication;
-using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.NetworkAccessibility;
 using _Project.Scripts.Services.Progress;
+using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

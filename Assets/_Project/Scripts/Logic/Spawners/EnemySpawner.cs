@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Enemy;
-using _Project.Scripts.Services.Factory.EnemyFactory;
+using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.Score;
 using _Project.Scripts.Services.Statistics;

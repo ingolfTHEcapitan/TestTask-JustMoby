@@ -1,4 +1,4 @@
-using _Project.Scripts.Data;
+using _Project.Scripts.Data.Player;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.SaveLoad;
 using Cysharp.Threading.Tasks;

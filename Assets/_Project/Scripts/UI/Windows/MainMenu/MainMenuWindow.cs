@@ -1,5 +1,5 @@
 ﻿using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Services.LoadingScreen;
+using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.UI.Windows.Shop;
 using UnityEditor;
 using UnityEngine;

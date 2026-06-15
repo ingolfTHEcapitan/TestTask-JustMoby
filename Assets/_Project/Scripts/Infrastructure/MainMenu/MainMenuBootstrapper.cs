@@ -1,8 +1,8 @@
 ﻿using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Services.Factory.UIFactory;
-using _Project.Scripts.Services.LoadingScreen;
+using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.Shop;
 using UnityEngine;
