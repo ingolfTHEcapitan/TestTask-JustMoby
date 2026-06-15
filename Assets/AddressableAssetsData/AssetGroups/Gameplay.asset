@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Gameplay
+  m_EditorClassIdentifier: 
+  m_GroupName: Gameplay
+  m_Data:
+    m_SerializedData: []
+  m_GUID: faa2e9d54fa7138419c53536120f6397
+  m_SerializeEntries:
+  - m_GUID: 077389f1b4018714ba97c6db32662b95
+    m_Address: PopUpLayer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 190b92b937a550d46b8fa508667be085
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5df367024fd9a42d993d65056dbf8944
+    m_Address: Icon_Damage
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a07c5b3907ec843a8bca61176e91e92d
+    m_Address: IconFrame_Health
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa3f944a796a411408a412504ecdc45a
+    m_Address: Enemy
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: af5cab4be50a64b4ba5d2d40b2e9a260
+    m_Address: IconFrame_Damage
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cca5d5ae3af5a4596827c2a3e30feafe
+    m_Address: Icon_Health
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de0b3d2941da540fd8c45dc4779030bd
+    m_Address: IconFrame_Speed
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e1683a1acccb446889b2eb95ce0cbaae
+    m_Address: Icon_Speed
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ecbf2fb2ff8b13745b205ce0fa330f95
+    m_Address: HudLayer
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc5b0a1421768624ea6623df9835e99c
+    m_Address: Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 396fa9a13c7640841ba3020bec1c024a, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1525a5f4dd7b5c74b9897e927e91c972, type: 2}
+    - {fileID: 11400000, guid: f472bfcb2a040784db0c95dcd8a8c0b3, type: 2}

@@ -11,6 +11,7 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 /[Aa]ssets/[Ss]aves/
+/[Ss]erver[Dd]ata/
 *.log
 
 # MemoryCaptures can get excessive in size.
