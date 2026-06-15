@@ -1,10 +1,9 @@
 using System;
 using _Project.Scripts.Services.Authentication;
-using _Project.Scripts.Services.Factory.RemoteConfigFactory;
 using _Project.Scripts.Services.IAP;
-using _Project.Scripts.Services.LoadingScreen;
+using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.RemoteConfig;
-using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory;
 using UnityEngine.SceneManagement;
 using Zenject;
 

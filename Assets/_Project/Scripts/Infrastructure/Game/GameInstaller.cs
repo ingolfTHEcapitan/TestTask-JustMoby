@@ -1,8 +1,8 @@
-using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Logic.Enemy.Factory;
+using _Project.Scripts.Logic.Player.Factory;
+using _Project.Scripts.Logic.Player.Stats;
+using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Logic.Spawners;
-using _Project.Scripts.Services.Factory.BulletFactory;
-using _Project.Scripts.Services.Factory.EnemyFactory;
-using _Project.Scripts.Services.Factory.PlayerFactory;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.Score;
 using UnityEngine;

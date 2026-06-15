@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using _Project.Scripts.Configs.IAP;
-using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.Services.Progress;
+using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;

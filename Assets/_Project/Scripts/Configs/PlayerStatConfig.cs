@@ -1,5 +1,5 @@
 using System;
-using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Logic.Player.Stats;
 using UnityEngine;
 
 namespace _Project.Scripts.Configs

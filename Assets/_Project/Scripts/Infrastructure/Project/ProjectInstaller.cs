@@ -7,20 +7,19 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Authentication;
-using _Project.Scripts.Services.Factory.LoadingCurtainFactory;
-using _Project.Scripts.Services.Factory.RemoteConfigFactory;
-using _Project.Scripts.Services.Factory.UIFactory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.IAP;
-using _Project.Scripts.Services.LoadingScreen;
+using _Project.Scripts.Services.LoadingCurtain;
+using _Project.Scripts.Services.LoadingCurtain.Factory;
 using _Project.Scripts.Services.NetworkAccessibility;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.RemoteConfig;
+using _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.SaveLoad.CloudSave;
 using _Project.Scripts.Services.Statistics;
-using Unity.Services.CloudSave;
+using _Project.Scripts.UI.Factory;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project
