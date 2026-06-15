@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DefaultGroup: 64006cf7e78ceee4fbc3482ac3a01557
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 445c3ff4ad2f15ed7f8a66bd419e716a
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
   m_RemoteCatalogBuildPath:
     m_Id: b7433f66c52a9844aa201de0bf7070f4
   m_RemoteCatalogLoadPath:
-    m_Id: 4fb978721694fc14e8599a2d99b9a8e7
+    m_Id: https://storage.yandexcloud.net/testtask-justmoby/[BuildTarget]
   m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
@@ -46,6 +46,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 077576eb139afe54d8d6ed4eb0a01868, type: 2}
   - {fileID: 11400000, guid: fc364afecfbd93947999be20203acc8d, type: 2}
+  - {fileID: 11400000, guid: ed876ab72771e7d4e8be757f80b3a855, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -56,6 +57,20 @@ MonoBehaviour:
     - m_InheritedParent: 
       m_Id: 1a99e1300df6bf340a3c33200c9548a8
       m_ProfileName: Default
+      m_Values:
+      - m_Id: 3228acb853b9bf940b78a398c2b12344
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 4fb978721694fc14e8599a2d99b9a8e7
+        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+      - m_Id: 5c6ea179a8891c843b6763dcd51dc184
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: b7433f66c52a9844aa201de0bf7070f4
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: d40f0f5f6bc7fd54788dc9a389e8107c
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+    - m_InheritedParent: 
+      m_Id: 0300d9987c15f6544afcd44b007a0e36
+      m_ProfileName: Remote
       m_Values:
       - m_Id: 3228acb853b9bf940b78a398c2b12344
         m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
@@ -100,7 +115,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3025e49e0c16f04bab034ad5314d728, type: 2}
   - {fileID: 11400000, guid: f2cb9a47afaeb2746b34296489243a40, type: 2}
   - {fileID: 11400000, guid: 917133352ef152d46a6fa9cbf3c48555, type: 2}
-  m_ActiveProfileId: 1a99e1300df6bf340a3c33200c9548a8
+  m_ActiveProfileId: 0300d9987c15f6544afcd44b007a0e36
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}

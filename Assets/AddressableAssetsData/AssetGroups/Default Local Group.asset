@@ -17,16 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 64006cf7e78ceee4fbc3482ac3a01557
   m_SerializeEntries:
-  - m_GUID: 077389f1b4018714ba97c6db32662b95
-    m_Address: PopUpLayer
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 190b92b937a550d46b8fa508667be085
-    m_Address: Player
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 21e081a4d6d99ef47966f98902981412
     m_Address: SmallGems_lcon
     m_ReadOnly: 0
@@ -47,58 +37,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5df367024fd9a42d993d65056dbf8944
-    m_Address: Icon_Damage
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 76c9679971861944dbe9710a59311286
     m_Address: RemoveAdd_Icon
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a07c5b3907ec843a8bca61176e91e92d
-    m_Address: IconFrame_Health
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: aa3f944a796a411408a412504ecdc45a
-    m_Address: Enemy
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: af5cab4be50a64b4ba5d2d40b2e9a260
-    m_Address: IconFrame_Damage
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cca5d5ae3af5a4596827c2a3e30feafe
-    m_Address: Icon_Health
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: de0b3d2941da540fd8c45dc4779030bd
-    m_Address: IconFrame_Speed
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e1683a1acccb446889b2eb95ce0cbaae
-    m_Address: Icon_Speed
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ecbf2fb2ff8b13745b205ce0fa330f95
-    m_Address: HudLayer
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fc2d6471bb2c0ca499ad3175b231c21b
     m_Address: "Save\u0421onflictResolveWindow"
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: fc5b0a1421768624ea6623df9835e99c
-    m_Address: Bullet
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
