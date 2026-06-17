@@ -11,12 +11,12 @@ namespace _Project.Scripts.Logic.Enemy.Factory
 {
     public class EnemyFactory: IEnemyFactory
     {
-        private readonly DiContainer _container;
+        private readonly IInstantiator _container;
         private readonly Transform _dynamicObjectsParent;
         private readonly IHealthCalculatorService _healthCalculator;
-        private IAssetProvider _assetProvider;
+        private readonly IAssetProvider _assetProvider;
 
-        public EnemyFactory(DiContainer container, IHealthCalculatorService healthCalculator, 
+        public EnemyFactory(IInstantiator container, IHealthCalculatorService healthCalculator, 
             IAssetProvider assetProvider, Transform dynamicObjectsParent)
         {
             _container = container;

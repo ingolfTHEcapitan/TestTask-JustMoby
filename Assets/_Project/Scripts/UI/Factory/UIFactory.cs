@@ -1,7 +1,5 @@
-using System.Threading.Tasks;
-using _Project.Scripts.Data.Player;
 using _Project.Scripts.Infrastructure.AssetManagement;
-using _Project.Scripts.UI.Windows.SaveConflictResolve;
+using _Project.Scripts.Services.SaveConflictResolve.UI;
 using _Project.Scripts.UI.Windows.Shop;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -11,10 +9,10 @@ namespace _Project.Scripts.UI.Factory
 {
     public class UIFactory : IUIFactory
     {
-        private readonly DiContainer _container;
+        private readonly IInstantiator _container;
         private readonly IAssetProvider _assetProvider;
 
-        public UIFactory(DiContainer container, IAssetProvider assetProvider)
+        public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
             _container = container;
             _assetProvider = assetProvider;
@@ -47,12 +45,10 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<Sprite> LoadSprite(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
 
-        public async Task<SaveConflictResolveWindow> CreateSaveConflictResolveWindow(PlayerProgress localProgress, PlayerProgress cloudProgress)
+        public async UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindow()
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.SaveConflictResolveWindow);
-            SaveConflictResolveWindow window = _container.InstantiatePrefabForComponent<SaveConflictResolveWindow>(prefab);
-            window.Construct(localProgress, cloudProgress);
-            return window;
+            return _container.InstantiatePrefabForComponent<SaveConflictResolveWindow>(prefab);
         }
     }
 }

@@ -8,8 +8,8 @@ namespace _Project.Scripts.Logic.Common.StateMachine
     public class StateMachine
     {
         private StateNode _currentStateNode;
-        private Dictionary<Type, StateNode> _nodes = new Dictionary<Type, StateNode>();
-        private HashSet<ITransition> _anyTransitions = new HashSet<ITransition>();
+        private readonly Dictionary<Type, StateNode> _nodes = new Dictionary<Type, StateNode>();
+        private readonly HashSet<ITransition> _anyTransitions = new HashSet<ITransition>();
         
         public IState CurrentState => _currentStateNode.State;
 

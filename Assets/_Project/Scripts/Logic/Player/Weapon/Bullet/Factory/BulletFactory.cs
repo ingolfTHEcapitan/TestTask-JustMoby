@@ -1,6 +1,7 @@
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Infrastructure.AssetManagement;
-using _Project.Scripts.Logic.Player.Stats;
+using _Project.Scripts.Logic.Player.PlayerStats;
+using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -9,23 +10,23 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet.Factory
 {
     public class BulletFactory : IBulletFactory
     {
-        private readonly DiContainer _container;
-        private readonly PlayerStatsModel _playerStatsModel;
+        private readonly IInstantiator _container;
+        private readonly PlayerStatsData _playerStatsData;
         private readonly IAssetProvider _assetProvider;
         private readonly Transform _dynamicObjectsParent;
 
-        public BulletFactory(DiContainer container, PlayerStatsModel playerStatsModel, 
+        public BulletFactory(IInstantiator container, PlayerStatsData playerStatsData, 
             IAssetProvider assetProvider, Transform dynamicObjectsParent)
         {
             _container = container;
-            _playerStatsModel = playerStatsModel;
+            _playerStatsData = playerStatsData;
             _assetProvider = assetProvider;
             _dynamicObjectsParent = dynamicObjectsParent;
         }
 
         public async UniTask<Bullet> CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection)
         {
-            float damage = _playerStatsModel.GetStatValue(StatName.Damage);
+            float damage = _playerStatsData.GetStatValue(StatName.Damage);
             
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Bullet);
             Bullet bullet = _container.InstantiatePrefab(prefab, at).GetComponent<Bullet>();

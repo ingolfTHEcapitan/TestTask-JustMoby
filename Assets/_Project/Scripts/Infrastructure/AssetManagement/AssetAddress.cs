@@ -10,6 +10,6 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         public const string Enemy = "Enemy";
         public const string Bullet = "Bullet";
         public const string ShopItem = "ShopItem";
-        public const string SaveConflictResolveWindow = "Save—onflictResolveWindow";
+        public const string SaveConflictResolveWindow = "SaveConflictResolveWindow";
     }
 }

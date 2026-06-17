@@ -5,14 +5,14 @@ using _Project.Scripts.Configs.IAP;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
+using ProductDescription = _Project.Scripts.Configs.IAP.ProductDescription;
 
 namespace _Project.Scripts.Services.IAP
 {
     public class IAPProvider: IDetailedStoreListener
     {
-        public event Action OnPurchaseInitialized;
         public event Action<string> OnPurchaseFailedAction;
-        public Func<Product, PurchaseProcessingResult> OnProcessPurchase;
+        public event Func<Product, PurchaseProcessingResult> OnProcessPurchase;
 
         public Dictionary<string, ProductConfig> ProductConfigs;
         public Dictionary<string, Product> Products = new Dictionary<string, Product>();
@@ -36,8 +36,8 @@ namespace _Project.Scripts.Services.IAP
             UnityPurchasing.Initialize(this, builder);
         }
 
-        public void StartPurchase(string productId) => 
-            _controller.InitiatePurchase(productId);
+        public void StartPurchase(ProductDescription productDescription) => 
+            _controller.InitiatePurchase(productDescription.Id);
 
         public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
         {
@@ -47,12 +47,9 @@ namespace _Project.Scripts.Services.IAP
             foreach (var product in controller.products.all)
                 Products.Add(product.definition.id, product);
             
-            OnPurchaseInitialized?.Invoke();
-            
             Debug.Log("UnityPurchasing initialization success");
         }
-
-
+        
         public void OnInitializeFailed(InitializationFailureReason error) => 
             Debug.LogError($"UnityPurchasing OnInitializeFailed: {error}");
 

@@ -1,7 +1,8 @@
 using System;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Player.Stats;
+using _Project.Scripts.Logic.Player.PlayerStats;
+using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Services.HealthCalculator;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -11,19 +12,21 @@ namespace _Project.Scripts.Logic.Player.Factory
 {
     public class PlayerFactory : IPlayerFactory, IDisposable
     {
-        private readonly DiContainer _container;
+        private readonly IInstantiator _container;
         private readonly IHealthCalculatorService _healthCalculator;
         private readonly IAssetProvider _assetProvider;
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly Transform _gameParent;
         private Health _playerHealth;
+        private PlayerStatsData _playerStatsData;
 
-        public PlayerFactory(DiContainer container, IHealthCalculatorService healthCalculator, 
-            PlayerStatsModel playerStatsModel, Transform gameParent, IAssetProvider assetProvider)
+        public PlayerFactory(IInstantiator container, IHealthCalculatorService healthCalculator, 
+            PlayerStatsModel playerStatsModel, PlayerStatsData playerStatsData, Transform gameParent, IAssetProvider assetProvider)
         {
             _container = container;
             _healthCalculator = healthCalculator;
             _playerStatsModel = playerStatsModel;
+            _playerStatsData = playerStatsData;
             _gameParent = gameParent;
             _assetProvider = assetProvider;
         }
@@ -35,7 +38,7 @@ namespace _Project.Scripts.Logic.Player.Factory
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
             _playerHealth.Initialize(maxHealth);
             
-            PlayerStatData healthStat = _playerStatsModel.GetStat(StatName.Health); 
+            PlayerStatData healthStat = _playerStatsData.GetStat(StatName.Health); 
             healthStat.OnStatChanged += UpdatePlayerMaxHealth;
             
             _playerHealth.GetComponent<PlayerDeath>().Initialize();

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Data.IAP;
@@ -12,11 +11,9 @@ using ProductDescription = _Project.Scripts.Configs.IAP.ProductDescription;
 
 namespace _Project.Scripts.Services.IAP
 {
-    public class IAPService : IIAPService, IDisposable
+    public class IAPService : IIAPService
     {
         private readonly PurchaseData _purchaseData;
-        public event Action OnPurchaseInitialized;
-        
         private readonly IAPProvider _iapProvider;
         private readonly IProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
@@ -33,7 +30,6 @@ namespace _Project.Scripts.Services.IAP
 
         public void Initialize()
         {
-            _iapProvider.OnPurchaseInitialized += InvokeOnPurchaseInitialized;
             _iapProvider.OnProcessPurchase += ProcessPurchase;
             _iapProvider.OnPurchaseFailedAction += HandlePurchaseFailed;
             _iapProvider.Initialize();
@@ -41,18 +37,18 @@ namespace _Project.Scripts.Services.IAP
 
         public void Dispose()
         {
-            _iapProvider.OnPurchaseInitialized -= InvokeOnPurchaseInitialized;
             _iapProvider.OnProcessPurchase -= ProcessPurchase;
+            _iapProvider.OnPurchaseFailedAction -= HandlePurchaseFailed;
         }
 
-        public async UniTask<bool> StartPurchase(string productId)
+        public async UniTask<bool> StartPurchase(ProductDescription productDescription)
         {
             if (_purchaseTaskCompletionSource != null)
                 return false;
             
             _purchaseTaskCompletionSource = new UniTaskCompletionSource<bool>();
             
-            _iapProvider.StartPurchase(productId);
+            _iapProvider.StartPurchase(productDescription);
 
             bool result = await _purchaseTaskCompletionSource.Task;
             _purchaseTaskCompletionSource = null;
@@ -110,10 +106,7 @@ namespace _Project.Scripts.Services.IAP
 
         private bool ProductBoughtOut(BoughtIAP boughtIAP, ProductConfig productConfig) => 
             boughtIAP != null && boughtIAP.Count >= productConfig.MaxPurchaseCount;
-
-        private void InvokeOnPurchaseInitialized() => 
-            OnPurchaseInitialized?.Invoke();
-
+        
         private void HandlePurchaseFailed(string obj) => 
             _purchaseTaskCompletionSource.TrySetResult(false);
     }

@@ -51,7 +51,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         }
 
         private void StartPurchase() => 
-            _iapService.StartPurchase(_productDescription.Id);
+            _iapService.StartPurchase(_productDescription);
 
         private void SetQuantityText()
         {

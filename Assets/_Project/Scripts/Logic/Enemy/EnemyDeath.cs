@@ -20,6 +20,7 @@ namespace _Project.Scripts.Logic.Enemy
 
         private bool _isDead;
         private EnemyConfig _config;
+        private WaitForSeconds _waitForSeconds;
 
         public bool IsForcedKilling { get; private set; }
 
@@ -27,8 +28,11 @@ namespace _Project.Scripts.Logic.Enemy
         private void Construct(EnemyConfig config) => 
             _config = config;
 
-        public void Initialize() => 
+        public void Initialize()
+        {
             _health.OnZeroHealth += EnemyDie;
+            _waitForSeconds = new WaitForSeconds(_config.DestroyDelay);
+        }
 
         private void OnDestroy() => 
             _health.OnZeroHealth -= EnemyDie;
@@ -49,14 +53,14 @@ namespace _Project.Scripts.Logic.Enemy
         {
             _isDead = true;
             DisableEnemyComponents();
-            StartCoroutine(DestroyTimer(_config.DestroyDelay));
+            StartCoroutine(DestroyTimer());
         }
 
-        private IEnumerator DestroyTimer(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            Destroy(gameObject);
+        private IEnumerator DestroyTimer()
+        { 
+            yield return _waitForSeconds;
             OnDied?.Invoke(this);
+            Destroy(gameObject);
         }
 
         private void DisableEnemyComponents()

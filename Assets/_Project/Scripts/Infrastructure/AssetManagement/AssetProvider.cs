@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
+using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Project.Scripts.Infrastructure.AssetManagement
@@ -9,9 +10,13 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
     {
         private readonly Dictionary<string, AsyncOperationHandle> _completedCache = new Dictionary<string, AsyncOperationHandle>();
         private readonly Dictionary<string, List<AsyncOperationHandle>> _handles = new Dictionary<string, List<AsyncOperationHandle>>();
+        private AsyncOperationHandle<IResourceLocator> _asyncOperationHandle;
 
-        public AssetProvider() => 
-            Addressables.InitializeAsync();
+        public async UniTask InitializeAsync()
+        {
+            _asyncOperationHandle = Addressables.InitializeAsync();
+            await _asyncOperationHandle.ToUniTask();
+        }
 
         public async UniTask<T> LoadAsync<T>(AssetReference assetReference) where T : class
         {
@@ -24,6 +29,9 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         
         public async UniTask<T> LoadAsync<T>(string assetAddress) where T : class
         {
+            if (!_asyncOperationHandle.IsDone) 
+                await _asyncOperationHandle.ToUniTask();
+            
             if (_completedCache.TryGetValue(assetAddress, out AsyncOperationHandle completedHandle))
                 return completedHandle.Result as T;
 

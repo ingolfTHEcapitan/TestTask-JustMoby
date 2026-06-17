@@ -2,8 +2,9 @@ using System;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
-using _Project.Scripts.Logic.Player.Stats;
-using _Project.Scripts.Logic.Player.Stats.UI;
+using _Project.Scripts.Logic.Player.PlayerStats;
+using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Logic.Player.Weapon;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Analytics;
@@ -32,10 +33,11 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly Transform _uiParent;
         private readonly LoadingCurtainService _loadingCurtain;
         private PlayerStatsPresenter _playerStatsPresenter;
-       
+        private PlayerStatsData _playerStatsData;
+
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
-            PlayerStatsModel playerStatsModel, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
+            PlayerStatsModel playerStatsModel, PlayerStatsData playerStatsData, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
             Transform enemySpawnPoint, IAnalyticsService analyticsService, 
             Transform uiParent, LoadingCurtainService loadingCurtain)
         {
@@ -44,6 +46,7 @@ namespace _Project.Scripts.Infrastructure.Game
             _assetProvider = assetProvider;
             _analyticsService = analyticsService;
             _playerStatsModel = playerStatsModel;
+            _playerStatsData = playerStatsData;
             _playerSpawner = playerSpawner;
             _enemySpawner = enemySpawner;
             _enemySpawnPoint = enemySpawnPoint;
@@ -124,7 +127,7 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
             
-            PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(view, model, pauseService, playerDeath);
+            PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(view, model, _playerStatsData, pauseService, playerDeath);
             playerStatsPresenter.Initialize();
             return playerStatsPresenter;
         }

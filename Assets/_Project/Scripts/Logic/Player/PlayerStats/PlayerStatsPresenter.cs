@@ -1,8 +1,9 @@
 using System;
-using _Project.Scripts.Logic.Player.Stats.UI;
+using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.GamePause;
 
-namespace _Project.Scripts.Logic.Player.Stats
+namespace _Project.Scripts.Logic.Player.PlayerStats
 {
     public class PlayerStatsPresenter : IDisposable
     {
@@ -11,12 +12,14 @@ namespace _Project.Scripts.Logic.Player.Stats
         private readonly IGamePauseService _pauseService;
         private readonly PlayerDeath _playerDeath;
         private bool _isOpen;
+        private PlayerStatsData _statsData;
 
-        public PlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model, IGamePauseService pauseService,
-            PlayerDeath playerDeath)
+        public PlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model, PlayerStatsData statsData,
+            IGamePauseService pauseService, PlayerDeath playerDeath)
         {
             _view = view;
             _model = model;
+            _statsData = statsData;
             _pauseService = pauseService;
             _playerDeath = playerDeath;
         }
@@ -28,7 +31,7 @@ namespace _Project.Scripts.Logic.Player.Stats
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
             
-            _view.CreateStatItems(_model.GetStats());
+            _view.CreateStatItems(_statsData.GetStats());
             
             foreach (PlayerStatItemView statItemView in _view.GetStatItems())
                 statItemView.OnUpgradeButtonClicked += UpgradeStatItem;
@@ -70,7 +73,7 @@ namespace _Project.Scripts.Logic.Player.Stats
             _model.DiscardPreviewChanges();
         }
 
-        private void ApplyChanges()
+        private void  ApplyChanges()
         {
             _model.ApplyChanges();
             Close();
@@ -84,13 +87,13 @@ namespace _Project.Scripts.Logic.Player.Stats
 
         private void UpdateAllStatItems()
         {
-            foreach (var stat in _model.Stats.Values)
+            foreach (var stat in _statsData.GetStats())
                 UpdateStatItem(stat.Name);
         }
 
         private void UpdateStatItem(StatName statName)
         {
-            PlayerStatData stat = _model.Stats[statName];
+            PlayerStatData stat = _statsData.GetStat(statName);
             bool canUpgrade = _model.CanUpgrade(statName);
             _view.UpdateStatItem(statName, stat.PreviewLevel, canUpgrade);
         }

@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using _Project.Scripts.Configs.IAP;
 using Cysharp.Threading.Tasks;
+using Zenject;
 
 namespace _Project.Scripts.Services.IAP
 {
-    public interface IIAPService
+    public interface IIAPService: IDisposable, IInitializable
     {
-        event Action OnPurchaseInitialized;
         bool IsInitialized { get; }
-        void Initialize();
-        UniTask<bool> StartPurchase(string productId);
+        UniTask<bool> StartPurchase(ProductDescription productDescription);
         List<ProductDescription> GetProducts();
     }
 }

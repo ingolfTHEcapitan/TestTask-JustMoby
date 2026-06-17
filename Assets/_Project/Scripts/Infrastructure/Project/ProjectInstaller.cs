@@ -54,7 +54,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<NetworkAccessibilityService>().AsSingle();
             Container.BindInterfacesAndSelfTo<AuthService>().AsSingle();
             Container.BindInterfacesAndSelfTo<ProgressService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
@@ -64,8 +64,9 @@ namespace _Project.Scripts.Infrastructure.Project
 
             Container.Bind<ISaveLoadService>().WithId(SaveType.Local).FromMethod(GetLocalSaveInstance).AsCached();
             Container.Bind<ISaveLoadService>().WithId(SaveType.Cloud).To<CloudSaveLoadService>().AsCached();
-            Container.Bind<ISaveLoadService>().WithId(SaveType.Coordinator).To<SaveLoadCoordinator>().AsCached();
-
+            Container.Bind<SaveLoadCoordinator>().AsCached();
+            Container.Bind<ISaveLoadService>().WithId(SaveType.Coordinator).To<SaveLoadCoordinator>().FromResolve();
+            Container.Bind<ISaveLoadCoordinator>().To<SaveLoadCoordinator>().FromResolve();
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
         }
 

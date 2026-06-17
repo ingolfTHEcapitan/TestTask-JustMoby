@@ -1220,9 +1220,9 @@ GameObject:
   - component: {fileID: 5481916757340218157}
   - component: {fileID: 7400717569723280100}
   - component: {fileID: 1434984473905565853}
-  - component: {fileID: 8262909208520743582}
+  - component: {fileID: 5197648688991274276}
   m_Layer: 5
-  m_Name: "Save\u0421onflictResolveWindow"
+  m_Name: SaveConflictResolveWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1313,7 +1313,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8262909208520743582
+--- !u!114 &5197648688991274276
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

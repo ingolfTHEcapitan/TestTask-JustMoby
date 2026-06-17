@@ -1,10 +1,11 @@
 using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Logic.Player.Factory;
-using _Project.Scripts.Logic.Player.Stats;
+using _Project.Scripts.Logic.Player.PlayerStats;
+using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.HealthCalculator;
-using _Project.Scripts.Services.Score;
+using _Project.Scripts.Services.UpgradePoints;
 using UnityEngine;
 using Zenject;
 
@@ -20,19 +21,17 @@ namespace _Project.Scripts.Infrastructure.Game
         
         public override void InstallBindings()
         {
-            BindServices();
             BindPlayer();
             BindPlayerStats();
-            BindScoreService();
+            BindHealthCalculatorService();
+            BindUpgradePointsService();
             BindEnemy();
             BindWeapon();
             BindGameBootstrapper();
         }
         
-        private void BindServices()
-        {
+        private void BindHealthCalculatorService() => 
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
-        }
 
         private void BindPlayer()
         {
@@ -40,11 +39,15 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.Bind<PlayerSpawner>().AsSingle();
         }
 
-        private void BindPlayerStats() => 
+        private void BindPlayerStats()
+        {
+            Container.BindInterfacesAndSelfTo<PlayerStatsData>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
+        }
 
-        private void BindScoreService() => 
-            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
+        private void BindUpgradePointsService() => 
+            Container.BindInterfacesAndSelfTo<UpgradePointsService>().AsSingle();
 
         private void BindEnemy()
         {

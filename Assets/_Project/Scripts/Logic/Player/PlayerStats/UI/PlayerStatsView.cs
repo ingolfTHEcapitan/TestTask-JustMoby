@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Services.PlayerInput;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Player.Stats.UI
+namespace _Project.Scripts.Logic.Player.PlayerStats.UI
 {
     public class PlayerStatsView: MonoBehaviour
     {

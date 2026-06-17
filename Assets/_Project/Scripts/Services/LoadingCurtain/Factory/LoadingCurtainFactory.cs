@@ -7,10 +7,10 @@ namespace _Project.Scripts.Services.LoadingCurtain.Factory
 {
     public class LoadingCurtainFactory : ILoadingCurtainFactory
     {
-        private readonly DiContainer _container;
+        private readonly IInstantiator _container;
         private readonly IAssetProvider _assetProvider;
 
-        public LoadingCurtainFactory(DiContainer container, IAssetProvider assetProvider)
+        public LoadingCurtainFactory(IInstantiator container, IAssetProvider assetProvider)
         {
             _container = container;
             _assetProvider = assetProvider;
