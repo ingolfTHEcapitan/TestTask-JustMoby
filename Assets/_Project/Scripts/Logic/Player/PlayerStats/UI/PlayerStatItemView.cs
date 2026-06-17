@@ -1,9 +1,10 @@
 using System;
+using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.Logic.Player.Stats.UI
+namespace _Project.Scripts.Logic.Player.PlayerStats.UI
 {
     public class PlayerStatItemView: MonoBehaviour
     {

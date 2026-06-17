@@ -5,15 +5,16 @@ using _Project.Scripts.Services.Authentication;
 using _Project.Scripts.Services.NetworkAccessibility;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.UI.Factory;
-using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Services.SaveLoad
 {
-    public class SaveLoadCoordinator: ISaveLoadService
+    public class SaveLoadCoordinator: ISaveLoadCoordinator
     {
+        public event Func<PlayerProgress, PlayerProgress, UniTask<SaveType>> OnSaveConflictHappened;
+        
         private readonly NetworkAccessibilityService _networkAccessibility;
         private readonly ISaveLoadService _localSaveService;
         private readonly ISaveLoadService _cloudSaveService;
@@ -86,11 +87,12 @@ namespace _Project.Scripts.Services.SaveLoad
         private async Task<PlayerProgress> ResolveSaveConflict(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
             Debug.LogWarning($"[{GetType().Name}] Обнаружен конфликт: Локальное сохранение новее облачного");
-                    
-            SaveConflictResolveWindow conflictResolveWindow = await _uiFactory.CreateSaveConflictResolveWindow(localProgress, cloudProgress);
-            SaveType choice = await conflictResolveWindow.Show();
-            conflictResolveWindow.Close();
-
+            
+            if (OnSaveConflictHappened == null)
+                return LoadLocalSave(localProgress);
+            
+            SaveType choice = await OnSaveConflictHappened.Invoke(localProgress, cloudProgress);
+            
             if (choice == SaveType.Local)
                 return LoadLocalSave(localProgress);
             

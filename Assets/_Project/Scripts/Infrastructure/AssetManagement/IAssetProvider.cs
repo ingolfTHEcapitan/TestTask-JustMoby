@@ -8,5 +8,6 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         UniTask<T> LoadAsync<T>(AssetReference assetReference) where T : class;
         UniTask<T> LoadAsync<T>(string assetAddress) where T : class;
         void CleanUp();
+        UniTask InitializeAsync();
     }
 }

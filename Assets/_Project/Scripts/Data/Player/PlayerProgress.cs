@@ -6,7 +6,7 @@ namespace _Project.Scripts.Data.Player
     [Serializable]
     public class PlayerProgress
     {
-        public PlayerStatsData PlayerStatsData = new PlayerStatsData();
+        public PlayerStatsProgress PlayerStatsProgress = new PlayerStatsProgress();
         public PurchaseData PurchaseData = new PurchaseData();
         public long LastSaveTimeUnix;
 

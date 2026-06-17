@@ -1,7 +1,6 @@
 ﻿using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.UI.Windows.Shop;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -54,7 +53,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         private void ExitGame()
         {
 #if UNITY_EDITOR
-            EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif

@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.UI.Windows.SaveConflictResolve
+namespace _Project.Scripts.Services.SaveConflictResolve.UI
 {
     public class SaveConflictResolveWindow: MonoBehaviour
     {
@@ -21,11 +21,11 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
         private UniTaskCompletionSource<SaveType> _taskCompletionSource;
         private PlayerProgress _localProgress;
         private PlayerProgress _cloudProgress;
-
+        
         public void Construct(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
-            _cloudProgress = cloudProgress;
             _localProgress = localProgress;
+            _cloudProgress = cloudProgress;
         }
         
         public void Awake()
@@ -33,6 +33,7 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             _localSaveButton.onClick.AddListener(ChoiceLocalSave);
             _cloudSaveButton.onClick.AddListener(ChoiceCloudSave);
             gameObject.SetActive(false);
+            DontDestroyOnLoad(gameObject);
         }
         
         private void OnDestroy()
@@ -58,11 +59,11 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             return result;
         }
 
-        public void Close()
+        public void Hide()
         {
             CursorController.SetCursorVisible(false);
             _taskCompletionSource = null;
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
 
         private void ChoiceSaveDateTextColor()
@@ -77,7 +78,7 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
                 _localDateText.color = _oldSaveColor;
                 _cloudDateText.color = _newSaveColor;
             }
-            else
+            else if (_localProgress.LastSaveTimeUnix == _cloudProgress.LastSaveTimeUnix)
             {
                 _localDateText.color = _defaultSaveColor;
                 _cloudDateText.color = _defaultSaveColor;

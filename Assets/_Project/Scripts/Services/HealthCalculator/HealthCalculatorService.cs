@@ -1,17 +1,18 @@
-using _Project.Scripts.Logic.Player.Stats;
+using _Project.Scripts.Logic.Player.PlayerStats;
+using _Project.Scripts.Logic.Player.PlayerStats.Data;
 
 namespace _Project.Scripts.Services.HealthCalculator
 {
     public class HealthCalculatorService : IHealthCalculatorService
     {
-        private readonly PlayerStatsModel _playerStatsModel;
+        private readonly PlayerStatsData _playerStatsData;
 
-        public HealthCalculatorService(PlayerStatsModel playerStatsModel) => 
-            _playerStatsModel = playerStatsModel;
+        public HealthCalculatorService(PlayerStatsData playerStatsData) => 
+            _playerStatsData = playerStatsData;
 
         public float CalculateEnemyMaxHealth()
         {
-            PlayerStatData damageStat = _playerStatsModel.Stats[StatName.Damage];
+            PlayerStatData damageStat = _playerStatsData.Stats[StatName.Damage];
 
             int minShotsToKill = 1;
             int maxShotsToKill = 10;
@@ -22,6 +23,6 @@ namespace _Project.Scripts.Services.HealthCalculator
         }
 
         public float CalculatePlayerMaxHealth() => 
-            _playerStatsModel.GetStatValue(StatName.Health);
+            _playerStatsData.GetStatValue(StatName.Health);
     }
 }

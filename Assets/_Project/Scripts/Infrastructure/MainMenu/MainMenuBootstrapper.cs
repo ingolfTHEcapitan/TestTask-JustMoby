@@ -1,6 +1,7 @@
 ﻿using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.Progress;
+using _Project.Scripts.Services.SaveConflictResolve;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.MainMenu;
@@ -12,6 +13,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 {
     public class MainMenuBootstrapper: IInitializable
     {
+        private readonly ISaveConflictResolveService _saveConflictResolveService;
         private readonly ILoadingCurtainService _loadingCurtain;
         private readonly IProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
@@ -19,8 +21,10 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly Transform _uiParent;
 
         public MainMenuBootstrapper(ILoadingCurtainService loadingCurtain, IProgressService progressService,
-            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent)
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent,
+            ISaveConflictResolveService saveConflictResolveService)
         {
+            _saveConflictResolveService = saveConflictResolveService;
             _loadingCurtain = loadingCurtain;
             _progressService = progressService;
             _saveLoadService = saveLoadService;
@@ -30,6 +34,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         public async void Initialize()
         {
+            await _saveConflictResolveService.CreateWindow();
             _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
            
             GameObject mainMenuLayer = await _uiFactory.CreateMainMenuLayer(_uiParent);

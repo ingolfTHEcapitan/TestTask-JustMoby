@@ -13,7 +13,7 @@ namespace _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory
         private readonly Dictionary<string, object> _configs;
         private readonly string[] _playerStatConfigKeys;
         private readonly IRemoteConfigService _remoteConfigService;
-        private List<PlayerStatConfig> _playerStatConfigs;
+        private readonly List<PlayerStatConfig> _playerStatConfigs;
 
         public RemoteConfigFactory(IRemoteConfigService remoteConfigService, PlayerSpawnerConfig playerSpawnerConfig, 
             EnemySpawnerConfig enemySpawnerConfig, WeaponConfig weaponConfig, BulletConfig bulletConfig, EnemyConfig enemyConfig, 

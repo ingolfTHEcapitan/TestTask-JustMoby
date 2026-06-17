@@ -5,8 +5,8 @@ using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Services.GamePause;
-using _Project.Scripts.Services.Score;
 using _Project.Scripts.Services.Statistics;
+using _Project.Scripts.Services.UpgradePoints;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -18,19 +18,19 @@ namespace _Project.Scripts.Logic.Spawners
         private readonly IGamePauseService _pauseService;
         private readonly IEnemyFactory _factory;
         private readonly IGameStatistics _statistics;
-        private readonly IScoreService _scoreService;
+        private readonly IUpgradePointsService _upgradePoints;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
         private readonly EnemySpawnerConfig _config;
         
         private CancellationTokenSource _cancellationTokenSource;
 
         public EnemySpawner(IGamePauseService pauseService, IEnemyFactory factory, 
-            IGameStatistics statistics, IScoreService scoreService, EnemySpawnerConfig config)
+            IGameStatistics statistics, IUpgradePointsService upgradePoints, EnemySpawnerConfig config)
         {
             _pauseService = pauseService;
             _factory = factory;
             _statistics = statistics;
-            _scoreService = scoreService;
+            _upgradePoints = upgradePoints;
             _config = config;
         }
         
@@ -90,7 +90,7 @@ namespace _Project.Scripts.Logic.Spawners
             return spawnPosition;
         }
 
-        private void OnEnemyDeath(EnemyDeath enemyDeath)
+        private async void OnEnemyDeath(EnemyDeath enemyDeath)
         {
             enemyDeath.OnDied -= OnEnemyDeath;
             _spawnedEnemies.Remove(enemyDeath);
@@ -99,7 +99,7 @@ namespace _Project.Scripts.Logic.Spawners
                 return;
             
             _statistics.RecordEnemyKilled();
-            _scoreService.AddScore();
+            await _upgradePoints.AddPoint();
         }
     }
 }

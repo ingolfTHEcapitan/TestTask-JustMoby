@@ -3,7 +3,7 @@
 namespace _Project.Scripts.Data.Player
 {
     [Serializable]
-    public class PlayerStatsData
+    public class PlayerStatsProgress
     {
         public int UpgradePoints;
         public int HealthLevel;
