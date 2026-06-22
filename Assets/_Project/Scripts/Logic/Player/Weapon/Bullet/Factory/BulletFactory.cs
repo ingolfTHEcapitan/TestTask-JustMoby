@@ -24,13 +24,13 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet.Factory
             _dynamicObjectsParent = dynamicObjectsParent;
         }
 
-        public async UniTask<Bullet> CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection)
+        public async UniTask<Bullet> CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection, Vector3 targetPoint)
         {
             float damage = _playerStatsData.GetStatValue(StatName.Damage);
             
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Bullet);
             Bullet bullet = _container.InstantiatePrefab(prefab, at).GetComponent<Bullet>();
-            bullet.Initialize(config, shootDirection, damage, _dynamicObjectsParent);
+            bullet.Initialize(config, shootDirection, targetPoint, damage, _dynamicObjectsParent);
             return bullet;
         }
     }

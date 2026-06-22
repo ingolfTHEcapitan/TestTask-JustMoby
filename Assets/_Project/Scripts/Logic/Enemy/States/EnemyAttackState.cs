@@ -3,7 +3,7 @@ using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Common.StateMachine.Transitions;
-using _Project.Scripts.Logic.Tools;
+using _Project.Scripts.Tools;
 using UnityEngine;
 using UnityEngine.AI;
 

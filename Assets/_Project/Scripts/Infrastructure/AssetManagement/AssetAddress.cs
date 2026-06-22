@@ -11,5 +11,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         public const string Bullet = "Bullet";
         public const string ShopItem = "ShopItem";
         public const string SaveConflictResolveWindow = "SaveConflictResolveWindow";
+        public const string HitFx = "HitFx_yellow";
+        public const string Deathfx = "DeathFx_soulEscape";
     }
 }

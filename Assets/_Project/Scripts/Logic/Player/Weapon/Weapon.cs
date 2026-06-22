@@ -15,6 +15,7 @@ namespace _Project.Scripts.Logic.Player.Weapon
         private const int AllLayers = -1;
 
         [SerializeField] private Transform _shootPoint;
+        [SerializeField] private GameObject _hitFxPrefab;
         
         private float _fireRate;
         private float _nextTimeToFire;
@@ -57,15 +58,15 @@ namespace _Project.Scripts.Logic.Player.Weapon
         private async UniTask Shoot()
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
-            await _factory.CreateBullet(_bulletConfig, _shootPoint, GetShootDirection());
+            Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
+            Vector3 targetPoint = GetTargetPoint(ray);
+            await _factory.CreateBullet(_bulletConfig, _shootPoint, GetShootDirection(targetPoint), targetPoint);
             _statistics.RecordShot();
         }
 
-        private Vector3 GetShootDirection()
+        private Vector3 GetShootDirection(Vector3 targetPoint)
         {
-            Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
-            Vector3 shootDirection = (GetTargetPoint(ray) - _shootPoint.position).normalized;
-            return shootDirection;
+            return (targetPoint - _shootPoint.position).normalized;
         }
         
         private Vector3 GetTargetPoint(Ray ray)
@@ -82,5 +83,12 @@ namespace _Project.Scripts.Logic.Player.Weapon
 
         private bool CanShoot() => 
             Time.time > _nextTimeToFire;
+        
+        private void PlayHitFx(Vector3 shootPos)
+        {
+            GameObject prefab = Instantiate(_hitFxPrefab, shootPos , Quaternion.Euler(0, 90, 0), transform);
+            prefab.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            
+        }
     }
 }

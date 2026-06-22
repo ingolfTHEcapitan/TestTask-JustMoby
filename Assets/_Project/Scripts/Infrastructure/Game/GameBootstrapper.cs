@@ -8,6 +8,7 @@ using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Logic.Player.Weapon;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Analytics;
+using _Project.Scripts.Services.Effects;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.UI.Common;
@@ -34,12 +35,13 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly LoadingCurtainService _loadingCurtain;
         private PlayerStatsPresenter _playerStatsPresenter;
         private PlayerStatsData _playerStatsData;
+        private EffectsService _effectsService;
 
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
-            PlayerStatsModel playerStatsModel, PlayerStatsData playerStatsData, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            Transform enemySpawnPoint, IAnalyticsService analyticsService, 
-            Transform uiParent, LoadingCurtainService loadingCurtain)
+            PlayerStatsModel playerStatsModel, PlayerStatsData playerStatsData, PlayerSpawner playerSpawner, 
+            EnemySpawner enemySpawner, Transform enemySpawnPoint, IAnalyticsService analyticsService, Transform uiParent, 
+            LoadingCurtainService loadingCurtain, EffectsService effectsService)
         {
             _pauseService = pauseService;
             _uiFactory = uiFactory;
@@ -52,11 +54,14 @@ namespace _Project.Scripts.Infrastructure.Game
             _enemySpawnPoint = enemySpawnPoint;
             _uiParent = uiParent;
             _loadingCurtain = loadingCurtain;
+            _effectsService = effectsService;
         }
 
         public async void Initialize()
         {
             CursorController.SetCursorVisible(visible: false);
+
+            await _effectsService.WarmUp();
             
             GameObject hudLayer = await _uiFactory.CreateHudLayer(_uiParent);
             GameObject popUpLayer = await _uiFactory.CreatePopUpLayer(_uiParent);

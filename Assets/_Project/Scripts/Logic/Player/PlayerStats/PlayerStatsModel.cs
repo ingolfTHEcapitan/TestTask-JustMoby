@@ -39,7 +39,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
                 stat.OnStatChanged -= InvokeStatChanged;
         }
 
-        public async UniTask ApplyChanges()
+        public async void ApplyChanges()
         {
             if (!HasAnyChanges()) 
                 return;

@@ -7,6 +7,7 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Authentication;
+using _Project.Scripts.Services.Effects;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.Services.LoadingCurtain;
@@ -67,7 +68,9 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.Bind<SaveLoadCoordinator>().AsCached();
             Container.Bind<ISaveLoadService>().WithId(SaveType.Coordinator).To<SaveLoadCoordinator>().FromResolve();
             Container.Bind<ISaveLoadCoordinator>().To<SaveLoadCoordinator>().FromResolve();
+            
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EffectsService>().AsSingle();
         }
 
         private void BindLoadingCurtain()
