@@ -47,6 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _shootPoint: {fileID: 5504319550492987190}
+  _hitFxPrefab: {fileID: 5880797563127281583, guid: 265d3a5ba69981a4698ceabcedf368b0,
+    type: 3}
 --- !u!1 &3660840105126695811
 GameObject:
   m_ObjectHideFlags: 0

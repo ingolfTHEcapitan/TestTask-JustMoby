@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Services.Effects;
+using _Project.Scripts.UI.Common;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
@@ -13,6 +16,9 @@ namespace _Project.Scripts.Logic.Enemy
         public event Action<EnemyDeath> OnDied;
 
         [SerializeField] private Health _health;
+        [SerializeField] private HealthBarView _healthBarView;
+        [SerializeField] private DissolveShader _dissolveShader;
+
         [Header("Components To Disable On Death")]
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private EnemyStateMachine _enemyStateMachine;
@@ -21,12 +27,16 @@ namespace _Project.Scripts.Logic.Enemy
         private bool _isDead;
         private EnemyConfig _config;
         private WaitForSeconds _waitForSeconds;
+        private EffectsService _effectsService;
 
         public bool IsForcedKilling { get; private set; }
 
         [Inject]
-        private void Construct(EnemyConfig config) => 
+        private void Construct(EnemyConfig config, EffectsService effectsService)
+        {
             _config = config;
+            _effectsService = effectsService;
+        }
 
         public void Initialize()
         {
@@ -36,6 +46,13 @@ namespace _Project.Scripts.Logic.Enemy
 
         private void OnDestroy() => 
             _health.OnZeroHealth -= EnemyDie;
+        
+        [UsedImplicitly]
+        public async void OnDeathPose()
+        {
+            _dissolveShader.Dissolve();
+            await _effectsService.PlayEnemyDeathFx(transform.position, transform);
+        }
         
         public void KillEnemy()
         {
@@ -52,6 +69,7 @@ namespace _Project.Scripts.Logic.Enemy
         private void Die()
         {
             _isDead = true;
+            _healthBarView.Hide();
             DisableEnemyComponents();
             StartCoroutine(DestroyTimer());
         }

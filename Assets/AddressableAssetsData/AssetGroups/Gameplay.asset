@@ -27,6 +27,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 265d3a5ba69981a4698ceabcedf368b0
+    m_Address: HitFx_yellow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5df367024fd9a42d993d65056dbf8944
     m_Address: Icon_Damage
     m_ReadOnly: 0
@@ -44,6 +49,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: af5cab4be50a64b4ba5d2d40b2e9a260
     m_Address: IconFrame_Damage
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b5c8ca7ed10b61e499cce8ec3b6e2e4c
+    m_Address: DeathFx_soulEscape
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

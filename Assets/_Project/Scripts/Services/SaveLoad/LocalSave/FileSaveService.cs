@@ -9,7 +9,7 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
 {
     public class FileSaveService : ISaveLoadService
     {
-        private const string FolderName = "Saves";
+        public static readonly string FolderName = "Saves";
         private const string FileName = "Save.json";
 
         private readonly string _saveDirectoryPath;
