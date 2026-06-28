@@ -1,11 +1,14 @@
+using System.Collections.Generic;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common.StateMachine;
 using _Project.Scripts.Logic.Common.StateMachine.Transitions;
 using _Project.Scripts.Logic.Enemy.States;
 using _Project.Scripts.Services.GamePause;
+using _Project.Scripts.Services.Sound;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy
@@ -14,7 +17,13 @@ namespace _Project.Scripts.Logic.Enemy
     {
         [SerializeField] private NavMeshAgent _agent;
         
+        [Header("Audio")]
+        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private List<AudioClip> _swordHitSounds;
+        [SerializeField] private List<AudioClip> _swordMissSounds;
+        
         private IGamePauseService _pauseService;
+        private IAudioService _audioService;
         private EnemyConfig _config;
         private EnemyRotateToPlayer _enemyRotateToPlayer;
         private Transform _playerTransform;
@@ -27,9 +36,10 @@ namespace _Project.Scripts.Logic.Enemy
         private bool _isSpawnAnimationEnded;
 
         [Inject]
-        private void Construct(IGamePauseService pauseService, EnemyConfig config)
+        private void Construct(IGamePauseService pauseService, IAudioService audioService, EnemyConfig config)
         {
             _pauseService = pauseService;
+            _audioService = audioService;
             _config = config;
         }
         
@@ -46,7 +56,8 @@ namespace _Project.Scripts.Logic.Enemy
             
             EnemySpawnState spawnState = new EnemySpawnState(_agent, _config);
             EnemyPatrolState patrolState = new EnemyPatrolState(_agent, _config, spawnPoint);
-            _attackState = new EnemyAttackState(_agent, _config, enemyRotateToPlayer, new FuncPredicate(AttackCooldownIsUp), transform);
+            _attackState = new EnemyAttackState(_agent, _config, enemyRotateToPlayer, new FuncPredicate(AttackCooldownIsUp), 
+                transform, _audioService,_audioSource, _swordHitSounds, _swordMissSounds);
             EnemyChaseState chaseState = new EnemyChaseState(_agent, _config, enemyRotateToPlayer, playerTransform);
             
             _stateMachine.AddTransition(spawnState, patrolState, new FuncPredicate(() => _isSpawnAnimationEnded));

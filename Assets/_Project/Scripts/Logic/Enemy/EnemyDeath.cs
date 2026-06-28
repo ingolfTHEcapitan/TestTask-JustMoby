@@ -50,7 +50,7 @@ namespace _Project.Scripts.Logic.Enemy
         [UsedImplicitly]
         public async void OnDeathPose()
         {
-            _dissolveShader.Dissolve();
+            _dissolveShader.PlayDissolveFx();
             await _effectsService.PlayEnemyDeathFx(transform.position, transform);
         }
         

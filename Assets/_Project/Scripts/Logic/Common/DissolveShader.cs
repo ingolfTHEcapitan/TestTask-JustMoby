@@ -21,7 +21,7 @@ namespace _Project.Scripts.Logic.Common
                 dissolveMaterials.Add(renderer.material);
         }
         
-        public void Dissolve()
+        public void PlayDissolveFx()
         {
             if (_dissolveCoroutine != null)
                 StopCoroutine(_dissolveCoroutine);

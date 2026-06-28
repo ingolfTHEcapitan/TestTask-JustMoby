@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using _Project.Scripts.Services.Sound;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Logic.Common
 {
@@ -7,12 +10,22 @@ namespace _Project.Scripts.Logic.Common
     {
         public event Action OnHealthChanged;
         public event Action OnZeroHealth;
+        
+        [Header("Audio")]
+        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private AudioClip _healSound;
+        [SerializeField] private List<AudioClip> _hitSounds;
 
         private bool _isDead;
-        
+        private IAudioService _audioService;
+
         public float CurrentHealth {get; private set;}
         public float MaxHealth { get; private set; }
-        
+
+        [Inject]
+        public void Construct(IAudioService audioService) => 
+            _audioService = audioService;
+
         public void Initialize(float maxHealth)
         {
             SetMaxHealth(maxHealth);
@@ -32,6 +45,7 @@ namespace _Project.Scripts.Logic.Common
             
             CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
             OnHealthChanged?.Invoke();
+            _audioService.PlayOneShotRandom(_hitSounds, _audioSource);
 
             if (CurrentHealth <= 0) 
                 OnZeroHealth?.Invoke();
@@ -41,6 +55,9 @@ namespace _Project.Scripts.Logic.Common
         {
             CurrentHealth = Mathf.Min(MaxHealth, CurrentHealth + amount);
             OnHealthChanged?.Invoke();
+            
+            if (_healSound != null)
+                _audioService.PlayOneShot(_healSound, _audioSource);
         }
     }
 }

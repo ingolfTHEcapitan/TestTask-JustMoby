@@ -19,6 +19,7 @@ using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.SaveLoad.CloudSave;
+using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Services.Statistics;
 using _Project.Scripts.UI.Factory;
 using Zenject;
@@ -71,6 +72,7 @@ namespace _Project.Scripts.Infrastructure.Project
             
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
             Container.BindInterfacesAndSelfTo<EffectsService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<AudioService>().AsSingle();
         }
 
         private void BindLoadingCurtain()

@@ -19,6 +19,10 @@ namespace _Project.Scripts.Infrastructure.Game
         [SerializeField] private Transform _gameParent;
         [SerializeField] private Transform _enemySpawnPoint;
         
+        [Header("Audio")]
+        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private AudioClip _dungeonMusic;
+        
         public override void InstallBindings()
         {
             BindPlayer();
@@ -61,7 +65,7 @@ namespace _Project.Scripts.Infrastructure.Game
         private void BindGameBootstrapper()
         {
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle()
-                .WithArguments(_enemySpawnPoint, _uiParent);
+                .WithArguments(_enemySpawnPoint, _uiParent, _audioSource, _dungeonMusic);
         }
     }
 }
