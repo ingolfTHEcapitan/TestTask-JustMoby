@@ -3,6 +3,7 @@ using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveConflictResolve;
 using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.Services.Sound;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.Shop;
@@ -40,9 +41,10 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             GameObject mainMenuLayer = await _uiFactory.CreateMainMenuLayer(_uiParent);
             
             ShopWindow shopWindow = InitShopWindow(mainMenuLayer);
-            InitMainMenu(mainMenuLayer, shopWindow);
+            MainMenuWindow mainMenu = InitMainMenu(mainMenuLayer, shopWindow);
 
             CursorController.SetCursorVisible(visible: true);
+            mainMenu.PlayBackGroundMusic();
             _loadingCurtain.HideLoading();
         }
 
@@ -53,10 +55,11 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             return shopWindow;
         }
 
-        private void InitMainMenu(GameObject mainMenuLayer, ShopWindow shopWindow)
+        private MainMenuWindow InitMainMenu(GameObject mainMenuLayer, ShopWindow shopWindow)
         {
             MainMenuWindow mainMenu = mainMenuLayer.GetComponentInChildren<MainMenuWindow>();
             mainMenu.Initialize(shopWindow);
+            return mainMenu;
         }
     }
 }

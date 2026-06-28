@@ -2,6 +2,7 @@ using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
+using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Services.Statistics;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -17,25 +18,32 @@ namespace _Project.Scripts.Logic.Player.Weapon
         [SerializeField] private Transform _shootPoint;
         [SerializeField] private GameObject _hitFxPrefab;
         
+        [Header("Audio")]
+        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private AudioClip _shotSound;
+        
         private float _fireRate;
         private float _nextTimeToFire;
+        private readonly Vector3 _screenCenter = new Vector3(0.5f, 0.5f, 0f);
+        
         private Camera _playerCamera;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
         private IBulletFactory _factory;
         private IGameStatistics _statistics;
+        private IAudioService _audioService;
         private WeaponConfig _weaponConfig;
         private BulletConfig _bulletConfig;
-        private readonly Vector3 _screenCenter = new Vector3(0.5f, 0.5f, 0f);
 
         [Inject]
         private void Construct(IGamePauseService pauseService, IInputService inputService, IBulletFactory factory, 
-            IGameStatistics statistics, WeaponConfig weaponConfig, BulletConfig bulletConfig)
+            IGameStatistics statistics, IAudioService audioService, WeaponConfig weaponConfig, BulletConfig bulletConfig)
         {
             _pauseService = pauseService;
             _inputService = inputService;
             _factory = factory;
             _statistics = statistics;
+            _audioService = audioService;
             _weaponConfig = weaponConfig;
             _bulletConfig = bulletConfig;
         }
@@ -50,9 +58,14 @@ namespace _Project.Scripts.Logic.Player.Weapon
         {
             if (_pauseService.IsPaused)
                 return;
-            
-            if (_inputService.IsFireButtonPressed() && CanShoot()) 
+
+            if (_inputService.IsFireButtonPressed() && CanShoot())
+            {
                 await Shoot();
+                _statistics.RecordShot();
+                _audioService.PlayOneShot(_shotSound, _audioSource);
+            }
+                
         }
 
         private async UniTask Shoot()
@@ -61,7 +74,6 @@ namespace _Project.Scripts.Logic.Player.Weapon
             Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
             Vector3 targetPoint = GetTargetPoint(ray);
             await _factory.CreateBullet(_bulletConfig, _shootPoint, GetShootDirection(targetPoint), targetPoint);
-            _statistics.RecordShot();
         }
 
         private Vector3 GetShootDirection(Vector3 targetPoint)

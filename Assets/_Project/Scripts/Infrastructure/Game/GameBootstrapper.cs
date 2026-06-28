@@ -11,6 +11,7 @@ using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Effects;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.LoadingCurtain;
+using _Project.Scripts.Services.Sound;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.GameOver;
@@ -36,12 +37,16 @@ namespace _Project.Scripts.Infrastructure.Game
         private PlayerStatsPresenter _playerStatsPresenter;
         private PlayerStatsData _playerStatsData;
         private EffectsService _effectsService;
+        private readonly IAudioService _audioService;
+        private readonly AudioSource _audioSource;
+        private readonly AudioClip _dungeonMusic;
 
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
             PlayerStatsModel playerStatsModel, PlayerStatsData playerStatsData, PlayerSpawner playerSpawner, 
             EnemySpawner enemySpawner, Transform enemySpawnPoint, IAnalyticsService analyticsService, Transform uiParent, 
-            LoadingCurtainService loadingCurtain, EffectsService effectsService)
+            LoadingCurtainService loadingCurtain, EffectsService effectsService, IAudioService audioService, 
+            AudioSource audioSource, AudioClip dungeonMusic)
         {
             _pauseService = pauseService;
             _uiFactory = uiFactory;
@@ -55,6 +60,9 @@ namespace _Project.Scripts.Infrastructure.Game
             _uiParent = uiParent;
             _loadingCurtain = loadingCurtain;
             _effectsService = effectsService;
+            _audioService = audioService;
+            _audioSource = audioSource;
+            _dungeonMusic = dungeonMusic;
         }
 
         public async void Initialize()
@@ -80,12 +88,14 @@ namespace _Project.Scripts.Infrastructure.Game
 
             _analyticsService.LogGameStart();
             _loadingCurtain.HideLoading();
+            _audioService.Play(_dungeonMusic, _audioSource);
         }
 
         public void Dispose()
         {
             _playerStatsPresenter.Dispose();
             _assetProvider.CleanUp();
+            _audioService.Stop(_audioSource);
         }
 
         private void InitGameOverWindow(GameObject popUpLayer, Health player, EnemySpawner enemySpawner)

@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Common.StateMachine.Transitions;
+using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Tools;
 using UnityEngine;
 using UnityEngine.AI;
@@ -23,19 +25,29 @@ namespace _Project.Scripts.Logic.Enemy.States
         
         private readonly Collider[] _hits = new Collider[1];
         private readonly int _layerMask;
+        
+        private readonly IAudioService _audioService;
+        private readonly AudioSource _audioSource;
+        private readonly List<AudioClip> _swordHitSounds;
+        private readonly List<AudioClip> _swordMissSounds;
 
         public bool IsAttacking {get; private set;}
 
         public EnemyAttackState(NavMeshAgent agent, EnemyConfig config, EnemyRotateToPlayer enemyRotateToPlayer, 
-            IPredicate attackCooldownIsUp,Transform enemyTransform) : base(agent, config)
+            IPredicate attackCooldownIsUp,Transform enemyTransform, IAudioService audioService, 
+            AudioSource audioSource, List<AudioClip> swordHitSounds, List<AudioClip> swordMissSounds) : base(agent, config)
         {
             _attackCooldownIsUp = attackCooldownIsUp;
             _enemyRotateToPlayer = enemyRotateToPlayer;
             _enemyTransform = enemyTransform;
+            _audioService = audioService;
+            _audioSource = audioSource;
+            _swordHitSounds = swordHitSounds;
+            _swordMissSounds = swordMissSounds;
 
             _layerMask = LayerMask.GetMask(PlayerLayer);
         }
-
+        
         public override void OnEnter()
         {
             _agent.ResetPath();
@@ -62,13 +74,18 @@ namespace _Project.Scripts.Logic.Enemy.States
 
         public void DealDamage()
         {
-            PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.red);
             if (Hit(out Collider hit))
             {
                 PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.green);
 
                 IHealth playerHealth = hit.GetComponent<IHealth>();
                 playerHealth.TakeDamage(_config.AttackDamage);
+                _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
+            }
+            else
+            {
+                PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.red);
+                _audioService.PlayOneShotRandom(_swordMissSounds, _audioSource);
             }
         }
         
