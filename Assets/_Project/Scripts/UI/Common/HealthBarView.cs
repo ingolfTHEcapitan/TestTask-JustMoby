@@ -1,7 +1,11 @@
 using System.Collections;
+using System.Threading;
+using System.Threading.Tasks;
 using _Project.Scripts.Logic.Common;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Common
@@ -10,11 +14,11 @@ namespace _Project.Scripts.UI.Common
     {
         [SerializeField] private Slider _healthSlider;
         [SerializeField] private TextMeshProUGUI _healthText;
-        [SerializeField] private float _lerpSpeed = 1f;
-        [SerializeField] private float _lerpTime = 2f;
+        [SerializeField] private float _sliderValuePerSecond = 0.5f;
         
         private IHealth _health;
-        private Coroutine _lerpCoroutine;
+        private UniTask _currentLerpTask;
+        private CancellationTokenSource _cts;
 
         private float CurrentValue => _health.CurrentHealth / _health.MaxHealth;
 
@@ -29,12 +33,22 @@ namespace _Project.Scripts.UI.Common
 
         private void OnDestroy()
         {
+            _cts?.Cancel();
+            _cts?.Dispose();
+            
             if (_health != null)
                 _health.OnHealthChanged -= UpdateHealthBar;
         }
 
-        public void Hide() => 
+        public async UniTask Hide()
+        {
+            Task taskToWait = _currentLerpTask.AsTask();
+            if (taskToWait != null && !taskToWait.IsCompleted)
+            {
+                await taskToWait;
+            }
             gameObject.SetActive(false);
+        }
 
         private void InitHealthBar()
         {
@@ -46,24 +60,36 @@ namespace _Project.Scripts.UI.Common
         {
             _healthText.text = $"{_health.CurrentHealth}/{_health.MaxHealth}";
 
-            if (_lerpCoroutine != null)
-                StopCoroutine(_lerpCoroutine);
+            _cts?.Cancel();
+            _cts?.Dispose();
+            _cts = new CancellationTokenSource();
             
-            _lerpCoroutine = StartCoroutine(LerpHealthSliderRoutine());
+            _currentLerpTask = LerpHealthSliderRoutine(_cts.Token);
         }
 
-        private IEnumerator LerpHealthSliderRoutine()
+        private async UniTask LerpHealthSliderRoutine(CancellationToken token)
         {
+            float startValue = _healthSlider.value;
+            float targetValue = CurrentValue;
             float elapsedTime = 0;
 
-            while (elapsedTime < _lerpTime)
+            float distance = Mathf.Abs(targetValue - startValue);
+            float duration = distance / _sliderValuePerSecond;
+            
+            
+            if (Mathf.Approximately(startValue, targetValue))
+                return;
+            
+            while (!Mathf.Approximately(_healthSlider.value , targetValue))
             {
-                if (_healthSlider.value != CurrentValue) 
-                    _healthSlider.value = Mathf.Lerp(_healthSlider.value, CurrentValue, elapsedTime);
+                if(token.IsCancellationRequested)
+                    break;
                 
-                elapsedTime += Time.deltaTime * _lerpSpeed;
+                elapsedTime += Time.deltaTime;
+                float time = Mathf.Clamp01(elapsedTime / duration);
+                _healthSlider.value = Mathf.Lerp(startValue, targetValue, time);
                 
-                yield return null;
+                await UniTask.Yield(token);
             }
         }
     }

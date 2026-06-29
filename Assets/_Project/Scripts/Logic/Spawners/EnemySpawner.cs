@@ -17,20 +17,15 @@ namespace _Project.Scripts.Logic.Spawners
     {
         private readonly IGamePauseService _pauseService;
         private readonly IEnemyFactory _factory;
-        private readonly IGameStatistics _statistics;
-        private readonly IUpgradePointsService _upgradePoints;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
         private readonly EnemySpawnerConfig _config;
         
         private CancellationTokenSource _cancellationTokenSource;
 
-        public EnemySpawner(IGamePauseService pauseService, IEnemyFactory factory, 
-            IGameStatistics statistics, IUpgradePointsService upgradePoints, EnemySpawnerConfig config)
+        public EnemySpawner(IGamePauseService pauseService, IEnemyFactory factory, EnemySpawnerConfig config)
         {
             _pauseService = pauseService;
             _factory = factory;
-            _statistics = statistics;
-            _upgradePoints = upgradePoints;
             _config = config;
         }
         
@@ -90,16 +85,10 @@ namespace _Project.Scripts.Logic.Spawners
             return spawnPosition;
         }
 
-        private async void OnEnemyDeath(EnemyDeath enemyDeath)
+        private void OnEnemyDeath(EnemyDeath enemyDeath)
         {
             enemyDeath.OnDied -= OnEnemyDeath;
             _spawnedEnemies.Remove(enemyDeath);
-            
-            if(enemyDeath.IsForcedKilling)
-                return;
-            
-            _statistics.RecordEnemyKilled();
-            await _upgradePoints.AddPoint();
         }
     }
 }

@@ -14,10 +14,10 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet
         private float _lifeTime;
         private Vector3 _targetPoint;
         
-        private EffectsService _effectsService;
+        private IEffectsService _effectsService;
 
         [Inject]
-        public void Construct(EffectsService effectsService) => 
+        public void Construct(IEffectsService effectsService) => 
             _effectsService = effectsService;
 
         public void Initialize(BulletConfig config, Vector3 direction, Vector3 targetPoint, float damage, Transform parent)
