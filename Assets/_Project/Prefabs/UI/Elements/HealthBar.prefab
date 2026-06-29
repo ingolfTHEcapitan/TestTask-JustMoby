@@ -233,6 +233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _healthSlider: {fileID: 235504412986314735}
   _healthText: {fileID: 235504413541349036}
+  _lerpSpeedPerSecond: 0.5
 --- !u!1 &235504413541349034
 GameObject:
   m_ObjectHideFlags: 0

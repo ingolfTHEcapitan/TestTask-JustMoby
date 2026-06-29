@@ -34,18 +34,18 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly Transform _enemySpawnPoint;
         private readonly Transform _uiParent;
         private readonly LoadingCurtainService _loadingCurtain;
-        private PlayerStatsPresenter _playerStatsPresenter;
-        private PlayerStatsData _playerStatsData;
-        private EffectsService _effectsService;
+        private readonly PlayerStatsData _playerStatsData;
+        private readonly IEffectsService _effectsService;
         private readonly IAudioService _audioService;
         private readonly AudioSource _audioSource;
         private readonly AudioClip _dungeonMusic;
+        private PlayerStatsPresenter _playerStatsPresenter;
 
 
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAssetProvider assetProvider, 
             PlayerStatsModel playerStatsModel, PlayerStatsData playerStatsData, PlayerSpawner playerSpawner, 
             EnemySpawner enemySpawner, Transform enemySpawnPoint, IAnalyticsService analyticsService, Transform uiParent, 
-            LoadingCurtainService loadingCurtain, EffectsService effectsService, IAudioService audioService, 
+            LoadingCurtainService loadingCurtain, IEffectsService effectsService, IAudioService audioService, 
             AudioSource audioSource, AudioClip dungeonMusic)
         {
             _pauseService = pauseService;
