@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Services.PlayerInput;
+using _Project.Scripts.UI.Factory;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,15 +23,21 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         [SerializeField] private Button _applyButton;
         [SerializeField] private Transform _statsContainer;
         [SerializeField] private TextMeshProUGUI _pointsText;
-        [SerializeField] private PlayerStatItemView playerStatItemPrefab;
+        
+        [Header("Audio")]
+        [SerializeField] private AudioSource _audioSource;
         
         private readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
         private IInputService _inputService;
         private Button _openButton;
-        
+        private IUIFactory _uiFactory;
+
         [Inject]
-        private void Construct(IInputService inputService) => 
+        private void Construct(IInputService inputService, IUIFactory uiFactory)
+        {
+            _uiFactory = uiFactory;
             _inputService = inputService;
+        }
 
         public void Initialize(Button openButton)
         {
@@ -55,14 +63,14 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         public void UpdatePointsText(string points) => 
             _pointsText.SetText($"Points {points}");
 
-        public void CreateStatItems(List<PlayerStatData> stats)
+        public async UniTask CreateStatItems(List<PlayerStatData> stats)
         {
             ClearStatItems();
             
             foreach (PlayerStatData stat in stats)
             {
-                PlayerStatItemView statItem = Instantiate(playerStatItemPrefab, _statsContainer);
-                statItem.Initialize(stat);
+                PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItem(_statsContainer);
+                statItem.Initialize(stat, _audioSource);
                 _statItems[stat.Name] = statItem;
             }
         }

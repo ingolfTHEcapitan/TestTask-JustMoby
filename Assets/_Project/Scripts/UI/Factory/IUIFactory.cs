@@ -1,3 +1,4 @@
+using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.SaveConflictResolve.UI;
 using _Project.Scripts.UI.Windows.Shop;
 using Cysharp.Threading.Tasks;
@@ -13,5 +14,6 @@ namespace _Project.Scripts.UI.Factory
         UniTask<ShopItem> CreateShopItem(Transform parent);
         UniTask<Sprite> LoadSprite(string assetAddress);
         UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindow();
+        UniTask<PlayerStatItemView> CreatePlayerStatItem(Transform parent);
     }
 }

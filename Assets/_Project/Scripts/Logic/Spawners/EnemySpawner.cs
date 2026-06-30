@@ -5,8 +5,6 @@ using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Services.GamePause;
-using _Project.Scripts.Services.Statistics;
-using _Project.Scripts.Services.UpgradePoints;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;

@@ -8,7 +8,6 @@ using _Project.Scripts.Services.Sound;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy

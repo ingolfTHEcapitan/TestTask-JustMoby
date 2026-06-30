@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using _Project.Scripts.Logic.Common;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Common

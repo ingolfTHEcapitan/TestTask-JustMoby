@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Configs.IAP;
+using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
@@ -30,11 +31,15 @@ namespace _Project.Scripts.UI.Windows.Shop
             _iapService = iapService;
         }
 
-        public async UniTask Initialize(ProductDescription productDescription)
+        public async UniTask Initialize(ProductDescription productDescription, AudioSource audioSource)
         {
             _productDescription = productDescription;
             
             _buyButton.onClick.AddListener(StartPurchase);
+            
+            ButtonSoundEffect buttonSoundEffect = _buyButton.GetComponent<ButtonSoundEffect>();
+            buttonSoundEffect.Initialize(audioSource);
+            
             await FillShopItem();
         }
 

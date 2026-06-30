@@ -2,6 +2,7 @@ using System;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.GamePause;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Logic.Player.PlayerStats
 {
@@ -11,8 +12,9 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         private readonly PlayerStatsModel _model;
         private readonly IGamePauseService _pauseService;
         private readonly PlayerDeath _playerDeath;
+        private readonly PlayerStatsData _statsData;
+        
         private bool _isOpen;
-        private PlayerStatsData _statsData;
 
         public PlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model, PlayerStatsData statsData,
             IGamePauseService pauseService, PlayerDeath playerDeath)
@@ -24,14 +26,14 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             _playerDeath = playerDeath;
         }
 
-        public void Initialize()
+        public async UniTask Initialize()
         {
             _model.OnStatsChanged += UpdateStatItems;
             _view.OnOpenButtonClicked += Open;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
             
-            _view.CreateStatItems(_statsData.GetStats());
+            await _view.CreateStatItems(_statsData.GetStats());
             
             foreach (PlayerStatItemView statItemView in _view.GetStatItems())
                 statItemView.OnUpgradeButtonClicked += UpgradeStatItem;

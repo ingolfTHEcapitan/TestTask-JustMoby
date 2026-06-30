@@ -3,7 +3,6 @@ using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveConflictResolve;
 using _Project.Scripts.Services.SaveLoad;
-using _Project.Scripts.Services.Sound;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.Shop;
@@ -14,16 +13,17 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 {
     public class MainMenuBootstrapper: IInitializable
     {
-        private readonly ISaveConflictResolveService _saveConflictResolveService;
         private readonly ILoadingCurtainService _loadingCurtain;
         private readonly IProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
         private readonly IUIFactory _uiFactory;
+        private readonly ISaveConflictResolveService _saveConflictResolveService;
+
         private readonly Transform _uiParent;
 
         public MainMenuBootstrapper(ILoadingCurtainService loadingCurtain, IProgressService progressService,
-            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent,
-            ISaveConflictResolveService saveConflictResolveService)
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory,
+            ISaveConflictResolveService saveConflictResolveService, Transform uiParent)
         {
             _saveConflictResolveService = saveConflictResolveService;
             _loadingCurtain = loadingCurtain;

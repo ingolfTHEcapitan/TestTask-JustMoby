@@ -16,6 +16,9 @@ namespace _Project.Scripts.UI.Windows.Shop
         [SerializeField] private Transform _productsContainer;
         [SerializeField] private Button _closeButton;
         
+        [Header("Audio")]
+        [SerializeField] private AudioSource _audioSource;
+        
         private IIAPService _iapService;
         private ProgressService _progressService;
         private readonly List<GameObject> _shopItemObjects = new List<GameObject>();
@@ -75,7 +78,7 @@ namespace _Project.Scripts.UI.Windows.Shop
             {
                 ShopItem shopItem = await _uiFactory.CreateShopItem(_productsContainer);
                 _shopItemObjects.Add(shopItem.gameObject);
-                await shopItem.Initialize(productDescription);
+                await shopItem.Initialize(productDescription, _audioSource);
             }
         }
 

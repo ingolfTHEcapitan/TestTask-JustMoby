@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Services.Sound;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace _Project.Scripts.Logic.Player.PlayerStats
 {
@@ -13,13 +15,21 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         
         private readonly PlayerStatsData _statsData;
         private readonly PlayerStatsSaveLoad _saveLoad;
+        private readonly IAudioService _audioService;
+        
+        private readonly AudioSource _audioSource;
+        private readonly AudioClip _levelUpSound;
 
         public int UpgradePoints { get; private set; }
         
-        public PlayerStatsModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad)
+        public PlayerStatsModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad, IAudioService audioService,
+            AudioSource audioSource, AudioClip levelUpSound)
         {
+            _audioService = audioService;
             _statsData = statsData;
             _saveLoad = saveLoad;
+            _audioSource = audioSource;
+            _levelUpSound = levelUpSound;
         }
 
         public async UniTask Initialize()
@@ -71,6 +81,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         {
             UpgradePoints += points;
             OnStatsChanged?.Invoke();
+            _audioService.PlayOneShot(_levelUpSound, _audioSource);
             await _saveLoad.SaveStats(UpgradePoints);
         }
 

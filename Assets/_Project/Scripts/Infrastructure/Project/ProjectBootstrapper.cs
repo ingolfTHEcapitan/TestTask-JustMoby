@@ -18,15 +18,16 @@ namespace _Project.Scripts.Infrastructure.Project
         private readonly ILoadingCurtainService _loadingCurtain;
         private readonly IRemoteConfigService _remoteConfigService;
         private readonly IRemoteConfigFactory _remoteConfigFactory;
-        private readonly LazyInject<IIAPService> _lazyIapService;
         private readonly IAuthService _authService;
         private readonly IAssetProvider _assetProvider;
+        private readonly IAnalyticsService _analyticsService;
+        private readonly LazyInject<IIAPService> _lazyIapService;
         private IIAPService _iapService;
-        private IAnalyticsService _analyticsService;
-        
-        public ProjectBootstrapper(ILoadingCurtainService loadingCurtain, LazyInject<IIAPService> lazyIapService, 
-            IRemoteConfigService remoteConfigService, IRemoteConfigFactory remoteConfigFactory, 
-            IAuthService authService, IAssetProvider assetProvider, IAnalyticsService analyticsService)
+
+
+        public ProjectBootstrapper(ILoadingCurtainService loadingCurtain, IRemoteConfigService remoteConfigService, 
+            IRemoteConfigFactory remoteConfigFactory, IAuthService authService, IAssetProvider assetProvider,
+            IAnalyticsService analyticsService, LazyInject<IIAPService> lazyIapService)
         {
             _lazyIapService = lazyIapService;
             _loadingCurtain = loadingCurtain;
