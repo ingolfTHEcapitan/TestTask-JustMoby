@@ -438,6 +438,7 @@ GameObject:
   - component: {fileID: 5983762570623161065}
   - component: {fileID: 6286505041228859525}
   - component: {fileID: 1326743518837575757}
+  - component: {fileID: 3519947686643544299}
   m_Layer: 0
   m_Name: Upgrade_button
   m_TagString: Untagged
@@ -562,6 +563,21 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.101960786}
   m_EffectDistance: {x: 0, y: -6}
   m_UseGraphicAlpha: 1
+--- !u!114 &3519947686643544299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6326753252556271543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1611a5124c434d499cc325770900d9e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pointerDown: {fileID: 8300000, guid: d8f42014edbccc0439ea92b410ad4557, type: 3}
+  _pointerEnter: {fileID: 8300000, guid: c5230b845c1250e4fb641b743c1cbac7, type: 3}
+  _audioSource: {fileID: 0}
 --- !u!1 &6855851673165230749
 GameObject:
   m_ObjectHideFlags: 0

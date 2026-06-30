@@ -1,3 +1,5 @@
+using UnityEngine.AddressableAssets;
+
 namespace _Project.Scripts.Infrastructure.AssetManagement
 {
     public static class AssetAddress
@@ -13,5 +15,6 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         public const string SaveConflictResolveWindow = "SaveConflictResolveWindow";
         public const string HitFx = "HitFx_yellow";
         public const string Deathfx = "DeathFx_soulEscape";
+        public const string PlayerStatItem = "PlayerStatItem";
     }
 }

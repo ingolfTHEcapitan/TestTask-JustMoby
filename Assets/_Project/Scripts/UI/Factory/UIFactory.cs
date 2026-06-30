@@ -1,4 +1,5 @@
 using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.SaveConflictResolve.UI;
 using _Project.Scripts.UI.Windows.Shop;
 using Cysharp.Threading.Tasks;
@@ -49,6 +50,12 @@ namespace _Project.Scripts.UI.Factory
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.SaveConflictResolveWindow);
             return _container.InstantiatePrefabForComponent<SaveConflictResolveWindow>(prefab);
+        }
+
+        public async UniTask<PlayerStatItemView> CreatePlayerStatItem(Transform parent)
+        {
+            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.PlayerStatItem);
+            return _container.InstantiatePrefabForComponent<PlayerStatItemView>(prefab, parent);
         }
     }
 }

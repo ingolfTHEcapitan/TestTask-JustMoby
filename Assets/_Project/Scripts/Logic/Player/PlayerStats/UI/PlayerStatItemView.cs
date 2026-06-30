@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using TMPro;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         private void OnDestroy() => 
             _upgradeButton.onClick.RemoveListener(InvokeOnUpgradeButtonClicked);
 
-        public void Initialize(PlayerStatData stat)
+        public void Initialize(PlayerStatData stat, AudioSource audioSource)
         {
             _upgradeButton.onClick.AddListener(InvokeOnUpgradeButtonClicked);
             
@@ -29,6 +30,9 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
             _nameText.SetText(_statName.ToString());
             _iconFrame.sprite = stat.IconFrame;
             _icon.sprite = stat.Icon;
+
+            ButtonSoundEffect buttonSoundEffect = _upgradeButton.GetComponent<ButtonSoundEffect>();
+            buttonSoundEffect.Initialize(audioSource);
         }
 
         public void UpdateLevelText(int level) => 

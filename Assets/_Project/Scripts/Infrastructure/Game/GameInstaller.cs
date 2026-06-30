@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Logic.Player.Factory;
 using _Project.Scripts.Logic.Player.PlayerStats;
@@ -20,8 +21,10 @@ namespace _Project.Scripts.Infrastructure.Game
         [SerializeField] private Transform _enemySpawnPoint;
         
         [Header("Audio")]
-        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private AudioSource _musicSource;
+        [SerializeField] private AudioSource _soundSource;
         [SerializeField] private AudioClip _dungeonMusic;
+        [SerializeField] private AudioClip _levelUpSounds;
         
         public override void InstallBindings()
         {
@@ -47,7 +50,7 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<PlayerStatsData>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle().WithArguments(_soundSource, _levelUpSounds);
         }
 
         private void BindUpgradePointsService() => 
@@ -65,7 +68,7 @@ namespace _Project.Scripts.Infrastructure.Game
         private void BindGameBootstrapper()
         {
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle()
-                .WithArguments(_enemySpawnPoint, _uiParent, _audioSource, _dungeonMusic);
+                .WithArguments(_enemySpawnPoint, _uiParent, _musicSource, _dungeonMusic);
         }
     }
 }
