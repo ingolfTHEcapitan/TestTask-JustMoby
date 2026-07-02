@@ -1,6 +1,7 @@
 ﻿using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.Sound;
+using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -25,6 +26,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         private ILoadingCurtainService _loadingCurtain;
         private IAudioService _audioService;
         private ShopWindow _shopWindow;
+        private SettingsWindow _settingsWindow;
 
         [Inject]
         private void Construct(ILoadingCurtainService loadingCurtain, IAudioService audioService)
@@ -33,18 +35,21 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _audioService = audioService;
         }
 
-        public void Initialize(ShopWindow shopWindow)
+        public void Initialize(ShopWindow shopWindow, SettingsWindow settingsWindow)
         {
             _playButton.onClick.AddListener(StartGame);
+            _settingsButton.onClick.AddListener(OpenSettingsWindow);
             _shopButton.onClick.AddListener(OpenShopWindow);
             _exitButton.onClick.AddListener(ExitGame);
-            
+
             _shopWindow = shopWindow;
+            _settingsWindow = settingsWindow;
         }
 
         private void OnDestroy()
         {
             _playButton.onClick.RemoveListener(StartGame);
+            _settingsButton.onClick.RemoveListener(OpenSettingsWindow);
             _shopButton.onClick.RemoveListener(OpenShopWindow);
             _exitButton.onClick.RemoveListener(ExitGame);
         }
@@ -53,6 +58,9 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         {
             _audioService.Play(_backgroundMusic, _audioSource);
         }
+
+        private void OpenSettingsWindow() => 
+            _settingsWindow.Open();
 
         private void OpenShopWindow() => 
             _shopWindow.Open();

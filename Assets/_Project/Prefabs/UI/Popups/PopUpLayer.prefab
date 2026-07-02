@@ -45,7 +45,8 @@ AudioSource:
   m_GameObject: {fileID: 3459820628876719006}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 6424704104930927264, guid: c15353fd9c22763409f7c656640b830d,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -657,6 +658,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerStatsWindow
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683942711538480718, guid: f5690ec389786384984df95b40be4241,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9098174794874443061, guid: f5690ec389786384984df95b40be4241,
         type: 3}

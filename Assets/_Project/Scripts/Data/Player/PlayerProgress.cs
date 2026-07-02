@@ -8,6 +8,7 @@ namespace _Project.Scripts.Data.Player
     {
         public PlayerStatsProgress PlayerStatsProgress = new PlayerStatsProgress();
         public PurchaseData PurchaseData = new PurchaseData();
+        public AudioSettingsData AudioSettingsData = new AudioSettingsData();
         public long LastSaveTimeUnix;
 
         public string GetFormatedSaveTime(bool getLocalDateTime = true)

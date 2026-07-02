@@ -5,6 +5,7 @@ using _Project.Scripts.Services.SaveConflictResolve;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.MainMenu;
+using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
 using UnityEngine;
 using Zenject;
@@ -41,11 +42,19 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             GameObject mainMenuLayer = await _uiFactory.CreateMainMenuLayer(_uiParent);
             
             ShopWindow shopWindow = InitShopWindow(mainMenuLayer);
-            MainMenuWindow mainMenu = InitMainMenu(mainMenuLayer, shopWindow);
+            SettingsWindow settingsWindow = InitSettingsWindow(mainMenuLayer);
+            MainMenuWindow mainMenu = InitMainMenu(mainMenuLayer, shopWindow, settingsWindow);
 
             CursorController.SetCursorVisible(visible: true);
             mainMenu.PlayBackGroundMusic();
             _loadingCurtain.HideLoading();
+        }
+
+        private SettingsWindow InitSettingsWindow(GameObject mainMenuLayer)
+        {
+            SettingsWindow settingsWindow = mainMenuLayer.GetComponentInChildren<SettingsWindow>(includeInactive: true);
+            settingsWindow.Initialize();
+            return settingsWindow;
         }
 
         private ShopWindow InitShopWindow(GameObject mainMenuLayer)
@@ -55,10 +64,11 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             return shopWindow;
         }
 
-        private MainMenuWindow InitMainMenu(GameObject mainMenuLayer, ShopWindow shopWindow)
+        private MainMenuWindow InitMainMenu(GameObject mainMenuLayer, 
+            ShopWindow shopWindow, SettingsWindow settingsWindow)
         {
             MainMenuWindow mainMenu = mainMenuLayer.GetComponentInChildren<MainMenuWindow>();
-            mainMenu.Initialize(shopWindow);
+            mainMenu.Initialize(shopWindow, settingsWindow);
             return mainMenu;
         }
     }
