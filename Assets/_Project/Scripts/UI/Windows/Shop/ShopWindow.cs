@@ -20,12 +20,12 @@ namespace _Project.Scripts.UI.Windows.Shop
         [SerializeField] private AudioSource _audioSource;
         
         private IIAPService _iapService;
-        private ProgressService _progressService;
+        private IProgressService _progressService;
         private readonly List<GameObject> _shopItemObjects = new List<GameObject>();
         private IUIFactory _uiFactory;
 
         [Inject]
-        private void Construct(IIAPService iapService, IUIFactory uiFactory, ProgressService progressService)
+        private void Construct(IIAPService iapService, IUIFactory uiFactory, IProgressService progressService)
         {
             _iapService = iapService;
             _uiFactory = uiFactory;

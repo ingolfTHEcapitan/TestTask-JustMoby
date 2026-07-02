@@ -32,6 +32,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35a21673b24503f41ab67b8582fcc3ad
+    m_Address: PlayerStatItem
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5df367024fd9a42d993d65056dbf8944
     m_Address: Icon_Damage
     m_ReadOnly: 0
