@@ -3,6 +3,8 @@ using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.GamePause;
+using _Project.Scripts.UI.Common;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,7 +13,9 @@ using Zenject;
 namespace _Project.Scripts.UI.Windows.GameOver
 {
     public class GameOverWindow: MonoBehaviour
-    {
+    {   
+        [SerializeField] private WindowPopupAnimation _windowAnimation;
+        [Space]
         [SerializeField] private GameObject _gameOverPanel;
         [SerializeField] private Button _reviveButton;
         [SerializeField] private Button _loadSaveButton;
@@ -49,9 +53,9 @@ namespace _Project.Scripts.UI.Windows.GameOver
             _loadSaveButton.onClick.RemoveListener(OnLoadSaveButtonClicked);
         }
 
-        private void OnReviveButtonClicked()
+        private async void OnReviveButtonClicked()
         {
-            HidePanel();
+            await HidePanel();
             CursorController.SetCursorVisible(true);
             
             _adsService.ShowRewardedAd(() =>
@@ -63,9 +67,9 @@ namespace _Project.Scripts.UI.Windows.GameOver
             });
         }
 
-        private void OnLoadSaveButtonClicked()
+        private async void OnLoadSaveButtonClicked()
         {
-            HidePanel();
+            await HidePanel();
             CursorController.SetCursorVisible(true);
 
             if (_adsService.IsInterstitialAdLoaded)
@@ -98,12 +102,14 @@ namespace _Project.Scripts.UI.Windows.GameOver
         {
             _pauseService.SetPaused(true);
             _gameOverPanel.SetActive(true);
+            _windowAnimation.AnimateOpen();
         }
 
-        private void HidePanel()
+        private async UniTask HidePanel()
         {
+            await _windowAnimation.AnimateClose();
             _pauseService.SetPaused(false);
-            _gameOverPanel.SetActive(false);    
+            _gameOverPanel.SetActive(false);
         }
     }
 }

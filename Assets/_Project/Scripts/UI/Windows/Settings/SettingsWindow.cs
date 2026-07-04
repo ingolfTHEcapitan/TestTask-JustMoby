@@ -1,7 +1,7 @@
 ﻿using _Project.Scripts.Data.Player;
-using _Project.Scripts.Services.IAP;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.UI.Common;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -11,6 +11,8 @@ namespace _Project.Scripts.UI.Windows.Settings
 {
     public class SettingsWindow: MonoBehaviour
     {
+        [SerializeField] private WindowPopupAnimation _windowAnimation;
+        [Space]
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
 
@@ -70,11 +72,13 @@ namespace _Project.Scripts.UI.Windows.Settings
         {
             InitSliders();
             gameObject.SetActive(true);
+            _windowAnimation.AnimateOpen();
         }
 
-        private void Close()
+        private async void Close()
         {
             InitSliders();
+            await _windowAnimation.AnimateClose();
             gameObject.SetActive(false);
         }
 
@@ -102,6 +106,7 @@ namespace _Project.Scripts.UI.Windows.Settings
             AudioSettingsData.EffectsVolume = _effectsSlider.value;
             AudioSettingsData.UIVolume = _uiSlider.value;
 
+            await _windowAnimation.AnimateClose();
             gameObject.SetActive(false);
             await _saveService.SaveProgressAsync(_progressService);
         }

@@ -2,6 +2,7 @@
 using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.Services.Progress;
+using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace _Project.Scripts.UI.Windows.Shop
 {
     public class ShopWindow: MonoBehaviour
     {
+        [SerializeField] private WindowPopupAnimation _windowAnimation;
         [SerializeField] private GameObject[] ShopUnavailableObjects;
         [SerializeField] private Transform _productsContainer;
         [SerializeField] private Button _closeButton;
@@ -50,10 +52,14 @@ namespace _Project.Scripts.UI.Windows.Shop
         {
             RefreshAvailableShopItems();
             gameObject.SetActive(true);
+            _windowAnimation.AnimateOpen();
         }
 
-        private void Close() => 
+        private async void Close()
+        {
+            await _windowAnimation.AnimateClose();
             gameObject.SetActive(false);
+        }
 
         private async void RefreshAvailableShopItems()
         {
