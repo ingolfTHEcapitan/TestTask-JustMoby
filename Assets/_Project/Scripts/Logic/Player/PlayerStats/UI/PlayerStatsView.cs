@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Services.PlayerInput;
+using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -18,7 +20,9 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         public event Action OnCloseButtonClicked;
         public event Action OnApplyChangesButtonClicked;
         
-        [SerializeField] private GameObject _statsPanel;
+        [SerializeField] private WindowPopupAnimation _windowAnimation;
+        [Space]
+        [SerializeField] private GameObject _statsWindow;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
         [SerializeField] private Transform _statsContainer;
@@ -87,11 +91,17 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         public List<PlayerStatItemView> GetStatItems() => 
             _statItems.Values.ToList();
         
-        public void ShowPanel() => 
-            _statsPanel.SetActive(true);
+        public void ShowWindow()
+        {
+            _statsWindow.SetActive(true);
+            _windowAnimation.AnimateOpen();
+        }
 
-        public void HidePanel() => 
-            _statsPanel.SetActive(false);
+        public async UniTask HideWindow()
+        {
+            await _windowAnimation.AnimateClose();
+            _statsWindow.SetActive(false);
+        }
 
         private void ClearStatItems()
         {

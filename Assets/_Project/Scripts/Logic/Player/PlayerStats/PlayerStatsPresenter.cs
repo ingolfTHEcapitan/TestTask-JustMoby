@@ -62,20 +62,20 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
                 return;
             
             _isOpen = true;
-            _view.ShowPanel();
             _pauseService.SetPaused(true);
+            _view.ShowWindow();
             UpdateStatItems();
         }
 
-        private void Close()
+        private async void Close()
         {
             _isOpen = false;
-            _view.HidePanel();
             _pauseService.SetPaused(false);
+            await _view.HideWindow();
             _model.DiscardPreviewChanges();
         }
 
-        private void  ApplyChanges()
+        private void ApplyChanges()
         {
             _model.ApplyChanges();
             Close();

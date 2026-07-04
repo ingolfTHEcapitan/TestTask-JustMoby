@@ -1,6 +1,7 @@
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.UI.Common;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,8 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
 {
     public class SaveConflictResolveWindow: MonoBehaviour
     {
+        [SerializeField] private WindowPopupAnimation _windowAnimation;
+        [Space]
         [SerializeField] private Button _localSaveButton;
         [SerializeField] private Button _cloudSaveButton;
         [SerializeField] private TextMeshProUGUI _localDateText;
@@ -46,6 +49,7 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
         {
             gameObject.SetActive(true);
             CursorController.SetCursorVisible(true);
+            _windowAnimation.AnimateOpen();
             
             _localDateText.text = $"Device save date\n{_localProgress.GetFormatedSaveTime()}";
             _cloudDateText.text = $"Cloud save date\n{_cloudProgress.GetFormatedSaveTime()}";
@@ -59,10 +63,11 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
             return result;
         }
 
-        public void Hide()
+        public async UniTask Hide()
         {
-            CursorController.SetCursorVisible(false);
             _taskCompletionSource = null;
+            CursorController.SetCursorVisible(false);
+            await _windowAnimation.AnimateClose();
             gameObject.SetActive(false);
         }
 

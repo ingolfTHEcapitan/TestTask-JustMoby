@@ -30,7 +30,7 @@ namespace _Project.Scripts.Services.SaveConflictResolve
             _window.Construct(localProgress, cloudProgress);
             
             SaveType choice = await _window.Show();
-            _window.Hide();
+            await _window.Hide();
             return choice;
         }
     }

@@ -52,6 +52,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _settingsButton.onClick.RemoveListener(OpenSettingsWindow);
             _shopButton.onClick.RemoveListener(OpenShopWindow);
             _exitButton.onClick.RemoveListener(ExitGame);
+            _audioService.Stop(_audioSource);
         }
 
         public void PlayBackGroundMusic()
