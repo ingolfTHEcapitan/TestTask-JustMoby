@@ -97,7 +97,6 @@ namespace _Project.Scripts.Infrastructure.Game
         public void Dispose()
         {
             _playerStatsPresenter.Dispose();
-            _assetProvider.CleanUp();
         }
 
         private void InitGameOverWindow(GameObject popUpLayer, Health player, EnemySpawner enemySpawner)

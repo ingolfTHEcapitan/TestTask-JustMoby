@@ -17,6 +17,6 @@ namespace _Project.Scripts.Services.PlayerInput
             Input.GetKeyDown(KeyCode.Tab);
 
         public bool IsMainMenuButtonPressed() => 
-            Input.GetKeyDown(KeyCode.Escape);
+            Input.GetKeyDown(KeyCode.Space);
     }
 }
