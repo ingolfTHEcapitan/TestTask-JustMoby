@@ -19,10 +19,10 @@ namespace _Project.Scripts.UI.Factory
             _assetProvider = assetProvider;
         }
         
-        public async UniTask<GameObject> CreateHudLayer(Transform uiParent)
+        public async UniTask<HeadUpDisplay> CreateHudLayer(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.HudLayer);
-            return _container.InstantiatePrefab(prefab, uiParent);
+            return _container.InstantiatePrefabForComponent<HeadUpDisplay>(prefab, uiParent);
         }
 
         public async UniTask<GameObject> CreatePopUpLayer(Transform uiParent)
