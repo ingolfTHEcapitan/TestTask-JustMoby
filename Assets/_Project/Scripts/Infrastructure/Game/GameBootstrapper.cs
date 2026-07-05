@@ -12,6 +12,7 @@ using _Project.Scripts.Services.Effects;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.Sound;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.GameOver;
@@ -44,8 +45,7 @@ namespace _Project.Scripts.Infrastructure.Game
         
         private readonly AudioSource _audioSource;
         private readonly AudioClip _dungeonMusic;
-
-
+        
         public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAnalyticsService analyticsService, 
             IAssetProvider assetProvider, IEffectsService effectsService, IAudioService audioService, 
             ILoadingCurtainService loadingCurtain, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
@@ -76,7 +76,7 @@ namespace _Project.Scripts.Infrastructure.Game
             await _effectsService.WarmUp();
             await _playerStatsModel.Initialize();
 
-            GameObject hudLayer = await _uiFactory.CreateHudLayer(_uiParent);
+            HeadUpDisplay hudLayer = await _uiFactory.CreateHudLayer(_uiParent);
             GameObject popUpLayer = await _uiFactory.CreatePopUpLayer(_uiParent);
             
             Health playerHealth = await InitPlayer(_playerSpawner);
@@ -113,9 +113,9 @@ namespace _Project.Scripts.Infrastructure.Game
             return playerHealth;
         }
         
-        private void InitPlayerHealthBarView(GameObject hud, Health playerHealth)
+        private void InitPlayerHealthBarView(HeadUpDisplay hud, Health playerHealth)
         {
-            HealthBarView playerHealthBarView = hud.GetComponentInChildren<HealthBarView>();
+            HealthBarView playerHealthBarView = hud.HealthBarView;
             playerHealthBarView.Construct(playerHealth);
             playerHealthBarView.Initialize();
         }
@@ -130,9 +130,9 @@ namespace _Project.Scripts.Infrastructure.Game
         private void InitEnemySpawner(EnemySpawner enemySpawner, Transform target, Transform playerTransform) => 
             enemySpawner.SpawnAround(target, playerTransform);
 
-        private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, GameObject hud)
+        private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, HeadUpDisplay hud)
         {
-            Button openButton = hud.GetComponentInChildren<Button>();
+            Button openButton = hud.OpenStatsWindowButton;
             
             PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
             playerStatsView.Initialize(openButton);

@@ -8,7 +8,7 @@ namespace _Project.Scripts.UI.Factory
 {
     public interface IUIFactory
     {
-        UniTask<GameObject> CreateHudLayer(Transform uiParent);
+        UniTask<HeadUpDisplay> CreateHudLayer(Transform uiParent);
         UniTask<GameObject> CreatePopUpLayer(Transform uiParent);
         UniTask<GameObject> CreateMainMenuLayer(Transform uiParent);
         UniTask<ShopItem> CreateShopItem(Transform parent);

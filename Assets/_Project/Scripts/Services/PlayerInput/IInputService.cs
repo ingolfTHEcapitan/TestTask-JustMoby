@@ -8,5 +8,6 @@ namespace _Project.Scripts.Services.PlayerInput
         Vector2 GetLookAxis();
         bool IsFireButtonPressed();
         bool IsOpenStatsButtonPressed();
+        bool IsMainMenuButtonPressed();
     }
 }

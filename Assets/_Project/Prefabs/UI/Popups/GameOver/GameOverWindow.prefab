@@ -178,7 +178,6 @@ MonoBehaviour:
   _closeEase: 26
   _canvasGroup: {fileID: 6238619309330895232}
   _openFadeDuration: 0.1
-  _closeFadeDuration: 0.3
 --- !u!1 &2224421474619776952
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,6 +1141,23 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4501562542885926918, guid: cd9b976c0354d2c4897e249febefe353,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501562542885926918, guid: cd9b976c0354d2c4897e249febefe353,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 147949cbcfbea40f4bab9ff19d78d2bf,
+        type: 3}
+    - target: {fileID: 5292296833209373472, guid: cd9b976c0354d2c4897e249febefe353,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c1f59514a388a46358461d6fa35aa804,
+        type: 3}
     - target: {fileID: 6993535742925933505, guid: cd9b976c0354d2c4897e249febefe353,
         type: 3}
       propertyPath: m_Name
@@ -1164,8 +1180,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
-    - {fileID: 914928349463986498, guid: cd9b976c0354d2c4897e249febefe353, type: 3}
-    - {fileID: 3102968407694512691, guid: cd9b976c0354d2c4897e249febefe353, type: 3}
     - {fileID: 9199077239656898479, guid: cd9b976c0354d2c4897e249febefe353, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8039239056850381372, guid: cd9b976c0354d2c4897e249febefe353,
