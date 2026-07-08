@@ -13,8 +13,6 @@ namespace _Project.Scripts.UI
 {
     public class HeadUpDisplay: MonoBehaviour
     {
-        private const string MainMenuScene = "MainMenu";
-        
         [SerializeField] private Button _backMainMenuButton;
         [field:SerializeField] public Button OpenStatsWindowButton { get; private set; }
         [field:SerializeField] public HealthBarView HealthBarView { get; private set; }
@@ -45,7 +43,7 @@ namespace _Project.Scripts.UI
         {
             CursorController.SetCursorVisible(visible: false);
             await _loadingCurtain.ShowLoading();
-            SceneManager.LoadSceneAsync(MainMenuScene);
+            SceneManager.LoadSceneAsync(SceneName.MainMenu);
         }
     }
 }

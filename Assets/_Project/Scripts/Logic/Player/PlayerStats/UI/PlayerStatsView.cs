@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
-using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -32,15 +30,13 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         [SerializeField] private AudioSource _audioSource;
         
         private readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
-        private IInputService _inputService;
         private Button _openButton;
         private IUIFactory _uiFactory;
 
         [Inject]
-        private void Construct(IInputService inputService, IUIFactory uiFactory)
+        private void Construct( IUIFactory uiFactory)
         {
             _uiFactory = uiFactory;
-            _inputService = inputService;
         }
 
         public void Initialize(Button openButton)
@@ -58,12 +54,6 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
             _applyButton.onClick.RemoveListener(InvokeOnApplyChangesButtonClicked);
         }
         
-        private void Update()
-        {
-            if (_inputService.IsOpenStatsButtonPressed()) 
-                InvokeOnOpenButtonClicked();
-        }
-
         public void UpdatePointsText(string points) => 
             _pointsText.SetText($"Points {points}");
 

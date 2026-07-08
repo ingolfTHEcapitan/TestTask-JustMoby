@@ -2,30 +2,38 @@ using System;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.GamePause;
+using _Project.Scripts.Services.PlayerInput;
 using Cysharp.Threading.Tasks;
+using Zenject;
 
 namespace _Project.Scripts.Logic.Player.PlayerStats
 {
-    public class PlayerStatsPresenter : IDisposable
+    public class PlayerStatsPresenter : IDisposable, ITickable
     {
-        private readonly PlayerStatsView _view;
-        private readonly PlayerStatsModel _model;
+        private readonly IInputService _inputService;
         private readonly IGamePauseService _pauseService;
-        private readonly PlayerDeath _playerDeath;
+        private readonly PlayerStatsModel _model;
         private readonly PlayerStatsData _statsData;
-        
+        private PlayerStatsView _view;
+        private PlayerDeath _playerDeath;
+
         private bool _isOpen;
 
-        public PlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model, PlayerStatsData statsData,
-            IGamePauseService pauseService, PlayerDeath playerDeath)
+        public PlayerStatsPresenter(IInputService inputService, IGamePauseService pauseService, 
+            PlayerStatsModel model, PlayerStatsData statsData)
         {
-            _view = view;
+            _inputService = inputService;
             _model = model;
             _statsData = statsData;
             _pauseService = pauseService;
+        }
+        
+        public void Construct(PlayerStatsView view, PlayerDeath playerDeath)
+        {
+            _view = view;
             _playerDeath = playerDeath;
         }
-
+        
         public async UniTask Initialize()
         {
             _model.OnStatsChanged += UpdateStatItems;
@@ -50,6 +58,12 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
                 statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;
         }
 
+        public void Tick()
+        {
+            if (_inputService.IsOpenStatsButtonPressed()) 
+                Open();
+        }
+        
         private void UpgradeStatItem(StatName statName)
         {
             _model.UpgradeStat(statName);
