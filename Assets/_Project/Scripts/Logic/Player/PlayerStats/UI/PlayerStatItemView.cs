@@ -1,6 +1,7 @@
 using System;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.UI.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
