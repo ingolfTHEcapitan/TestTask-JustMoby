@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Common
+namespace _Project.Scripts.UI.Common
 {
 	public class ButtonSoundEffect : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 	{

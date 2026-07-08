@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace _Project.Scripts.Logic.Common
+namespace _Project.Scripts.Services.Effects
 {
     public class DissolveShader: MonoBehaviour
     {
