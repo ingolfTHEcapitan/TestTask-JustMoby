@@ -12,8 +12,6 @@ namespace _Project.Scripts.UI.Windows.MainMenu
 {
     public class MainMenuWindow: MonoBehaviour
     {
-        private const string GameplayScene = "Gameplay";
-        
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _shopButton;
@@ -71,7 +69,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             CursorController.SetCursorVisible(visible: false);
             _audioService.Stop(_audioSource);
             _loadingCurtain.ShowLoading();
-            SceneManager.LoadSceneAsync(GameplayScene);
+            SceneManager.LoadSceneAsync(SceneName.Gameplay);
         }
 
         private void ExitGame()

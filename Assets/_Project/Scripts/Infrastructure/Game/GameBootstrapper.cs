@@ -1,5 +1,3 @@
-using System;
-using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.Player.PlayerStats;
@@ -9,7 +7,6 @@ using _Project.Scripts.Logic.Player.Weapon;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Effects;
-using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.Sound;
 using _Project.Scripts.UI;
@@ -23,12 +20,10 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Game
 {
-    public class GameBootstrapper : IInitializable, IDisposable
+    public class GameBootstrapper : IInitializable
     {
-        private readonly IGamePauseService _pauseService;
         private readonly IUIFactory _uiFactory;
         private readonly IAnalyticsService _analyticsService;
-        private readonly IAssetProvider _assetProvider;
         private readonly IEffectsService _effectsService;
         private readonly IAudioService _audioService;
         private readonly ILoadingCurtainService _loadingCurtain;
@@ -38,24 +33,22 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private readonly PlayerStatsData _playerStatsData;
         private readonly PlayerStatsModel _playerStatsModel;
-        private PlayerStatsPresenter _playerStatsPresenter;
+        private readonly PlayerStatsPresenter _playerStatsPresenter;
 
         private readonly Transform _enemySpawnPoint;
         private readonly Transform _uiParent;
         
         private readonly AudioSource _audioSource;
         private readonly AudioClip _dungeonMusic;
-        
-        public GameBootstrapper(IGamePauseService pauseService, IUIFactory uiFactory, IAnalyticsService analyticsService, 
-            IAssetProvider assetProvider, IEffectsService effectsService, IAudioService audioService, 
+
+        public GameBootstrapper(IUIFactory uiFactory, IAnalyticsService analyticsService, IEffectsService effectsService, IAudioService audioService, 
             ILoadingCurtainService loadingCurtain, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            PlayerStatsData playerStatsData, PlayerStatsModel playerStatsModel, Transform enemySpawnPoint, Transform uiParent, 
-            AudioSource audioSource, AudioClip dungeonMusic)
+            PlayerStatsData playerStatsData, PlayerStatsModel playerStatsModel, PlayerStatsPresenter playerStatsPresenter, 
+            Transform enemySpawnPoint, Transform uiParent, AudioSource audioSource, AudioClip dungeonMusic)
         {
-            _pauseService = pauseService;
+            _playerStatsPresenter = playerStatsPresenter;
             _uiFactory = uiFactory;
             _analyticsService = analyticsService;
-            _assetProvider = assetProvider;
             _effectsService = effectsService;
             _audioService = audioService;
             _loadingCurtain = loadingCurtain;
@@ -84,7 +77,7 @@ namespace _Project.Scripts.Infrastructure.Game
             InitWeapon(playerHealth);
             
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer);
-            _playerStatsPresenter = await InitPlayerStatsPresenter(playerStatsView, _playerStatsModel, _pauseService, playerHealth);
+            await InitPlayerStatsPresenter(playerStatsView, playerHealth);
 
             InitEnemySpawner(_enemySpawner, _enemySpawnPoint, playerHealth.transform);
             InitGameOverWindow(popUpLayer, playerHealth, _enemySpawner);
@@ -93,16 +86,11 @@ namespace _Project.Scripts.Infrastructure.Game
             _loadingCurtain.HideLoading();
             _audioService.Play(_dungeonMusic, _audioSource);
         }
-
-        public void Dispose()
-        {
-            _playerStatsPresenter.Dispose();
-        }
-
+        
         private void InitGameOverWindow(GameObject popUpLayer, Health player, EnemySpawner enemySpawner)
         {
             PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
-            GameOverWindow gameOverWindow = popUpLayer.GetComponentInChildren<GameOverWindow>();
+            GameOverWindow gameOverWindow = popUpLayer.GetComponentInChildren<GameOverWindow>(includeInactive: true);
             gameOverWindow.Initialize(playerDeath, enemySpawner);
         }
 
@@ -133,19 +121,16 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Button openButton = hud.OpenStatsWindowButton;
             
-            PlayerStatsView playerStatsView = popUpLayer.GetComponent<PlayerStatsView>();
+            PlayerStatsView playerStatsView = popUpLayer.GetComponentInChildren<PlayerStatsView>(includeInactive: true);
             playerStatsView.Initialize(openButton);
             return playerStatsView;
         }
 
-        private async UniTask<PlayerStatsPresenter> InitPlayerStatsPresenter(PlayerStatsView view, PlayerStatsModel model,
-            IGamePauseService pauseService, Health player)
+        private async UniTask InitPlayerStatsPresenter(PlayerStatsView view, Health player)
         {
             PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
-            
-            PlayerStatsPresenter playerStatsPresenter = new PlayerStatsPresenter(view, model, _playerStatsData, pauseService, playerDeath);
-            await playerStatsPresenter.Initialize();
-            return playerStatsPresenter;
+            _playerStatsPresenter.Construct(view,playerDeath );
+            await _playerStatsPresenter.Initialize();
         }
     }
 }

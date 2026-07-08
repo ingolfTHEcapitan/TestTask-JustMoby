@@ -50,6 +50,7 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<PlayerStatsData>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerStatsPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle().WithArguments(_soundSource, _levelUpSounds);
         }
 

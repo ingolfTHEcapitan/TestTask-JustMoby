@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Authentication;
 using _Project.Scripts.Services.IAP;
@@ -13,8 +14,6 @@ namespace _Project.Scripts.Infrastructure.Project
 {
     public class ProjectBootstrapper: IInitializable, IDisposable
     {
-        private const string MainMenuScene = "MainMenu";
-        
         private readonly ILoadingCurtainService _loadingCurtain;
         private readonly IRemoteConfigService _remoteConfigService;
         private readonly IRemoteConfigFactory _remoteConfigFactory;
@@ -50,7 +49,7 @@ namespace _Project.Scripts.Infrastructure.Project
             _iapService = _lazyIapService.Value;
             _iapService.Initialize();
 
-            SceneManager.LoadSceneAsync(MainMenuScene);
+            SceneManager.LoadSceneAsync(SceneName.MainMenu);
         }
 
         public void Dispose()
