@@ -66,7 +66,6 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
         public async UniTask Hide()
         {
             _taskCompletionSource = null;
-            CursorController.SetCursorVisible(false);
             await _windowAnimation.AnimateClose();
             gameObject.SetActive(false);
         }

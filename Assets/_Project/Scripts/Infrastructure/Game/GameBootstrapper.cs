@@ -64,18 +64,16 @@ namespace _Project.Scripts.Infrastructure.Game
 
         public async void Initialize()
         {
-            CursorController.SetCursorVisible(visible: false);
-
             await _effectsService.WarmUp();
             await _playerStatsModel.Initialize();
 
             HeadUpDisplay hudLayer = await _uiFactory.CreateHudLayer(_uiParent);
             GameObject popUpLayer = await _uiFactory.CreatePopUpLayer(_uiParent);
-            
+
             Health playerHealth = await InitPlayer(_playerSpawner);
             InitPlayerHealthBarView(hudLayer, playerHealth);
             InitWeapon(playerHealth);
-            
+
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer);
             await InitPlayerStatsPresenter(playerStatsView, playerHealth);
 
@@ -83,6 +81,7 @@ namespace _Project.Scripts.Infrastructure.Game
             InitGameOverWindow(popUpLayer, playerHealth, _enemySpawner);
 
             _analyticsService.LogGameStart();
+            CursorController.SetCursorVisible(visible: false);
             _loadingCurtain.HideLoading();
             _audioService.Play(_dungeonMusic, _audioSource);
         }
