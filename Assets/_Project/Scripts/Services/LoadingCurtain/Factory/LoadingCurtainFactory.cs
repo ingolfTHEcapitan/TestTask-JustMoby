@@ -16,7 +16,7 @@ namespace _Project.Scripts.Services.LoadingCurtain.Factory
             _assetProvider = assetProvider;
         }
         
-        public async UniTask<UI.LoadingCurtain> CreateLoadingCurtain()
+        public async UniTask<UI.LoadingCurtain> CreateLoadingCurtainAsync()
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.LoadingCurtain);
             return _container.InstantiatePrefabForComponent<UI.LoadingCurtain>(prefab);

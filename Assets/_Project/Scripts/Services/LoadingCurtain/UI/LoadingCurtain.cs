@@ -1,10 +1,11 @@
 using _Project.Scripts.Services.Sound;
+using _Project.Scripts.UI.Windows;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Services.LoadingCurtain.UI
 {
-    public class LoadingCurtain : MonoBehaviour
+    public class LoadingCurtain : MonoBehaviour, IWindow
     {
         [SerializeField] private GameObject _loadingIndicator;
         [SerializeField] private float _indicatorRotationSpeed = 100f;
@@ -16,19 +17,19 @@ namespace _Project.Scripts.Services.LoadingCurtain.UI
         private IAudioService _audioService;
 
         [Inject]
-        public void Construct(IAudioService audioService) => 
+        private void Construct(IAudioService audioService) => 
             _audioService = audioService;
 
         private void Awake() => 
             DontDestroyOnLoad(gameObject);
 
-        public void Show()
+        public void Open()
         {
             gameObject.SetActive(true);
             _audioService.Play(_loadingMusic, _audioSource);
         }
 
-        public void Hide()
+        public void Close()
         {
             gameObject.SetActive(false);
             _audioService.Stop(_audioSource);

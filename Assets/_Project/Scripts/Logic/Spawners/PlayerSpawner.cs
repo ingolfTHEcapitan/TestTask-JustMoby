@@ -16,7 +16,7 @@ namespace _Project.Scripts.Logic.Spawners
             _config = config;
         }
 
-        public async UniTask<Health> Spawn() => 
-            await _factory.CreatePlayer(_config.SpawnPosition);
+        public async UniTask<Health> SpawnAsync() => 
+            await _factory.CreatePlayerAsync(_config.SpawnPosition);
     }
 }

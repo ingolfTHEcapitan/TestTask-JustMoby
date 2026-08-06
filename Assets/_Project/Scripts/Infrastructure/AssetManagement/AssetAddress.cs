@@ -1,5 +1,3 @@
-using UnityEngine.AddressableAssets;
-
 namespace _Project.Scripts.Infrastructure.AssetManagement
 {
     public static class AssetAddress

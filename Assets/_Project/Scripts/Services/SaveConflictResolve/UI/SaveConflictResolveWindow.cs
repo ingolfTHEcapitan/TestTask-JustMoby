@@ -1,5 +1,4 @@
 using _Project.Scripts.Data.Player;
-using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.UI.Common;
 using Cysharp.Threading.Tasks;
@@ -24,11 +23,16 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
         private UniTaskCompletionSource<SaveType> _taskCompletionSource;
         private PlayerProgress _localProgress;
         private PlayerProgress _cloudProgress;
-        
-        public void Construct(PlayerProgress localProgress, PlayerProgress cloudProgress)
+        private CursorController _cursorController;
+        private SaveTimeFormater _saveTimeFormater;
+
+        public void Construct(PlayerProgress localProgress, PlayerProgress cloudProgress,
+            CursorController cursorController, SaveTimeFormater saveTimeFormater)
         {
+            _cursorController = cursorController;
             _localProgress = localProgress;
             _cloudProgress = cloudProgress;
+            _saveTimeFormater = saveTimeFormater;
         }
         
         public void Awake()
@@ -36,23 +40,23 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
             _localSaveButton.onClick.AddListener(ChoiceLocalSave);
             _cloudSaveButton.onClick.AddListener(ChoiceCloudSave);
             gameObject.SetActive(false);
-            DontDestroyOnLoad(gameObject);
         }
         
         private void OnDestroy()
         {
             _localSaveButton.onClick.RemoveListener(ChoiceLocalSave);
             _cloudSaveButton.onClick.RemoveListener(ChoiceCloudSave);
+            Destroy(gameObject);
         }
 
-        public async UniTask<SaveType> Show()
+        public async UniTask<SaveType> ShowAsync()
         {
-            gameObject.SetActive(true);
-            CursorController.SetCursorVisible(true);
+            gameObject.SetActive(true); 
+            _cursorController.SetCursorVisible(true);
             _windowAnimation.AnimateOpen();
             
-            _localDateText.text = $"Device save date\n{_localProgress.GetFormatedSaveTime()}";
-            _cloudDateText.text = $"Cloud save date\n{_cloudProgress.GetFormatedSaveTime()}";
+            _localDateText.text = $"Device save date\n{_saveTimeFormater.GetFormatedSaveTime(_localProgress.LastSaveTimeUnix)}";
+            _cloudDateText.text = $"Cloud save date\n{_saveTimeFormater.GetFormatedSaveTime(_cloudProgress.LastSaveTimeUnix)}";
             
             ChoiceSaveDateTextColor();
             
@@ -63,11 +67,11 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
             return result;
         }
 
-        public async UniTask Hide()
+        public async UniTask CloseAsync()
         {
             _taskCompletionSource = null;
-            await _windowAnimation.AnimateClose();
-            gameObject.SetActive(false);
+            await _windowAnimation.AnimateCloseAsync();
+            Destroy(gameObject);
         }
 
         private void ChoiceSaveDateTextColor()
@@ -90,9 +94,9 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
         }
 
         private void ChoiceCloudSave() => 
-            _taskCompletionSource.TrySetResult(SaveType.Cloud);
+            _taskCompletionSource?.TrySetResult(SaveType.Cloud);
 
         private void ChoiceLocalSave() => 
-            _taskCompletionSource.TrySetResult(SaveType.Local);
+            _taskCompletionSource?.TrySetResult(SaveType.Local);
     }
 }

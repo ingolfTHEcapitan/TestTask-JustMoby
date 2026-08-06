@@ -61,19 +61,19 @@ namespace _Project.Scripts.Logic.Player.Weapon
 
             if (_inputService.IsFireButtonPressed() && CanShoot())
             {
-                await Shoot();
+                await ShootAsync();
                 _statistics.RecordShot();
                 _audioService.PlayOneShot(_shotSound, _audioSource);
             }
                 
         }
 
-        private async UniTask Shoot()
+        private async UniTask ShootAsync()
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
             Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
             Vector3 targetPoint = GetTargetPoint(ray);
-            await _factory.CreateBullet(_bulletConfig, _shootPoint, GetShootDirection(targetPoint), targetPoint);
+            await _factory.CreateBulletAsync(_bulletConfig, _shootPoint, GetShootDirection(targetPoint), targetPoint);
         }
 
         private Vector3 GetShootDirection(Vector3 targetPoint)
@@ -85,7 +85,6 @@ namespace _Project.Scripts.Logic.Player.Weapon
         {
             Vector3 targetPoint;
             
-            // используем QueryTriggerInteraction, что бы луч при выстреле игнорировал триггеры.
             if (Physics.Raycast(ray, out RaycastHit hit, MaxRayDistance ,AllLayers, QueryTriggerInteraction.Ignore))
                 targetPoint = hit.point;
             else
@@ -95,12 +94,5 @@ namespace _Project.Scripts.Logic.Player.Weapon
 
         private bool CanShoot() => 
             Time.time > _nextTimeToFire;
-        
-        private void PlayHitFx(Vector3 shootPos)
-        {
-            GameObject prefab = Instantiate(_hitFxPrefab, shootPos , Quaternion.Euler(0, 90, 0), transform);
-            prefab.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-            
-        }
     }
 }

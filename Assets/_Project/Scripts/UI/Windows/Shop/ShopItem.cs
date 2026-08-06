@@ -1,5 +1,4 @@
 ﻿using _Project.Scripts.Configs.IAP;
-using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
@@ -32,7 +31,7 @@ namespace _Project.Scripts.UI.Windows.Shop
             _iapService = iapService;
         }
 
-        public async UniTask Initialize(ProductDescription productDescription, AudioSource audioSource)
+        public async UniTask InitializeAsync(ProductDescription productDescription, AudioSource audioSource)
         {
             _productDescription = productDescription;
             
@@ -41,23 +40,23 @@ namespace _Project.Scripts.UI.Windows.Shop
             ButtonSoundEffect buttonSoundEffect = _buyButton.GetComponent<ButtonSoundEffect>();
             buttonSoundEffect.Initialize(audioSource);
             
-            await FillShopItem();
+            await FillShopItemAsync();
         }
 
         private void OnDestroy() => 
             _buyButton.onClick.RemoveListener(StartPurchase);
 
-        private async UniTask FillShopItem()
+        private async UniTask FillShopItemAsync()
         {
             _productNameText.text = _productDescription.ProductConfig.ProductName;
-            _icon.sprite = await _uiFactory.LoadSprite(_productDescription.ProductConfig.IconAddress);
+            _icon.sprite = await _uiFactory.LoadSpriteAsync(_productDescription.ProductConfig.IconAddress);
             _buyButtonPriceText.text = _productDescription.ProductConfig.Price;
             _availablePurchasesLeftText.text = _productDescription.AvailablePurchasesLeft.ToString();
             SetQuantityText();
         }
 
         private void StartPurchase() => 
-            _iapService.StartPurchase(_productDescription);
+            _iapService.StartPurchaseAsync(_productDescription);
 
         private void SetQuantityText()
         {

@@ -24,7 +24,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
                 return completedHandle.Result as T;
 
             AsyncOperationHandle<T> handle = Addressables.LoadAssetAsync<T>(assetReference);
-            return await RunWithCacheOnComplete(handle, assetReference.AssetGUID);
+            return await RunWithCacheOnCompleteAsync(handle, assetReference.AssetGUID);
         }
         
         public async UniTask<T> LoadAsync<T>(string assetAddress) where T : class
@@ -36,7 +36,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
                 return completedHandle.Result as T;
 
             AsyncOperationHandle<T> handle = Addressables.LoadAssetAsync<T>(assetAddress);
-            return await RunWithCacheOnComplete(handle, assetAddress);
+            return await RunWithCacheOnCompleteAsync(handle, assetAddress);
         }
 
         public void CleanUp()
@@ -49,7 +49,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
             _handles.Clear();
         }
 
-        private async UniTask<T> RunWithCacheOnComplete<T>(AsyncOperationHandle<T> handle, string cacheKey) where T : class
+        private async UniTask<T> RunWithCacheOnCompleteAsync<T>(AsyncOperationHandle<T> handle, string cacheKey) where T : class
         {
             handle.Completed += completeHandle => 
                 _completedCache[cacheKey] = completeHandle;

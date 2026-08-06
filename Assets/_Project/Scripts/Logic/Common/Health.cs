@@ -23,7 +23,7 @@ namespace _Project.Scripts.Logic.Common
         public float MaxHealth { get; private set; }
 
         [Inject]
-        public void Construct(IAudioService audioService) => 
+        private void Construct(IAudioService audioService) => 
             _audioService = audioService;
 
         public void Initialize(float maxHealth)

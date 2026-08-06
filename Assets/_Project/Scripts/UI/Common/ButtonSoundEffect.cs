@@ -14,7 +14,7 @@ namespace _Project.Scripts.UI.Common
 		private IAudioService _audioService;
 
 		[Inject]
-		public void Construct(IAudioService audioService)
+		private void Construct(IAudioService audioService)
 		{
 			_audioService = audioService;
 		}

@@ -5,7 +5,7 @@ namespace _Project.Scripts.Services.RemoteConfig
 {
     public interface IRemoteConfigService
     {
-        UniTask FetchDataAsync();
+        UniTask FetchDataAsyncAsync();
         FirebaseRemoteConfig RemoteConfig { get; }
     }
 }

@@ -32,7 +32,7 @@ namespace _Project.Scripts.UI.Common
                 .Join(_transform.DOScale(Vector3.one, _animationDuration).From(_animationStartScale).SetEase(_openEase));
         }
 
-        public async UniTask AnimateClose()
+        public async UniTask AnimateCloseAsync()
         {
             KillAnimationIfActive();
             

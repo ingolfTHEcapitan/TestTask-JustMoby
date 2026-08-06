@@ -8,12 +8,12 @@ namespace _Project.Scripts.UI.Factory
 {
     public interface IUIFactory
     {
-        UniTask<HeadUpDisplay> CreateHudLayer(Transform uiParent);
-        UniTask<GameObject> CreatePopUpLayer(Transform uiParent);
-        UniTask<GameObject> CreateMainMenuLayer(Transform uiParent);
-        UniTask<ShopItem> CreateShopItem(Transform parent);
-        UniTask<Sprite> LoadSprite(string assetAddress);
-        UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindow();
-        UniTask<PlayerStatItemView> CreatePlayerStatItem(Transform parent);
+        UniTask<HeadUpDisplay> CreateHudLayerAsync(Transform uiParent);
+        UniTask<GameObject> CreatePopUpLayerAsync(Transform uiParent);
+        UniTask<GameObject> CreateMainMenuLayerAsync(Transform uiParent);
+        UniTask<ShopItem> CreateShopItemAsync(Transform uiParent);
+        UniTask<Sprite> LoadSpriteAsync(string assetAddress);
+        UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent);
+        UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(Transform uiParent);
     }
 }

@@ -61,16 +61,16 @@ namespace _Project.Scripts.Logic.Spawners
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime)
                 {
                     await UniTask.Delay(TimeSpan.FromSeconds(_config.SpawnDelay), cancellationToken: token);
-                    await InitEnemy(target, playerTransform);
+                    await InitEnemyAsync(target, playerTransform);
                 }
                 
                 await UniTask.WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime, cancellationToken: token);
             }
         }
 
-        private async UniTask InitEnemy(Transform target, Transform playerTransform)
+        private async UniTask InitEnemyAsync(Transform target, Transform playerTransform)
         {
-            EnemyDeath enemyDeath = await _factory.CreateEnemy(GetSpawnPosition(target), playerTransform);
+            EnemyDeath enemyDeath = await _factory.CreateEnemyAsync(GetSpawnPosition(target), playerTransform);
             enemyDeath.OnDied += OnEnemyDeath;
             _spawnedEnemies.Add(enemyDeath);
         }

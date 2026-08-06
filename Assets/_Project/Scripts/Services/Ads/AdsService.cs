@@ -19,8 +19,8 @@ namespace _Project.Scripts.Services.Ads
         public event Action OnRewardedAdLoaded;
         public event Action OnInterstitialAdLoaded;
 
-        private Action _onRewardedAdFinished;
-        private Action _onInterstitialAdFinished;
+        private Action OnRewardedAdFinished;
+        private Action OnInterstitialAdFinished;
         
         private readonly IProgressService _progressService;
 
@@ -38,8 +38,8 @@ namespace _Project.Scripts.Services.Ads
         {
             Debug.Log("Unity Ads Initialization Complete!");
 
-            UniTask rewardedAd = LoadAd(AndroidRewardedAdId);
-            UniTask interstitialAd = LoadAd(AndroidInterstitialAdId);
+            UniTask rewardedAd = LoadAdAsync(AndroidRewardedAdId);
+            UniTask interstitialAd = LoadAdAsync(AndroidInterstitialAdId);
             await UniTask.WhenAll(rewardedAd, interstitialAd);
         }
 
@@ -72,19 +72,19 @@ namespace _Project.Scripts.Services.Ads
         {
             Debug.Log($"On Unity Ads Show Complete: {showCompletionState.ToString()}");
 
-            UniTask rewardedAd = LoadAd(AndroidRewardedAdId);
-            UniTask interstitialAd = LoadAd(AndroidInterstitialAdId);
+            UniTask rewardedAd = LoadAdAsync(AndroidRewardedAdId);
+            UniTask interstitialAd = LoadAdAsync(AndroidInterstitialAdId);
             await UniTask.WhenAll(rewardedAd, interstitialAd);
             
             if (placementId == AndroidRewardedAdId)
             {
-                _onRewardedAdFinished?.Invoke();
-                _onRewardedAdFinished = null;
+                OnRewardedAdFinished?.Invoke();
+                OnRewardedAdFinished = null;
             }
             else if (placementId == AndroidInterstitialAdId)
             {
-                _onInterstitialAdFinished?.Invoke();
-                _onInterstitialAdFinished = null;
+                OnInterstitialAdFinished?.Invoke();
+                OnInterstitialAdFinished = null;
             }
         }
 
@@ -95,7 +95,7 @@ namespace _Project.Scripts.Services.Ads
         public void ShowRewardedAd(Action onRewardedAdFinished)
         {
             Advertisement.Show(AndroidRewardedAdId, this);
-            _onRewardedAdFinished = onRewardedAdFinished;
+            OnRewardedAdFinished = onRewardedAdFinished;
         }
         
         public void ShowInterstitialAd(Action onInterstitialAdFinished)
@@ -107,7 +107,7 @@ namespace _Project.Scripts.Services.Ads
             }
             
             Advertisement.Show(AndroidInterstitialAdId, this);
-            _onInterstitialAdFinished = onInterstitialAdFinished;
+            OnInterstitialAdFinished = onInterstitialAdFinished;
         }
 
         private string GetGameId()
@@ -126,13 +126,11 @@ namespace _Project.Scripts.Services.Ads
             return gameId;
         }
 
-        private UniTask LoadAd(string placementId)
+        private UniTask LoadAdAsync(string placementId)
         {
             Debug.Log($"Loading {placementId} Ad");
             Advertisement.Load(placementId, this);
             return Task.CompletedTask.AsUniTask();
         }
-
-        
     }
 }

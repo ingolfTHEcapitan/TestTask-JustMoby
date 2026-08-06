@@ -6,11 +6,12 @@ namespace _Project.Scripts.Services.Effects
 {
     public class DissolveShader: MonoBehaviour
     {
-        private readonly List<Material> dissolveMaterials = new List<Material>();
-
-        private readonly float _maxThreshold = 1f;
-        private readonly string _dissolveAmountKey = "_DissolveAmount";
-        private readonly float _speed = 0.25f;
+        private const float MaxThreshold = 1f;
+        private const string DissolveAmountKey = "_DissolveAmount";
+        
+        [SerializeField] private float _speed = 0.25f;
+        
+        private readonly List<Material> _dissolveMaterials = new List<Material>();
         private Coroutine _dissolveCoroutine;
 
         private void Awake()
@@ -18,7 +19,7 @@ namespace _Project.Scripts.Services.Effects
             Renderer[] renderers = GetComponentsInChildren<Renderer>();
 
             foreach (Renderer renderer in renderers) 
-                dissolveMaterials.Add(renderer.material);
+                _dissolveMaterials.Add(renderer.material);
         }
         
         public void PlayDissolveFx()
@@ -33,10 +34,10 @@ namespace _Project.Scripts.Services.Effects
         {
             float threshold = 0;
 
-            while (threshold < _maxThreshold)
+            while (threshold < MaxThreshold)
             {
-                foreach (Material material in dissolveMaterials) 
-                    material.SetFloat(_dissolveAmountKey, threshold);
+                foreach (Material material in _dissolveMaterials) 
+                    material.SetFloat(DissolveAmountKey, threshold);
                 
                 threshold += Time.deltaTime * _speed;
                 yield return null;

@@ -26,8 +26,6 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
             if (!Directory.Exists(_saveDirectoryPath)) 
                 Directory.CreateDirectory(_saveDirectoryPath);
             
-            progressService.PlayerProgress.LastSaveTimeUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            
             string json = JsonUtility.ToJson(progressService.PlayerProgress, prettyPrint: true);
             await File.WriteAllTextAsync(_savePath, json).AsUniTask();
             Debug.Log("Progress saved to File, save path: " + _savePath);

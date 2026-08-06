@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
-using _Project.Scripts.Services.Sound;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace _Project.Scripts.Logic.Player.PlayerStats
 {
@@ -15,37 +13,29 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         
         private readonly PlayerStatsData _statsData;
         private readonly PlayerStatsSaveLoad _saveLoad;
-        private readonly IAudioService _audioService;
-        
-        private readonly AudioSource _audioSource;
-        private readonly AudioClip _levelUpSound;
-
+       
         public int UpgradePoints { get; private set; }
         
-        public PlayerStatsModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad, IAudioService audioService,
-            AudioSource audioSource, AudioClip levelUpSound)
+        public PlayerStatsModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad)
         {
-            _audioService = audioService;
             _statsData = statsData;
             _saveLoad = saveLoad;
-            _audioSource = audioSource;
-            _levelUpSound = levelUpSound;
         }
 
-        public async UniTask Initialize()
+        public async UniTask InitializeAsync()
         {
             Dictionary<StatName,PlayerStatData> statsData = await _statsData.CreateStatsAsync();
 
             foreach (PlayerStatData statData in statsData.Values) 
                 statData.OnStatChanged += InvokeStatChanged;
 
-            PlayerStatsProgress progress = await _saveLoad.LoadStats();
+            PlayerStatsProgress progress = await _saveLoad.LoadStatsAsync();
             UpgradePoints = progress.UpgradePoints;
         }
 
         public void Dispose()
         {
-            foreach (PlayerStatData stat in _statsData.GetStats())
+            foreach (PlayerStatData stat in _statsData.GetStatValues())
                 stat.OnStatChanged -= InvokeStatChanged;
         }
 
@@ -54,10 +44,10 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             if (!HasAnyChanges()) 
                 return;
             
-            foreach (PlayerStatData stat in _statsData.GetStats()) 
+            foreach (PlayerStatData stat in _statsData.GetStatValues()) 
                 stat.ApplyPreviewLevel();
             
-            await _saveLoad.SaveStats(UpgradePoints);
+            await _saveLoad.SaveStatsAsync(UpgradePoints);
         }
 
         public void DiscardPreviewChanges()
@@ -67,7 +57,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             
             int returnedPoints = 0;
 
-            foreach (PlayerStatData stat in _statsData.GetStats())
+            foreach (PlayerStatData stat in _statsData.GetStatValues())
             {
                 returnedPoints += stat.PreviewLevel - stat.Level;
                 stat.DiscardPreviewLevel();
@@ -81,8 +71,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         {
             UpgradePoints += points;
             OnStatsChanged?.Invoke();
-            _audioService.PlayOneShot(_levelUpSound, _audioSource);
-            await _saveLoad.SaveStats(UpgradePoints);
+            await _saveLoad.SaveStatsAsync(UpgradePoints);
         }
 
         public void UpgradeStat(StatName statName)
@@ -97,14 +86,14 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         
         public bool CanUpgrade(StatName statName)
         {
-            if (UpgradePoints <=0 || !_statsData.Stats.ContainsKey(statName))
+            if (UpgradePoints <=0 || !_statsData.GetStats().ContainsKey(statName))
                 return false;
 
             return _statsData.GetStat(statName).PreviewLevel < _statsData.GetStat(statName).MaxLevel;
         }
         
         private bool HasAnyChanges() =>
-            _statsData.GetStats().Any(stat => stat.PreviewLevelHasChanged);
+            _statsData.GetStatValues().Any(stat => stat.PreviewLevelHasChanged);
         
         private void InvokeStatChanged() => 
             OnStatsChanged?.Invoke();

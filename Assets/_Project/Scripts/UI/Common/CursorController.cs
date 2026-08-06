@@ -1,10 +1,10 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Logic.Common
+namespace _Project.Scripts.UI.Common
 {
-    public static class CursorController
+    public class CursorController
     {
-        public static void SetCursorVisible(bool visible)
+        public void SetCursorVisible(bool visible)
         {
             Cursor.lockState = visible ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = visible;

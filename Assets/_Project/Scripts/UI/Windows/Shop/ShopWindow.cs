@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using _Project.Scripts.Configs.IAP;
+using _Project.Scripts.Data.IAP;
 using _Project.Scripts.Services.IAP;
-using _Project.Scripts.Services.Progress;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
@@ -11,10 +11,10 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.Shop
 {
-    public class ShopWindow: MonoBehaviour
+    public class ShopWindow: MonoBehaviour, IWindow
     {
         [SerializeField] private WindowPopupAnimation _windowAnimation;
-        [SerializeField] private GameObject[] ShopUnavailableObjects;
+        [SerializeField] private GameObject[] _shopUnavailableObjects;
         [SerializeField] private Transform _productsContainer;
         [SerializeField] private Button _closeButton;
         
@@ -22,22 +22,22 @@ namespace _Project.Scripts.UI.Windows.Shop
         [SerializeField] private AudioSource _audioSource;
         
         private IIAPService _iapService;
-        private IProgressService _progressService;
         private readonly List<GameObject> _shopItemObjects = new List<GameObject>();
         private IUIFactory _uiFactory;
+        private PurchaseModel _purchaseModel;
 
         [Inject]
-        private void Construct(IIAPService iapService, IUIFactory uiFactory, IProgressService progressService)
+        private void Construct(IIAPService iapService, IUIFactory uiFactory, PurchaseModel purchaseModel)
         {
             _iapService = iapService;
             _uiFactory = uiFactory;
-            _progressService = progressService;
+            _purchaseModel = purchaseModel;
         }
 
         public void Initialize()
         {
             _closeButton.onClick.AddListener(Close);
-            _progressService.PlayerProgress.PurchaseData.OnChanged += RefreshAvailableShopItems;
+            _purchaseModel.OnChanged += RefreshAvailableShopItems;
             
             RefreshAvailableShopItems();
         }
@@ -45,7 +45,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         private void OnDestroy()
         {
             _closeButton.onClick.RemoveListener(Close);
-            _progressService.PlayerProgress.PurchaseData.OnChanged -= RefreshAvailableShopItems;
+            _purchaseModel.OnChanged -= RefreshAvailableShopItems;
         }
 
         public void Open()
@@ -57,7 +57,7 @@ namespace _Project.Scripts.UI.Windows.Shop
 
         private async void Close()
         {
-            await _windowAnimation.AnimateClose();
+            await _windowAnimation.AnimateCloseAsync();
             gameObject.SetActive(false);
         }
 
@@ -69,7 +69,7 @@ namespace _Project.Scripts.UI.Windows.Shop
                 return;
 
             ClearShopItems();
-            await FillShopItems();
+            await FillShopItemsAsync();
         }
 
         private void ClearShopItems()
@@ -78,19 +78,19 @@ namespace _Project.Scripts.UI.Windows.Shop
                 Destroy(shopItemObject);
         }
 
-        private async UniTask FillShopItems()
+        private async UniTask FillShopItemsAsync()
         {
             foreach (ProductDescription productDescription in _iapService.GetProducts())
             {
-                ShopItem shopItem = await _uiFactory.CreateShopItem(_productsContainer);
+                ShopItem shopItem = await _uiFactory.CreateShopItemAsync(_productsContainer);
                 _shopItemObjects.Add(shopItem.gameObject);
-                await shopItem.Initialize(productDescription, _audioSource);
+                await shopItem.InitializeAsync(productDescription, _audioSource);
             }
         }
 
         private void UpdateShopUnavailableObjects()
         {
-            foreach (GameObject shopUnavailableObject in ShopUnavailableObjects) 
+            foreach (GameObject shopUnavailableObject in _shopUnavailableObjects) 
                 shopUnavailableObject.SetActive(!_iapService.IsInitialized);
         }
     }

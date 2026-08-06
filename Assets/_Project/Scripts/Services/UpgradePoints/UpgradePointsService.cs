@@ -6,7 +6,7 @@ namespace _Project.Scripts.Services.UpgradePoints
 {
     public class UpgradePointsService : IUpgradePointsService
     {
-        public event Action OnChanged;
+        public event Action OnPointAdded;
 
         private readonly PlayerStatsModel _playerStatsModel;
         
@@ -15,11 +15,11 @@ namespace _Project.Scripts.Services.UpgradePoints
         public UpgradePointsService(PlayerStatsModel playerStatsModel) => 
             _playerStatsModel = playerStatsModel;
 
-        public async UniTask AddPoint()
+        public async UniTask AddPointAsync()
         {
             await _playerStatsModel.AddUpgradePoint();
             CurrentPoints = _playerStatsModel.UpgradePoints;
-            OnChanged?.Invoke();
+            OnPointAdded?.Invoke();
         }
     }
 }

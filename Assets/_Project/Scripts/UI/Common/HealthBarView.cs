@@ -1,5 +1,4 @@
 using System.Threading;
-using System.Threading.Tasks;
 using _Project.Scripts.Logic.Common;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -38,13 +37,11 @@ namespace _Project.Scripts.UI.Common
                 _health.OnHealthChanged -= UpdateHealthBar;
         }
 
-        public async UniTask Hide()
+        public async UniTask HideAsync()
         {
-            Task taskToWait = _currentLerpTask.AsTask();
-            if (taskToWait != null && !taskToWait.IsCompleted)
-            {
-                await taskToWait;
-            }
+            if (_currentLerpTask.Status == UniTaskStatus.Pending) 
+                await _currentLerpTask;
+            
             gameObject.SetActive(false);
         }
 
@@ -62,10 +59,10 @@ namespace _Project.Scripts.UI.Common
             _cts?.Dispose();
             _cts = new CancellationTokenSource();
             
-            _currentLerpTask = LerpHealthSliderRoutine(_cts.Token);
+            _currentLerpTask = LerpHealthSliderAsync(_cts.Token);
         }
 
-        private async UniTask LerpHealthSliderRoutine(CancellationToken token)
+        private async UniTask LerpHealthSliderAsync(CancellationToken token)
         {
             float startValue = _healthSlider.value;
             float targetValue = CurrentValue;

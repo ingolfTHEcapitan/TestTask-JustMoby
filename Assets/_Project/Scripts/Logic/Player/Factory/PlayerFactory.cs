@@ -15,44 +15,51 @@ namespace _Project.Scripts.Logic.Player.Factory
         private readonly IInstantiator _container;
         private readonly IHealthCalculatorService _healthCalculator;
         private readonly IAssetProvider _assetProvider;
-        private readonly PlayerStatsModel _playerStatsModel;
         private readonly Transform _gameParent;
+        private readonly PlayerStatsData _playerStatsData;
         private Health _playerHealth;
-        private PlayerStatsData _playerStatsData;
+        private PlayerStatData _healthStat;
 
-        public PlayerFactory(IInstantiator container, IHealthCalculatorService healthCalculator, 
-            PlayerStatsModel playerStatsModel, PlayerStatsData playerStatsData, Transform gameParent, IAssetProvider assetProvider)
+        public PlayerFactory(IInstantiator container, IHealthCalculatorService healthCalculator, PlayerStatsData playerStatsData, Transform gameParent, IAssetProvider assetProvider)
         {
             _container = container;
             _healthCalculator = healthCalculator;
-            _playerStatsModel = playerStatsModel;
             _playerStatsData = playerStatsData;
             _gameParent = gameParent;
             _assetProvider = assetProvider;
         }
 
-        public async UniTask<Health> CreatePlayer(Vector3 at)
+        public async UniTask<Health> CreatePlayerAsync(Vector3 at)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Player);
             _playerHealth = _container.InstantiatePrefabForComponent<Health>(prefab, at, Quaternion.identity, _gameParent);
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
             _playerHealth.Initialize(maxHealth);
             
-            PlayerStatData healthStat = _playerStatsData.GetStat(StatName.Health); 
-            healthStat.OnStatChanged += UpdatePlayerMaxHealth;
+            _healthStat = _playerStatsData.GetStat(StatName.Health); 
+            _healthStat.OnStatChanged += UpdatePlayerMaxHealth;
             
             _playerHealth.GetComponent<PlayerDeath>().Initialize();
+
+            InitWeapon(_playerHealth);
             
             return _playerHealth;
         }
 
         public void Dispose() => 
-            _playerStatsModel.OnStatsChanged -= UpdatePlayerMaxHealth;
+            _healthStat.OnStatChanged -= UpdatePlayerMaxHealth;
 
         private void UpdatePlayerMaxHealth()
         {
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
             _playerHealth.SetMaxHealth(maxHealth);
+        }
+        
+        private void InitWeapon(Health player)
+        {
+            Weapon.Weapon weapon = player.GetComponentInChildren<Weapon.Weapon>();
+            Camera playerCamera = player.GetComponentInChildren<Camera>();
+            weapon.Initialize(playerCamera);
         }
     }
 }

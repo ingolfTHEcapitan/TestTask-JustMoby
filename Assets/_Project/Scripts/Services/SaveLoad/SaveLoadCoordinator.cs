@@ -18,17 +18,14 @@ namespace _Project.Scripts.Services.SaveLoad
         private readonly NetworkAccessibilityService _networkAccessibility;
         private readonly ISaveLoadService _localSaveService;
         private readonly ISaveLoadService _cloudSaveService;
-        private readonly IUIFactory _uiFactory;
         private readonly IAuthService _authService;
         private readonly IProgressService _progressService;
 
-        public SaveLoadCoordinator(NetworkAccessibilityService networkAccessibility, IUIFactory uiFactory, IAuthService authService,
-            [Inject(Id = SaveType.Local)] ISaveLoadService localSaveService, [Inject(Id = SaveType.Cloud)] ISaveLoadService cloudSaveService,
-            IProgressService progressService)
+        public SaveLoadCoordinator(NetworkAccessibilityService networkAccessibility, IAuthService authService, IProgressService progressService,
+            [Inject(Id = SaveType.Local)] ISaveLoadService localSaveService, [Inject(Id = SaveType.Cloud)] ISaveLoadService cloudSaveService)
         {
             _networkAccessibility = networkAccessibility;
             _authService = authService;
-            _uiFactory = uiFactory;
             _cloudSaveService = cloudSaveService;
             _localSaveService = localSaveService;
             _progressService = progressService;
@@ -36,9 +33,11 @@ namespace _Project.Scripts.Services.SaveLoad
 
         public async UniTask SaveProgressAsync(IProgressService progressService)
         {
+            progressService.PlayerProgress.LastSaveTimeUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            
             await _localSaveService.SaveProgressAsync(progressService);
             
-            if (await HasInternet() && _authService.IsSignedIn)
+            if (await HasInternetAsync() && _authService.IsSignedIn)
             {
                 try
                 {
@@ -56,7 +55,7 @@ namespace _Project.Scripts.Services.SaveLoad
         {
             PlayerProgress localProgress = await _localSaveService.LoadProgressAsync();
             
-            if (!await HasInternet() || !_authService.IsSignedIn)
+            if (!await HasInternetAsync() || !_authService.IsSignedIn)
             {
                 Debug.LogWarning($"[{GetType().Name}] Оффлайн режим или нет авторизации. Загружено локальное сохранение");
                 return localProgress;
@@ -70,10 +69,10 @@ namespace _Project.Scripts.Services.SaveLoad
                 bool localSaveIsNewer = localProgress.LastSaveTimeUnix > cloudProgress.LastSaveTimeUnix;
 
                 if (cloudSaveIsNewer)
-                    return LoadCloudSave(cloudProgress);
+                    return await LoadCloudSaveAsync(cloudProgress);
                 
                 if (localSaveIsNewer)
-                    return await ResolveSaveConflict(localProgress, cloudProgress);
+                    return await ResolveSaveConflictAsync(localProgress, cloudProgress);
                 
                 return localProgress;
             }
@@ -84,39 +83,38 @@ namespace _Project.Scripts.Services.SaveLoad
             }
         }
 
-        private async Task<PlayerProgress> ResolveSaveConflict(PlayerProgress localProgress, PlayerProgress cloudProgress)
+        private async Task<PlayerProgress> ResolveSaveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
             Debug.LogWarning($"[{GetType().Name}] Обнаружен конфликт: Локальное сохранение новее облачного");
             
             if (OnSaveConflictHappened == null)
-                return LoadLocalSave(localProgress);
+                return await LoadLocalSaveAsync(localProgress);
             
             SaveType choice = await OnSaveConflictHappened.Invoke(localProgress, cloudProgress);
             
             if (choice == SaveType.Local)
-                return LoadLocalSave(localProgress);
+                return await LoadLocalSaveAsync(localProgress);
             
-            return LoadCloudSave(cloudProgress);
-
+            return await LoadCloudSaveAsync(cloudProgress);
         }
 
-        private PlayerProgress LoadCloudSave(PlayerProgress cloudProgress)
+        private async UniTask<PlayerProgress> LoadCloudSaveAsync(PlayerProgress cloudProgress)
         {
             _progressService.PlayerProgress = cloudProgress;
-            _localSaveService.SaveProgressAsync(_progressService);
+            await _localSaveService.SaveProgressAsync(_progressService);
             Debug.Log($"[{GetType().Name}] Загружено облачное сохранение, локальное было обновлено");
             return cloudProgress;
         }
 
-        private PlayerProgress LoadLocalSave(PlayerProgress localProgress)
+        private async UniTask<PlayerProgress> LoadLocalSaveAsync(PlayerProgress localProgress)
         {
             _progressService.PlayerProgress = localProgress;
-            _cloudSaveService.SaveProgressAsync(_progressService);
+            await _cloudSaveService.SaveProgressAsync(_progressService);
             Debug.Log($"[{GetType().Name}] Загружено локально сохранение, Облачное было обновлено");
             return localProgress;
         }
 
-        private async Task<bool> HasInternet() => 
+        private async Task<bool> HasInternetAsync() => 
             await _networkAccessibility.CheckNetworkConnectionAsync();
     }
 }

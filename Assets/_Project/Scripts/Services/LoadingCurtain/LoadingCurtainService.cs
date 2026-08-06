@@ -12,18 +12,18 @@ namespace _Project.Scripts.Services.LoadingCurtain
         public LoadingCurtainService(ILoadingCurtainFactory curtainFactory) => 
             _curtainFactory = curtainFactory;
 
-        public async UniTask ShowLoading()
+        public async UniTask ShowLoadingAsync()
         {
             if (_loadingCurtain == null) 
-                _loadingCurtain = await _curtainFactory.CreateLoadingCurtain();
+                _loadingCurtain = await _curtainFactory.CreateLoadingCurtainAsync();
             
-            _loadingCurtain.Show();
+            _loadingCurtain.Open();
         }
         
         public void HideLoading()
         {
             if (_loadingCurtain != null) 
-                _loadingCurtain.Hide();
+                _loadingCurtain.Close();
         }
     }
 }

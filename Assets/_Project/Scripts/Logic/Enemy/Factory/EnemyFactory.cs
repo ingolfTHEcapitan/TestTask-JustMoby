@@ -25,7 +25,7 @@ namespace _Project.Scripts.Logic.Enemy.Factory
             _dynamicObjectsParent = dynamicObjectsParent;
         }
 
-        public async UniTask<EnemyDeath> CreateEnemy(Vector3 spawnPoint, Transform playerTransform)
+        public async UniTask<EnemyDeath> CreateEnemyAsync(Vector3 spawnPoint, Transform playerTransform)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Enemy);
             
