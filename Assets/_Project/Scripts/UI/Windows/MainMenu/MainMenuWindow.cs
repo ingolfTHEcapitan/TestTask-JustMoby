@@ -1,10 +1,10 @@
-﻿using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Services.LoadingCurtain;
+﻿using _Project.Scripts.Services.LoadingCurtain;
+using _Project.Scripts.Services.SceneLoader;
 using _Project.Scripts.Services.Sound;
+using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Zenject;
 
@@ -24,16 +24,21 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         private ILoadingCurtainService _loadingCurtain;
         private IAudioService _audioService;
         private ShopWindow _shopWindow;
-        private SettingsWindow _settingsWindow;
+        private SettingsView _settingsView;
+        private CursorController _cursorController;
+        private ISceneLoaderService _sceneLoader;
 
         [Inject]
-        private void Construct(ILoadingCurtainService loadingCurtain, IAudioService audioService)
+        private void Construct(ILoadingCurtainService loadingCurtain, IAudioService audioService, 
+            CursorController cursorController, ISceneLoaderService sceneLoader)
         {
+            _cursorController = cursorController;
             _loadingCurtain = loadingCurtain;
             _audioService = audioService;
+            _sceneLoader = sceneLoader;
         }
 
-        public void Initialize(ShopWindow shopWindow, SettingsWindow settingsWindow)
+        public void Initialize(ShopWindow shopWindow, SettingsView settingsView)
         {
             _playButton.onClick.AddListener(StartGame);
             _settingsButton.onClick.AddListener(OpenSettingsWindow);
@@ -41,7 +46,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _exitButton.onClick.AddListener(ExitGame);
 
             _shopWindow = shopWindow;
-            _settingsWindow = settingsWindow;
+            _settingsView = settingsView;
         }
 
         private void OnDestroy()
@@ -59,17 +64,17 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         }
 
         private void OpenSettingsWindow() => 
-            _settingsWindow.Open();
+            _settingsView.Open();
 
         private void OpenShopWindow() => 
             _shopWindow.Open();
 
-        private void StartGame()
+        private async void StartGame()
         {
-            CursorController.SetCursorVisible(visible: false);
+            _cursorController.SetCursorVisible(visible: false);
             _audioService.Stop(_audioSource);
-            _loadingCurtain.ShowLoading();
-            SceneManager.LoadSceneAsync(SceneName.Gameplay);
+            await _loadingCurtain.ShowLoadingAsync();
+            await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.Gameplay);
         }
 
         private void ExitGame()

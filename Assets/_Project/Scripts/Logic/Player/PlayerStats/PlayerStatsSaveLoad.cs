@@ -17,12 +17,12 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         public PlayerStatsSaveLoad(PlayerStatsData statsData, [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, 
             IProgressService progressService)
         {
-            _stats = statsData.Stats;
+            _stats = statsData.GetStats();
             _saveLoadService = saveLoadService;
             _progressService = progressService;
         }
         
-        public async UniTask<PlayerStatsProgress> LoadStats()
+        public async UniTask<PlayerStatsProgress> LoadStatsAsync()
         {
             PlayerProgress playerProgress = await _saveLoadService.LoadProgressAsync();
             PlayerStatsProgress progress = playerProgress.PlayerStatsProgress;
@@ -39,7 +39,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             return progress;
         }
 
-        public async UniTask SaveStats(int upgradePoints)
+        public async UniTask SaveStatsAsync(int upgradePoints)
         {
             PlayerStatsProgress progress = _progressService.PlayerProgress.PlayerStatsProgress;
 

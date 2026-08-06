@@ -1,11 +1,8 @@
-using System;
-using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.PlayerInput;
+using _Project.Scripts.Services.SceneLoader;
 using _Project.Scripts.UI.Common;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -19,12 +16,17 @@ namespace _Project.Scripts.UI
         
         private IInputService _inputService;
         private ILoadingCurtainService _loadingCurtain;
-        
+        private CursorController _cursorController;
+        private ISceneLoaderService _sceneLoader;
+
         [Inject]
-        public void Construct(IInputService inputService, ILoadingCurtainService loadingCurtain)
+        private void Construct(IInputService inputService, ILoadingCurtainService loadingCurtain, 
+            CursorController cursorController, ISceneLoaderService sceneLoader)
         {
+            _cursorController = cursorController;
             _inputService = inputService;
             _loadingCurtain = loadingCurtain;
+            _sceneLoader = sceneLoader;
         }
 
         public void Initialize() => 
@@ -41,9 +43,9 @@ namespace _Project.Scripts.UI
 
         private async void BackToMainMenu()
         {
-            CursorController.SetCursorVisible(visible: false);
-            await _loadingCurtain.ShowLoading();
-            SceneManager.LoadSceneAsync(SceneName.MainMenu);
+            _cursorController.SetCursorVisible(visible: false);
+            await _loadingCurtain.ShowLoadingAsync();
+            await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
         }
     }
 }

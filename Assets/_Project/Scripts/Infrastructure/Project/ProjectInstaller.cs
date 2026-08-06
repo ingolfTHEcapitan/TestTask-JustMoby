@@ -3,6 +3,7 @@ using _Project.Scripts.Configs;
 using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Configs.Weapon;
+using _Project.Scripts.Data.IAP;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
@@ -19,8 +20,10 @@ using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.SaveLoad.CloudSave;
+using _Project.Scripts.Services.SceneLoader;
 using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Services.Statistics;
+using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using Zenject;
 
@@ -53,9 +56,13 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private void BindServices()
         {
+            Container.Bind<CursorController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SceneLoaderService>().AsSingle();
             Container.BindInterfacesAndSelfTo<NetworkAccessibilityService>().AsSingle();
             Container.BindInterfacesAndSelfTo<AuthService>().AsSingle();
             Container.BindInterfacesAndSelfTo<ProgressService>().AsSingle();
+            Container.Bind<PurchaseModel>().AsSingle();
+            Container.Bind<SaveTimeFormater>().AsSingle();
             Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();

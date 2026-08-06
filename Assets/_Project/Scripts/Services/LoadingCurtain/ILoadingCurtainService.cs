@@ -4,7 +4,7 @@ namespace _Project.Scripts.Services.LoadingCurtain
 {
     public interface ILoadingCurtainService
     {
-        UniTask ShowLoading();
+        UniTask ShowLoadingAsync();
         void HideLoading();
     }
 }

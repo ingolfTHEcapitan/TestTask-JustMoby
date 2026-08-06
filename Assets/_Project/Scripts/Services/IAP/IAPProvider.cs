@@ -14,9 +14,9 @@ namespace _Project.Scripts.Services.IAP
         public event Action<string> OnPurchaseFailedAction;
         public event Func<Product, PurchaseProcessingResult> OnProcessPurchase;
 
-        public Dictionary<string, ProductConfig> ProductConfigs;
-        public Dictionary<string, Product> Products = new Dictionary<string, Product>();
-        
+        private Dictionary<string, ProductConfig> _productConfigs;
+        private readonly Dictionary<string, Product> _products = new Dictionary<string, Product>();
+
         private IStoreController _controller;
         private IExtensionProvider _extensions;
         private readonly ProductConfigWrapper _productConfigWrapper;
@@ -28,10 +28,10 @@ namespace _Project.Scripts.Services.IAP
 
         public void Initialize()
         {
-            ProductConfigs = _productConfigWrapper.Configs.ToDictionary(x => x.Id, x => x);
+            _productConfigs = _productConfigWrapper.Configs.ToDictionary(x => x.Id, x => x);
             ConfigurationBuilder builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
             
-            AddProducts(ProductConfigs, builder);
+            AddProducts(_productConfigs, builder);
             
             UnityPurchasing.Initialize(this, builder);
         }
@@ -39,13 +39,22 @@ namespace _Project.Scripts.Services.IAP
         public void StartPurchase(ProductDescription productDescription) => 
             _controller.InitiatePurchase(productDescription.Id);
 
+        public ProductConfig GetProductConfig(string productId) =>
+            _productConfigs[productId];
+        
+        public Product GetProduct(string productId) => 
+            _products[productId];
+        
+        public IEnumerable<string> GetProductIds() => 
+            _products.Keys;
+
         public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
         {
             _extensions = extensions;
             _controller = controller;
             
             foreach (var product in controller.products.all)
-                Products.Add(product.definition.id, product);
+                _products.Add(product.definition.id, product);
             
             Debug.Log("UnityPurchasing initialization success");
         }

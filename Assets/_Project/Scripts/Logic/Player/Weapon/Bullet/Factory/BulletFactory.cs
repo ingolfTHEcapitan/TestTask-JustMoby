@@ -24,7 +24,7 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet.Factory
             _dynamicObjectsParent = dynamicObjectsParent;
         }
 
-        public async UniTask<Bullet> CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection, Vector3 targetPoint)
+        public async UniTask<Bullet> CreateBulletAsync(BulletConfig config, Transform at, Vector3 shootDirection, Vector3 targetPoint)
         {
             float damage = _playerStatsData.GetStatValue(StatName.Damage);
             

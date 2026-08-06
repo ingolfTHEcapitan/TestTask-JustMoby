@@ -4,6 +4,6 @@ namespace _Project.Scripts.Services.SaveConflictResolve
 {
     public interface ISaveConflictResolveService
     {
-        UniTask CreateWindow();
+        void Initialize();
     }
 }

@@ -17,7 +17,7 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet
         private IEffectsService _effectsService;
 
         [Inject]
-        public void Construct(IEffectsService effectsService) => 
+        private void Construct(IEffectsService effectsService) => 
             _effectsService = effectsService;
 
         public void Initialize(BulletConfig config, Vector3 direction, Vector3 targetPoint, float damage, Transform parent)
@@ -40,7 +40,7 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet
             if (other.gameObject.TryGetComponent(out IHealth health))
             {
                 health.TakeDamage(_damage);
-                await _effectsService.PlayHitFx(_targetPoint, other.gameObject.transform);
+                await _effectsService.PlayHitFxAsync(_targetPoint, other.gameObject.transform);
                 DestroyBullet();
             }
         }

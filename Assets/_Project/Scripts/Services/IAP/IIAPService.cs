@@ -9,7 +9,7 @@ namespace _Project.Scripts.Services.IAP
     public interface IIAPService: IDisposable, IInitializable
     {
         bool IsInitialized { get; }
-        UniTask<bool> StartPurchase(ProductDescription productDescription);
+        UniTask<bool> StartPurchaseAsync(ProductDescription productDescription);
         List<ProductDescription> GetProducts();
     }
 }

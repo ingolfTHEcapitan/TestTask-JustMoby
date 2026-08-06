@@ -6,6 +6,6 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet.Factory
 {
     public interface IBulletFactory
     {
-        UniTask<Bullet> CreateBullet(BulletConfig config, Transform at, Vector3 shootDirection, Vector3 targetPoint);
+        UniTask<Bullet> CreateBulletAsync(BulletConfig config, Transform at, Vector3 shootDirection, Vector3 targetPoint);
     }
 }

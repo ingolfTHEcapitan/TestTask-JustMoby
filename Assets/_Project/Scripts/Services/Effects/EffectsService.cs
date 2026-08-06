@@ -16,13 +16,13 @@ namespace _Project.Scripts.Services.Effects
             _container = container;
         }
 
-        public async UniTask WarmUp()
+        public async UniTask WarmUpAsync()
         {
             await _assetProvider.LoadAsync<GameObject>(AssetAddress.HitFx);
             await _assetProvider.LoadAsync<GameObject>(AssetAddress.Deathfx);
         }
 
-        public async UniTask PlayHitFx(Vector3 position, Transform parent)
+        public async UniTask PlayHitFxAsync(Vector3 position, Transform parent)
         {
             Quaternion rotation = Quaternion.Euler(0, 90, 0);
             
@@ -31,7 +31,7 @@ namespace _Project.Scripts.Services.Effects
             fxGameObject.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
         }
         
-        public async UniTask PlayEnemyDeathFx(Vector3 position, Transform parent)
+        public async UniTask PlayEnemyDeathFxAsync(Vector3 position, Transform parent)
         {
             Quaternion rotation = Quaternion.Euler(-90, 0, 0);
             

@@ -19,43 +19,45 @@ namespace _Project.Scripts.UI.Factory
             _assetProvider = assetProvider;
         }
         
-        public async UniTask<HeadUpDisplay> CreateHudLayer(Transform uiParent)
+        public async UniTask<HeadUpDisplay> CreateHudLayerAsync(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.HudLayer);
-            return _container.InstantiatePrefabForComponent<HeadUpDisplay>(prefab, uiParent);
+            HeadUpDisplay headUpDisplay = _container.InstantiatePrefabForComponent<HeadUpDisplay>(prefab, uiParent);
+            headUpDisplay.Initialize();
+            return headUpDisplay;
         }
 
-        public async UniTask<GameObject> CreatePopUpLayer(Transform uiParent)
+        public async UniTask<GameObject> CreatePopUpLayerAsync(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.PopUpLayer);
             return _container.InstantiatePrefab(prefab, uiParent);
         }
 
-        public async UniTask<GameObject> CreateMainMenuLayer(Transform uiParent)
+        public async UniTask<GameObject> CreateMainMenuLayerAsync(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.MainMenuLayer);
             return _container.InstantiatePrefab(prefab, uiParent);
         }
 
-        public async UniTask<ShopItem> CreateShopItem(Transform parent)
+        public async UniTask<ShopItem> CreateShopItemAsync(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.ShopItem);
-            return _container.InstantiatePrefabForComponent<ShopItem>(prefab, parent);
+            return _container.InstantiatePrefabForComponent<ShopItem>(prefab, uiParent);
         }
         
-        public async UniTask<Sprite> LoadSprite(string assetAddress) => 
+        public async UniTask<Sprite> LoadSpriteAsync(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
 
-        public async UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindow()
+        public async UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.SaveConflictResolveWindow);
-            return _container.InstantiatePrefabForComponent<SaveConflictResolveWindow>(prefab);
+            return _container.InstantiatePrefabForComponent<SaveConflictResolveWindow>(prefab, uiParent);
         }
 
-        public async UniTask<PlayerStatItemView> CreatePlayerStatItem(Transform parent)
+        public async UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.PlayerStatItem);
-            return _container.InstantiatePrefabForComponent<PlayerStatItemView>(prefab, parent);
+            return _container.InstantiatePrefabForComponent<PlayerStatItemView>(prefab, uiParent);
         }
     }
 }

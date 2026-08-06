@@ -3,7 +3,10 @@ using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
+using _Project.Scripts.Services.Sound;
+using _Project.Scripts.Services.UpgradePoints;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Logic.Player.PlayerStats
@@ -12,20 +15,31 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
     {
         private readonly IInputService _inputService;
         private readonly IGamePauseService _pauseService;
+        private readonly IUpgradePointsService _upgradePoints;
+        private readonly IAudioService _audioService;
+        
         private readonly PlayerStatsModel _model;
         private readonly PlayerStatsData _statsData;
+        private readonly AudioSource _audioSource;
+        private readonly AudioClip _levelUpSound;
+        
         private PlayerStatsView _view;
         private PlayerDeath _playerDeath;
 
         private bool _isOpen;
 
-        public PlayerStatsPresenter(IInputService inputService, IGamePauseService pauseService, 
-            PlayerStatsModel model, PlayerStatsData statsData)
+        public PlayerStatsPresenter(IInputService inputService, IGamePauseService pauseService, IAudioService audioService,
+            PlayerStatsModel model, PlayerStatsData statsData, IUpgradePointsService upgradePoints, AudioSource audioSource,
+            AudioClip levelUpSound)
         {
             _inputService = inputService;
             _model = model;
             _statsData = statsData;
             _pauseService = pauseService;
+            _upgradePoints = upgradePoints;
+            _audioService = audioService;
+            _audioSource = audioSource;
+            _levelUpSound = levelUpSound;
         }
         
         public void Construct(PlayerStatsView view, PlayerDeath playerDeath)
@@ -34,14 +48,15 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             _playerDeath = playerDeath;
         }
         
-        public async UniTask Initialize()
+        public async UniTask InitializeAsync()
         {
             _model.OnStatsChanged += UpdateStatItems;
             _view.OnOpenButtonClicked += Open;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
+            _upgradePoints.OnPointAdded += PlayLevelUpSound;
             
-            await _view.CreateStatItems(_statsData.GetStats());
+            await _view.CreateStatItemsAsync(_statsData.GetStatValues());
             
             foreach (PlayerStatItemView statItemView in _view.GetStatItems())
                 statItemView.OnUpgradeButtonClicked += UpgradeStatItem;
@@ -53,6 +68,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             _view.OnOpenButtonClicked -= Open;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
+            _upgradePoints.OnPointAdded -= PlayLevelUpSound;
             
             foreach (PlayerStatItemView statItemView in _view.GetStatItems())
                 statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;
@@ -85,7 +101,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         {
             _isOpen = false;
             _pauseService.SetPaused(false);
-            await _view.HideWindow();
+            await _view.HideWindowAsync();
             _model.DiscardPreviewChanges();
         }
 
@@ -103,7 +119,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
 
         private void UpdateAllStatItems()
         {
-            foreach (var stat in _statsData.GetStats())
+            foreach (var stat in _statsData.GetStatValues())
                 UpdateStatItem(stat.Name);
         }
 
@@ -113,5 +129,8 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             bool canUpgrade = _model.CanUpgrade(statName);
             _view.UpdateStatItem(statName, stat.PreviewLevel, canUpgrade);
         }
+        
+        private void PlayLevelUpSound() => 
+            _audioService.PlayOneShot(_levelUpSound, _audioSource);
     }
 }

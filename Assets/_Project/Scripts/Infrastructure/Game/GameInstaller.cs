@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Logic.Player.Factory;
 using _Project.Scripts.Logic.Player.PlayerStats;
@@ -34,7 +33,7 @@ namespace _Project.Scripts.Infrastructure.Game
             BindUpgradePointsService();
             BindEnemy();
             BindWeapon();
-            BindGameBootstrapper();
+            BindGame();
         }
         
         private void BindHealthCalculatorService() => 
@@ -50,8 +49,8 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<PlayerStatsData>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerStatsPresenter>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle().WithArguments(_soundSource, _levelUpSounds);
+            Container.BindInterfacesAndSelfTo<PlayerStatsPresenter>().AsSingle().WithArguments(_soundSource, _levelUpSounds);
+            Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
         }
 
         private void BindUpgradePointsService() => 
@@ -66,10 +65,11 @@ namespace _Project.Scripts.Infrastructure.Game
         private void BindWeapon() => 
             Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
 
-        private void BindGameBootstrapper()
+        private void BindGame()
         {
-            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle()
-                .WithArguments(_enemySpawnPoint, _uiParent, _musicSource, _dungeonMusic);
+            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent);
+            Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _dungeonMusic);
+            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
         }
     }
 }

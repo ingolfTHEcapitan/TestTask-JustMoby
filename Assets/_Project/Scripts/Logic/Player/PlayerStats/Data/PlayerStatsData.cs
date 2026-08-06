@@ -9,8 +9,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.Data
     {
         private readonly List<PlayerStatConfig> _configs;
         private readonly IUIFactory _uiFactory;
-        
-        public Dictionary<StatName, PlayerStatData> Stats { get; private set; } = new Dictionary<StatName, PlayerStatData>();
+        private readonly Dictionary<StatName, PlayerStatData> _stats = new Dictionary<StatName, PlayerStatData>();
 
         public PlayerStatsData(IUIFactory uiFactory, List<PlayerStatConfig> configs)
         {
@@ -24,24 +23,26 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.Data
             {
                 PlayerStatData statData = new PlayerStatData(config);
                 await statData.LoadUIPartsAsync(config, _uiFactory);
-                Stats[config.Name] = statData;
+                _stats[config.Name] = statData;
             }
             
-            return Stats;
+            return _stats;
         }
         
         public float GetStatValue(StatName statName)
         {
-            if (Stats.TryGetValue(statName, out PlayerStatData stat))
+            if (_stats.TryGetValue(statName, out PlayerStatData stat))
                 return stat.CurrentValue;
             
             return 0;
         }
         
-        public List<PlayerStatData> GetStats() => 
-            new List<PlayerStatData>(Stats.Values);
+        public List<PlayerStatData> GetStatValues() => 
+            new List<PlayerStatData>(_stats.Values);
         
         public PlayerStatData GetStat(StatName statName) => 
-            Stats[statName];
+            _stats[statName];
+        public Dictionary<StatName, PlayerStatData> GetStats() => 
+            _stats;
     }
 }

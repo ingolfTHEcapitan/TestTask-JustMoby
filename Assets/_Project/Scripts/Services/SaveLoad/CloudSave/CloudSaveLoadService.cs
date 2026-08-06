@@ -15,8 +15,6 @@ namespace _Project.Scripts.Services.SaveLoad.CloudSave
         
         public async UniTask SaveProgressAsync(IProgressService progressService)
         {
-            progressService.PlayerProgress.LastSaveTimeUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            
             string json = JsonUtility.ToJson(progressService.PlayerProgress, false);
             
             Dictionary<string, object> playerProgress = new Dictionary<string, object>

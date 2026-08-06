@@ -37,8 +37,8 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.Data
 
         public async UniTask LoadUIPartsAsync(PlayerStatConfig config, IUIFactory uiFactory)
         {
-            IconFrame = await uiFactory.LoadSprite(config.IconFrameAddress);
-            Icon = await uiFactory.LoadSprite(config.IconAddress);
+            IconFrame = await uiFactory.LoadSpriteAsync(config.IconFrameAddress);
+            Icon = await uiFactory.LoadSpriteAsync(config.IconAddress);
         }
 
         public void RecalculateCurrentValue()

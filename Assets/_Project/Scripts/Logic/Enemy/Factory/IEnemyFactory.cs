@@ -5,6 +5,6 @@ namespace _Project.Scripts.Logic.Enemy.Factory
 {
     public interface IEnemyFactory
     {
-        UniTask<EnemyDeath> CreateEnemy(Vector3 spawnPoint, Transform playerTransform);
+        UniTask<EnemyDeath> CreateEnemyAsync(Vector3 spawnPoint, Transform playerTransform);
     }
 }

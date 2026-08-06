@@ -10,7 +10,7 @@ namespace _Project.Scripts.Services.RemoteConfig
     {
         public FirebaseRemoteConfig RemoteConfig { get; private set; }
         
-        public async UniTask FetchDataAsync()
+        public async UniTask FetchDataAsyncAsync()
         {
             Debug.Log("Fetching data...");
 

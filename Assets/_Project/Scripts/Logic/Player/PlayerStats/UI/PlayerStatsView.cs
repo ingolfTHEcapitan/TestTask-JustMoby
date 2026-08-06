@@ -57,13 +57,13 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         public void UpdatePointsText(string points) => 
             _pointsText.SetText($"Points {points}");
 
-        public async UniTask CreateStatItems(List<PlayerStatData> stats)
+        public async UniTask CreateStatItemsAsync(List<PlayerStatData> stats)
         {
             ClearStatItems();
             
             foreach (PlayerStatData stat in stats)
             {
-                PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItem(_statsContainer);
+                PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemAsync(_statsContainer);
                 statItem.Initialize(stat, _audioSource);
                 _statItems[stat.Name] = statItem;
             }
@@ -87,9 +87,9 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
             _windowAnimation.AnimateOpen();
         }
 
-        public async UniTask HideWindow()
+        public async UniTask HideWindowAsync()
         {
-            await _windowAnimation.AnimateClose();
+            await _windowAnimation.AnimateCloseAsync();
             _statsWindow.SetActive(false);
         }
 

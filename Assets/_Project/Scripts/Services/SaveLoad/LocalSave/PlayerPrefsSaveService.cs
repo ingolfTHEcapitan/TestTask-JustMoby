@@ -12,25 +12,23 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
         
         public UniTask SaveProgressAsync(IProgressService progressService)
         {
-            progressService.PlayerProgress.LastSaveTimeUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            
             string json = JsonUtility.ToJson(progressService.PlayerProgress, false);
             PlayerPrefs.SetString(PlayerProgressKey, json);
             Debug.Log("Progress saved to PlayerPrefs");
             return UniTask.CompletedTask;
         }
 
-        public UniTask<PlayerProgress> LoadProgressAsync()
+        public async UniTask<PlayerProgress> LoadProgressAsync()
         {
             if (PlayerPrefs.HasKey(PlayerProgressKey))
             {
                 string json = PlayerPrefs.GetString(PlayerProgressKey);
                 PlayerProgress playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
                 Debug.Log("Progress loaded from PlayerPrefs");
-                return  UniTask.FromResult(playerProgress);
+                return await UniTask.FromResult(playerProgress);
             }
             
-            return UniTask.FromResult(new PlayerProgress());
+            return await UniTask.FromResult(new PlayerProgress());
         }
     }
 }
