@@ -94,8 +94,9 @@ namespace _Project.Scripts.UI.Windows.Settings
 
         private void UpdateEffectsVolume(float volume) =>
             UpdateAudioMixerVolume(EffectsVolumeName, volume);
-        
-        private void UpdateUIVolume(float volume) => 
-            UpdateAudioMixerVolume(EffectsVolumeName, volume);
+
+        private void UpdateUIVolume(float volume) =>
+            UpdateAudioMixerVolume(UIVolumeName, volume);
+
     }
 }
