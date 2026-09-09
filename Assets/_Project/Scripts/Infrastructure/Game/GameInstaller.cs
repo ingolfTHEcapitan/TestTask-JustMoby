@@ -21,7 +21,6 @@ namespace _Project.Scripts.Infrastructure.Game
         
         [Header("Audio")]
         [SerializeField] private AudioSource _musicSource;
-        [SerializeField] private AudioSource _soundSource;
         [SerializeField] private AudioClip _dungeonMusic;
         [SerializeField] private AudioClip _levelUpSounds;
         
@@ -49,7 +48,7 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<PlayerStatsData>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerStatsPresenter>().AsSingle().WithArguments(_soundSource, _levelUpSounds);
+            Container.BindInterfacesAndSelfTo<PlayerStatsPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
         }
 
@@ -67,7 +66,7 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindGame()
         {
-            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent);
+            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent, _levelUpSounds);
             Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _dungeonMusic);
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
         }

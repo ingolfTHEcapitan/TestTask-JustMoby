@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Services.Sound;
+using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
@@ -28,23 +30,32 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource;
-        
+
         private readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
-        private Button _openButton;
+
+        private IUpgradePointsService _pointsService;
+        private IAudioService _audioService;
         private IUIFactory _uiFactory;
+        private AudioClip _levelUpSound;
+        private Button _openButton;
+
 
         [Inject]
-        private void Construct( IUIFactory uiFactory)
+        private void Construct(IUIFactory uiFactory, IAudioService audioService)
         {
             _uiFactory = uiFactory;
+            _audioService = audioService;
         }
 
-        public void Initialize(Button openButton)
+        public void Initialize(Button openButton, AudioClip levelUpSound, IUpgradePointsService pointsService)
         {
+            _levelUpSound = levelUpSound;
             _openButton = openButton;
+            _pointsService = pointsService;
             _openButton.onClick.AddListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.AddListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.AddListener(InvokeOnApplyChangesButtonClicked);
+            _pointsService.OnPointAdded += PlayLevelUpSound;
         }
 
         private void OnDestroy()
@@ -52,6 +63,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
             _openButton.onClick.RemoveListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.RemoveListener(InvokeOnApplyChangesButtonClicked);
+            _pointsService.OnPointAdded -= PlayLevelUpSound;
         }
         
         public void UpdatePointsText(string points) => 
@@ -100,7 +112,10 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
             
             _statItems.Clear();
         }
-
+        
+        private void PlayLevelUpSound() => 
+            _audioService.PlayOneShot(_levelUpSound, _audioSource);
+        
         private void InvokeOnOpenButtonClicked() => 
             OnOpenButtonClicked?.Invoke();
 

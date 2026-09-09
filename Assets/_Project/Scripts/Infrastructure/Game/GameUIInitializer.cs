@@ -3,6 +3,7 @@ using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.Player.PlayerStats;
 using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Logic.Spawners;
+using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
@@ -20,14 +21,18 @@ namespace _Project.Scripts.Infrastructure.Game
        
         private readonly PlayerStatsPresenter _playerStatsPresenter;
         private readonly EnemySpawner _enemySpawner;
+        private readonly AudioClip _levelUpSound;
+        private IUpgradePointsService _pointsService;
 
-        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, 
-            PlayerStatsPresenter playerStatsPresenter, EnemySpawner enemySpawner)
+        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound,
+            PlayerStatsPresenter playerStatsPresenter, EnemySpawner enemySpawner, IUpgradePointsService pointsService)
         {
+            _pointsService = pointsService;
             _uiFactory = uiFactory;
             _uiParent = uiParent;
             _playerStatsPresenter = playerStatsPresenter;
             _enemySpawner = enemySpawner;
+            _levelUpSound = levelUpSound;
         }
 
         public async UniTask InitUIAsync(Health playerHealth)
@@ -37,7 +42,7 @@ namespace _Project.Scripts.Infrastructure.Game
 
             InitPlayerHealthBarView(hudLayer, playerHealth);
 
-            PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer);
+            PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer, _levelUpSound, _pointsService);
             await InitPlayerStatsPresenterAsync(playerStatsView, playerHealth);
             
             InitGameOverWindow(popUpLayer, playerHealth, _enemySpawner);
@@ -50,12 +55,13 @@ namespace _Project.Scripts.Infrastructure.Game
             playerHealthBarView.Initialize();
         }
 
-        private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, HeadUpDisplay hud)
+        private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, HeadUpDisplay hud, AudioClip levelUpSound,
+            IUpgradePointsService pointsService)
         {
             Button openButton = hud.OpenStatsWindowButton;
             
             PlayerStatsView playerStatsView = popUpLayer.GetComponentInChildren<PlayerStatsView>(includeInactive: true);
-            playerStatsView.Initialize(openButton);
+            playerStatsView.Initialize(openButton, levelUpSound, pointsService);
             return playerStatsView;
         }
 
