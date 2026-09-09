@@ -16,16 +16,16 @@ namespace _Project.Scripts.Services.SaveConflictResolve
         private readonly ISaveLoadCoordinator _saveLoadCoordinator;
         
         private readonly CursorController _cursorController;
-        private readonly SaveTimeFormater _saveTimeFormater;
+        private readonly SaveTimeFormatter _saveTimeFormatter;
         private readonly Transform _uiParent;
 
         public SaveConflictResolveService(IUIFactory uiFactory, ISaveLoadCoordinator saveLoadCoordinator, 
-            CursorController cursorController, SaveTimeFormater saveTimeFormater, Transform uiParent)
+            CursorController cursorController, SaveTimeFormatter saveTimeFormatter, Transform uiParent)
         {
             _cursorController = cursorController;
             _saveLoadCoordinator = saveLoadCoordinator;
             _uiFactory = uiFactory;
-            _saveTimeFormater = saveTimeFormater;
+            _saveTimeFormatter = saveTimeFormatter;
             _uiParent = uiParent;
         }
 
@@ -39,7 +39,7 @@ namespace _Project.Scripts.Services.SaveConflictResolve
         {
             SaveConflictResolveWindow window = await _uiFactory.CreateSaveConflictResolveWindowAsync(_uiParent);
             
-            window.Construct(localProgress, cloudProgress, _cursorController, _saveTimeFormater);
+            window.Construct(localProgress, cloudProgress, _cursorController, _saveTimeFormatter);
             
             SaveType choice = await window.ShowAsync();
             await window.CloseAsync();

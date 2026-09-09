@@ -7,7 +7,7 @@ namespace _Project.Scripts.Services.HealthCalculator
     {
         private const int MinShotsToKill = 1;
         private const int MaxShotsToKill = 10;
-        private const int _exclusiveOffset = 1;
+        private const int ExclusiveOffset = 1;
 
         private readonly PlayerStatsData _playerStatsData;
 
@@ -18,7 +18,7 @@ namespace _Project.Scripts.Services.HealthCalculator
         {
             PlayerStatData damageStat = _playerStatsData.GetStat(StatName.Damage);
             
-            int randomShootsCount = UnityEngine.Random.Range(MinShotsToKill, MaxShotsToKill + _exclusiveOffset);
+            int randomShootsCount = UnityEngine.Random.Range(MinShotsToKill, MaxShotsToKill + ExclusiveOffset);
             float maxHealth = damageStat.BaseValue * randomShootsCount;
             return maxHealth;
         }

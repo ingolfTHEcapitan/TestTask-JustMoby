@@ -20,9 +20,7 @@ namespace _Project.Scripts.UI.Windows.Settings
             _progressService = progressService;
         }
 
-        public async UniTask SaveSettingsAsync()
-        {
+        public async UniTask SaveSettingsAsync() => 
             await _saveService.SaveProgressAsync(_progressService);
-        }
     }
 }

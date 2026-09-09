@@ -104,7 +104,7 @@ namespace _Project.Scripts.Services.IAP
             {
                 Product product = _iapProvider.GetProduct(productId);
                 ProductConfig productConfig = _iapProvider.GetProductConfig(productId);
-                BoughtIAP boughtIAP = purchaseData.boughtIAPs.Find(x => x.IAPid == productId);
+                BoughtIAP boughtIAP = purchaseData.BoughtIAPs.Find(x => x.IAPid == productId);
                 
                 if (ProductBoughtOut(boughtIAP, productConfig))
                     continue;

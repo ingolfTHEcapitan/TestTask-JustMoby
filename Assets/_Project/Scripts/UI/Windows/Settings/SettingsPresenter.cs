@@ -13,29 +13,29 @@ namespace _Project.Scripts.UI.Windows.Settings
         private const string EffectsVolumeName = "EffectsVolume";
         private const string UIVolumeName = "UIVolume";
 
-        public SettingsPresenter(SettingsModel model) => 
+        public SettingsPresenter(SettingsModel model) =>
             _model = model;
 
-        public void Construct(SettingsView view) => 
+        public void Construct(SettingsView view) =>
             _view = view;
 
         public void Initialize()
         {
             _view.OnOpen += SyncViewWithModel;
-            _view.OnCloseButtonClicked += HandleClose;
-            _view.OnApplyButtonClicked += HandleAppleSettings;
+            _view.OnCloseButtonClicked += Close;
+            _view.OnApplyButtonClicked += SaveSettingsAndClose;
 
             _view.OnMasterVolumeChanged += UpdateMasterVolume;
             _view.OnMusicVolumeChanged += UpdateMusicVolume;
             _view.OnEffectsVolumeChanged += UpdateEffectsVolume;
             _view.OnUIVolumeChanged += UpdateUIVolume;
         }
-        
+
         public void Dispose()
         {
             _view.OnOpen -= SyncViewWithModel;
-            _view.OnCloseButtonClicked -= HandleClose;
-            _view.OnApplyButtonClicked -= HandleAppleSettings;
+            _view.OnCloseButtonClicked -= Close;
+            _view.OnApplyButtonClicked -= SaveSettingsAndClose;
 
             _view.OnMasterVolumeChanged -= UpdateMasterVolume;
             _view.OnMusicVolumeChanged -= UpdateMusicVolume;
@@ -44,36 +44,36 @@ namespace _Project.Scripts.UI.Windows.Settings
         }
 
 
-        private void SyncViewWithModel()
+        private async void SaveSettingsAndClose()
         {
             AudioSettingsData audioData = _model.AudioSettingsData;
-            _view.SetSlidersValues(audioData.MasterVolume, audioData.MusicVolume, audioData.EffectsVolume, audioData.UIVolume);
-            
-            UpdateMasterVolume(audioData.MasterVolume);
-            UpdateMusicVolume(audioData.MusicVolume);
-            UpdateEffectsVolume(audioData.EffectsVolume);
-            UpdateUIVolume(audioData.UIVolume);
-        }
 
-        private async void HandleAppleSettings()
-        {
-            AudioSettingsData audioData = _model.AudioSettingsData;
-            
             audioData.MasterVolume = _view.MasterVolume;
             audioData.MusicVolume = _view.MusicVolume;
             audioData.EffectsVolume = _view.EffectsVolume;
             audioData.UIVolume = _view.UIVolume;
-            
+
             await _view.CloseAsync();
             await _model.SaveSettingsAsync();
         }
 
-        private async void HandleClose()
+        private async void Close()
         {
             await _view.CloseAsync();
             SyncViewWithModel();
         }
 
+        private void SyncViewWithModel()
+        {
+            AudioSettingsData audioData = _model.AudioSettingsData;
+            _view.SetSlidersValues(audioData.MasterVolume, audioData.MusicVolume, audioData.EffectsVolume,
+                audioData.UIVolume);
+
+            UpdateMasterVolume(audioData.MasterVolume);
+            UpdateMusicVolume(audioData.MusicVolume);
+            UpdateEffectsVolume(audioData.EffectsVolume);
+            UpdateUIVolume(audioData.UIVolume);
+        }
 
         private void UpdateAudioMixerVolume(string volumeName, float volume)
         {
@@ -82,18 +82,17 @@ namespace _Project.Scripts.UI.Windows.Settings
                 dbVolume = -80;
             else
                 dbVolume = Mathf.Log10(volume) * 20;
-            
+
             _view.SetAudioMixerVolume(volumeName, dbVolume);
         }
-        
-        
-        private void UpdateMasterVolume(float volume) => 
+
+        private void UpdateMasterVolume(float volume) =>
             UpdateAudioMixerVolume(MasterVolumeName, volume);
 
-        private void UpdateMusicVolume(float volume) => 
+        private void UpdateMusicVolume(float volume) =>
             UpdateAudioMixerVolume(MusicVolumeName, volume);
 
-        private void UpdateEffectsVolume(float volume) => 
+        private void UpdateEffectsVolume(float volume) =>
             UpdateAudioMixerVolume(EffectsVolumeName, volume);
         
         private void UpdateUIVolume(float volume) => 

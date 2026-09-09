@@ -44,7 +44,7 @@ namespace _Project.Scripts.Infrastructure.Project
             UniTask assetProviderTask = _assetProvider.InitializeAsync();
             UniTask loadingCurtainTask = _loadingCurtain.ShowLoadingAsync();
             UniTask analyticsServiceTask = _analyticsService.InitializeAsync();
-            UniTask remoteConfigServiceTask = _remoteConfigService.FetchDataAsyncAsync();
+            UniTask remoteConfigServiceTask = _remoteConfigService.FetchDataAsync();
             UniTask authServiceTask = _authService.SignUpAsync();
 
             await UniTask.WhenAll(assetProviderTask, loadingCurtainTask, analyticsServiceTask, 

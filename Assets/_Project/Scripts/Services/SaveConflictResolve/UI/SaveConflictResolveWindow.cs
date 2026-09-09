@@ -24,15 +24,15 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
         private PlayerProgress _localProgress;
         private PlayerProgress _cloudProgress;
         private CursorController _cursorController;
-        private SaveTimeFormater _saveTimeFormater;
+        private SaveTimeFormatter _saveTimeFormatter;
 
         public void Construct(PlayerProgress localProgress, PlayerProgress cloudProgress,
-            CursorController cursorController, SaveTimeFormater saveTimeFormater)
+            CursorController cursorController, SaveTimeFormatter saveTimeFormatter)
         {
             _cursorController = cursorController;
             _localProgress = localProgress;
             _cloudProgress = cloudProgress;
-            _saveTimeFormater = saveTimeFormater;
+            _saveTimeFormatter = saveTimeFormatter;
         }
         
         public void Awake()
@@ -55,8 +55,8 @@ namespace _Project.Scripts.Services.SaveConflictResolve.UI
             _cursorController.SetCursorVisible(true);
             _windowAnimation.AnimateOpen();
             
-            _localDateText.text = $"Device save date\n{_saveTimeFormater.GetFormatedSaveTime(_localProgress.LastSaveTimeUnix)}";
-            _cloudDateText.text = $"Cloud save date\n{_saveTimeFormater.GetFormatedSaveTime(_cloudProgress.LastSaveTimeUnix)}";
+            _localDateText.text = $"Device save date\n{_saveTimeFormatter.Format(_localProgress.LastSaveTimeUnix)}";
+            _cloudDateText.text = $"Cloud save date\n{_saveTimeFormatter.Format(_cloudProgress.LastSaveTimeUnix)}";
             
             ChoiceSaveDateTextColor();
             

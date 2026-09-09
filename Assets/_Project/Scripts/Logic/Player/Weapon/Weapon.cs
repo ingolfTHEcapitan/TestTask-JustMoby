@@ -16,7 +16,6 @@ namespace _Project.Scripts.Logic.Player.Weapon
         private const int AllLayers = -1;
 
         [SerializeField] private Transform _shootPoint;
-        [SerializeField] private GameObject _hitFxPrefab;
         
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource;

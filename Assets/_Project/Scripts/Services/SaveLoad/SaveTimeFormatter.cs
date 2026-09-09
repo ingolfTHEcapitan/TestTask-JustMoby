@@ -2,13 +2,13 @@
 
 namespace _Project.Scripts.Services.SaveLoad
 {
-    public class SaveTimeFormater
+    public class SaveTimeFormatter
     {
-        public string GetFormatedSaveTime(long lastSaveTimeUnix, bool getLocalDateTime = true)
+        public string Format(long lastSaveTimeUnix, bool useLocalDateTime = true)
         {
             DateTimeOffset unixSaveTime = DateTimeOffset.FromUnixTimeSeconds(lastSaveTimeUnix);
 
-            if (getLocalDateTime) 
+            if (useLocalDateTime) 
                 unixSaveTime = unixSaveTime.LocalDateTime;
             
             return unixSaveTime.ToString("yyyy-MM-dd HH:mm:ss");

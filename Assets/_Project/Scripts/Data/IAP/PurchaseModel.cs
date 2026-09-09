@@ -10,7 +10,7 @@ namespace _Project.Scripts.Data.IAP
         
         private readonly IProgressService _progress;
         
-        private List<BoughtIAP> BoughtIAPs => _progress.PlayerProgress.PurchaseData.boughtIAPs;
+        private List<BoughtIAP> BoughtIAPs => _progress.PlayerProgress.PurchaseData.BoughtIAPs;
 
         public PurchaseModel(IProgressService progress) => 
             _progress = progress;
