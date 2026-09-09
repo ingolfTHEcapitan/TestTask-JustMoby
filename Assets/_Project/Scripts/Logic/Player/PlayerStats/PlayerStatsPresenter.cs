@@ -14,7 +14,6 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
     public class PlayerStatsPresenter : IDisposable, ITickable
     {
         private readonly IInputService _inputService;
-        private readonly IGamePauseService _pauseService;
         private readonly PlayerStatsModel _model;
         private readonly PlayerStatsData _statsData;
         
@@ -22,13 +21,11 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         private PlayerDeath _playerDeath;
         private bool _isOpen;
 
-        public PlayerStatsPresenter(IInputService inputService, IGamePauseService pauseService, 
-            PlayerStatsModel model, PlayerStatsData statsData)
+        public PlayerStatsPresenter(IInputService inputService, PlayerStatsModel model, PlayerStatsData statsData)
         {
             _inputService = inputService;
             _model = model;
             _statsData = statsData;
-            _pauseService = pauseService;
         }
         
         public void Construct(PlayerStatsView view, PlayerDeath playerDeath)
@@ -79,7 +76,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
                 return;
             
             _isOpen = true;
-            _pauseService.SetPaused(true);
+            _model.SetPaused(true);
             _view.ShowWindow();
             UpdateStatItems();
         }
@@ -87,7 +84,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         private async void Close()
         {
             _isOpen = false;
-            _pauseService.SetPaused(false);
+            _model.SetPaused(false);
             await _view.HideWindowAsync();
             _model.DiscardPreviewChanges();
         }

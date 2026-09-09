@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Services.GamePause;
 using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Logic.Player.PlayerStats
@@ -13,13 +14,14 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         
         private readonly PlayerStatsData _statsData;
         private readonly PlayerStatsSaveLoad _saveLoad;
-       
+        private readonly IGamePauseService _pauseService;
         public int UpgradePoints { get; private set; }
         
-        public PlayerStatsModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad)
+        public PlayerStatsModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad, IGamePauseService pauseService)
         {
             _statsData = statsData;
             _saveLoad = saveLoad;
+            _pauseService = pauseService;
         }
 
         public async UniTask InitializeAsync()
@@ -91,7 +93,10 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
 
             return _statsData.GetStat(statName).PreviewLevel < _statsData.GetStat(statName).MaxLevel;
         }
-        
+
+        public void SetPaused(bool paused) => 
+            _pauseService.SetPaused(paused);
+
         private bool HasAnyChanges() =>
             _statsData.GetStatValues().Any(stat => stat.PreviewLevelHasChanged);
         
