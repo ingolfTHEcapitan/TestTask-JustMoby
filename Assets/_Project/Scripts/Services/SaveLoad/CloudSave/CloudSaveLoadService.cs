@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
@@ -21,7 +20,6 @@ namespace _Project.Scripts.Services.SaveLoad.CloudSave
             { { CloudSaveKey, json }, };
             
             await CloudSaveService.Instance.Data.Player.SaveAsync(playerProgress);
-            Debug.Log("Progress saved to Cloud Save" );
         }
 
         public async UniTask<PlayerProgress> LoadProgressAsync()
@@ -32,9 +30,6 @@ namespace _Project.Scripts.Services.SaveLoad.CloudSave
             if (playerData.TryGetValue(CloudSaveKey, out Item playerProgress))
             {
                 string json = playerProgress.Value.GetAs<string>();
-                
-                Debug.Log("Progress loaded from Cloud Save" );
-                
                 return JsonUtility.FromJson<PlayerProgress>(json);
             }
             

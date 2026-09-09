@@ -15,7 +15,7 @@ namespace _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory
         private readonly IRemoteConfigService _remoteConfigService;
         private readonly List<PlayerStatConfig> _playerStatConfigs;
 
-        public RemoteConfigFactory(IRemoteConfigService remoteConfigService, PlayerSpawnerConfig playerSpawnerConfig, 
+        public RemoteConfigFactory(IRemoteConfigService remoteConfigService, PlayerSpawnerConfig playerSpawnerConfig, AdsConfig adsConfig,
             EnemySpawnerConfig enemySpawnerConfig, WeaponConfig weaponConfig, BulletConfig bulletConfig, EnemyConfig enemyConfig, 
             LocalSaveServiceConfig localSaveServiceConfig, ProductConfigWrapper productConfigWrapper, List<PlayerStatConfig> playerStatConfigs)
         {
@@ -30,6 +30,7 @@ namespace _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory
                 {"bullet_config",bulletConfig},
                 {"enemy_skeleton_config", enemyConfig},
                 {"local_save_service_config", localSaveServiceConfig},
+                {"ads_config", adsConfig},
                 {"product_config", productConfigWrapper},
             };
             

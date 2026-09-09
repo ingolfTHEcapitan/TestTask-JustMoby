@@ -21,14 +21,14 @@ namespace _Project.Scripts.Logic.Enemy
 
         public void Initialize()
         {
-            _health.OnHealthChanged += PlayHit;
+            _health.OnTakeDamage += PlayHit;
             _health.OnZeroHealth += PlayDeath;
             _attackState.OnAttackStarted += PlayAttack;
         }
 
         private void OnDestroy()
         {
-            _health.OnHealthChanged -= PlayHit;
+            _health.OnTakeDamage -= PlayHit;
             _health.OnZeroHealth -= PlayDeath;
             _attackState.OnAttackStarted -= PlayAttack;
         }

@@ -1,7 +1,9 @@
+using System;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Player.PlayerStats;
+using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Effects;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -29,19 +31,28 @@ namespace _Project.Scripts.Infrastructure.Game
             _playerStatsModel = playerStatsModel;
         }
 
-        public async void Initialize()
+        public void Initialize() => 
+            InitializeAsync().Forget();
+
+        private async UniTaskVoid InitializeAsync()
         {
-            await _effectsService.WarmUpAsync();
+            try
+            {
+                await _effectsService.WarmUpAsync();
+                _playerStatsModel.CreateStats();
             
-            await _playerStatsModel.InitializeAsync();
+                Health playerHealth = await _playerSpawner.SpawnAsync();
             
-            Health playerHealth = await _playerSpawner.SpawnAsync();
+                await _uiInitializer.InitUIAsync(playerHealth);
             
-            await _uiInitializer.InitUIAsync(playerHealth);
+                _enemySpawner.SpawnAround( _enemySpawnPoint, playerHealth.transform);
             
-            _enemySpawner.SpawnAround( _enemySpawnPoint, playerHealth.transform);
-            
-            _gameStarter.StartGame();
+                _gameStarter.StartGame();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[GAME BOOTSTRAPPER] init error: {e}");
+            }
         }
     }
 }

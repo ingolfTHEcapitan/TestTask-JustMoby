@@ -1,0 +1,89 @@
+using _Project.Scripts.Data.Player;
+using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.UI.Common;
+using Cysharp.Threading.Tasks;
+
+namespace _Project.Scripts.UI.Windows.SaveConflictResolve
+{
+    public class SaveConflictResolveWindowPresenter
+    {
+        private readonly SaveConflictResolveWindowModel _model;
+        private readonly SaveConflictResolveWindowView _view;
+        private readonly CursorController _cursorController;
+        private readonly SaveTimeFormatter _saveTimeFormatter;
+        
+        private UniTaskCompletionSource<SaveType> _taskCompletionSource;
+        
+        public SaveConflictResolveWindowPresenter(SaveConflictResolveWindowModel model, SaveConflictResolveWindowView view, CursorController cursorController, SaveTimeFormatter saveTimeFormatter)
+        {
+            _model = model;
+            _view = view;
+            _cursorController = cursorController;
+            _saveTimeFormatter = saveTimeFormatter;
+        }
+
+        public void Initialize()
+        {
+            _model.Initialize();
+            _view.Initialize();
+
+            _view.OnWindowDestroy += CleanUp;
+            _view.OnLocalSaveButtonClicked += ChoiceLocalSave;
+            _view.OnCloudSaveButtonClicked += ChoiceCloudSave;
+            _model.OnSaveConflictHappened += ResolveConflictAsync;
+        }
+
+        private void CleanUp()
+        {
+            _view.OnWindowDestroy -= CleanUp;
+            _view.OnLocalSaveButtonClicked -= ChoiceLocalSave;
+            _view.OnCloudSaveButtonClicked -= ChoiceCloudSave;
+            _model.OnSaveConflictHappened -= ResolveConflictAsync;
+            _taskCompletionSource = null;
+            _model.Dispose();
+        }
+
+        private async UniTask<SaveType> ResolveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
+        {
+            string local = _saveTimeFormatter.Format(localProgress.LastSaveTimeUnix);
+            string cloud = _saveTimeFormatter.Format(cloudProgress.LastSaveTimeUnix);
+
+            _view.UpdateSaveDateText(local, cloud);
+            ChoiceSaveDateTextColor();
+            
+            await _view.OpenAsync();
+            _cursorController.SetCursorVisible(true);
+
+            _taskCompletionSource = new UniTaskCompletionSource<SaveType>();
+            SaveType result = await _taskCompletionSource.Task;
+            _taskCompletionSource = null;
+
+            _cursorController.SetCursorVisible(false);
+            await _view.CloseAsync();
+
+            return result;
+        }
+
+        private void ChoiceSaveDateTextColor()
+        {
+            if (_model.IsLocalSaveNewer())
+            {
+                _view.SetLocalDateTextColorNew();
+            }
+            else if (_model.IsCloudSaveNewer())
+            {
+               _view.SetCloudDateTextColorNew();
+            }
+            else if (_model.IsLocalSaveEqualCloudSaveTime())
+            {
+                _view.SetSaveDateTextColorDefault();
+            }
+        }
+
+        private void ChoiceCloudSave() => 
+            _taskCompletionSource?.TrySetResult(SaveType.Cloud);
+
+        private void ChoiceLocalSave() => 
+            _taskCompletionSource?.TrySetResult(SaveType.Local);
+    }
+}

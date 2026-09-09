@@ -5,6 +5,8 @@ namespace _Project.Scripts.Logic.Common
     public interface IHealth
     {
         event Action OnHealthChanged;
+        event Action OnTakeDamage;
+        event Action OnTakeHeal;
         float MaxHealth { get; }
         float CurrentHealth { get; }
         void TakeDamage(float damage);

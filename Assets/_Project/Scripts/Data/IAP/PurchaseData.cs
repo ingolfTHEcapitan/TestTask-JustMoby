@@ -7,6 +7,6 @@ namespace _Project.Scripts.Data.IAP
     public class PurchaseData
     {
         public bool IsAdsRemoved;
-        public List<BoughtIAP> boughtIAPs = new List<BoughtIAP>();
+        public List<BoughtIAP> BoughtIAPs = new List<BoughtIAP>();
     }
 }

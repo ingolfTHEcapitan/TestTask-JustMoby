@@ -237,10 +237,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e050b2eb5dc432ca3ab0f515127b6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _audioSource: {fileID: 3619087064373259428}
-  _healSound: {fileID: 0}
-  _hitSounds:
-  - {fileID: 8300000, guid: 507eb340d89be8c4ab4647e00aaf49e5, type: 3}
 --- !u!114 &666391151365057433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,6 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c009bd0d0b4bd9b5e482c502cab036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _speed: 0.25
 --- !u!1 &7049452954211621582
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,6 +642,26 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _hitSounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _hitSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 507eb340d89be8c4ab4647e00aaf49e5, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 507eb340d89be8c4ab4647e00aaf49e5, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

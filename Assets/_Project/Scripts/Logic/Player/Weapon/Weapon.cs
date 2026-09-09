@@ -16,7 +16,6 @@ namespace _Project.Scripts.Logic.Player.Weapon
         private const int AllLayers = -1;
 
         [SerializeField] private Transform _shootPoint;
-        [SerializeField] private GameObject _hitFxPrefab;
         
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource;
@@ -54,14 +53,14 @@ namespace _Project.Scripts.Logic.Player.Weapon
             _fireRate = _weaponConfig.FireRate;
         }
 
-        private async void Update()
+        private void Update()
         {
             if (_pauseService.IsPaused)
                 return;
 
             if (_inputService.IsFireButtonPressed() && CanShoot())
             {
-                await ShootAsync();
+                 ShootAsync().Forget(Debug.LogException);
                 _statistics.RecordShot();
                 _audioService.PlayOneShot(_shotSound, _audioSource);
             }

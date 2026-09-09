@@ -7,5 +7,6 @@ namespace _Project.Scripts.Logic.Player.Factory
     public interface IPlayerFactory
     {
         UniTask<Health> CreatePlayerAsync(Vector3 at);
+        PlayerDeath GetPlayerDeath();
     }
 }

@@ -1,12 +1,13 @@
-﻿using _Project.Scripts.Services.LoadingCurtain;
+﻿using System;
 using _Project.Scripts.Services.Progress;
-using _Project.Scripts.Services.SaveConflictResolve;
 using _Project.Scripts.Services.SaveLoad;
-using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
 using _Project.Scripts.UI.Windows.MainMenu;
+using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -14,69 +15,60 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 {
     public class MainMenuBootstrapper: IInitializable
     {
-        private readonly ILoadingCurtainService _loadingCurtain;
+        private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         private readonly IProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
         private readonly IUIFactory _uiFactory;
-        private readonly ISaveConflictResolveService _saveConflictResolveService;
 
         private readonly Transform _uiParent;
-        private readonly CursorController _cursorController;
-        private readonly SettingsPresenter _settingsPresenter;
+        private readonly LazyInject<SettingsWindowPresenter> _lazySettingsWindowPresenter;
+        private readonly LazyInject<ShopWindowPresenter> _lazyShopWindowPresenter;
+        private readonly LazyInject<MainMenuWindowPresenter> _lazyMainMenuWindowPresenter;
+        private readonly LazyInject<SaveConflictResolveWindowPresenter> _lazySaveConflictResolveWindowPresenter;
 
-        public MainMenuBootstrapper(ILoadingCurtainService loadingCurtain, IProgressService progressService,
-            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory,
-            ISaveConflictResolveService saveConflictResolveService, Transform uiParent, CursorController cursorController,
-            SettingsPresenter settingsPresenter)
+        public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent,
+            LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, LazyInject<ShopWindowPresenter> lazyShopWindowPresenter,
+            LazyInject<MainMenuWindowPresenter> lazyMainMenuWindowPresenter,LazyInject<SaveConflictResolveWindowPresenter> lazySaveConflictResolveWindowPresenter)
         {
-            _settingsPresenter = settingsPresenter;
-            _saveConflictResolveService = saveConflictResolveService;
-            _loadingCurtain = loadingCurtain;
+            _lazyShopWindowPresenter = lazyShopWindowPresenter;
+            _lazySettingsWindowPresenter = lazySettingsWindowPresenter;
+            _lazyMainMenuWindowPresenter = lazyMainMenuWindowPresenter;
+            _lazySaveConflictResolveWindowPresenter = lazySaveConflictResolveWindowPresenter;
+            _loadingCurtainPresenter = loadingCurtainPresenter;
             _progressService = progressService;
             _saveLoadService = saveLoadService;
             _uiFactory = uiFactory;
             _uiParent = uiParent;
-            _cursorController = cursorController;
         }
 
-        public async void Initialize()
+        public void Initialize() => 
+            InitializeAsync().Forget();
+
+        private async UniTaskVoid InitializeAsync()
         {
-            _saveConflictResolveService.Initialize();
-            _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
-           
-            GameObject mainMenuLayer = await _uiFactory.CreateMainMenuLayerAsync(_uiParent);
+            try
+            {
+                await _uiFactory.CreateSaveConflictResolveWindowViewAsync(_uiParent);
+                _lazySaveConflictResolveWindowPresenter.Value.Initialize();
             
-            ShopWindow shopWindow = InitShopWindow(mainMenuLayer);
-            SettingsView settingsView = InitSettingsWindow(mainMenuLayer);
-            MainMenuWindow mainMenu = InitMainMenu(mainMenuLayer, shopWindow, settingsView);
+                _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
+            
+                await _uiFactory.CreateShopWindowViewAsync(_uiParent);
+                await _lazyShopWindowPresenter.Value.InitializeAsync();
 
-            _cursorController.SetCursorVisible(visible: true);
-            mainMenu.PlayBackGroundMusic();
-            _loadingCurtain.HideLoading();
-        }
-
-        private SettingsView InitSettingsWindow(GameObject mainMenuLayer)
-        {
-            SettingsView settingsView = mainMenuLayer.GetComponentInChildren<SettingsView>(includeInactive: true);
-            settingsView.Initialize();
-            _settingsPresenter.Construct(settingsView);
-            _settingsPresenter.Initialize();
-            return settingsView;
-        }
-
-        private ShopWindow InitShopWindow(GameObject mainMenuLayer)
-        {
-            ShopWindow shopWindow = mainMenuLayer.GetComponentInChildren<ShopWindow>(includeInactive: true);
-            shopWindow.Initialize();
-            return shopWindow;
-        }
-
-        private MainMenuWindow InitMainMenu(GameObject mainMenuLayer, 
-            ShopWindow shopWindow, SettingsView settingsView)
-        {
-            MainMenuWindow mainMenu = mainMenuLayer.GetComponentInChildren<MainMenuWindow>();
-            mainMenu.Initialize(shopWindow, settingsView);
-            return mainMenu;
+                await _uiFactory.CreateSettingsViewAsync(_uiParent);
+                _lazySettingsWindowPresenter.Value.Initialize();
+            
+                await _uiFactory.CreateMainMenuWindowViewAsync(_uiParent); 
+                _lazyMainMenuWindowPresenter.Value.Initialize();
+            
+                _loadingCurtainPresenter.HideLoading();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[MAIN MENU BOOTSTRAPPER] init error: {e}");
+            }
         }
     }
 }

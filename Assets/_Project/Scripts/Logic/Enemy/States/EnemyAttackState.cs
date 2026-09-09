@@ -66,21 +66,21 @@ namespace _Project.Scripts.Logic.Enemy.States
             _enemyRotateToPlayer.enabled = false;
         }
 
-        private void StartAttack()
-        {
-            IsAttacking = true;
-            OnAttackStarted?.Invoke();
-        }
-
         public void DealDamage()
         {
             if (Hit(out Collider hit))
             {
                 PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.green);
 
-                IHealth playerHealth = hit.GetComponent<IHealth>();
-                playerHealth.TakeDamage(_config.AttackDamage);
-                _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
+                if (hit.TryGetComponent(out IHealth playerHealth))
+                {
+                    playerHealth.TakeDamage(_config.AttackDamage);
+                    _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
+                }
+                else
+                {
+                    throw new NullReferenceException($"[ENEMY] No IHealth component found on {hit.gameObject.name}");
+                }
             }
             else
             {
@@ -88,9 +88,15 @@ namespace _Project.Scripts.Logic.Enemy.States
                 _audioService.PlayOneShotRandom(_swordMissSounds, _audioSource);
             }
         }
-        
+
         public void AttackEnded() =>
             IsAttacking = false;
+
+        private void StartAttack()
+        {
+            IsAttacking = true;
+            OnAttackStarted?.Invoke();
+        }
 
         private bool Hit(out Collider hit)
         {

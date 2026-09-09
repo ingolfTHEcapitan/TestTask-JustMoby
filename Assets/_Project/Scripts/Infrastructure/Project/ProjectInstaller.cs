@@ -8,11 +8,7 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Authentication;
-using _Project.Scripts.Services.Effects;
-using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.IAP;
-using _Project.Scripts.Services.LoadingCurtain;
-using _Project.Scripts.Services.LoadingCurtain.Factory;
 using _Project.Scripts.Services.NetworkAccessibility;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.Progress;
@@ -22,9 +18,9 @@ using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.SaveLoad.CloudSave;
 using _Project.Scripts.Services.SceneLoader;
 using _Project.Scripts.Services.Sound;
-using _Project.Scripts.Services.Statistics;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project
@@ -48,6 +44,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.Bind<EnemyConfig>().AsSingle();
             Container.Bind<LocalSaveServiceConfig>().AsSingle();
             Container.Bind<ProductConfigWrapper>().AsSingle();
+            Container.Bind<AdsConfig>().AsSingle();
             Container.Bind<List<PlayerStatConfig>>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<RemoteConfigService>().AsSingle();
@@ -62,13 +59,10 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<AuthService>().AsSingle();
             Container.BindInterfacesAndSelfTo<ProgressService>().AsSingle();
             Container.Bind<PurchaseModel>().AsSingle();
-            Container.Bind<SaveTimeFormater>().AsSingle();
             Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<FirebaseAnalyticsService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<GameStatistics>().AsSingle();
             Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle();
 
             Container.Bind<ISaveLoadService>().WithId(SaveType.Local).FromMethod(GetLocalSaveInstance).AsCached();
@@ -77,21 +71,24 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.Bind<ISaveLoadService>().WithId(SaveType.Coordinator).To<SaveLoadCoordinator>().FromResolve();
             Container.Bind<ISaveLoadCoordinator>().To<SaveLoadCoordinator>().FromResolve();
             
+            Container.BindInterfacesAndSelfTo<IAPProvider>().AsSingle();
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<EffectsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<AudioService>().AsSingle();
         }
 
         private void BindLoadingCurtain()
         {
-            Container.BindInterfacesAndSelfTo<LoadingCurtainFactory>().AsSingle();
-            Container.BindInterfacesAndSelfTo<LoadingCurtainService>().AsSingle();
+            Container.Bind<LoadingCurtainView>().FromMethod(GetLoadingWindowView).AsSingle();
+            Container.Bind<LoadingCurtainPresenter>().AsSingle();
         }
-        
+
         private void BindProjectBootstrapper() => 
             Container.BindInterfacesAndSelfTo<ProjectBootstrapper>().AsSingle();
 
         private ISaveLoadService GetLocalSaveInstance(InjectContext context) => 
             context.Container.Resolve<LocalSaveServiceConfig>().GetInstance();
+
+        private LoadingCurtainView GetLoadingWindowView(InjectContext context) => 
+            context.Container.Resolve<IUIFactory>().GetWindowView<LoadingCurtainView>();
     }
 }

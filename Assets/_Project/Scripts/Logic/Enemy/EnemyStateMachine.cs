@@ -99,7 +99,7 @@ namespace _Project.Scripts.Logic.Enemy
         private void UpdateAttackCoolDown()
         {
             if (!AttackCooldownIsUp()) 
-                _currentAttackCooldown = Mathf.Max(0, _currentAttackCooldown -= Time.deltaTime);
+                _currentAttackCooldown = Mathf.Max(0, _currentAttackCooldown - Time.deltaTime);
         }
         
         private bool IsPlayerInAttackRange() => 
@@ -114,8 +114,8 @@ namespace _Project.Scripts.Logic.Enemy
         private bool IsPlayerOutOfChaseRange() => 
             GetSqrDistanceToPlayer() > _chaseDistanceSquared;
 
-        private bool AttackCooldownIsUp() 
-            => _currentAttackCooldown <= 0f;
+        private bool AttackCooldownIsUp() =>
+            _currentAttackCooldown <= 0f;
 
         private float GetSqrDistanceToPlayer() => 
             (transform.position - _playerTransform.position).sqrMagnitude;

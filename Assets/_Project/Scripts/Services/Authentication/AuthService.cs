@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
@@ -16,20 +15,20 @@ namespace _Project.Scripts.Services.Authentication
             await SignUpAnonymouslyAsync();
         }
 
-        private async Task SignUpAnonymouslyAsync()
+        private async UniTask SignUpAnonymouslyAsync()
         {
             try
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                Debug.Log("Sign in anonymously succeeded! is IsSignedIn");
-                Debug.Log("Player ID " + AuthenticationService.Instance.PlayerId);
             }
             catch (AuthenticationException exception)
             {
+                Debug.LogError($"[AUTH SERVICE] Anonymous sign-in failed (auth): {exception.Message}");
                 Debug.LogException(exception);
             }
             catch (RequestFailedException exception)
             {
+                Debug.LogError($"[AUTH SERVICE] Anonymous sign-in failed (network): {exception.Message}");
                 Debug.LogException(exception);
             }
         }

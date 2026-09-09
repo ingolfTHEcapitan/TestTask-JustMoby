@@ -55,34 +55,28 @@ namespace _Project.Scripts.Services.IAP
             
             foreach (var product in controller.products.all)
                 _products.Add(product.definition.id, product);
-            
-            Debug.Log("UnityPurchasing initialization success");
         }
         
         public void OnInitializeFailed(InitializationFailureReason error) => 
-            Debug.LogError($"UnityPurchasing OnInitializeFailed: {error}");
+            Debug.LogError($"[IAP UNITY] Initialization failed: {error}");
 
         public void OnInitializeFailed(InitializationFailureReason error, string message) => 
-            Debug.LogError($"UnityPurchasing OnInitializeFailed: {error}, message: {message}");
+            Debug.LogError($"[IAP UNITY] Initialization failed: {error}, message: {message}");
 
-        public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent)
-        {
-            Debug.Log($"UnityPurchasing ProcessPurchase success: {purchaseEvent.purchasedProduct.definition.id}");
-            
-            return OnProcessPurchase.Invoke(purchaseEvent.purchasedProduct);
-        }
+        public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs purchaseEvent) => 
+            OnProcessPurchase.Invoke(purchaseEvent.purchasedProduct);
 
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
-            Debug.LogError($"product {product.definition.id} purchase failed, Purchase Failure Reason: {failureReason}," +
-                           $" transaction id: {product.transactionID}");
+            Debug.LogError($"[IAP UNITY] product {product.definition.id} purchase failed" + 
+                           $"\nReason: {failureReason}, transaction id: {product.transactionID}");
             OnPurchaseFailedAction?.Invoke(product.definition.id);
         }
 
         public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
         {
-            Debug.LogError($"product {product.definition.id} purchase failed, Purchase Failure Description: {failureDescription.message}," +
-                           $" transaction id: {product.transactionID}");
+            Debug.LogError($"[IAP UNITY] product {product.definition.id} purchase failed" + 
+                           $"\nDescription: {failureDescription.message}, transaction id: {product.transactionID}");
             OnPurchaseFailedAction?.Invoke(product.definition.id);
         }
         

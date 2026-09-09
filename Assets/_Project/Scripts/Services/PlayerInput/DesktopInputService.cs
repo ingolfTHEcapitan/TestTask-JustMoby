@@ -1,9 +1,22 @@
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Services.PlayerInput
 {
     public class DesktopInputService : IInputService
     {
+        public event Action OnOpenStatsButtonPressed;
+        public event Action OnMainMenuButtonPressed;
+
+        public void Tick()
+        {
+            if(IsOpenStatsButtonPressed())
+                OnOpenStatsButtonPressed?.Invoke();
+            
+            if (IsMainMenuButtonPressed()) 
+                OnMainMenuButtonPressed?.Invoke();
+        }
+
         public Vector2 GetMovementAxis() => 
             new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 

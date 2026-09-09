@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Services.Progress;
@@ -28,7 +27,6 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
             
             string json = JsonUtility.ToJson(progressService.PlayerProgress, prettyPrint: true);
             await File.WriteAllTextAsync(_savePath, json).AsUniTask();
-            Debug.Log("Progress saved to File, save path: " + _savePath);
         }
 
         public async UniTask<PlayerProgress> LoadProgressAsync()
@@ -37,7 +35,6 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
             {
                 string json = await File.ReadAllTextAsync(_savePath).AsUniTask();
                 PlayerProgress playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
-                Debug.Log("Progress loaded from File, save path: " + _savePath);
                 return playerProgress;
             }
             

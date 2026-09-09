@@ -32,6 +32,12 @@ namespace _Project.Scripts.Logic.Common.StateMachine
         public IState GetState<TState>() where TState: class, IState => 
             _nodes[typeof(TState)].State as TState;
         
+        public void AddTransition(IState from, IState to, IPredicate condition) => 
+            GetOrAddNode(from).AddTransition(GetOrAddNode(to).State, condition);
+        
+        public void AddAnyTransition(IState to, IPredicate condition) => 
+            _anyTransitions.Add(new Transition(GetOrAddNode(to).State , condition));
+        
         private void ChangeState(IState state)
         {
             if (_currentStateNode.State == state)
@@ -57,13 +63,7 @@ namespace _Project.Scripts.Logic.Common.StateMachine
             
             return null;
         }
-
-        public void AddTransition(IState from, IState to, IPredicate condition) => 
-            GetOrAddNode(from).AddTransition(GetOrAddNode(to).State, condition);
         
-        public void AddAnyTransition(IState to, IPredicate condition) => 
-            _anyTransitions.Add(new Transition(GetOrAddNode(to).State , condition));
-
         private StateNode GetOrAddNode(IState state)
         {
             StateNode node = _nodes.GetValueOrDefault(state.GetType());
@@ -76,8 +76,7 @@ namespace _Project.Scripts.Logic.Common.StateMachine
             
             return node;
         }
-
-
+        
         class StateNode
         {
             public IState State { get; }

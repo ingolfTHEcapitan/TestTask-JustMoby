@@ -1,5 +1,4 @@
-using _Project.Scripts.Logic.Player.PlayerStats;
-using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Logic.PlayerStats;
 
 namespace _Project.Scripts.Services.HealthCalculator
 {
@@ -7,23 +6,23 @@ namespace _Project.Scripts.Services.HealthCalculator
     {
         private const int MinShotsToKill = 1;
         private const int MaxShotsToKill = 10;
-        private const int _exclusiveOffset = 1;
+        private const int ExclusiveOffset = 1;
 
-        private readonly PlayerStatsData _playerStatsData;
+        private readonly PlayerStatsModel _playerStatsModel;
 
-        public HealthCalculatorService(PlayerStatsData playerStatsData) => 
-            _playerStatsData = playerStatsData;
+        public HealthCalculatorService(PlayerStatsModel playerStatsModel) => 
+            _playerStatsModel = playerStatsModel;
 
         public float CalculateEnemyMaxHealth()
         {
-            PlayerStatData damageStat = _playerStatsData.GetStat(StatName.Damage);
+            PlayerStatData damageStat = _playerStatsModel.GetStat(StatName.Damage);
             
-            int randomShootsCount = UnityEngine.Random.Range(MinShotsToKill, MaxShotsToKill + _exclusiveOffset);
+            int randomShootsCount = UnityEngine.Random.Range(MinShotsToKill, MaxShotsToKill + ExclusiveOffset);
             float maxHealth = damageStat.BaseValue * randomShootsCount;
             return maxHealth;
         }
 
         public float CalculatePlayerMaxHealth() => 
-            _playerStatsData.GetStatValue(StatName.Health);
+            _playerStatsModel.GetStatValue(StatName.Health);
     }
 }
