@@ -99,7 +99,7 @@ namespace _Project.Scripts.Logic.Enemy
         private void UpdateAttackCoolDown()
         {
             if (!AttackCooldownIsUp()) 
-                _currentAttackCooldown = Mathf.Max(0, _currentAttackCooldown -= Time.deltaTime);
+                _currentAttackCooldown = Mathf.Max(0, _currentAttackCooldown - Time.deltaTime);
         }
         
         private bool IsPlayerInAttackRange() => 
