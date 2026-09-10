@@ -68,7 +68,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         public void UpdatePointsText(string points) => 
             _pointsText.SetText($"Points {points}");
         
-        public async Task<PlayerStatItemView> CreatePlayerStatItemAsync(PlayerStatData stat)
+        public async UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(PlayerStatData stat)
         {
             PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemAsync(_statsContainer);
             statItem.Initialize(stat, _audioSource);

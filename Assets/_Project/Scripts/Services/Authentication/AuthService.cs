@@ -16,7 +16,7 @@ namespace _Project.Scripts.Services.Authentication
             await SignUpAnonymouslyAsync();
         }
 
-        private async Task SignUpAnonymouslyAsync()
+        private async UniTask SignUpAnonymouslyAsync()
         {
             try
             {

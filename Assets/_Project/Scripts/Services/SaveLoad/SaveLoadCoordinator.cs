@@ -83,7 +83,7 @@ namespace _Project.Scripts.Services.SaveLoad
             }
         }
 
-        private async Task<PlayerProgress> ResolveSaveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
+        private async UniTask<PlayerProgress> ResolveSaveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
             Debug.LogWarning($"[{GetType().Name}] Обнаружен конфликт: Локальное сохранение новее облачного");
             
@@ -114,7 +114,7 @@ namespace _Project.Scripts.Services.SaveLoad
             return localProgress;
         }
 
-        private async Task<bool> HasInternetAsync() => 
+        private async UniTask<bool> HasInternetAsync() => 
             await _networkAccessibility.CheckNetworkConnectionAsync();
     }
 }
