@@ -507,6 +507,66 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 45
       objectReference: {fileID: 0}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _healSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 7f0b26dda2e24b747a57a9a43f0b064a, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeHealSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 7f0b26dda2e24b747a57a9a43f0b064a, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _hitSounds.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _hitSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: ce9896da6dfa7c343ba4dff8ad555ad5, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _hitSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 34e54c2b67b9b0248a41abe80836c241, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _hitSounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 7d1b34ccbd3693e4cb6cab17748b032a, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 3a0a113fd9fcdba46b5b7152afc908bf, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 2506d2e95025d2748afbd1ce9c444e43, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 108081a777bf3f64fa79c46449ab9343, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: cc6bf322f6d6bc545be22be3df62dc47, type: 3}
+    - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: 40b38cc22551d3147ad6f891a6bf223b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
