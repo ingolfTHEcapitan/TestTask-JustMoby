@@ -37,7 +37,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
 
         public void Dispose()
         {
-            foreach (PlayerStatData stat in _statsData.GetStatValues())
+            foreach (PlayerStatData stat in GetStatValues())
                 stat.OnStatChanged -= InvokeStatChanged;
         }
 
@@ -46,7 +46,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             if (!HasAnyChanges()) 
                 return;
             
-            foreach (PlayerStatData stat in _statsData.GetStatValues()) 
+            foreach (PlayerStatData stat in GetStatValues()) 
                 stat.ApplyPreviewLevel();
             
             await _saveLoad.SaveStatsAsync(UpgradePoints);
@@ -59,7 +59,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             
             int returnedPoints = 0;
 
-            foreach (PlayerStatData stat in _statsData.GetStatValues())
+            foreach (PlayerStatData stat in GetStatValues())
             {
                 returnedPoints += stat.PreviewLevel - stat.Level;
                 stat.DiscardPreviewLevel();
@@ -81,7 +81,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             if (!CanUpgrade(statName))
                 return;
 
-            _statsData.GetStat(statName).IncreasePreviewLevel();
+            GetStat(statName).IncreasePreviewLevel();
             UpgradePoints--;
             OnStatsChanged?.Invoke();
         }
@@ -91,15 +91,21 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             if (UpgradePoints <=0 || !_statsData.GetStats().ContainsKey(statName))
                 return false;
 
-            return _statsData.GetStat(statName).PreviewLevel < _statsData.GetStat(statName).MaxLevel;
+            return GetStat(statName).PreviewLevel < GetStat(statName).MaxLevel;
         }
 
         public void SetPaused(bool paused) => 
             _pauseService.SetPaused(paused);
 
+        public List<PlayerStatData> GetStatValues() => 
+            _statsData.GetStatValues();
+
+        public PlayerStatData GetStat(StatName statName) => 
+            _statsData.GetStat(statName);
+
         private bool HasAnyChanges() =>
-            _statsData.GetStatValues().Any(stat => stat.PreviewLevelHasChanged);
-        
+            GetStatValues().Any(stat => stat.PreviewLevelHasChanged);
+
         private void InvokeStatChanged() => 
             OnStatsChanged?.Invoke();
     }

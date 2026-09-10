@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Services.UpgradePoints;
@@ -30,9 +31,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource;
-
-        private readonly Dictionary<StatName, PlayerStatItemView> _statItems = new Dictionary<StatName, PlayerStatItemView>();
-
+        
         private IUpgradePointsService _pointsService;
         private IAudioService _audioService;
         private IUIFactory _uiFactory;
@@ -68,30 +67,19 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         
         public void UpdatePointsText(string points) => 
             _pointsText.SetText($"Points {points}");
-
-        public async UniTask CreateStatItemsAsync(List<PlayerStatData> stats)
+        
+        public async Task<PlayerStatItemView> CreatePlayerStatItemAsync(PlayerStatData stat)
         {
-            ClearStatItems();
-            
-            foreach (PlayerStatData stat in stats)
-            {
-                PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemAsync(_statsContainer);
-                statItem.Initialize(stat, _audioSource);
-                _statItems[stat.Name] = statItem;
-            }
+            PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemAsync(_statsContainer);
+            statItem.Initialize(stat, _audioSource);
+            return statItem;
         }
 
-        public void UpdateStatItem(StatName statName, int level, bool canUpgrade)
+        public void UpdateStatItem(PlayerStatItemView statItem, int level, bool canUpgrade)
         {
-            if (_statItems.TryGetValue(statName, out PlayerStatItemView statItem))
-            {
-                statItem.UpdateLevelText(level);
-                statItem.ToggleUpgradeButton(canUpgrade);
-            }
+            statItem.UpdateLevelText(level);
+            statItem.ToggleUpgradeButton(canUpgrade);
         }
-
-        public List<PlayerStatItemView> GetStatItems() => 
-            _statItems.Values.ToList();
         
         public void ShowWindow()
         {
@@ -103,14 +91,6 @@ namespace _Project.Scripts.Logic.Player.PlayerStats.UI
         {
             await _windowAnimation.AnimateCloseAsync();
             _statsWindow.SetActive(false);
-        }
-
-        private void ClearStatItems()
-        {
-            foreach (PlayerStatItemView item in _statItems.Values) 
-                Destroy(item.gameObject);
-            
-            _statItems.Clear();
         }
         
         private void PlayLevelUpSound() => 
