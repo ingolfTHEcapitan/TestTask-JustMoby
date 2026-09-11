@@ -6,21 +6,22 @@ using Zenject;
 namespace _Project.Scripts.UI.HUD
 {
     public class HeadUpDisplayPresenter: IDisposable, ITickable
-    {   //P +
-        private IInputService _inputService;
-        private CursorController _cursorController;
-        
-        private HeadUpDisplayView _view;
-        private HeadUpDisplayModel _model;
+    {
+        private readonly IInputService _inputService;
+        private readonly CursorController _cursorController;
 
-        public HeadUpDisplayPresenter(HeadUpDisplayView view, HeadUpDisplayModel model, 
-            IInputService inputService, CursorController cursorController)
+        private readonly HeadUpDisplayModel _model;
+        private HeadUpDisplayView _view;
+
+        public HeadUpDisplayPresenter(HeadUpDisplayModel model, IInputService inputService, CursorController cursorController)
         {
             _model = model;
-            _view = view;
             _inputService = inputService;
             _cursorController = cursorController;
         }
+        
+        public void Construct(HeadUpDisplayView view) => 
+            _view = view;
 
         public void Initialize() => 
             _view.OnBackToMainMenuButtonClicked += BackToMainMenu;
@@ -30,15 +31,14 @@ namespace _Project.Scripts.UI.HUD
 
         public void Tick()
         {
-            // P
             if (_inputService.IsMainMenuButtonPressed())
                 BackToMainMenu();
         }
 
-        private void BackToMainMenu()
+        private async void BackToMainMenu()
         {
-            // P +
             _cursorController.SetCursorVisible(visible: false);
+            await _model.LoadMainMenu();
         }
     }
 }

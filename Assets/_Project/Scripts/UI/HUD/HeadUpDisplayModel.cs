@@ -7,7 +7,6 @@ namespace _Project.Scripts.UI.HUD
 {
     public class HeadUpDisplayModel
     {
-        //M
         private readonly ILoadingCurtainService _loadingCurtain;
         private readonly ISceneLoaderService _sceneLoader;
 
@@ -15,12 +14,10 @@ namespace _Project.Scripts.UI.HUD
         {
             _loadingCurtain = loadingCurtain;
             _sceneLoader = sceneLoader;
-            
         }
 
         public async UniTask LoadMainMenu()
         {
-            // M
             await _loadingCurtain.ShowLoadingAsync();
             await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
         }

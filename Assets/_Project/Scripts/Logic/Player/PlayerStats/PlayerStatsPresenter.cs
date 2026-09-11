@@ -21,7 +21,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
         private PlayerDeath _playerDeath;
         private bool _isOpen;
 
-        public PlayerStatsPresenter(IInputService inputService, PlayerStatsModel model, PlayerStatsData statsData)
+        public PlayerStatsPresenter(IInputService inputService, PlayerStatsModel model)
         {
             _inputService = inputService;
             _model = model;

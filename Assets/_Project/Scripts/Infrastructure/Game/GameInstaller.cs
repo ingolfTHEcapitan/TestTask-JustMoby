@@ -6,6 +6,7 @@ using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.UpgradePoints;
+using _Project.Scripts.UI.HUD;
 using UnityEngine;
 using Zenject;
 
@@ -28,6 +29,7 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             BindPlayer();
             BindPlayerStats();
+            BindHeadUpDisplay();
             BindHealthCalculatorService();
             BindUpgradePointsService();
             BindEnemy();
@@ -50,6 +52,12 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
+        }
+        
+        private void BindHeadUpDisplay()
+        {
+            Container.BindInterfacesAndSelfTo<HeadUpDisplayModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<HeadUpDisplayPresenter>().AsSingle();
         }
 
         private void BindUpgradePointsService() => 

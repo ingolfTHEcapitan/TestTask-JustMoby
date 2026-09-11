@@ -7,6 +7,7 @@ using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -22,10 +23,11 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly PlayerStatsPresenter _playerStatsPresenter;
         private readonly EnemySpawner _enemySpawner;
         private readonly AudioClip _levelUpSound;
-        private IUpgradePointsService _pointsService;
+        private readonly IUpgradePointsService _pointsService;
+        private HeadUpDisplayPresenter _hudPresenter;
 
-        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound,
-            PlayerStatsPresenter playerStatsPresenter, EnemySpawner enemySpawner, IUpgradePointsService pointsService)
+        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, PlayerStatsPresenter playerStatsPresenter, 
+            EnemySpawner enemySpawner, IUpgradePointsService pointsService, HeadUpDisplayPresenter hudPresenter)
         {
             _pointsService = pointsService;
             _uiFactory = uiFactory;
@@ -33,29 +35,37 @@ namespace _Project.Scripts.Infrastructure.Game
             _playerStatsPresenter = playerStatsPresenter;
             _enemySpawner = enemySpawner;
             _levelUpSound = levelUpSound;
+            _hudPresenter = hudPresenter;
         }
 
         public async UniTask InitUIAsync(Health playerHealth)
         {
-            HeadUpDisplay hudLayer = await _uiFactory.CreateHudLayerAsync(_uiParent);
+            HeadUpDisplayView hudView = await _uiFactory.CreateHudLayerAsync(_uiParent);
             GameObject popUpLayer = await _uiFactory.CreatePopUpLayerAsync(_uiParent);
 
-            InitPlayerHealthBarView(hudLayer, playerHealth);
-
-            PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudLayer, _levelUpSound, _pointsService);
+            InitPlayerHealthBarView(hudView, playerHealth);
+            InitHudPresenter(hudView);
+            
+            PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudView, _levelUpSound, _pointsService);
             await InitPlayerStatsPresenterAsync(playerStatsView, playerHealth);
             
             InitGameOverWindow(popUpLayer, playerHealth, _enemySpawner);
         }
-        
-        private void InitPlayerHealthBarView(HeadUpDisplay hud, Health playerHealth)
+
+        private void InitHudPresenter(HeadUpDisplayView hudView)
+        {
+            _hudPresenter.Construct(hudView);
+            _hudPresenter.Initialize();
+        }
+
+        private void InitPlayerHealthBarView(HeadUpDisplayView hud, Health playerHealth)
         {
             HealthBarView playerHealthBarView = hud.HealthBarView;
             playerHealthBarView.Construct(playerHealth);
             playerHealthBarView.Initialize();
         }
 
-        private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, HeadUpDisplay hud, AudioClip levelUpSound,
+        private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, HeadUpDisplayView hud, AudioClip levelUpSound,
             IUpgradePointsService pointsService)
         {
             Button openButton = hud.OpenStatsWindowButton;

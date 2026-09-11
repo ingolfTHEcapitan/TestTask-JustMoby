@@ -1,6 +1,7 @@
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.SaveConflictResolve.UI;
+using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.Shop;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -19,12 +20,10 @@ namespace _Project.Scripts.UI.Factory
             _assetProvider = assetProvider;
         }
         
-        public async UniTask<HeadUpDisplay> CreateHudLayerAsync(Transform uiParent)
+        public async UniTask<HeadUpDisplayView> CreateHudLayerAsync(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.HudLayer);
-            HeadUpDisplay headUpDisplay = _container.InstantiatePrefabForComponent<HeadUpDisplay>(prefab, uiParent);
-            headUpDisplay.Initialize();
-            return headUpDisplay;
+            return _container.InstantiatePrefabForComponent<HeadUpDisplayView>(prefab, uiParent);
         }
 
         public async UniTask<GameObject> CreatePopUpLayerAsync(Transform uiParent)
