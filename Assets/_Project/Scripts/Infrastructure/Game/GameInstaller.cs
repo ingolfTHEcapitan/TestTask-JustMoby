@@ -51,7 +51,7 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<PlayerStatsData>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerStatsPresenter>().AsSingle();
+            Container.Bind<PlayerStatsPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
         }
         

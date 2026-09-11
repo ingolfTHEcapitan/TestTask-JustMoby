@@ -58,10 +58,7 @@ namespace _Project.Scripts.Infrastructure.Project
             await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
         }
 
-        public void Dispose()
-        {
-            if (_iapService is IDisposable disposable) 
-                disposable.Dispose();
-        }
+        public void Dispose() => 
+            _iapService.Dispose();
     }
 }

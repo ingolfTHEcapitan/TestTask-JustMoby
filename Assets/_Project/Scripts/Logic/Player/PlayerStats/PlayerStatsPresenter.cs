@@ -5,12 +5,11 @@ using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.PlayerInput;
 using Cysharp.Threading.Tasks;
-using Zenject;
 using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.Logic.Player.PlayerStats
 {
-    public class PlayerStatsPresenter : IDisposable, ITickable
+    public class PlayerStatsPresenter : IDisposable
     {
         private readonly IInputService _inputService;
         private readonly PlayerStatsModel _model;
@@ -39,6 +38,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             _view.OnOpenButtonClicked += Open;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
+            _inputService.OnOpenStatsButtonPressed += Open;
             
             await CreateStatItemsAsync(_model.GetStatValues());
             
@@ -56,13 +56,7 @@ namespace _Project.Scripts.Logic.Player.PlayerStats
             foreach (PlayerStatItemView statItemView in GetStatItems())
                 statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;
         }
-
-        public void Tick()
-        {
-            if (_inputService.IsOpenStatsButtonPressed()) 
-                Open();
-        }
-
+        
         private async UniTask CreateStatItemsAsync(List<PlayerStatData> stats)
         {
             ClearStatItems();
