@@ -4,7 +4,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
     {
         public const string PopUpLayer = "PopUpLayer";
         public const string MainMenuLayer = "MainMenuLayer";
-        public const string HudLayer = "HudLayer";
+        public const string HeadUpDisplay = "HeadUpDisplay";
         public const string LoadingCurtain = "LoadingCurtain";
         public const string Player = "Player";
         public const string Enemy = "Enemy";
@@ -12,7 +12,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         public const string ShopItem = "ShopItem";
         public const string SaveConflictResolveWindow = "SaveConflictResolveWindow";
         public const string HitFx = "HitFx_yellow";
-        public const string Deathfx = "DeathFx_soulEscape";
+        public const string DeathFx = "DeathFx_soulEscape";
         public const string PlayerStatItem = "PlayerStatItem";
     }
 }

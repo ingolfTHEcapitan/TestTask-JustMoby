@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 4051196001282480721}
   - component: {fileID: 6619846481525256050}
   m_Layer: 5
-  m_Name: HUDlayer
+  m_Name: HeadUpDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

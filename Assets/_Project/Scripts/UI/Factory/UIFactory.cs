@@ -24,7 +24,7 @@ namespace _Project.Scripts.UI.Factory
         
         public async UniTask<HeadUpDisplayView> CreateHudLayerAsync(Transform uiParent)
         {
-            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.HudLayer);
+            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.HeadUpDisplay);
             _hudView = _container.InstantiatePrefabForComponent<HeadUpDisplayView>(prefab, uiParent);
             return _hudView;
         }

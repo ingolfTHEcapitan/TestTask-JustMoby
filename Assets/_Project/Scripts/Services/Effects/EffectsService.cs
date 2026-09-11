@@ -19,7 +19,7 @@ namespace _Project.Scripts.Services.Effects
         public async UniTask WarmUpAsync()
         {
             await _assetProvider.LoadAsync<GameObject>(AssetAddress.HitFx);
-            await _assetProvider.LoadAsync<GameObject>(AssetAddress.Deathfx);
+            await _assetProvider.LoadAsync<GameObject>(AssetAddress.DeathFx);
         }
 
         public async UniTask PlayHitFxAsync(Vector3 position, Transform parent)
@@ -35,7 +35,7 @@ namespace _Project.Scripts.Services.Effects
         {
             Quaternion rotation = Quaternion.Euler(-90, 0, 0);
             
-            GameObject fxPrefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Deathfx);
+            GameObject fxPrefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.DeathFx);
             GameObject fxGameObject = _container.InstantiatePrefab(fxPrefab, position , rotation, parent);
             fxGameObject.transform.localPosition = new Vector3(0, 0.5f, -1);
         }

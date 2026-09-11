@@ -17,11 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: faa2e9d54fa7138419c53536120f6397
   m_SerializeEntries:
-  - m_GUID: 077389f1b4018714ba97c6db32662b95
-    m_Address: PopUpLayer
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 190b92b937a550d46b8fa508667be085
     m_Address: Player
     m_ReadOnly: 0
@@ -34,6 +29,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 35a21673b24503f41ab67b8582fcc3ad
     m_Address: PlayerStatItem
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4f93eafe91250ba419f14c8ff7e826a2
+    m_Address: GameOverWindow
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -78,7 +78,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ecbf2fb2ff8b13745b205ce0fa330f95
-    m_Address: HudLayer
+    m_Address: HeadUpDisplay
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f5690ec389786384984df95b40be4241
+    m_Address: PlayerStatsWindow
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

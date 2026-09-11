@@ -17,13 +17,13 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 64006cf7e78ceee4fbc3482ac3a01557
   m_SerializeEntries:
-  - m_GUID: 21e081a4d6d99ef47966f98902981412
-    m_Address: SmallGems_lcon
+  - m_GUID: 21c2b4e3c6f59984e80e68404e24e34c
+    m_Address: MainMenu
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2748c7e0a427f47488a53e7711dfc26c
-    m_Address: MainMenuLayer
+  - m_GUID: 21e081a4d6d99ef47966f98902981412
+    m_Address: SmallGems_lcon
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -37,8 +37,18 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 560e629e0a533dd44bc60237d7abed0c
+    m_Address: SettingsWindow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 76c9679971861944dbe9710a59311286
     m_Address: RemoveAdd_Icon
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 970e5eab3b3fab1488b17610d245d60b
+    m_Address: ShopWindow
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
