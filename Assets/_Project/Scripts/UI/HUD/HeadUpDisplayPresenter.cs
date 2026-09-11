@@ -1,44 +1,40 @@
 ﻿using System;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.UI.Common;
-using Zenject;
 
 namespace _Project.Scripts.UI.HUD
 {
-    public class HeadUpDisplayPresenter: IDisposable, ITickable
+    public class HeadUpDisplayPresenter: IDisposable
+
     {
-        private readonly IInputService _inputService;
-        private readonly CursorController _cursorController;
+    private readonly IInputService _inputService;
+    private readonly CursorController _cursorController;
 
-        private readonly HeadUpDisplayModel _model;
-        private HeadUpDisplayView _view;
+    private readonly HeadUpDisplayModel _model;
+    private readonly HeadUpDisplayView _view;
 
-        public HeadUpDisplayPresenter(HeadUpDisplayModel model, IInputService inputService, CursorController cursorController)
-        {
-            _model = model;
-            _inputService = inputService;
-            _cursorController = cursorController;
-        }
-        
-        public void Construct(HeadUpDisplayView view) => 
-            _view = view;
+    public HeadUpDisplayPresenter(HeadUpDisplayModel model, HeadUpDisplayView view,
+        IInputService inputService, CursorController cursorController)
+    {
+        _model = model;
+        _view = view;
+        _inputService = inputService;
+        _cursorController = cursorController;
+    }
 
-        public void Initialize() => 
-            _view.OnBackToMainMenuButtonClicked += BackToMainMenu;
+    public void Initialize()
+    {
+        _view.OnBackToMainMenuButtonClicked += BackToOnMainMenu;
+        _inputService.OnMainMenuButtonPressed += BackToOnMainMenu;
+    }
 
-        public void Dispose() => 
-            _view.OnBackToMainMenuButtonClicked -= BackToMainMenu;
+    public void Dispose() =>
+        _view.OnBackToMainMenuButtonClicked -= BackToOnMainMenu;
 
-        public void Tick()
-        {
-            if (_inputService.IsMainMenuButtonPressed())
-                BackToMainMenu();
-        }
-
-        private async void BackToMainMenu()
-        {
-            _cursorController.SetCursorVisible(visible: false);
-            await _model.LoadMainMenu();
-        }
+    private async void BackToOnMainMenu()
+    {
+        _cursorController.SetCursorVisible(visible: false);
+        await _model.LoadMainMenu();
+    }
     }
 }

@@ -6,6 +6,7 @@ using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.UpgradePoints;
+using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.HUD;
 using UnityEngine;
 using Zenject;
@@ -56,8 +57,9 @@ namespace _Project.Scripts.Infrastructure.Game
         
         private void BindHeadUpDisplay()
         {
+            Container.Bind<HeadUpDisplayView>().FromMethod(GetHudView).AsSingle();
             Container.BindInterfacesAndSelfTo<HeadUpDisplayModel>().AsSingle();
-            Container.BindInterfacesAndSelfTo<HeadUpDisplayPresenter>().AsSingle();
+            Container.Bind<HeadUpDisplayPresenter>().AsSingle();
         }
 
         private void BindUpgradePointsService() => 
@@ -78,5 +80,8 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _dungeonMusic);
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
         }
+        
+        private HeadUpDisplayView GetHudView(InjectContext context) =>
+            context.Container.Resolve<IUIFactory>().GetHudView();
     }
 }

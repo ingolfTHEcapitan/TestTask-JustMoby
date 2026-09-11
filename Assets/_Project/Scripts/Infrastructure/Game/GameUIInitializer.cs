@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Logic.Common;
+﻿using System;
+using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.Player.PlayerStats;
 using _Project.Scripts.Logic.Player.PlayerStats.UI;
@@ -12,10 +13,11 @@ using _Project.Scripts.UI.Windows.GameOver;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Game
 {
-    public class GameUIInitializer
+    public class GameUIInitializer: IDisposable
     {
         private readonly IUIFactory _uiFactory;
         private readonly Transform _uiParent;
@@ -24,10 +26,11 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly EnemySpawner _enemySpawner;
         private readonly AudioClip _levelUpSound;
         private readonly IUpgradePointsService _pointsService;
+        private readonly LazyInject<HeadUpDisplayPresenter> _lazyHudPresenter;
         private HeadUpDisplayPresenter _hudPresenter;
 
         public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, PlayerStatsPresenter playerStatsPresenter, 
-            EnemySpawner enemySpawner, IUpgradePointsService pointsService, HeadUpDisplayPresenter hudPresenter)
+            EnemySpawner enemySpawner, IUpgradePointsService pointsService, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter)
         {
             _pointsService = pointsService;
             _uiFactory = uiFactory;
@@ -35,8 +38,11 @@ namespace _Project.Scripts.Infrastructure.Game
             _playerStatsPresenter = playerStatsPresenter;
             _enemySpawner = enemySpawner;
             _levelUpSound = levelUpSound;
-            _hudPresenter = hudPresenter;
+            _lazyHudPresenter = lazyHudPresenter;
         }
+
+        public void Dispose() => 
+            _hudPresenter.Dispose();
 
         public async UniTask InitUIAsync(Health playerHealth)
         {
@@ -44,18 +50,13 @@ namespace _Project.Scripts.Infrastructure.Game
             GameObject popUpLayer = await _uiFactory.CreatePopUpLayerAsync(_uiParent);
 
             InitPlayerHealthBarView(hudView, playerHealth);
-            InitHudPresenter(hudView);
+            _hudPresenter = _lazyHudPresenter.Value;
+            _hudPresenter.Initialize();
             
             PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudView, _levelUpSound, _pointsService);
             await InitPlayerStatsPresenterAsync(playerStatsView, playerHealth);
             
             InitGameOverWindow(popUpLayer, playerHealth, _enemySpawner);
-        }
-
-        private void InitHudPresenter(HeadUpDisplayView hudView)
-        {
-            _hudPresenter.Construct(hudView);
-            _hudPresenter.Initialize();
         }
 
         private void InitPlayerHealthBarView(HeadUpDisplayView hud, Health playerHealth)

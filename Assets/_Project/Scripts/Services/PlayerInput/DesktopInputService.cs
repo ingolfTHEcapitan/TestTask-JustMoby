@@ -5,16 +5,16 @@ namespace _Project.Scripts.Services.PlayerInput
 {
     public class DesktopInputService : IInputService
     {
-        public event Action OpenStatsButtonPressed;
-        public event Action MainMenuButtonPressed;
+        public event Action OnOpenStatsButtonPressed;
+        public event Action OnMainMenuButtonPressed;
 
         public void Tick()
         {
             if(IsOpenStatsButtonPressed())
-                OpenStatsButtonPressed?.Invoke();
+                OnOpenStatsButtonPressed?.Invoke();
             
             if (IsMainMenuButtonPressed()) 
-                MainMenuButtonPressed?.Invoke();
+                OnMainMenuButtonPressed?.Invoke();
         }
 
         public Vector2 GetMovementAxis() => 

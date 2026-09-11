@@ -16,5 +16,6 @@ namespace _Project.Scripts.UI.Factory
         UniTask<Sprite> LoadSpriteAsync(string assetAddress);
         UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent);
         UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(Transform uiParent);
+        HeadUpDisplayView GetHudView();
     }
 }

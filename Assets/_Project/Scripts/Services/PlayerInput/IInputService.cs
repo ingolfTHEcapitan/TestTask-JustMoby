@@ -6,8 +6,8 @@ namespace _Project.Scripts.Services.PlayerInput
 {
     public interface IInputService : ITickable
     {
-        event Action OpenStatsButtonPressed;
-        event Action MainMenuButtonPressed;
+        event Action OnOpenStatsButtonPressed;
+        event Action OnMainMenuButtonPressed;
         
         Vector2 GetMovementAxis();
         Vector2 GetLookAxis();

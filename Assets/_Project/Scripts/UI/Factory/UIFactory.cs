@@ -1,3 +1,4 @@
+using System.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Player.PlayerStats.UI;
 using _Project.Scripts.Services.SaveConflictResolve.UI;
@@ -13,6 +14,7 @@ namespace _Project.Scripts.UI.Factory
     {
         private readonly IInstantiator _container;
         private readonly IAssetProvider _assetProvider;
+        private HeadUpDisplayView _hudView;
 
         public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
@@ -23,7 +25,8 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<HeadUpDisplayView> CreateHudLayerAsync(Transform uiParent)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.HudLayer);
-            return _container.InstantiatePrefabForComponent<HeadUpDisplayView>(prefab, uiParent);
+            _hudView = _container.InstantiatePrefabForComponent<HeadUpDisplayView>(prefab, uiParent);
+            return _hudView;
         }
 
         public async UniTask<GameObject> CreatePopUpLayerAsync(Transform uiParent)
@@ -57,6 +60,18 @@ namespace _Project.Scripts.UI.Factory
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.PlayerStatItem);
             return _container.InstantiatePrefabForComponent<PlayerStatItemView>(prefab, uiParent);
+        }
+
+        public HeadUpDisplayView GetHudView()
+        {
+            if (!_hudView)
+            {
+                throw new InvalidConstraintException
+                ("HUD view requested before creation. " +
+                 "Ensure HeadUpDisplayPresenter is not resolved before GameUIInitializer ran.");
+            }
+            
+            return _hudView;
         }
     }
 }
