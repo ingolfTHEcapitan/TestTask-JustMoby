@@ -5,7 +5,6 @@ using _Project.Scripts.Services.Sound;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 

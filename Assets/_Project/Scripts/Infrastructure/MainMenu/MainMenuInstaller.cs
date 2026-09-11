@@ -1,4 +1,4 @@
-﻿using _Project.Scripts.Services.SaveConflictResolve;
+﻿using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using UnityEngine;
 using Zenject;

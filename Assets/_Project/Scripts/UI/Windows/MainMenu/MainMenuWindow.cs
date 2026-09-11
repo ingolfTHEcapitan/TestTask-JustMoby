@@ -1,7 +1,7 @@
-﻿using _Project.Scripts.Services.LoadingCurtain;
-using _Project.Scripts.Services.SceneLoader;
+﻿using _Project.Scripts.Services.SceneLoader;
 using _Project.Scripts.Services.Sound;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
 using UnityEngine;

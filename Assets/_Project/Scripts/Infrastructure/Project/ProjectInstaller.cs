@@ -11,8 +11,6 @@ using _Project.Scripts.Services.Authentication;
 using _Project.Scripts.Services.Effects;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.IAP;
-using _Project.Scripts.Services.LoadingCurtain;
-using _Project.Scripts.Services.LoadingCurtain.Factory;
 using _Project.Scripts.Services.NetworkAccessibility;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.Progress;
@@ -25,6 +23,8 @@ using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Services.Statistics;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
+using _Project.Scripts.UI.Windows.LoadingCurtain.Factory;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project

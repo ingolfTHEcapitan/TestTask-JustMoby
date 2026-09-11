@@ -3,7 +3,7 @@ using _Project.Scripts.Configs;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 
-namespace _Project.Scripts.Logic.Player.PlayerStats.Data
+namespace _Project.Scripts.Logic.PlayerStats.Data
 {
     public class PlayerStatsData
     {

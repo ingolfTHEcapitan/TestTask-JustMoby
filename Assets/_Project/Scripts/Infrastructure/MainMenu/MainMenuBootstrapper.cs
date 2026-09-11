@@ -1,10 +1,10 @@
-﻿using _Project.Scripts.Services.LoadingCurtain;
-using _Project.Scripts.Services.Progress;
-using _Project.Scripts.Services.SaveConflictResolve;
+﻿using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
 using _Project.Scripts.UI.Windows.MainMenu;
+using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
 using UnityEngine;

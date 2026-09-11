@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Services.LoadingCurtain.Factory
+namespace _Project.Scripts.UI.Windows.LoadingCurtain.Factory
 {
     public class LoadingCurtainFactory : ILoadingCurtainFactory
     {
@@ -16,10 +16,10 @@ namespace _Project.Scripts.Services.LoadingCurtain.Factory
             _assetProvider = assetProvider;
         }
         
-        public async UniTask<UI.LoadingCurtain> CreateLoadingCurtainAsync()
+        public async UniTask<LoadingCurtain> CreateLoadingCurtainAsync()
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.LoadingCurtain);
-            return _container.InstantiatePrefabForComponent<UI.LoadingCurtain>(prefab);
+            return _container.InstantiatePrefabForComponent<LoadingCurtain>(prefab);
         }
     }
 }

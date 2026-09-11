@@ -1,4 +1,4 @@
-namespace _Project.Scripts.Logic.Player.PlayerStats
+namespace _Project.Scripts.Logic.PlayerStats
 {
     public enum StatName
     {

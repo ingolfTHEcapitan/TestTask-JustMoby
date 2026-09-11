@@ -1,5 +1,5 @@
 using System;
-using _Project.Scripts.Logic.Player.PlayerStats;
+using _Project.Scripts.UI.Windows.PlayerStats;
 using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Services.UpgradePoints

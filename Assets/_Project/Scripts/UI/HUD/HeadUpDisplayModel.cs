@@ -1,6 +1,5 @@
-﻿using System.Threading.Tasks;
-using _Project.Scripts.Services.LoadingCurtain;
-using _Project.Scripts.Services.SceneLoader;
+﻿using _Project.Scripts.Services.SceneLoader;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
 using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.UI.HUD

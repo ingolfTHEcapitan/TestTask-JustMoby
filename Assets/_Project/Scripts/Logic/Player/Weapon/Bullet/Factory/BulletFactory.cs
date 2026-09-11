@@ -1,7 +1,7 @@
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Infrastructure.AssetManagement;
-using _Project.Scripts.Logic.Player.PlayerStats;
-using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Logic.PlayerStats.Data;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;

@@ -1,6 +1,6 @@
 using Cysharp.Threading.Tasks;
 
-namespace _Project.Scripts.Services.LoadingCurtain
+namespace _Project.Scripts.UI.Windows.LoadingCurtain
 {
     public interface ILoadingCurtainService
     {

@@ -1,8 +1,8 @@
 using System;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Player.PlayerStats;
-using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.HealthCalculator;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

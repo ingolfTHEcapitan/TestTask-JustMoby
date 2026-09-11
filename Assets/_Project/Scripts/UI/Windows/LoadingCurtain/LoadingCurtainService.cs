@@ -1,13 +1,13 @@
-using _Project.Scripts.Services.LoadingCurtain.Factory;
+using _Project.Scripts.UI.Windows.LoadingCurtain.Factory;
 using Cysharp.Threading.Tasks;
 
-namespace _Project.Scripts.Services.LoadingCurtain
+namespace _Project.Scripts.UI.Windows.LoadingCurtain
 {
     public class LoadingCurtainService : ILoadingCurtainService
     {
         private readonly ILoadingCurtainFactory _curtainFactory;
         
-        private UI.LoadingCurtain _loadingCurtain;
+        private LoadingCurtain _loadingCurtain;
 
         public LoadingCurtainService(ILoadingCurtainFactory curtainFactory) => 
             _curtainFactory = curtainFactory;

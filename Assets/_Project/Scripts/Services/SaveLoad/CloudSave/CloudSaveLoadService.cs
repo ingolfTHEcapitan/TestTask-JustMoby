@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;

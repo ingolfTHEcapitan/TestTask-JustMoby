@@ -1,13 +1,14 @@
 using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Logic.Player.Factory;
-using _Project.Scripts.Logic.Player.PlayerStats;
-using _Project.Scripts.Logic.Player.PlayerStats.Data;
 using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
+using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.HUD;
+using _Project.Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
 using Zenject;
 

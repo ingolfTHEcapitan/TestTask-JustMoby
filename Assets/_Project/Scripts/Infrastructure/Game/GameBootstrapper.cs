@@ -1,7 +1,7 @@
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Player.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Effects;
+using _Project.Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
 using Zenject;
 

@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Logic.Player.PlayerStats.Data;
-using _Project.Scripts.Logic.Player.PlayerStats.UI;
+using _Project.Scripts.Logic.Player;
+using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.PlayerInput;
 using Cysharp.Threading.Tasks;
 using Object = UnityEngine.Object;
 
-namespace _Project.Scripts.Logic.Player.PlayerStats
+namespace _Project.Scripts.UI.Windows.PlayerStats
 {
     public class PlayerStatsPresenter : IDisposable
     {

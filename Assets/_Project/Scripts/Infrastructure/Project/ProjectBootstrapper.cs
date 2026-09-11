@@ -3,10 +3,10 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Authentication;
 using _Project.Scripts.Services.IAP;
-using _Project.Scripts.Services.LoadingCurtain;
 using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory;
 using _Project.Scripts.Services.SceneLoader;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
 using Cysharp.Threading.Tasks;
 using Zenject;
 

@@ -1,6 +1,5 @@
 using System;
 using _Project.Scripts.Data.Player;
-using _Project.Scripts.Services.SaveConflictResolve.UI;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
@@ -8,7 +7,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace _Project.Scripts.Services.SaveConflictResolve
+namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 {
     public class SaveConflictResolveService : ISaveConflictResolveService, IDisposable
     {

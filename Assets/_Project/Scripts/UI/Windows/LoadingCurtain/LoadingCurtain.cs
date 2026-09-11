@@ -1,9 +1,8 @@
 using _Project.Scripts.Services.Sound;
-using _Project.Scripts.UI.Windows;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Services.LoadingCurtain.UI
+namespace _Project.Scripts.UI.Windows.LoadingCurtain
 {
     public class LoadingCurtain : MonoBehaviour, IWindow
     {

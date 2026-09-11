@@ -1,6 +1,4 @@
-using Cysharp.Threading.Tasks;
-
-namespace _Project.Scripts.Services.SaveConflictResolve
+namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 {
     public interface ISaveConflictResolveService
     {

@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using _Project.Scripts.Services.Sound;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Scripts.Logic.Common
 {

@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI.Common;
@@ -13,7 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Player.PlayerStats.UI
+namespace _Project.Scripts.UI.Windows.PlayerStats
 {
     public class PlayerStatsView: MonoBehaviour
     {

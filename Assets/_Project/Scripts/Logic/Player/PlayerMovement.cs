@@ -1,5 +1,5 @@
-using _Project.Scripts.Logic.Player.PlayerStats;
-using _Project.Scripts.Logic.Player.PlayerStats.Data;
+using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
 using UnityEngine;

@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.Services.SaveConflictResolve.UI
+namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 {
     public class SaveConflictResolveWindow: MonoBehaviour
     {
