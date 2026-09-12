@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1050495087958034686}
+  - component: {fileID: 5621571995431799958}
   - component: {fileID: 2697370528122636081}
   - component: {fileID: 2864862097691887430}
-  - component: {fileID: 5621571995431799958}
   - component: {fileID: 3881892243181093751}
   m_Layer: 5
   m_Name: PlayerStatItem
@@ -43,6 +43,14 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 570, y: 105}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5621571995431799958
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793729835088024643}
+  m_CullTransparentMesh: 1
 --- !u!114 &2697370528122636081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,14 +98,6 @@ MonoBehaviour:
   _iconFrame: {fileID: 5446958178086465882}
   _icon: {fileID: 8315483628939521619}
   _upgradeButton: {fileID: 6286505041228859525}
---- !u!222 &5621571995431799958
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 793729835088024643}
-  m_CullTransparentMesh: 1
 --- !u!114 &3881892243181093751
 MonoBehaviour:
   m_ObjectHideFlags: 0

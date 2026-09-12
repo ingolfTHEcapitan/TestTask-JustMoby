@@ -44,17 +44,17 @@ namespace _Project.Scripts.Infrastructure.Game
 
         public async UniTask InitUIAsync(Health playerHealth)
         {
-            HeadUpDisplayView hudView = await _uiFactory.CreateHudLayerAsync(_uiParent);
-            GameObject popUpLayer = await _uiFactory.CreatePopUpLayerAsync(_uiParent);
+            HeadUpDisplayView hudView = await _uiFactory.CreateHudViewAsync(_uiParent);
+            
 
             InitPlayerHealthBarView(hudView, playerHealth);
             _hudPresenter = _lazyHudPresenter.Value;
             _hudPresenter.Initialize();
             
-            PlayerStatsView playerStatsView = InitPlayerStatsView(popUpLayer, hudView, _levelUpSound, _pointsService);
+            PlayerStatsView playerStatsView = await InitPlayerStatsView(hudView, _levelUpSound, _pointsService);
             await InitPlayerStatsPresenterAsync(playerStatsView, playerHealth);
             
-            InitGameOverWindow(popUpLayer, playerHealth, _enemySpawner);
+            await InitGameOverWindow(playerHealth, _enemySpawner);
         }
 
         private void InitPlayerHealthBarView(HeadUpDisplayView hud, Health playerHealth)
@@ -64,12 +64,11 @@ namespace _Project.Scripts.Infrastructure.Game
             playerHealthBarView.Initialize();
         }
 
-        private PlayerStatsView InitPlayerStatsView(GameObject popUpLayer, HeadUpDisplayView hud, AudioClip levelUpSound,
-            IUpgradePointsService pointsService)
+        private async UniTask<PlayerStatsView> InitPlayerStatsView(HeadUpDisplayView hud, AudioClip levelUpSound, IUpgradePointsService pointsService)
         {
             Button openButton = hud.OpenStatsWindowButton;
             
-            PlayerStatsView playerStatsView = popUpLayer.GetComponentInChildren<PlayerStatsView>(includeInactive: true);
+            PlayerStatsView playerStatsView = await _uiFactory.CreatePlayerStatsViewAsync(_uiParent);
             playerStatsView.Initialize(openButton, levelUpSound, pointsService);
             return playerStatsView;
         }
@@ -81,10 +80,10 @@ namespace _Project.Scripts.Infrastructure.Game
             await _playerStatsPresenter.InitializeAsync();
         }
 
-        private void InitGameOverWindow(GameObject popUpLayer, Health player, EnemySpawner enemySpawner)
+        private async UniTask InitGameOverWindow(Health player, EnemySpawner enemySpawner)
         {
             PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
-            GameOverWindow gameOverWindow = popUpLayer.GetComponentInChildren<GameOverWindow>(includeInactive: true);
+            GameOverWindow gameOverWindow = await _uiFactory.CreateGameOverWindowAsync(_uiParent);
             gameOverWindow.Initialize(playerDeath, enemySpawner);
         }
     }

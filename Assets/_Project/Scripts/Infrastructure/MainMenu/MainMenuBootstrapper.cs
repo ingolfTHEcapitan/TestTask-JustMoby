@@ -7,6 +7,7 @@ using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -43,38 +44,40 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         {
             _saveConflictResolveService.Initialize();
             _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
-           
-            GameObject mainMenuLayer = await _uiFactory.CreateMainMenuLayerAsync(_uiParent);
             
-            ShopWindow shopWindow = InitShopWindow(mainMenuLayer);
-            SettingsView settingsView = InitSettingsWindow(mainMenuLayer);
-            MainMenuWindow mainMenu = InitMainMenu(mainMenuLayer, shopWindow, settingsView);
+            ShopWindow shopWindow = await InitShopWindow();
+            SettingsView settingsView = await InitSettingsView();
+            InitSettingsPresenter(settingsView);
+            MainMenuWindow mainMenu = await InitMainMenu(shopWindow, settingsView);
 
             _cursorController.SetCursorVisible(visible: true);
             mainMenu.PlayBackGroundMusic();
             _loadingCurtain.HideLoading();
         }
 
-        private SettingsView InitSettingsWindow(GameObject mainMenuLayer)
+        private void InitSettingsPresenter(SettingsView settingsView)
         {
-            SettingsView settingsView = mainMenuLayer.GetComponentInChildren<SettingsView>(includeInactive: true);
-            settingsView.Initialize();
             _settingsPresenter.Construct(settingsView);
             _settingsPresenter.Initialize();
+        }
+
+        private async UniTask<SettingsView> InitSettingsView()
+        {
+            SettingsView settingsView = await _uiFactory.CreateSettingsViewAsync(_uiParent);
+            settingsView.Initialize();
             return settingsView;
         }
 
-        private ShopWindow InitShopWindow(GameObject mainMenuLayer)
+        private async UniTask<ShopWindow> InitShopWindow()
         {
-            ShopWindow shopWindow = mainMenuLayer.GetComponentInChildren<ShopWindow>(includeInactive: true);
+            ShopWindow shopWindow = await _uiFactory.CreateShopWindowAsync(_uiParent);
             shopWindow.Initialize();
             return shopWindow;
         }
 
-        private MainMenuWindow InitMainMenu(GameObject mainMenuLayer, 
-            ShopWindow shopWindow, SettingsView settingsView)
+        private async UniTask<MainMenuWindow> InitMainMenu(ShopWindow shopWindow, SettingsView settingsView)
         {
-            MainMenuWindow mainMenu = mainMenuLayer.GetComponentInChildren<MainMenuWindow>();
+            MainMenuWindow mainMenu = await _uiFactory.CreateMainMenuWindowAsync(_uiParent);
             mainMenu.Initialize(shopWindow, settingsView);
             return mainMenu;
         }

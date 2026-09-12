@@ -14,6 +14,8 @@ namespace _Project.Scripts.UI.Windows.Shop
     public class ShopWindow: MonoBehaviour, IWindow
     {
         [SerializeField] private WindowPopupAnimation _windowAnimation;
+        [Space]
+        [SerializeField] private GameObject _windowContent;
         [SerializeField] private GameObject[] _shopUnavailableObjects;
         [SerializeField] private Transform _productsContainer;
         [SerializeField] private Button _closeButton;
@@ -36,6 +38,7 @@ namespace _Project.Scripts.UI.Windows.Shop
 
         public void Initialize()
         {
+            _windowContent.SetActive(false);
             _closeButton.onClick.AddListener(Close);
             _purchaseModel.OnChanged += RefreshAvailableShopItems;
             
@@ -51,14 +54,14 @@ namespace _Project.Scripts.UI.Windows.Shop
         public void Open()
         {
             RefreshAvailableShopItems();
-            gameObject.SetActive(true);
+            _windowContent.SetActive(true);
             _windowAnimation.AnimateOpen();
         }
 
         private async void Close()
         {
             await _windowAnimation.AnimateCloseAsync();
-            gameObject.SetActive(false);
+            _windowContent.SetActive(false);
         }
 
         private async void RefreshAvailableShopItems()

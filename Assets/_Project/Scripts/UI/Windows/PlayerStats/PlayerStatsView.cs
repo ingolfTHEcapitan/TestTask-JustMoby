@@ -20,7 +20,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         [SerializeField] private WindowPopupAnimation _windowAnimation;
         [Space]
-        [SerializeField] private GameObject _statsWindow;
+        [SerializeField] private GameObject _windowContent;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
         [SerializeField] private Transform _statsContainer;
@@ -45,6 +45,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public void Initialize(Button openButton, AudioClip levelUpSound, IUpgradePointsService pointsService)
         {
+            _windowContent.SetActive(false);
             _levelUpSound = levelUpSound;
             _openButton = openButton;
             _pointsService = pointsService;
@@ -67,7 +68,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         public async UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(PlayerStatData stat)
         {
-            PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemAsync(_statsContainer);
+            PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemViewAsync(_statsContainer);
             statItem.Initialize(stat, _audioSource);
             return statItem;
         }
@@ -80,14 +81,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         public void ShowWindow()
         {
-            _statsWindow.SetActive(true);
+            _windowContent.SetActive(true);
             _windowAnimation.AnimateOpen();
         }
 
         public async UniTask HideWindowAsync()
         {
             await _windowAnimation.AnimateCloseAsync();
-            _statsWindow.SetActive(false);
+            _windowContent.SetActive(false);
         }
         
         private void PlayLevelUpSound() => 

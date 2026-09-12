@@ -16,7 +16,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
     {   
         [SerializeField] private WindowPopupAnimation _windowAnimation;
         [Space]
-        [SerializeField] private GameObject _gameOverPanel;
+        [SerializeField] private GameObject _windowContent;
         [SerializeField] private Button _reviveButton;
         [SerializeField] private Button _loadSaveButton;
         
@@ -40,6 +40,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
 
         public void Initialize(PlayerDeath playerDeath, EnemySpawner enemySpawner)
         {
+            _windowContent.SetActive(false);
             _playerDeath = playerDeath;
             _enemySpawner = enemySpawner;
             _playerDeath.OnDied += Open;
@@ -100,13 +101,12 @@ namespace _Project.Scripts.UI.Windows.GameOver
 
             if (_reviveInThisSession) 
                 _reviveButton.interactable = false;
-
         }
 
         public void Open()
         {
             _pauseService.SetPaused(true);
-            _gameOverPanel.SetActive(true);
+            _windowContent.SetActive(true);
             _windowAnimation.AnimateOpen();
         }
 
@@ -114,7 +114,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
         {
             await _windowAnimation.AnimateCloseAsync();
             _pauseService.SetPaused(false);
-            _gameOverPanel.SetActive(false);
+            _windowContent.SetActive(false);
         }
     }
 }

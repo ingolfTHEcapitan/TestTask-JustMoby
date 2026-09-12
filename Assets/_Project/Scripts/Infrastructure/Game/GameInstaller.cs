@@ -83,6 +83,6 @@ namespace _Project.Scripts.Infrastructure.Game
         }
         
         private HeadUpDisplayView GetHudView(InjectContext context) =>
-            context.Container.Resolve<IUIFactory>().GetHudView();
+            context.Container.Resolve<IUIFactory>().GetView();
     }
 }

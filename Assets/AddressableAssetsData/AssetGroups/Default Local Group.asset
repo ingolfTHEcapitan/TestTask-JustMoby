@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: 64006cf7e78ceee4fbc3482ac3a01557
   m_SerializeEntries:
   - m_GUID: 21c2b4e3c6f59984e80e68404e24e34c
-    m_Address: MainMenu
+    m_Address: MainMenuWindow
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -49,6 +49,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 970e5eab3b3fab1488b17610d245d60b
     m_Address: ShopWindow
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f5690ec389786384984df95b40be4241
+    m_Address: PlayerStatsWindow
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

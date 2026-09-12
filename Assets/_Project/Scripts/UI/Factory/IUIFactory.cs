@@ -1,6 +1,10 @@
 using _Project.Scripts.UI.HUD;
+using _Project.Scripts.UI.Windows.GameOver;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
+using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.PlayerStats;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
+using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -9,13 +13,17 @@ namespace _Project.Scripts.UI.Factory
 {
     public interface IUIFactory
     {
-        UniTask<HeadUpDisplayView> CreateHudLayerAsync(Transform uiParent);
-        UniTask<GameObject> CreatePopUpLayerAsync(Transform uiParent);
-        UniTask<GameObject> CreateMainMenuLayerAsync(Transform uiParent);
+        UniTask<HeadUpDisplayView> CreateHudViewAsync(Transform uiParent);
+        UniTask<GameOverWindow> CreateGameOverWindowAsync(Transform uiParent);
+        UniTask<LoadingCurtain> CreateLoadingCurtainAsync(Transform uiParent);
+        UniTask<MainMenuWindow> CreateMainMenuWindowAsync(Transform uiParent);
+        UniTask<PlayerStatsView> CreatePlayerStatsViewAsync(Transform uiParent);
+        UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent);
+        UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent);
+        UniTask<SettingsView> CreateSettingsViewAsync(Transform uiParent);
+        UniTask<ShopWindow> CreateShopWindowAsync(Transform uiParent);
         UniTask<ShopItem> CreateShopItemAsync(Transform uiParent);
         UniTask<Sprite> LoadSpriteAsync(string assetAddress);
-        UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent);
-        UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(Transform uiParent);
-        HeadUpDisplayView GetHudView();
+        HeadUpDisplayView GetView();
     }
 }

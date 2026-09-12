@@ -20,6 +20,7 @@ namespace _Project.Scripts.UI.Windows.Settings
         
         [SerializeField] private WindowPopupAnimation _windowAnimation;
         [Space]
+        [SerializeField] private GameObject _windowContent;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
 
@@ -39,6 +40,7 @@ namespace _Project.Scripts.UI.Windows.Settings
 
         public void Initialize()
         {
+            _windowContent.SetActive(false);
             _closeButton.onClick.AddListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.AddListener(InvokeOnApplyButtonClicked);
             SubscribeSliderEvents();
@@ -53,7 +55,7 @@ namespace _Project.Scripts.UI.Windows.Settings
         
         public void Open()
         {
-            gameObject.SetActive(true);
+            _windowContent.SetActive(true);
             _windowAnimation.AnimateOpen();
             OnOpen?.Invoke();
         }
@@ -61,7 +63,7 @@ namespace _Project.Scripts.UI.Windows.Settings
         public async UniTask CloseAsync()
         {
             await _windowAnimation.AnimateCloseAsync();
-            gameObject.SetActive(false);
+            _windowContent.SetActive(false);
         }
 
         public void SetSlidersValues(float master, float music, float effects, float ui)
