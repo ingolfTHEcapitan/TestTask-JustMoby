@@ -6,18 +6,18 @@ namespace _Project.Scripts.UI.HUD
 {
     public class HeadUpDisplayModel
     {
-        private readonly ILoadingCurtainService _loadingCurtain;
+        private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         private readonly ISceneLoaderService _sceneLoader;
 
-        public HeadUpDisplayModel(ILoadingCurtainService loadingCurtain, ISceneLoaderService sceneLoader)
+        public HeadUpDisplayModel(LoadingCurtainPresenter loadingCurtainPresenter, ISceneLoaderService sceneLoader)
         {
-            _loadingCurtain = loadingCurtain;
+            _loadingCurtainPresenter = loadingCurtainPresenter;
             _sceneLoader = sceneLoader;
         }
 
         public async UniTask LoadMainMenu()
         {
-            await _loadingCurtain.ShowLoadingAsync();
+            _loadingCurtainPresenter.ShowLoading();
             await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
         }
     }

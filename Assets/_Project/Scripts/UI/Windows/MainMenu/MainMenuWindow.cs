@@ -21,7 +21,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _backgroundMusic;
         
-        private ILoadingCurtainService _loadingCurtain;
+        private LoadingCurtainPresenter _loadingCurtainPresenter;
         private IAudioService _audioService;
         private ShopWindow _shopWindow;
         private SettingsView _settingsView;
@@ -29,11 +29,11 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         private ISceneLoaderService _sceneLoader;
 
         [Inject]
-        private void Construct(ILoadingCurtainService loadingCurtain, IAudioService audioService, 
+        private void Construct(LoadingCurtainPresenter loadingCurtain, IAudioService audioService, 
             CursorController cursorController, ISceneLoaderService sceneLoader)
         {
             _cursorController = cursorController;
-            _loadingCurtain = loadingCurtain;
+            _loadingCurtainPresenter = loadingCurtain;
             _audioService = audioService;
             _sceneLoader = sceneLoader;
         }
@@ -73,7 +73,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         {
             _cursorController.SetCursorVisible(visible: false);
             _audioService.Stop(_audioSource);
-            await _loadingCurtain.ShowLoadingAsync();
+            _loadingCurtainPresenter.ShowLoading();
             await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.Gameplay);
         }
 

@@ -15,7 +15,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 {
     public class MainMenuBootstrapper: IInitializable
     {
-        private readonly ILoadingCurtainService _loadingCurtain;
+        private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         private readonly IProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
         private readonly IUIFactory _uiFactory;
@@ -25,14 +25,14 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly CursorController _cursorController;
         private readonly SettingsPresenter _settingsPresenter;
 
-        public MainMenuBootstrapper(ILoadingCurtainService loadingCurtain, IProgressService progressService,
+        public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
             [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory,
             ISaveConflictResolveService saveConflictResolveService, Transform uiParent, CursorController cursorController,
             SettingsPresenter settingsPresenter)
         {
             _settingsPresenter = settingsPresenter;
             _saveConflictResolveService = saveConflictResolveService;
-            _loadingCurtain = loadingCurtain;
+            _loadingCurtainPresenter = loadingCurtainPresenter;
             _progressService = progressService;
             _saveLoadService = saveLoadService;
             _uiFactory = uiFactory;
@@ -52,7 +52,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
             _cursorController.SetCursorVisible(visible: true);
             mainMenu.PlayBackGroundMusic();
-            _loadingCurtain.HideLoading();
+            _loadingCurtainPresenter.HideLoading();
         }
 
         private void InitSettingsPresenter(SettingsView settingsView)

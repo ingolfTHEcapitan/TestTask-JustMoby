@@ -83,13 +83,17 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private void BindLoadingCurtain()
         {
-            Container.BindInterfacesAndSelfTo<LoadingCurtainService>().AsSingle();
+            Container.Bind<LoadingCurtainView>().FromMethod(GetLoadingWindowView).AsSingle();
+            Container.Bind<LoadingCurtainPresenter>().AsSingle();
         }
-        
+
         private void BindProjectBootstrapper() => 
             Container.BindInterfacesAndSelfTo<ProjectBootstrapper>().AsSingle();
 
         private ISaveLoadService GetLocalSaveInstance(InjectContext context) => 
             context.Container.Resolve<LocalSaveServiceConfig>().GetInstance();
+
+        private LoadingCurtainView GetLoadingWindowView(InjectContext context) => 
+            context.Container.Resolve<IUIFactory>().GetLoadingWindowView();
     }
 }

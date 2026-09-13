@@ -4,7 +4,7 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.LoadingCurtain
 {
-    public class LoadingCurtain : MonoBehaviour, IWindow
+    public class LoadingCurtainView : MonoBehaviour, IWindow
     {
         [SerializeField] private GameObject _loadingIndicator;
         [SerializeField] private float _indicatorRotationSpeed = 100f;
@@ -34,9 +34,10 @@ namespace _Project.Scripts.UI.Windows.LoadingCurtain
             _audioService.Stop(_audioSource);
         }
 
-        private void Update()
-        {
+        private void Update() => 
+            AnimateLoadingIndicator();
+
+        private void AnimateLoadingIndicator() => 
             _loadingIndicator.transform.Rotate(Vector3.forward, Time.deltaTime * _indicatorRotationSpeed);
-        }
     }
 }

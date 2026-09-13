@@ -1,6 +1,7 @@
 using System.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.Game;
+using _Project.Scripts.Infrastructure.Project;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
@@ -21,6 +22,7 @@ namespace _Project.Scripts.UI.Factory
         private readonly IAssetProvider _assetProvider;
         
         private HeadUpDisplayView _hudView;
+        private LoadingCurtainView _loadingCurtainView;
 
         public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
@@ -37,8 +39,11 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<GameOverWindow> CreateGameOverWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<GameOverWindow>(AssetAddress.GameOverWindow, uiParent);
 
-        public async UniTask<LoadingCurtain> CreateLoadingCurtainAsync()=> 
-            await CreateViewAsync<LoadingCurtain>(AssetAddress.LoadingCurtain);
+        public async UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync()
+        {
+            _loadingCurtainView = await CreateViewAsync<LoadingCurtainView>(AssetAddress.LoadingCurtain);
+            return _loadingCurtainView;
+        }
 
         public async UniTask<MainMenuWindow> CreateMainMenuWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<MainMenuWindow>(AssetAddress.MainMenuWindow, uiParent);
@@ -64,7 +69,7 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<Sprite> LoadSpriteAsync(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
 
-        public HeadUpDisplayView GetView()
+        public HeadUpDisplayView GetHudView()
         {
             if (_hudView)
                 return _hudView;
@@ -72,6 +77,16 @@ namespace _Project.Scripts.UI.Factory
             throw new InvalidConstraintException
             ($"{_hudView.gameObject.name} view requested before creation. " +
              $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
+        }
+        
+        public LoadingCurtainView GetLoadingWindowView()
+        {
+            if (_loadingCurtainView)
+                return _loadingCurtainView;
+            
+            throw new InvalidConstraintException
+            ($"{_loadingCurtainView.gameObject.name} view requested before creation. " +
+             $"Ensure presenter depending on it is not resolved before {nameof(ProjectInstaller)} runs");
         }
         
         private async UniTask<TView> CreateViewAsync<TView>(string assetAddress,Transform uiParent = null) where TView : MonoBehaviour
