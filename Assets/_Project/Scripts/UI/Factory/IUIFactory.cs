@@ -15,7 +15,7 @@ namespace _Project.Scripts.UI.Factory
     {
         UniTask<HeadUpDisplayView> CreateHudViewAsync(Transform uiParent);
         UniTask<GameOverWindow> CreateGameOverWindowAsync(Transform uiParent);
-        UniTask<LoadingCurtain> CreateLoadingCurtainAsync(Transform uiParent);
+        UniTask<LoadingCurtain> CreateLoadingCurtainAsync();
         UniTask<MainMenuWindow> CreateMainMenuWindowAsync(Transform uiParent);
         UniTask<PlayerStatsView> CreatePlayerStatsViewAsync(Transform uiParent);
         UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent);

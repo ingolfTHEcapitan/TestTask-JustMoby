@@ -30,36 +30,36 @@ namespace _Project.Scripts.UI.Factory
         
         public async UniTask<HeadUpDisplayView> CreateHudViewAsync(Transform uiParent)
         {
-            _hudView = await CreateViewAsync<HeadUpDisplayView>(uiParent, AssetAddress.HeadUpDisplay);
+            _hudView = await CreateViewAsync<HeadUpDisplayView>(AssetAddress.HeadUpDisplay, uiParent);
             return _hudView;
         }
 
         public async UniTask<GameOverWindow> CreateGameOverWindowAsync(Transform uiParent)=> 
-            await CreateViewAsync<GameOverWindow>(uiParent, AssetAddress.GameOverWindow);
+            await CreateViewAsync<GameOverWindow>(AssetAddress.GameOverWindow, uiParent);
 
-        public async UniTask<LoadingCurtain> CreateLoadingCurtainAsync(Transform uiParent)=> 
-            await CreateViewAsync<LoadingCurtain>(uiParent, AssetAddress.LoadingCurtain);
+        public async UniTask<LoadingCurtain> CreateLoadingCurtainAsync()=> 
+            await CreateViewAsync<LoadingCurtain>(AssetAddress.LoadingCurtain);
 
         public async UniTask<MainMenuWindow> CreateMainMenuWindowAsync(Transform uiParent)=> 
-            await CreateViewAsync<MainMenuWindow>(uiParent, AssetAddress.MainMenuWindow);
+            await CreateViewAsync<MainMenuWindow>(AssetAddress.MainMenuWindow, uiParent);
 
         public async UniTask<PlayerStatsView> CreatePlayerStatsViewAsync(Transform uiParent)=> 
-            await CreateViewAsync<PlayerStatsView>(uiParent, AssetAddress.PlayerStatsWindow);
+            await CreateViewAsync<PlayerStatsView>(AssetAddress.PlayerStatsWindow, uiParent);
         
         public async UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent)=> 
-            await CreateViewAsync<PlayerStatItemView>(uiParent, AssetAddress.PlayerStatItem);
+            await CreateViewAsync<PlayerStatItemView>(AssetAddress.PlayerStatItem, uiParent);
         
         public async UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent)=> 
-            await CreateViewAsync<SaveConflictResolveWindow>(uiParent, AssetAddress.SaveConflictResolveWindow);
+            await CreateViewAsync<SaveConflictResolveWindow>(AssetAddress.SaveConflictResolveWindow, uiParent);
         
         public async UniTask<SettingsView> CreateSettingsViewAsync(Transform uiParent)=> 
-            await CreateViewAsync<SettingsView>(uiParent, AssetAddress.SettingsWindow);
+            await CreateViewAsync<SettingsView>(AssetAddress.SettingsWindow, uiParent);
         
         public async UniTask<ShopWindow> CreateShopWindowAsync(Transform uiParent)=> 
-            await CreateViewAsync<ShopWindow>(uiParent, AssetAddress.ShopWindow);
+            await CreateViewAsync<ShopWindow>(AssetAddress.ShopWindow, uiParent);
         
         public async UniTask<ShopItem> CreateShopItemAsync(Transform uiParent)=> 
-            await CreateViewAsync<ShopItem>(uiParent, AssetAddress.ShopItem);
+            await CreateViewAsync<ShopItem>(AssetAddress.ShopItem, uiParent);
         
         public async UniTask<Sprite> LoadSpriteAsync(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
@@ -74,7 +74,7 @@ namespace _Project.Scripts.UI.Factory
              $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
         }
         
-        private async UniTask<TView> CreateViewAsync<TView>(Transform uiParent, string assetAddress) where TView : MonoBehaviour
+        private async UniTask<TView> CreateViewAsync<TView>(string assetAddress,Transform uiParent = null) where TView : MonoBehaviour
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(assetAddress);
             TView view = _container.InstantiatePrefabForComponent<TView>(prefab, uiParent);

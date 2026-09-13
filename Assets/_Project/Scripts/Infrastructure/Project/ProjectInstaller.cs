@@ -24,7 +24,6 @@ using _Project.Scripts.Services.Statistics;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
-using _Project.Scripts.UI.Windows.LoadingCurtain.Factory;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project
@@ -84,7 +83,6 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private void BindLoadingCurtain()
         {
-            Container.BindInterfacesAndSelfTo<LoadingCurtainFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<LoadingCurtainService>().AsSingle();
         }
         

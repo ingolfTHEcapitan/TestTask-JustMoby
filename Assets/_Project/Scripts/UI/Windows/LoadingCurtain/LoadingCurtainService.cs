@@ -1,29 +1,29 @@
-using _Project.Scripts.UI.Windows.LoadingCurtain.Factory;
+using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.UI.Windows.LoadingCurtain
 {
     public class LoadingCurtainService : ILoadingCurtainService
     {
-        private readonly ILoadingCurtainFactory _curtainFactory;
+        private readonly IUIFactory _uiFactory;
         
-        private LoadingCurtain _loadingCurtain;
+        private LoadingCurtain _loadingCurtainView;
 
-        public LoadingCurtainService(ILoadingCurtainFactory curtainFactory) => 
-            _curtainFactory = curtainFactory;
+        public LoadingCurtainService(IUIFactory uiFactory) => 
+            _uiFactory = uiFactory;
 
         public async UniTask ShowLoadingAsync()
         {
-            if (_loadingCurtain == null) 
-                _loadingCurtain = await _curtainFactory.CreateLoadingCurtainAsync();
+            if (_loadingCurtainView == null) 
+                _loadingCurtainView = await _uiFactory.CreateLoadingCurtainAsync();
             
-            _loadingCurtain.Open();
+            _loadingCurtainView.Open();
         }
         
         public void HideLoading()
         {
-            if (_loadingCurtain != null) 
-                _loadingCurtain.Close();
+            if (_loadingCurtainView != null) 
+                _loadingCurtainView.Close();
         }
     }
 }
