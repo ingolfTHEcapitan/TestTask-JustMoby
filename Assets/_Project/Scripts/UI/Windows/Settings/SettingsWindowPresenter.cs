@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {
-    public class SettingsPresenter: IDisposable
+    public class SettingsWindowPresenter: IDisposable
     {
-        private SettingsView _view;
-        private SettingsModel _model;
+        private SettingsWindowView _view;
+        private SettingsWindowModel _model;
         private const string MasterVolumeName = "MasterVolume";
         private const string MusicVolumeName = "MusicVolume";
         private const string EffectsVolumeName = "EffectsVolume";
         private const string UIVolumeName = "UIVolume";
 
-        public SettingsPresenter(SettingsModel model) =>
+        public SettingsWindowPresenter(SettingsWindowModel model) =>
             _model = model;
 
-        public void Construct(SettingsView view) =>
+        public void Construct(SettingsWindowView view) =>
             _view = view;
 
         public void Initialize()

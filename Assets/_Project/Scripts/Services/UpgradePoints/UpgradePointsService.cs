@@ -8,17 +8,17 @@ namespace _Project.Scripts.Services.UpgradePoints
     {
         public event Action OnPointAdded;
 
-        private readonly PlayerStatsModel _playerStatsModel;
+        private readonly PlayerStatsWindowModel _playerStatsWindowModel;
         
         public int CurrentPoints { get; private set; }
 
-        public UpgradePointsService(PlayerStatsModel playerStatsModel) => 
-            _playerStatsModel = playerStatsModel;
+        public UpgradePointsService(PlayerStatsWindowModel playerStatsWindowModel) => 
+            _playerStatsWindowModel = playerStatsWindowModel;
 
         public async UniTask AddPointAsync()
         {
-            await _playerStatsModel.AddUpgradePoint();
-            CurrentPoints = _playerStatsModel.UpgradePoints;
+            await _playerStatsWindowModel.AddUpgradePoint();
+            CurrentPoints = _playerStatsWindowModel.UpgradePoints;
             OnPointAdded?.Invoke();
         }
     }

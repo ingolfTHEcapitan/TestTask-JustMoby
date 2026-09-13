@@ -23,14 +23,14 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private readonly Transform _uiParent;
         private readonly CursorController _cursorController;
-        private readonly SettingsPresenter _settingsPresenter;
+        private readonly SettingsWindowPresenter _settingsWindowPresenter;
 
         public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
             [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory,
             ISaveConflictResolveService saveConflictResolveService, Transform uiParent, CursorController cursorController,
-            SettingsPresenter settingsPresenter)
+            SettingsWindowPresenter settingsWindowPresenter)
         {
-            _settingsPresenter = settingsPresenter;
+            _settingsWindowPresenter = settingsWindowPresenter;
             _saveConflictResolveService = saveConflictResolveService;
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _progressService = progressService;
@@ -46,26 +46,26 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
             ShopWindow shopWindow = await InitShopWindow();
-            SettingsView settingsView = await InitSettingsView();
-            InitSettingsPresenter(settingsView);
-            MainMenuWindow mainMenu = await InitMainMenu(shopWindow, settingsView);
+            SettingsWindowView settingsWindowView = await InitSettingsView();
+            InitSettingsPresenter(settingsWindowView);
+            MainMenuWindow mainMenu = await InitMainMenu(shopWindow, settingsWindowView);
 
             _cursorController.SetCursorVisible(visible: true);
             mainMenu.PlayBackGroundMusic();
             _loadingCurtainPresenter.HideLoading();
         }
 
-        private void InitSettingsPresenter(SettingsView settingsView)
+        private void InitSettingsPresenter(SettingsWindowView settingsWindowView)
         {
-            _settingsPresenter.Construct(settingsView);
-            _settingsPresenter.Initialize();
+            _settingsWindowPresenter.Construct(settingsWindowView);
+            _settingsWindowPresenter.Initialize();
         }
 
-        private async UniTask<SettingsView> InitSettingsView()
+        private async UniTask<SettingsWindowView> InitSettingsView()
         {
-            SettingsView settingsView = await _uiFactory.CreateSettingsViewAsync(_uiParent);
-            settingsView.Initialize();
-            return settingsView;
+            SettingsWindowView settingsWindowView = await _uiFactory.CreateSettingsViewAsync(_uiParent);
+            settingsWindowView.Initialize();
+            return settingsWindowView;
         }
 
         private async UniTask<ShopWindow> InitShopWindow()
@@ -75,10 +75,10 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             return shopWindow;
         }
 
-        private async UniTask<MainMenuWindow> InitMainMenu(ShopWindow shopWindow, SettingsView settingsView)
+        private async UniTask<MainMenuWindow> InitMainMenu(ShopWindow shopWindow, SettingsWindowView settingsWindowView)
         {
             MainMenuWindow mainMenu = await _uiFactory.CreateMainMenuWindowAsync(_uiParent);
-            mainMenu.Initialize(shopWindow, settingsView);
+            mainMenu.Initialize(shopWindow, settingsWindowView);
             return mainMenu;
         }
     }

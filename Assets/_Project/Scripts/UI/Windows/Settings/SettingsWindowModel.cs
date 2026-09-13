@@ -6,14 +6,14 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {
-    public class SettingsModel
+    public class SettingsWindowModel
     {
         private readonly IProgressService _progressService;
         private readonly ISaveLoadService _saveService;
         
         public AudioSettingsData AudioSettingsData => _progressService.PlayerProgress.AudioSettingsData;
         
-        private SettingsModel(IProgressService progressService, 
+        private SettingsWindowModel(IProgressService progressService, 
             [Inject(Id = SaveType.Coordinator)] ISaveLoadService saveService)
         {
             _saveService = saveService;

@@ -24,8 +24,8 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private void BindSettingsWindow()
         {
-            Container.BindInterfacesAndSelfTo<SettingsModel>().AsSingle();
-            Container.BindInterfacesAndSelfTo<SettingsPresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SettingsWindowModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SettingsWindowPresenter>().AsSingle();
         }
     }
 }

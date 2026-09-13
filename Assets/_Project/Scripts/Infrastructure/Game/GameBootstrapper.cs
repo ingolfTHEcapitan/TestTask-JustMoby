@@ -15,10 +15,10 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly Transform _enemySpawnPoint;
         private readonly GameUIInitializer _uiInitializer;
         private readonly GameStarter _gameStarter;
-        private readonly PlayerStatsModel _playerStatsModel;
+        private readonly PlayerStatsWindowModel _playerStatsWindowModel;
         
         public GameBootstrapper(IEffectsService effectsService, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            Transform enemySpawnPoint, GameUIInitializer uiInitializer, GameStarter gameStarter, PlayerStatsModel playerStatsModel)
+            Transform enemySpawnPoint, GameUIInitializer uiInitializer, GameStarter gameStarter, PlayerStatsWindowModel playerStatsWindowModel)
         {
             _effectsService = effectsService;
             _playerSpawner = playerSpawner;
@@ -26,14 +26,14 @@ namespace _Project.Scripts.Infrastructure.Game
             _enemySpawnPoint = enemySpawnPoint;
             _uiInitializer = uiInitializer;
             _gameStarter = gameStarter;
-            _playerStatsModel = playerStatsModel;
+            _playerStatsWindowModel = playerStatsWindowModel;
         }
 
         public async void Initialize()
         {
             await _effectsService.WarmUpAsync();
             
-            await _playerStatsModel.InitializeAsync();
+            await _playerStatsWindowModel.InitializeAsync();
             
             Health playerHealth = await _playerSpawner.SpawnAsync();
             

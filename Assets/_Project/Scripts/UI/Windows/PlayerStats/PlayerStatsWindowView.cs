@@ -12,7 +12,7 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
-    public class PlayerStatsView: MonoBehaviour
+    public class PlayerStatsWindowView: MonoBehaviour
     {
         public event Action OnOpenButtonClicked;
         public event Action OnCloseButtonClicked;

@@ -52,8 +52,8 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<PlayerStatsData>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
-            Container.Bind<PlayerStatsPresenter>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
+            Container.Bind<PlayerStatsWindowPresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerStatsWindowModel>().AsSingle();
         }
         
         private void BindHeadUpDisplay()

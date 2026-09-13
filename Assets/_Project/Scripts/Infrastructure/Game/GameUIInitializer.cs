@@ -20,20 +20,20 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly IUIFactory _uiFactory;
         private readonly Transform _uiParent;
        
-        private readonly PlayerStatsPresenter _playerStatsPresenter;
+        private readonly PlayerStatsWindowPresenter _playerStatsWindowPresenter;
         private readonly EnemySpawner _enemySpawner;
         private readonly AudioClip _levelUpSound;
         private readonly IUpgradePointsService _pointsService;
         private readonly LazyInject<HeadUpDisplayPresenter> _lazyHudPresenter;
         private HeadUpDisplayPresenter _hudPresenter;
 
-        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, PlayerStatsPresenter playerStatsPresenter, 
+        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, PlayerStatsWindowPresenter playerStatsWindowPresenter, 
             EnemySpawner enemySpawner, IUpgradePointsService pointsService, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter)
         {
             _pointsService = pointsService;
             _uiFactory = uiFactory;
             _uiParent = uiParent;
-            _playerStatsPresenter = playerStatsPresenter;
+            _playerStatsWindowPresenter = playerStatsWindowPresenter;
             _enemySpawner = enemySpawner;
             _levelUpSound = levelUpSound;
             _lazyHudPresenter = lazyHudPresenter;
@@ -51,8 +51,8 @@ namespace _Project.Scripts.Infrastructure.Game
             _hudPresenter = _lazyHudPresenter.Value;
             _hudPresenter.Initialize();
             
-            PlayerStatsView playerStatsView = await InitPlayerStatsView(hudView, _levelUpSound, _pointsService);
-            await InitPlayerStatsPresenterAsync(playerStatsView, playerHealth);
+            PlayerStatsWindowView playerStatsWindowView = await InitPlayerStatsView(hudView, _levelUpSound, _pointsService);
+            await InitPlayerStatsPresenterAsync(playerStatsWindowView, playerHealth);
             
             await InitGameOverWindow(playerHealth, _enemySpawner);
         }
@@ -64,20 +64,20 @@ namespace _Project.Scripts.Infrastructure.Game
             playerHealthBarView.Initialize();
         }
 
-        private async UniTask<PlayerStatsView> InitPlayerStatsView(HeadUpDisplayView hud, AudioClip levelUpSound, IUpgradePointsService pointsService)
+        private async UniTask<PlayerStatsWindowView> InitPlayerStatsView(HeadUpDisplayView hud, AudioClip levelUpSound, IUpgradePointsService pointsService)
         {
             Button openButton = hud.OpenStatsWindowButton;
             
-            PlayerStatsView playerStatsView = await _uiFactory.CreatePlayerStatsViewAsync(_uiParent);
-            playerStatsView.Initialize(openButton, levelUpSound, pointsService);
-            return playerStatsView;
+            PlayerStatsWindowView playerStatsWindowView = await _uiFactory.CreatePlayerStatsViewAsync(_uiParent);
+            playerStatsWindowView.Initialize(openButton, levelUpSound, pointsService);
+            return playerStatsWindowView;
         }
 
-        private async UniTask InitPlayerStatsPresenterAsync(PlayerStatsView view, Health player)
+        private async UniTask InitPlayerStatsPresenterAsync(PlayerStatsWindowView view, Health player)
         {
             PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
-            _playerStatsPresenter.Construct(view, playerDeath);
-            await _playerStatsPresenter.InitializeAsync();
+            _playerStatsWindowPresenter.Construct(view, playerDeath);
+            await _playerStatsWindowPresenter.InitializeAsync();
         }
 
         private async UniTask InitGameOverWindow(Health player, EnemySpawner enemySpawner)

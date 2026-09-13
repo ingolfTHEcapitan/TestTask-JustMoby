@@ -17,10 +17,10 @@ namespace _Project.Scripts.UI.Factory
         UniTask<GameOverWindow> CreateGameOverWindowAsync(Transform uiParent);
         UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync();
         UniTask<MainMenuWindow> CreateMainMenuWindowAsync(Transform uiParent);
-        UniTask<PlayerStatsView> CreatePlayerStatsViewAsync(Transform uiParent);
+        UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent);
         UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent);
         UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent);
-        UniTask<SettingsView> CreateSettingsViewAsync(Transform uiParent);
+        UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent);
         UniTask<ShopWindow> CreateShopWindowAsync(Transform uiParent);
         UniTask<ShopItem> CreateShopItemAsync(Transform uiParent);
         UniTask<Sprite> LoadSpriteAsync(string assetAddress);

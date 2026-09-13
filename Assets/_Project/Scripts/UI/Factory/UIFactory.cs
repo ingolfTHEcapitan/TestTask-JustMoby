@@ -48,8 +48,8 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<MainMenuWindow> CreateMainMenuWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<MainMenuWindow>(AssetAddress.MainMenuWindow, uiParent);
 
-        public async UniTask<PlayerStatsView> CreatePlayerStatsViewAsync(Transform uiParent)=> 
-            await CreateViewAsync<PlayerStatsView>(AssetAddress.PlayerStatsWindow, uiParent);
+        public async UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent)=> 
+            await CreateViewAsync<PlayerStatsWindowView>(AssetAddress.PlayerStatsWindow, uiParent);
         
         public async UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent)=> 
             await CreateViewAsync<PlayerStatItemView>(AssetAddress.PlayerStatItem, uiParent);
@@ -57,8 +57,8 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<SaveConflictResolveWindow>(AssetAddress.SaveConflictResolveWindow, uiParent);
         
-        public async UniTask<SettingsView> CreateSettingsViewAsync(Transform uiParent)=> 
-            await CreateViewAsync<SettingsView>(AssetAddress.SettingsWindow, uiParent);
+        public async UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent)=> 
+            await CreateViewAsync<SettingsWindowView>(AssetAddress.SettingsWindow, uiParent);
         
         public async UniTask<ShopWindow> CreateShopWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<ShopWindow>(AssetAddress.ShopWindow, uiParent);

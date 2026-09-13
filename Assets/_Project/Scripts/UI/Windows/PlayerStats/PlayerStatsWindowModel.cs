@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
-    public class PlayerStatsModel: IDisposable
+    public class PlayerStatsWindowModel: IDisposable
     {
         public event Action OnStatsChanged;
         
@@ -18,7 +18,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private readonly IGamePauseService _pauseService;
         public int UpgradePoints { get; private set; }
         
-        public PlayerStatsModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad, IGamePauseService pauseService)
+        public PlayerStatsWindowModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad, IGamePauseService pauseService)
         {
             _statsData = statsData;
             _saveLoad = saveLoad;
