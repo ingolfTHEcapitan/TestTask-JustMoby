@@ -73,6 +73,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             return statItem;
         }
 
+        public void ClearStatsContainer()
+        {
+            foreach (Transform child in _statsContainer) 
+                Destroy(child.gameObject);
+        }
+        
         public void UpdateStatItem(PlayerStatItemView statItem, int level, bool canUpgrade)
         {
             statItem.UpdateLevelText(level);

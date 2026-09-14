@@ -24,7 +24,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         [SerializeField] private AudioSource _audioSource;
         
         private IIAPService _iapService;
-        private readonly List<GameObject> _shopItemObjects = new List<GameObject>();
+        private readonly List<ShopItem> _shopItems = new List<ShopItem>();
         private IUIFactory _uiFactory;
         private PurchaseModel _purchaseModel;
 
@@ -42,6 +42,7 @@ namespace _Project.Scripts.UI.Windows.Shop
             _closeButton.onClick.AddListener(Close);
             _purchaseModel.OnChanged += RefreshAvailableShopItems;
             
+            ClearProductsContainer();
             RefreshAvailableShopItems();
         }
 
@@ -70,15 +71,22 @@ namespace _Project.Scripts.UI.Windows.Shop
             
             if (!_iapService.IsInitialized)
                 return;
-
+            
             ClearShopItems();
             await FillShopItemsAsync();
         }
 
+        private void ClearProductsContainer()
+        {
+            foreach (Transform child in _productsContainer) 
+                Destroy(child.gameObject);
+        }
+
         private void ClearShopItems()
         {
-            foreach (GameObject shopItemObject in _shopItemObjects) 
-                Destroy(shopItemObject);
+            foreach (ShopItem shopItem in _shopItems)
+                if (shopItem)
+                    Destroy(shopItem.gameObject);
         }
 
         private async UniTask FillShopItemsAsync()
@@ -86,7 +94,7 @@ namespace _Project.Scripts.UI.Windows.Shop
             foreach (ProductDescription productDescription in _iapService.GetProducts())
             {
                 ShopItem shopItem = await _uiFactory.CreateShopItemAsync(_productsContainer);
-                _shopItemObjects.Add(shopItem.gameObject);
+                _shopItems.Add(shopItem);
                 await shopItem.InitializeAsync(productDescription, _audioSource);
             }
         }

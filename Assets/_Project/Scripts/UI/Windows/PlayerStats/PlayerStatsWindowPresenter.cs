@@ -60,6 +60,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         private async UniTask CreateStatItemsAsync(List<PlayerStatData> stats)
         {
+            _windowView.ClearStatsContainer();
             ClearStatItems();
             
             foreach (PlayerStatData stat in stats)
@@ -119,8 +120,9 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void ClearStatItems()
         {
-            foreach (PlayerStatItemView statItemView in _statItemsView.Values) 
-                Object.Destroy(statItemView.gameObject);
+            foreach (PlayerStatItemView statItemView in _statItemsView.Values)
+                if (statItemView)
+                    Object.Destroy(statItemView.gameObject);
             
             _statItemsView.Clear();
         }
