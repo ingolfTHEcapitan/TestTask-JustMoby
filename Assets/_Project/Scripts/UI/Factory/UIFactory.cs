@@ -1,6 +1,7 @@
 using System.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.Game;
+using _Project.Scripts.Infrastructure.MainMenu;
 using _Project.Scripts.Infrastructure.Project;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
@@ -23,6 +24,7 @@ namespace _Project.Scripts.UI.Factory
         
         private HeadUpDisplayView _hudView;
         private LoadingCurtainView _loadingCurtainView;
+        private SettingsWindowView _settingsWindowView;
 
         public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
@@ -57,9 +59,12 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<SaveConflictResolveWindow>(AssetAddress.SaveConflictResolveWindow, uiParent);
         
-        public async UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent)=> 
-            await CreateViewAsync<SettingsWindowView>(AssetAddress.SettingsWindow, uiParent);
-        
+        public async UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent)
+        {
+            _settingsWindowView = await CreateViewAsync<SettingsWindowView>(AssetAddress.SettingsWindow, uiParent);
+            return _settingsWindowView;
+        }
+
         public async UniTask<ShopWindow> CreateShopWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<ShopWindow>(AssetAddress.ShopWindow, uiParent);
         
@@ -86,7 +91,17 @@ namespace _Project.Scripts.UI.Factory
             
             throw new InvalidConstraintException
             ($"{_loadingCurtainView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(ProjectInstaller)} runs");
+             $"Ensure presenter depending on it is not resolved before {nameof(ProjectBootstrapper)} runs");
+        }
+        
+        public SettingsWindowView GetSettingsWindowView()
+        {
+            if (_settingsWindowView)
+                return _settingsWindowView;
+            
+            throw new InvalidConstraintException
+            ($"{_settingsWindowView.gameObject.name} view requested before creation. " +
+             $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
         }
         
         private async UniTask<TView> CreateViewAsync<TView>(string assetAddress,Transform uiParent = null) where TView : MonoBehaviour

@@ -66,7 +66,7 @@ namespace _Project.Scripts.UI.Windows.Settings
             _windowContent.SetActive(false);
         }
 
-        public void SetSlidersValues(float master, float music, float effects, float ui)
+        public void UpdateSlidersValues(float master, float music, float effects, float ui)
         {
             _masterSlider.SetValueWithoutNotify(master);
             _musicSlider.SetValueWithoutNotify(music);
@@ -74,7 +74,7 @@ namespace _Project.Scripts.UI.Windows.Settings
             _uiSlider.SetValueWithoutNotify(ui);
         }
 
-        public void SetAudioMixerVolume(string volumeName, float dbVolume) => 
+        public void UpdateAudioMixerVolume(string volumeName, float dbVolume) => 
             _audioMixer.SetFloat(volumeName, dbVolume);
         
         private void SubscribeSliderEvents()

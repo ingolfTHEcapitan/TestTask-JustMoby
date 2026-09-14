@@ -2,6 +2,7 @@ using _Project.Scripts.Data.Player;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.UI.Windows.Settings
@@ -22,5 +23,15 @@ namespace _Project.Scripts.UI.Windows.Settings
 
         public async UniTask SaveSettingsAsync() => 
             await _saveService.SaveProgressAsync(_progressService);
+        
+        public float ConvertVolumeToDecibel(float volume)
+        {
+            float dbVolume;
+            if (volume < 1e-06)
+                dbVolume = -80;
+            else
+                dbVolume = Mathf.Log10(volume) * 20;
+            return dbVolume;
+        }
     }
 }

@@ -26,5 +26,6 @@ namespace _Project.Scripts.UI.Factory
         UniTask<Sprite> LoadSpriteAsync(string assetAddress);
         HeadUpDisplayView GetHudView();
         LoadingCurtainView GetLoadingWindowView();
+        SettingsWindowView GetSettingsWindowView();
     }
 }

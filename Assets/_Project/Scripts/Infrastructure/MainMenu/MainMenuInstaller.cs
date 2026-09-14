@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.UI.Windows.SaveConflictResolve;
+﻿using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using UnityEngine;
 using Zenject;
@@ -24,8 +25,12 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private void BindSettingsWindow()
         {
+            Container.BindInterfacesAndSelfTo<SettingsWindowView>().FromMethod(GetSettingsWindowView).AsSingle();
             Container.BindInterfacesAndSelfTo<SettingsWindowModel>().AsSingle();
-            Container.BindInterfacesAndSelfTo<SettingsWindowPresenter>().AsSingle();
+            Container.Bind<SettingsWindowPresenter>().AsSingle();
         }
+
+        private SettingsWindowView GetSettingsWindowView(InjectContext context) =>
+            context.Container.Resolve<IUIFactory>().GetSettingsWindowView();
     }
 }

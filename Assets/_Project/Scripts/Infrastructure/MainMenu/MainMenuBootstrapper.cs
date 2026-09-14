@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.Services.Progress;
+﻿using System;
+using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
@@ -13,7 +14,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.MainMenu
 {
-    public class MainMenuBootstrapper: IInitializable
+    public class MainMenuBootstrapper: IInitializable, IDisposable
     {
         private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         private readonly IProgressService _progressService;
@@ -23,14 +24,15 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private readonly Transform _uiParent;
         private readonly CursorController _cursorController;
-        private readonly SettingsWindowPresenter _settingsWindowPresenter;
+        private readonly LazyInject<SettingsWindowPresenter> _lazySettingsWindowPresenter;
+        private SettingsWindowPresenter _settingsWindowPresenter;
 
         public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
             [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory,
             ISaveConflictResolveService saveConflictResolveService, Transform uiParent, CursorController cursorController,
-            SettingsWindowPresenter settingsWindowPresenter)
+            LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter)
         {
-            _settingsWindowPresenter = settingsWindowPresenter;
+            _lazySettingsWindowPresenter = lazySettingsWindowPresenter;
             _saveConflictResolveService = saveConflictResolveService;
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _progressService = progressService;
@@ -46,8 +48,11 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
             ShopWindow shopWindow = await InitShopWindow();
+            
             SettingsWindowView settingsWindowView = await InitSettingsView();
-            InitSettingsPresenter(settingsWindowView);
+            _settingsWindowPresenter = _lazySettingsWindowPresenter.Value;
+            _settingsWindowPresenter.Initialize();
+            
             MainMenuWindow mainMenu = await InitMainMenu(shopWindow, settingsWindowView);
 
             _cursorController.SetCursorVisible(visible: true);
@@ -55,11 +60,8 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             _loadingCurtainPresenter.HideLoading();
         }
 
-        private void InitSettingsPresenter(SettingsWindowView settingsWindowView)
-        {
-            _settingsWindowPresenter.Construct(settingsWindowView);
-            _settingsWindowPresenter.Initialize();
-        }
+        public void Dispose() => 
+            _settingsWindowPresenter.Dispose();
 
         private async UniTask<SettingsWindowView> InitSettingsView()
         {
