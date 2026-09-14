@@ -29,6 +29,8 @@ namespace _Project.Scripts.UI.Windows.Settings
             _view.OnMusicVolumeChanged += UpdateMusicVolume;
             _view.OnEffectsVolumeChanged += UpdateEffectsVolume;
             _view.OnUIVolumeChanged += UpdateUIVolume;
+            
+            SyncViewWithModel();
         }
 
         public void Dispose()
@@ -65,14 +67,13 @@ namespace _Project.Scripts.UI.Windows.Settings
 
         private void SyncViewWithModel()
         {
-            AudioSettingsData audioData = _model.AudioSettingsData;
-            _view.SetSlidersValues(audioData.MasterVolume, audioData.MusicVolume, audioData.EffectsVolume,
-                audioData.UIVolume);
+            AudioSettingsData data = _model.AudioSettingsData;
+            _view.SetSlidersValues(data.MasterVolume, data.MusicVolume, data.EffectsVolume, data.UIVolume);
 
-            UpdateMasterVolume(audioData.MasterVolume);
-            UpdateMusicVolume(audioData.MusicVolume);
-            UpdateEffectsVolume(audioData.EffectsVolume);
-            UpdateUIVolume(audioData.UIVolume);
+            UpdateMasterVolume(data.MasterVolume);
+            UpdateMusicVolume(data.MusicVolume);
+            UpdateEffectsVolume(data.EffectsVolume);
+            UpdateUIVolume(data.UIVolume);
         }
 
         private void UpdateAudioMixerVolume(string volumeName, float volume)
