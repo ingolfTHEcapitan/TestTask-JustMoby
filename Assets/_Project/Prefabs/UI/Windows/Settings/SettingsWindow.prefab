@@ -1875,7 +1875,7 @@ PrefabInstance:
     - target: {fileID: 3259056757211994046, guid: cd9b976c0354d2c4897e249febefe353,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -44.650208
+      value: -45
       objectReference: {fileID: 0}
     - target: {fileID: 3259056757211994046, guid: cd9b976c0354d2c4897e249febefe353,
         type: 3}
@@ -1967,7 +1967,7 @@ PrefabInstance:
     - target: {fileID: 6993535742925933505, guid: cd9b976c0354d2c4897e249febefe353,
         type: 3}
       propertyPath: m_Name
-      value: SettingsPanel
+      value: Panel
       objectReference: {fileID: 0}
     - target: {fileID: 7236479672748840864, guid: cd9b976c0354d2c4897e249febefe353,
         type: 3}
