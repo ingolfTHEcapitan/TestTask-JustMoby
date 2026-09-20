@@ -76,6 +76,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.Bind<ISaveLoadService>().WithId(SaveType.Coordinator).To<SaveLoadCoordinator>().FromResolve();
             Container.Bind<ISaveLoadCoordinator>().To<SaveLoadCoordinator>().FromResolve();
             
+            Container.BindInterfacesAndSelfTo<IAPProvider>().AsSingle();
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
             Container.BindInterfacesAndSelfTo<EffectsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<AudioService>().AsSingle();

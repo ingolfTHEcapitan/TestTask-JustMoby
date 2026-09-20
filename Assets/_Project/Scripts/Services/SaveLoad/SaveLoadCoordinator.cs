@@ -13,13 +13,13 @@ namespace _Project.Scripts.Services.SaveLoad
     {
         public event Func<PlayerProgress, PlayerProgress, UniTask<SaveType>> OnSaveConflictHappened;
         
-        private readonly NetworkAccessibilityService _networkAccessibility;
+        private readonly INetworkAccessibilityService _networkAccessibility;
         private readonly ISaveLoadService _localSaveService;
         private readonly ISaveLoadService _cloudSaveService;
         private readonly IAuthService _authService;
         private readonly IProgressService _progressService;
 
-        public SaveLoadCoordinator(NetworkAccessibilityService networkAccessibility, IAuthService authService, IProgressService progressService,
+        public SaveLoadCoordinator(INetworkAccessibilityService networkAccessibility, IAuthService authService, IProgressService progressService,
             [Inject(Id = SaveType.Local)] ISaveLoadService localSaveService, [Inject(Id = SaveType.Cloud)] ISaveLoadService cloudSaveService)
         {
             _networkAccessibility = networkAccessibility;
