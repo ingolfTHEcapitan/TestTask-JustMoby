@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4222493852889472848}
   - component: {fileID: 3407461243488601737}
   - component: {fileID: 8942873177650094794}
-  - component: {fileID: 8306710520385746202}
+  - component: {fileID: 5027727671092440921}
   - component: {fileID: 4365488774352655363}
   m_Layer: 0
   m_Name: GameOverWindow
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8306710520385746202
+--- !u!114 &5027727671092440921
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4488662198956518447}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 395ef22575b7445699c6fedd265b2196, type: 3}
+  m_Script: {fileID: 11500000, guid: cc65f322800147d6a1bdc624638abe7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _windowAnimation: {fileID: 4365488774352655363}

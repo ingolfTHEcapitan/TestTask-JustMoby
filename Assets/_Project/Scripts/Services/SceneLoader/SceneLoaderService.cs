@@ -20,5 +20,11 @@ namespace _Project.Scripts.Services.SceneLoader
             
             await SceneManager.LoadSceneAsync(buildIndex).ToUniTask();
         }
+        
+        public async UniTask ReloadAsync()
+        {
+            int sceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+            await SceneManager.LoadSceneAsync(sceneBuildIndex).ToUniTask();
+        }
     }
 }

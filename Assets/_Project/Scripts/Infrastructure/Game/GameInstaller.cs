@@ -1,4 +1,5 @@
 using _Project.Scripts.Logic.Enemy.Factory;
+using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.Player.Factory;
 using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Logic.PlayerStats;
@@ -8,6 +9,7 @@ using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.HUD;
+using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
 using Zenject;
@@ -32,6 +34,7 @@ namespace _Project.Scripts.Infrastructure.Game
             BindPlayer();
             BindPlayerStats();
             BindHeadUpDisplay();
+            BindGameOverWindow();
             BindHealthCalculatorService();
             BindUpgradePointsService();
             BindEnemy();
@@ -46,7 +49,11 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<PlayerFactory>().AsSingle().WithArguments(_gameParent);
             Container.Bind<PlayerSpawner>().AsSingle();
+            Container.Bind<PlayerDeath>().FromMethod(GetPlayerDeath).AsSingle();
         }
+
+        private PlayerDeath GetPlayerDeath(InjectContext context) => 
+            context.Container.Resolve<IPlayerFactory>().GetPlayerDeath();
 
         private void BindPlayerStats()
         {
@@ -63,6 +70,13 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.Bind<HeadUpDisplayPresenter>().AsSingle();
         }
 
+        private void BindGameOverWindow()
+        {
+            Container.Bind<GameOverWindowView>().FromMethod(GetGameOverView).AsSingle();
+            Container.Bind<GameOverWindowModel>().AsSingle();
+            Container.Bind<GameOverWindowPresenter>().AsSingle();
+        }
+        
         private void BindUpgradePointsService() => 
             Container.BindInterfacesAndSelfTo<UpgradePointsService>().AsSingle();
 
@@ -84,5 +98,8 @@ namespace _Project.Scripts.Infrastructure.Game
         
         private HeadUpDisplayView GetHudView(InjectContext context) =>
             context.Container.Resolve<IUIFactory>().GetHudView();
+        
+        private GameOverWindowView GetGameOverView(InjectContext context) => 
+            context.Container.Resolve<IUIFactory>().GetGameOverView();
     }
 }

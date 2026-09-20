@@ -14,7 +14,7 @@ namespace _Project.Scripts.UI.Factory
     public interface IUIFactory
     {
         UniTask<HeadUpDisplayView> CreateHudViewAsync(Transform uiParent);
-        UniTask<GameOverWindow> CreateGameOverWindowAsync(Transform uiParent);
+        UniTask<GameOverWindowView> CreateGameOverWindowViewAsync(Transform uiParent);
         UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync();
         UniTask<MainMenuWindow> CreateMainMenuWindowAsync(Transform uiParent);
         UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent);
@@ -27,5 +27,6 @@ namespace _Project.Scripts.UI.Factory
         HeadUpDisplayView GetHudView();
         LoadingCurtainView GetLoadingWindowView();
         SettingsWindowView GetSettingsWindowView();
+        GameOverWindowView GetGameOverView();
     }
 }

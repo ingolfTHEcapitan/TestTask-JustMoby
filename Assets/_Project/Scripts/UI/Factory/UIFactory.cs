@@ -25,6 +25,7 @@ namespace _Project.Scripts.UI.Factory
         private HeadUpDisplayView _hudView;
         private LoadingCurtainView _loadingCurtainView;
         private SettingsWindowView _settingsWindowView;
+        private GameOverWindowView _gameOverView;
 
         public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
@@ -38,8 +39,11 @@ namespace _Project.Scripts.UI.Factory
             return _hudView;
         }
 
-        public async UniTask<GameOverWindow> CreateGameOverWindowAsync(Transform uiParent)=> 
-            await CreateViewAsync<GameOverWindow>(AssetAddress.GameOverWindow, uiParent);
+        public async UniTask<GameOverWindowView> CreateGameOverWindowViewAsync(Transform uiParent)
+        {
+            _gameOverView = await CreateViewAsync<GameOverWindowView>(AssetAddress.GameOverWindow, uiParent);
+            return _gameOverView;
+        }
 
         public async UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync()
         {
@@ -103,7 +107,17 @@ namespace _Project.Scripts.UI.Factory
             ($"{_settingsWindowView.gameObject.name} view requested before creation. " +
              $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
         }
-        
+
+        public GameOverWindowView GetGameOverView()
+        {
+            if (_gameOverView)
+                return _gameOverView;
+            
+            throw new InvalidConstraintException
+            ($"{_gameOverView.gameObject.name} view requested before creation. " +
+             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
+        }
+
         private async UniTask<TView> CreateViewAsync<TView>(string assetAddress,Transform uiParent = null) where TView : MonoBehaviour
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(assetAddress);

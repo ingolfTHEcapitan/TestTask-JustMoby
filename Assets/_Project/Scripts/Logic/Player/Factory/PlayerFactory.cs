@@ -1,5 +1,7 @@
 using System;
+using System.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.Infrastructure.Game;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.PlayerStats.Data;
@@ -19,6 +21,7 @@ namespace _Project.Scripts.Logic.Player.Factory
         private readonly PlayerStatsData _playerStatsData;
         private Health _playerHealth;
         private PlayerStatData _healthStat;
+        private PlayerDeath _playerDeath;
 
         public PlayerFactory(IInstantiator container, IHealthCalculatorService healthCalculator, PlayerStatsData playerStatsData, Transform gameParent, IAssetProvider assetProvider)
         {
@@ -38,14 +41,25 @@ namespace _Project.Scripts.Logic.Player.Factory
             
             _healthStat = _playerStatsData.GetStat(StatName.Health); 
             _healthStat.OnStatChanged += UpdatePlayerMaxHealth;
-            
-            _playerHealth.GetComponent<PlayerDeath>().Initialize();
+
+            _playerDeath = _playerHealth.GetComponent<PlayerDeath>();
+            _playerDeath.Initialize();
 
             InitWeapon(_playerHealth);
             
             return _playerHealth;
         }
 
+        public PlayerDeath GetPlayerDeath()
+        {
+            if (_playerDeath)
+                return _playerDeath;
+            
+            throw new InvalidConstraintException
+            ($"{_playerDeath.gameObject.name} requested before creation. " +
+             $"Ensure classes depending on it is not resolved before {nameof(GameBootstrapper)} runs");
+        }
+        
         public void Dispose() => 
             _healthStat.OnStatChanged -= UpdatePlayerMaxHealth;
 
@@ -61,5 +75,7 @@ namespace _Project.Scripts.Logic.Player.Factory
             Camera playerCamera = player.GetComponentInChildren<Camera>();
             weapon.Initialize(playerCamera);
         }
+        
+        
     }
 }

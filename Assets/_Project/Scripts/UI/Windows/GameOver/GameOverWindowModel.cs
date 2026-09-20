@@ -4,6 +4,7 @@ using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.SceneLoader;
+using Cysharp.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.UI.Windows.GameOver
@@ -13,29 +14,24 @@ namespace _Project.Scripts.UI.Windows.GameOver
         public event Action OnPlayerDied;
         public event Action OnRewardedAdLoaded;
         
-        // M +
-        private IGamePauseService _pauseService;
-        private IAdsService _adsService;
-        private ISceneLoaderService _sceneLoader;
-        private PlayerDeath _playerDeath;
-        private EnemySpawner _enemySpawner;
+        private readonly IGamePauseService _pauseService;
+        private readonly IAdsService _adsService;
+        private readonly ISceneLoaderService _sceneLoader;
+        private readonly PlayerDeath _playerDeath;
+        private readonly EnemySpawner _enemySpawner;
         
-        // M +
         private bool _reviveInThisSession;
         
-        public GameOverWindowModel(IGamePauseService pauseService, IAdsService adsService, 
-            ISceneLoaderService sceneLoader, EnemySpawner enemySpawner)
+        public GameOverWindowModel(IGamePauseService pauseService, IAdsService adsService, ISceneLoaderService sceneLoader,
+            EnemySpawner enemySpawner, PlayerDeath playerDeath)
         {
             _pauseService = pauseService;
             _adsService = adsService;
             _sceneLoader = sceneLoader;
             _enemySpawner = enemySpawner;
+            _playerDeath = playerDeath;
         }
         
-        public void Construct(PlayerDeath playerDeath) => 
-            _playerDeath = playerDeath;
-
-
         public void Initialize()
         {
             // M + 
@@ -49,21 +45,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
             _adsService.OnRewardedAdLoaded -= InvokeOnRewardedAdLoaded;
         }
 
-        public void ShowRewardedAd(Action onRewardedAdFinished)
-        {
-            // M
-            _adsService.ShowRewardedAd(() =>
-            {
-                // M
-                _playerDeath.Revive();
-                _enemySpawner.KillAllEnemies();
-                _reviveInThisSession = true;
-                
-                onRewardedAdFinished?.Invoke();
-            });
-        }
-
-        public bool TryShowInterstitialAd(Action onInterstitialAdFinished)
+        public bool TryShowInterstitialAd(Action onInterstitialAdFinished = null)
         {
             if (_adsService.IsInterstitialAdLoaded)
             {
@@ -74,13 +56,33 @@ namespace _Project.Scripts.UI.Windows.GameOver
             onInterstitialAdFinished?.Invoke();
             return false;
         }
-        
-        public async void ReloadScene()
+
+        public bool TryShowRewardedAd(Action onRewardedAdFinished = null)
         {
-            // M
+            if (!_adsService.IsRewardedAdLoaded)
+            {
+                onRewardedAdFinished?.Invoke();
+                return false;
+            }
+            
+            _adsService.ShowRewardedAd(() =>
+            {
+                _playerDeath.Revive();
+                _enemySpawner.KillAllEnemies();
+                _reviveInThisSession = true;
+                onRewardedAdFinished?.Invoke();
+            });
+            
+            return true;
+        }
+
+        public void SetPaused(bool paused) => 
+            _pauseService.SetPaused(paused);
+
+        public async UniTask ReloadSceneAsync()
+        {
             _reviveInThisSession = false;
-            // M
-            await _sceneLoader.LoadAsync(SceneManager.GetActiveScene().buildIndex);
+            await _sceneLoader.ReloadAsync();
         }
 
         public bool CanRevive() => 
