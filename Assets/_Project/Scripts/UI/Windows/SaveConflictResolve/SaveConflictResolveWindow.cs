@@ -46,7 +46,6 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
         {
             _localSaveButton.onClick.RemoveListener(ChoiceLocalSave);
             _cloudSaveButton.onClick.RemoveListener(ChoiceCloudSave);
-            Destroy(gameObject);
         }
 
         public async UniTask<SaveType> ShowAsync()

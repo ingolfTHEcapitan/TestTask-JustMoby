@@ -33,7 +33,7 @@ namespace _Project.Scripts.Services.Ads
             _progressService = progressService;
             Advertisement.Initialize(GetGameId(), TestMode, this);
         }
-
+        
         public async void  OnInitializationComplete()
         {
             Debug.Log("Unity Ads Initialization Complete!");
