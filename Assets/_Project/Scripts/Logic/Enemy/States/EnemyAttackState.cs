@@ -78,9 +78,15 @@ namespace _Project.Scripts.Logic.Enemy.States
             {
                 PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.green);
 
-                IHealth playerHealth = hit.GetComponent<IHealth>();
-                playerHealth.TakeDamage(_config.AttackDamage);
-                _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
+                if (hit.TryGetComponent(out IHealth playerHealth))
+                {
+                    playerHealth.TakeDamage(_config.AttackDamage);
+                    _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
+                }
+                else
+                {
+                    throw new NullReferenceException($"No IHealth component found on {hit.gameObject.name}");
+                }
             }
             else
             {
