@@ -11,6 +11,7 @@ using _Project.Scripts.UI.Windows.PlayerStats;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
+using _Project.Scripts.UI.Windows.Shop.Item;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -71,9 +72,6 @@ namespace _Project.Scripts.UI.Factory
 
         public async UniTask<ShopWindow> CreateShopWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<ShopWindow>(AssetAddress.ShopWindow, uiParent);
-        
-        public async UniTask<ShopItem> CreateShopItemAsync(Transform uiParent)=> 
-            await CreateViewAsync<ShopItem>(AssetAddress.ShopItem, uiParent);
         
         public async UniTask<Sprite> LoadSpriteAsync(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);

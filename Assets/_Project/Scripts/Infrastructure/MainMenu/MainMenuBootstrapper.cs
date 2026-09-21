@@ -8,6 +8,7 @@ using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
+using _Project.Scripts.UI.Windows.Shop.Item;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -23,6 +24,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly ISaveConflictResolveService _saveConflictResolveService;
 
         private readonly Transform _uiParent;
+        private readonly ShopItemUIFactory _shopItemUIFactory;
         private readonly CursorController _cursorController;
         private readonly LazyInject<SettingsWindowPresenter> _lazySettingsWindowPresenter;
         private SettingsWindowPresenter _settingsWindowPresenter;
@@ -30,7 +32,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
             [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory,
             ISaveConflictResolveService saveConflictResolveService, Transform uiParent, CursorController cursorController,
-            LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter)
+            LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, ShopItemUIFactory shopItemUIFactory)
         {
             _lazySettingsWindowPresenter = lazySettingsWindowPresenter;
             _saveConflictResolveService = saveConflictResolveService;
@@ -40,6 +42,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             _uiFactory = uiFactory;
             _uiParent = uiParent;
             _cursorController = cursorController;
+            _shopItemUIFactory = shopItemUIFactory;
         }
 
         public async void Initialize()
@@ -73,7 +76,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private async UniTask<ShopWindow> InitShopWindow()
         {
             ShopWindow shopWindow = await _uiFactory.CreateShopWindowAsync(_uiParent);
-            shopWindow.Initialize();
+            shopWindow.Initialize(_shopItemUIFactory);
             return shopWindow;
         }
 

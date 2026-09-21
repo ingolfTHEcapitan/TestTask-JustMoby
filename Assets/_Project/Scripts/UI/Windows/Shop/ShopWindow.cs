@@ -4,6 +4,7 @@ using _Project.Scripts.Data.IAP;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.Shop.Item;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,96 +14,127 @@ namespace _Project.Scripts.UI.Windows.Shop
 {
     public class ShopWindow: MonoBehaviour, IWindow
     {
+        // V
         [SerializeField] private WindowPopupAnimation _windowAnimation;
         [Space]
         [SerializeField] private GameObject _windowContent;
         [SerializeField] private GameObject[] _shopUnavailableObjects;
         [SerializeField] private Transform _productsContainer;
         [SerializeField] private Button _closeButton;
-        
+        // V
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource;
         
+        // M
         private IIAPService _iapService;
-        private readonly List<ShopItem> _shopItems = new List<ShopItem>();
-        private IUIFactory _uiFactory;
+        // P
+        private readonly List<ShopItemView> _shopItemViews = new List<ShopItemView>();
+        // M
         private PurchaseModel _purchaseModel;
+        private ShopItemUIFactory _shopItemUIFactory;
 
         [Inject]
-        private void Construct(IIAPService iapService, IUIFactory uiFactory, PurchaseModel purchaseModel)
+        private void Construct(IIAPService iapService, PurchaseModel purchaseModel)
         {
+            // M
             _iapService = iapService;
-            _uiFactory = uiFactory;
+            // M
             _purchaseModel = purchaseModel;
         }
 
-        public void Initialize()
+        public void Initialize(ShopItemUIFactory shopItemUIFactory)
         {
+            _shopItemUIFactory = shopItemUIFactory;
+            // V
             _windowContent.SetActive(false);
             _closeButton.onClick.AddListener(Close);
+            // M
             _purchaseModel.OnChanged += RefreshAvailableShopItems;
             
+            // V
             ClearProductsContainer();
+            // MVP
             RefreshAvailableShopItems();
         }
 
+        // MV
         private void OnDestroy()
         {
+            // V
             _closeButton.onClick.RemoveListener(Close);
+            // M
             _purchaseModel.OnChanged -= RefreshAvailableShopItems;
+            _shopItemUIFactory.Dispose();
         }
 
+        // V
         public void Open()
         {
+            // MVP
             RefreshAvailableShopItems();
             _windowContent.SetActive(true);
             _windowAnimation.AnimateOpen();
         }
 
+        // V
         private async void Close()
         {
             await _windowAnimation.AnimateCloseAsync();
             _windowContent.SetActive(false);
         }
 
+        // MVP
         private async void RefreshAvailableShopItems()
         {
-            UpdateShopUnavailableObjects();
+            // V
+            UpdateShopUnavailableObjects(!_iapService.IsInitialized);
             
+            // M
             if (!_iapService.IsInitialized)
                 return;
             
+            // P
             ClearShopItems();
             await FillShopItemsAsync();
         }
 
+        // V
         private void ClearProductsContainer()
         {
             foreach (Transform child in _productsContainer) 
                 Destroy(child.gameObject);
         }
 
+        // P
         private void ClearShopItems()
         {
-            foreach (ShopItem shopItem in _shopItems)
-                if (shopItem)
-                    Destroy(shopItem.gameObject);
+            foreach (ShopItemView shopItemView in _shopItemViews)
+                if (shopItemView)
+                    Destroy(shopItemView.gameObject);
         }
 
+        // P
         private async UniTask FillShopItemsAsync()
         {
+            // P
             foreach (ProductDescription productDescription in _iapService.GetProducts())
             {
-                ShopItem shopItem = await _uiFactory.CreateShopItemAsync(_productsContainer);
-                _shopItems.Add(shopItem);
-                await shopItem.InitializeAsync(productDescription, _audioSource);
+                // P+
+                //ShopItem shopItem = await _uiFactory.CreateShopItemAsync(_productsContainer);
+                // P
+                ShopItemView shopItemView = await _shopItemUIFactory.CreateShopItemAsync(_productsContainer, productDescription, _audioSource);
+                _shopItemViews.Add(shopItemView);
+                
+                // V+
+                //await shopItem.InitializeAsync(productDescription, _audioSource);
             }
         }
 
-        private void UpdateShopUnavailableObjects()
+        // V
+        private void UpdateShopUnavailableObjects(bool iapServiceIsInitialized)
         {
             foreach (GameObject shopUnavailableObject in _shopUnavailableObjects) 
-                shopUnavailableObject.SetActive(!_iapService.IsInitialized);
+                shopUnavailableObject.SetActive(iapServiceIsInitialized);
         }
     }
 }
