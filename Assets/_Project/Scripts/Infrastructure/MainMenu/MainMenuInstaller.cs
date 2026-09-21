@@ -1,6 +1,7 @@
 ﻿using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
+using _Project.Scripts.UI.Windows.Shop.Item;
 using UnityEngine;
 using Zenject;
 
@@ -14,7 +15,13 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         {
             BindMainMenuBootstrapper();
             BindSaveConflictResolver();
+            BindShopWindow();
             BindSettingsWindow();
+        }
+
+        private void BindShopWindow()
+        {
+            Container.Bind<ShopItemUIFactory>().AsSingle();
         }
 
         private void BindMainMenuBootstrapper() => 
