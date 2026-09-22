@@ -7,7 +7,7 @@ namespace _Project.Scripts.UI.Windows.Shop.Item
     public class ShopItemModel
     {
         private readonly IIAPService _iapService;
-        private ProductDescription _productDescription;
+        private readonly ProductDescription _productDescription;
 
         public string IconAddress => _productDescription.ProductConfig.IconAddress;
         public string ProductName => _productDescription.ProductConfig.ProductName;
@@ -15,12 +15,12 @@ namespace _Project.Scripts.UI.Windows.Shop.Item
         public int Quantity => _productDescription.ProductConfig.Quantity;
         public int PurchasesLeft => _productDescription.AvailablePurchasesLeft;
 
-        public ShopItemModel(IIAPService iapService) => 
+        public ShopItemModel(IIAPService iapService, ProductDescription productDescription)
+        {
             _iapService = iapService;
-        
-        public void Initialize(ProductDescription productDescription) =>
             _productDescription = productDescription;
-        
+        }
+
         public void StartPurchase() => 
             _iapService.StartPurchaseAsync(_productDescription);
 

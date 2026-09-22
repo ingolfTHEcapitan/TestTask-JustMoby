@@ -14,17 +14,13 @@ namespace _Project.Scripts.UI.Factory
     {
         private readonly IInstantiator _container;
         private readonly IAssetProvider _assetProvider;
-        private readonly IIAPService _iapService;
-        private readonly IUIFactory _uiFactory;
-
+        
         private readonly List<ShopItemPresenter> _presenters = new List<ShopItemPresenter>();
         
-        public ShopItemUIFactory(IInstantiator container, IUIFactory uiFactory, IAssetProvider assetProvider, IIAPService iapService)
+        public ShopItemUIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
             _container = container;
-            _uiFactory = uiFactory;
             _assetProvider = assetProvider;
-            _iapService = iapService;
         }
 
         public void Dispose()
@@ -40,11 +36,11 @@ namespace _Project.Scripts.UI.Factory
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.ShopItem);
             ShopItemView view = _container.InstantiatePrefabForComponent<ShopItemView>(prefab, parent);
 
-            ShopItemModel model = new ShopItemModel(_iapService);
-            ShopItemPresenter presenter = new ShopItemPresenter(_uiFactory, view, model);
-            _presenters.Add(presenter);
+            ShopItemModel model = _container.Instantiate<ShopItemModel>(new object[] {productDescription});
+            ShopItemPresenter presenter = _container.Instantiate<ShopItemPresenter>(new object[] {view, model});
+            await presenter.Initialize(audioSource);
             
-            await presenter.Initialize(productDescription, audioSource);
+            _presenters.Add(presenter);
             
             return view;
         }
