@@ -21,11 +21,10 @@ namespace _Project.Scripts.UI.Windows.Shop.Item
             _model = model;
         }
 
-        public async UniTask<ShopItemView> Initialize(ProductDescription productDescription, AudioSource audioSource)
+        public async UniTask<ShopItemView> Initialize(AudioSource audioSource)
         {
             _view.OnBuyButtonClicked += StartPurchase;
             _view.Initialize(audioSource);
-            _model.Initialize(productDescription);
 
             await FillShopItemAsync();
             return _view;
