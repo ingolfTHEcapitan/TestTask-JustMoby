@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
@@ -14,11 +15,15 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         
         public override void InstallBindings()
         {
-            BindMainMenuBootstrapper();
             BindSaveConflictResolver();
             BindShopWindow();
             BindSettingsWindow();
+            BindMainMenuWindow();
+            BindMainMenuBootstrapper();
         }
+
+        private void BindSaveConflictResolver() => 
+            Container.BindInterfacesAndSelfTo<SaveConflictResolveService>().AsSingle().WithArguments(_uiParent);
 
         private void BindShopWindow()
         {
@@ -28,12 +33,6 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             Container.Bind<ShopItemFactory>().AsSingle();
         }
 
-        private void BindMainMenuBootstrapper() => 
-            Container.BindInterfacesAndSelfTo<MainMenuBootstrapper>().AsSingle().WithArguments(_uiParent);
-
-        private void BindSaveConflictResolver() => 
-            Container.BindInterfacesAndSelfTo<SaveConflictResolveService>().AsSingle().WithArguments(_uiParent);
-
         private void BindSettingsWindow()
         {
             Container.BindInterfacesAndSelfTo<SettingsWindowView>().FromMethod(GetSettingsWindowView).AsSingle();
@@ -41,10 +40,23 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             Container.Bind<SettingsWindowPresenter>().AsSingle();
         }
 
+        private void BindMainMenuWindow()
+        {
+            Container.Bind<MainMenuWindowView>().FromMethod(GetMainMenuWindowView).AsSingle();
+            Container.BindInterfacesAndSelfTo<MainMenuWindowModel>().AsSingle();
+            Container.Bind<MainMenuWindowPresenter>().AsSingle();
+        }
+
+        private void BindMainMenuBootstrapper() => 
+            Container.BindInterfacesAndSelfTo<MainMenuBootstrapper>().AsSingle().WithArguments(_uiParent);
+
         private SettingsWindowView GetSettingsWindowView(InjectContext context) =>
             context.Container.Resolve<IUIFactory>().GetSettingsWindowView();
 
         private ShopWindowView GetShopWindowView(InjectContext context) => 
             context.Container.Resolve<IUIFactory>().GetShopWindowView();
+
+        private MainMenuWindowView GetMainMenuWindowView(InjectContext context) => 
+            context.Container.Resolve<IUIFactory>().GetMainMenuWindowView();
     }
 }

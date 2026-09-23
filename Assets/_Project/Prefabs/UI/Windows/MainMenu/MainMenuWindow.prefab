@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 6542064919053237718}
   - component: {fileID: 6767220175634137930}
   - component: {fileID: 3993840227896163184}
-  - component: {fileID: 8928015100833099659}
+  - component: {fileID: 1688769386627254729}
   m_Layer: 0
   m_Name: MainMenuWindow
   m_TagString: Untagged
@@ -255,7 +255,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &8928015100833099659
+--- !u!114 &1688769386627254729
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -264,14 +264,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 7724544699663222998}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7450c89097864a0a9fbbfaffc6372ec0, type: 3}
+  m_Script: {fileID: 11500000, guid: a5dbd175a99e476d974e4330682a0201, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _playButton: {fileID: 7604687520744331712}
   _settingsButton: {fileID: 8989294671031954182}
   _shopButton: {fileID: 146824859742268892}
   _exitButton: {fileID: 554619244813736578}
-  _audioSource: {fileID: 1576422202225788123}
+  _musicAudioSource: {fileID: 1576422202225788123}
   _backgroundMusic: {fileID: 8300000, guid: 5f4726198961d97439014a6ec7df248f, type: 3}
 --- !u!1001 &16236858974504362
 PrefabInstance:
