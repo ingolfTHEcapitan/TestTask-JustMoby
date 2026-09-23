@@ -21,7 +21,8 @@ namespace _Project.Scripts.UI.Windows.Settings
         
         public void Initialize()
         {
-            _view.OnOpen += UpdateAudioMixerAndSlidersValues;
+            _view.Initialize();
+            
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyButtonClicked += SaveSettingsAndClose;
 
@@ -35,7 +36,6 @@ namespace _Project.Scripts.UI.Windows.Settings
 
         public void Dispose()
         {
-            _view.OnOpen -= UpdateAudioMixerAndSlidersValues;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyButtonClicked -= SaveSettingsAndClose;
 
@@ -45,7 +45,12 @@ namespace _Project.Scripts.UI.Windows.Settings
             _view.OnUIVolumeChanged -= UpdateUIVolume;
         }
 
-
+        public void Open()
+        {
+            UpdateAudioMixerAndSlidersValues();
+            _view.Open();
+        }
+        
         private async void SaveSettingsAndClose()
         {
             AudioSettingsData audioData = _model.AudioSettingsData;

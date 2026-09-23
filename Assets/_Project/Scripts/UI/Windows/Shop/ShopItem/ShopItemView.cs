@@ -2,15 +2,14 @@ using System;
 using _Project.Scripts.UI.Common;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Purchasing;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.UI.Windows.Shop.Item
+namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
     public class ShopItemView: MonoBehaviour
     {
         public event Action OnBuyButtonClicked;
-        // V+
+    
         [SerializeField] private TextMeshProUGUI _productNameText;
         [SerializeField] private TextMeshProUGUI _quantityText;
         [SerializeField] private TextMeshProUGUI _availablePurchasesLeftText;
@@ -20,7 +19,6 @@ namespace _Project.Scripts.UI.Windows.Shop.Item
 
         public void Initialize(AudioSource audioSource)
         {
-            //V
             _buyButton.onClick.AddListener(InvokeOnBuyButtonClicked);
             ButtonSoundEffect buttonSoundEffect = _buyButton.GetComponent<ButtonSoundEffect>();
             buttonSoundEffect.Initialize(audioSource);

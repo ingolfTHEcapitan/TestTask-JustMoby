@@ -11,7 +11,6 @@ using _Project.Scripts.UI.Windows.PlayerStats;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
-using _Project.Scripts.UI.Windows.Shop.Item;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -27,6 +26,7 @@ namespace _Project.Scripts.UI.Factory
         private LoadingCurtainView _loadingCurtainView;
         private SettingsWindowView _settingsWindowView;
         private GameOverWindowView _gameOverView;
+        private ShopWindowView _shopWindowView;
 
         public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
@@ -69,10 +69,13 @@ namespace _Project.Scripts.UI.Factory
             _settingsWindowView = await CreateViewAsync<SettingsWindowView>(AssetAddress.SettingsWindow, uiParent);
             return _settingsWindowView;
         }
-
-        public async UniTask<ShopWindow> CreateShopWindowAsync(Transform uiParent)=> 
-            await CreateViewAsync<ShopWindow>(AssetAddress.ShopWindow, uiParent);
         
+        public async UniTask<ShopWindowView> CreateShopWindowViewAsync(Transform uiParent)
+        {
+            _shopWindowView = await CreateViewAsync<ShopWindowView>(AssetAddress.ShopWindow, uiParent);
+            return _shopWindowView;
+        }
+
         public async UniTask<Sprite> LoadSpriteAsync(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
 
@@ -114,6 +117,16 @@ namespace _Project.Scripts.UI.Factory
             throw new InvalidConstraintException
             ($"{_gameOverView.gameObject.name} view requested before creation. " +
              $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
+        }
+
+        public ShopWindowView GetShopWindowView()
+        {
+            if (_shopWindowView)
+                return _shopWindowView;
+            
+            throw new InvalidConstraintException
+            ($"{_shopWindowView.gameObject.name} view requested before creation. " +
+             $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
         }
 
         private async UniTask<TView> CreateViewAsync<TView>(string assetAddress,Transform uiParent = null) where TView : MonoBehaviour

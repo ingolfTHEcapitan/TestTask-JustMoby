@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.IAP;
-using _Project.Scripts.UI.Windows.Shop.Item;
+using _Project.Scripts.UI.Windows.Shop.ShopItem;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.UI.Factory
 {
-    public class ShopItemUIFactory: IDisposable
+    public class ShopItemFactory: IDisposable
     {
         private readonly IInstantiator _container;
         private readonly IAssetProvider _assetProvider;
         
         private readonly List<ShopItemPresenter> _presenters = new List<ShopItemPresenter>();
         
-        public ShopItemUIFactory(IInstantiator container, IAssetProvider assetProvider)
+        public ShopItemFactory(IInstantiator container, IAssetProvider assetProvider)
         {
             _container = container;
             _assetProvider = assetProvider;

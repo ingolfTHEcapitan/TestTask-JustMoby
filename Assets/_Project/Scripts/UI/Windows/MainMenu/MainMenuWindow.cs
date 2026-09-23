@@ -23,8 +23,8 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         
         private LoadingCurtainPresenter _loadingCurtainPresenter;
         private IAudioService _audioService;
-        private ShopWindow _shopWindow;
-        private SettingsWindowView _settingsWindowView;
+        private ShopWindowPresenter _shopWindowPresenter;
+        private SettingsWindowPresenter _settingsWindowPresenter;
         private CursorController _cursorController;
         private ISceneLoaderService _sceneLoader;
 
@@ -38,15 +38,15 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _sceneLoader = sceneLoader;
         }
 
-        public void Initialize(ShopWindow shopWindow, SettingsWindowView settingsWindowView)
+        public void Initialize(ShopWindowPresenter shopWindowPresenter, SettingsWindowPresenter settingsWindowPresenter)
         {
             _playButton.onClick.AddListener(StartGame);
             _settingsButton.onClick.AddListener(OpenSettingsWindow);
             _shopButton.onClick.AddListener(OpenShopWindow);
             _exitButton.onClick.AddListener(ExitGame);
 
-            _shopWindow = shopWindow;
-            _settingsWindowView = settingsWindowView;
+            _shopWindowPresenter = shopWindowPresenter;
+            _settingsWindowPresenter = settingsWindowPresenter;
         }
 
         private void OnDestroy()
@@ -64,10 +64,10 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         }
 
         private void OpenSettingsWindow() => 
-            _settingsWindowView.Open();
+            _settingsWindowPresenter.Open();
 
         private void OpenShopWindow() => 
-            _shopWindow.Open();
+            _shopWindowPresenter.Open();
 
         private async void StartGame()
         {

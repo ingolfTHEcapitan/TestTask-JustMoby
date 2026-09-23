@@ -1,7 +1,7 @@
 ﻿using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
-using _Project.Scripts.UI.Windows.Shop.Item;
+using _Project.Scripts.UI.Windows.Shop;
 using UnityEngine;
 using Zenject;
 
@@ -21,7 +21,10 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private void BindShopWindow()
         {
-            Container.Bind<ShopItemUIFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ShopWindowView>().FromMethod(GetShopWindowView);
+            Container.BindInterfacesAndSelfTo<ShopWindowModel>().AsSingle();
+            Container.Bind<ShopWindowPresenter>().AsSingle();
+            Container.Bind<ShopItemFactory>().AsSingle();
         }
 
         private void BindMainMenuBootstrapper() => 
@@ -39,5 +42,8 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private SettingsWindowView GetSettingsWindowView(InjectContext context) =>
             context.Container.Resolve<IUIFactory>().GetSettingsWindowView();
+
+        private ShopWindowView GetShopWindowView(InjectContext context) => 
+            context.Container.Resolve<IUIFactory>().GetShopWindowView();
     }
 }
