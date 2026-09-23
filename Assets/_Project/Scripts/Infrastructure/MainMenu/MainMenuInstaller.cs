@@ -2,6 +2,7 @@
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
+using _Project.Scripts.UI.Windows.Shop.ShopItem;
 using UnityEngine;
 using Zenject;
 
