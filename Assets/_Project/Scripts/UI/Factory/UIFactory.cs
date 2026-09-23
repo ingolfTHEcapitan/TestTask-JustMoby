@@ -27,6 +27,7 @@ namespace _Project.Scripts.UI.Factory
         private SettingsWindowView _settingsWindowView;
         private GameOverWindowView _gameOverView;
         private ShopWindowView _shopWindowView;
+        private PlayerStatsWindowView _playerStatsWindowView;
 
         public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
@@ -55,9 +56,12 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<MainMenuWindow> CreateMainMenuWindowAsync(Transform uiParent)=> 
             await CreateViewAsync<MainMenuWindow>(AssetAddress.MainMenuWindow, uiParent);
 
-        public async UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent)=> 
-            await CreateViewAsync<PlayerStatsWindowView>(AssetAddress.PlayerStatsWindow, uiParent);
-        
+        public async UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent)
+        {
+            _playerStatsWindowView = await CreateViewAsync<PlayerStatsWindowView>(AssetAddress.PlayerStatsWindow, uiParent);
+            return _playerStatsWindowView;
+        }
+
         public async UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent)=> 
             await CreateViewAsync<PlayerStatItemView>(AssetAddress.PlayerStatItem, uiParent);
         
@@ -109,13 +113,13 @@ namespace _Project.Scripts.UI.Factory
              $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
         }
 
-        public GameOverWindowView GetGameOverView()
+        public PlayerStatsWindowView GetPlayerStatsWindowView()
         {
-            if (_gameOverView)
-                return _gameOverView;
+            if (_playerStatsWindowView)
+                return _playerStatsWindowView;
             
             throw new InvalidConstraintException
-            ($"{_gameOverView.gameObject.name} view requested before creation. " +
+            ($"{_playerStatsWindowView.gameObject.name} view requested before creation. " +
              $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
         }
 
@@ -127,6 +131,16 @@ namespace _Project.Scripts.UI.Factory
             throw new InvalidConstraintException
             ($"{_shopWindowView.gameObject.name} view requested before creation. " +
              $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
+        }
+        
+        public GameOverWindowView GetGameOverWindowView()
+        {
+            if (_gameOverView)
+                return _gameOverView;
+            
+            throw new InvalidConstraintException
+            ($"{_gameOverView.gameObject.name} view requested before creation. " +
+             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
         }
 
         private async UniTask<TView> CreateViewAsync<TView>(string assetAddress,Transform uiParent = null) where TView : MonoBehaviour

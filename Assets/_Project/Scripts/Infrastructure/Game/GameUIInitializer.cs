@@ -19,29 +19,33 @@ namespace _Project.Scripts.Infrastructure.Game
     {
         private readonly IUIFactory _uiFactory;
         private readonly Transform _uiParent;
-       
-        private readonly PlayerStatsWindowPresenter _playerStatsWindowPresenter;
+
         private readonly AudioClip _levelUpSound;
-        private readonly IUpgradePointsService _pointsService;
         private readonly LazyInject<HeadUpDisplayPresenter> _lazyHudPresenter;
         private readonly LazyInject<GameOverWindowPresenter> _lazyGameOverWindowPresenter;
+        private readonly LazyInject<PlayerStatsWindowPresenter> _lazyPlayerStatsWindowPresenter;
         private HeadUpDisplayPresenter _hudPresenter;
         private GameOverWindowPresenter _gameOverWindowPresenter;
+        private PlayerStatsWindowPresenter _playerStatsWindowPresenter;
 
-        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, PlayerStatsWindowPresenter playerStatsWindowPresenter, IUpgradePointsService pointsService, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter,
+        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, 
+            LazyInject<PlayerStatsWindowPresenter> lazyPlayerStatsWindowPresenter, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter,
             LazyInject<GameOverWindowPresenter> lazyGameOverWindowPresenter)
         {
-            _pointsService = pointsService;
             _uiFactory = uiFactory;
             _uiParent = uiParent;
-            _playerStatsWindowPresenter = playerStatsWindowPresenter;
             _levelUpSound = levelUpSound;
-            _lazyHudPresenter = lazyHudPresenter;
+            _lazyPlayerStatsWindowPresenter = lazyPlayerStatsWindowPresenter;
             _lazyGameOverWindowPresenter = lazyGameOverWindowPresenter;
+            _lazyHudPresenter = lazyHudPresenter;
         }
 
-        public void Dispose() => 
+        public void Dispose()
+        {
             _hudPresenter.Dispose();
+            _playerStatsWindowPresenter.Dispose();
+            _gameOverWindowPresenter.Dispose();
+        }
 
         public async UniTask InitUIAsync(Health playerHealth)
         {
@@ -50,8 +54,9 @@ namespace _Project.Scripts.Infrastructure.Game
             _hudPresenter = _lazyHudPresenter.Value;
             _hudPresenter.Initialize();
             
-            PlayerStatsWindowView playerStatsWindowView = await InitPlayerStatsView(hudView, _levelUpSound, _pointsService);
-            await InitPlayerStatsPresenterAsync(playerStatsWindowView, playerHealth);
+            PlayerStatsWindowView playerStatsWindowView = await InitPlayerStatsView(hudView, _levelUpSound);
+            _playerStatsWindowPresenter = _lazyPlayerStatsWindowPresenter.Value;
+            await _playerStatsWindowPresenter.InitializeAsync();
             
             GameOverWindowView gameOverWindowView = await _uiFactory.CreateGameOverWindowViewAsync(_uiParent);
             _gameOverWindowPresenter = _lazyGameOverWindowPresenter.Value;
@@ -65,20 +70,13 @@ namespace _Project.Scripts.Infrastructure.Game
             playerHealthBarView.Initialize();
         }
 
-        private async UniTask<PlayerStatsWindowView> InitPlayerStatsView(HeadUpDisplayView hud, AudioClip levelUpSound, IUpgradePointsService pointsService)
+        private async UniTask<PlayerStatsWindowView> InitPlayerStatsView(HeadUpDisplayView hud, AudioClip levelUpSound)
         {
             Button openButton = hud.OpenStatsWindowButton;
             
             PlayerStatsWindowView playerStatsWindowView = await _uiFactory.CreatePlayerStatsViewAsync(_uiParent);
-            playerStatsWindowView.Initialize(openButton, levelUpSound, pointsService);
+            playerStatsWindowView.Initialize(openButton, levelUpSound);
             return playerStatsWindowView;
-        }
-
-        private async UniTask InitPlayerStatsPresenterAsync(PlayerStatsWindowView view, Health player)
-        {
-            PlayerDeath playerDeath = player.GetComponent<PlayerDeath>();
-            _playerStatsWindowPresenter.Construct(view, playerDeath);
-            await _playerStatsWindowPresenter.InitializeAsync();
         }
     }
 }

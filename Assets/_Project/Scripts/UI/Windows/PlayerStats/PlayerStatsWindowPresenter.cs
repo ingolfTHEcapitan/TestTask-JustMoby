@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.PlayerInput;
+using _Project.Scripts.Services.UpgradePoints;
 using Cysharp.Threading.Tasks;
 using Object = UnityEngine.Object;
 
@@ -13,35 +13,35 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     public class PlayerStatsWindowPresenter : IDisposable
     {
         private readonly IInputService _inputService;
+        private readonly IUpgradePointsService _pointsService;
         private readonly PlayerStatsWindowModel _model;
-        
+        private readonly PlayerStatsWindowView _view;
+
         private readonly Dictionary<StatName, PlayerStatItemView> _statItemsView = new Dictionary<StatName, PlayerStatItemView>();
-        
-        private PlayerStatsWindowView _windowView;
-        private PlayerDeath _playerDeath;
+
         private bool _isOpen;
 
-        public PlayerStatsWindowPresenter(IInputService inputService, PlayerStatsWindowModel model)
+        public PlayerStatsWindowPresenter(IInputService inputService, IUpgradePointsService pointsService, 
+            PlayerStatsWindowModel model, PlayerStatsWindowView view)
         {
             _inputService = inputService;
+            _pointsService = pointsService;
             _model = model;
-        }
-        
-        public void Construct(PlayerStatsWindowView view, PlayerDeath playerDeath)
-        {
-            _windowView = view;
-            _playerDeath = playerDeath;
+            _view = view;
         }
         
         public async UniTask InitializeAsync()
         {
-            _model.OnStatsChanged += UpdateAllStatItems;
-            _windowView.OnOpenButtonClicked += Open;
-            _windowView.OnCloseButtonClicked += Close;
-            _windowView.OnApplyChangesButtonClicked += ApplyChanges;
-            _inputService.OnOpenStatsButtonPressed += Open;
+            await _model.Initialize();
             
-            await CreateStatItemsAsync(_model.GetStatValues());
+            _model.OnStatsChanged += UpdateAllStatItems;
+            _view.OnOpenButtonClicked += Open;
+            _view.OnCloseButtonClicked += Close;
+            _view.OnApplyChangesButtonClicked += ApplyChanges;
+            _inputService.OnOpenStatsButtonPressed += Open;
+            _pointsService.OnPointAdded += _view.PlayLevelUpSound;
+            
+            await CreateStatItemsAsync();
             
             foreach (PlayerStatItemView statItemView in GetStatItems())
                 statItemView.OnUpgradeButtonClicked += UpgradeStatItem;
@@ -50,22 +50,25 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public void Dispose()
         {
             _model.OnStatsChanged -= UpdateAllStatItems;
-            _windowView.OnOpenButtonClicked -= Open;
-            _windowView.OnCloseButtonClicked -= Close;
-            _windowView.OnApplyChangesButtonClicked -= ApplyChanges;
+            _view.OnOpenButtonClicked -= Open;
+            _view.OnCloseButtonClicked -= Close;
+            _view.OnApplyChangesButtonClicked -= ApplyChanges;
+            _pointsService.OnPointAdded -= _view.PlayLevelUpSound;
             
             foreach (PlayerStatItemView statItemView in GetStatItems())
                 statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;
+            
+            _model.Dispose();
         }
         
-        private async UniTask CreateStatItemsAsync(List<PlayerStatData> stats)
+        private async UniTask CreateStatItemsAsync()
         {
-            _windowView.ClearStatsContainer();
+            _view.ClearStatsContainer();
             ClearStatItems();
             
-            foreach (PlayerStatData stat in stats)
+            foreach (PlayerStatData stat in _model.GetStats())
             {
-                PlayerStatItemView statItemView = await _windowView.CreatePlayerStatItemAsync(stat);
+                PlayerStatItemView statItemView = await _view.CreatePlayerStatItemAsync(stat);
                 _statItemsView[stat.Name] = statItemView;
             }
         }
@@ -78,12 +81,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void Open()
         {
-            if (_isOpen || _playerDeath.IsDead)
+            if (_isOpen || _model.IsPlayerDead)
                 return;
             
             _isOpen = true;
             _model.SetPaused(true);
-            _windowView.ShowWindow();
+            _view.ShowWindow();
             UpdateAllStatItems();
         }
 
@@ -91,7 +94,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         {
             _isOpen = false;
             _model.SetPaused(false);
-            await _windowView.HideWindowAsync();
+            await _view.HideWindowAsync();
             _model.DiscardPreviewChanges();
         }
 
@@ -103,9 +106,9 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void UpdateAllStatItems()
         {
-            _windowView.UpdatePointsText(_model.UpgradePoints.ToString());
+            _view.UpdatePointsText(_model.UpgradePoints.ToString());
             
-            foreach (var stat in _model.GetStatValues())
+            foreach (var stat in _model.GetStats())
                 UpdateStatItem(stat.Name);
         }
 
@@ -115,7 +118,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             bool canUpgrade = _model.CanUpgrade(statName);
            
             if (_statItemsView.TryGetValue(statName, out PlayerStatItemView statItemView)) 
-                _windowView.UpdateStatItem(statItemView, stat.PreviewLevel, canUpgrade);
+                _view.UpdateStatItem(statItemView, stat.PreviewLevel, canUpgrade);
         }
 
         private void ClearStatItems()

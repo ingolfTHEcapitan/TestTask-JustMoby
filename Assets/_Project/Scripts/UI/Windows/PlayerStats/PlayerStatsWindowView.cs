@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Services.UpgradePoints;
@@ -29,7 +30,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource;
         
-        private IUpgradePointsService _pointsService;
         private IAudioService _audioService;
         private IUIFactory _uiFactory;
         private AudioClip _levelUpSound;
@@ -43,16 +43,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _audioService = audioService;
         }
 
-        public void Initialize(Button openButton, AudioClip levelUpSound, IUpgradePointsService pointsService)
+        public void Initialize(Button openButton, AudioClip levelUpSound)
         {
             _windowContent.SetActive(false);
             _levelUpSound = levelUpSound;
             _openButton = openButton;
-            _pointsService = pointsService;
             _openButton.onClick.AddListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.AddListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.AddListener(InvokeOnApplyChangesButtonClicked);
-            _pointsService.OnPointAdded += PlayLevelUpSound;
         }
 
         private void OnDestroy()
@@ -60,7 +58,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _openButton.onClick.RemoveListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.RemoveListener(InvokeOnApplyChangesButtonClicked);
-            _pointsService.OnPointAdded -= PlayLevelUpSound;
         }
         
         public void UpdatePointsText(string points) => 
@@ -97,7 +94,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _windowContent.SetActive(false);
         }
         
-        private void PlayLevelUpSound() => 
+        public void PlayLevelUpSound() => 
             _audioService.PlayOneShot(_levelUpSound, _audioSource);
         
         private void InvokeOnOpenButtonClicked() => 
