@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Infrastructure.AssetManagement;
-using _Project.Scripts.Services.IAP;
-using _Project.Scripts.UI.Windows.Shop.ShopItem;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.UI.Factory
+namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
     public class ShopItemFactory: IDisposable
     {

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using _Project.Scripts.Data.Player;
-using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
 using Cysharp.Threading.Tasks;
@@ -14,10 +13,10 @@ namespace _Project.Scripts.Logic.PlayerStats
         private readonly IProgressService _progressService;
         private readonly Dictionary<StatName, PlayerStatData> _stats;
 
-        public PlayerStatsSaveLoad(PlayerStatsData statsData, [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, 
+        public PlayerStatsSaveLoad(PlayerStatsModel statsModel, [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, 
             IProgressService progressService)
         {
-            _stats = statsData.GetStats();
+            _stats = statsModel.GetStatDictionary();
             _saveLoadService = saveLoadService;
             _progressService = progressService;
         }

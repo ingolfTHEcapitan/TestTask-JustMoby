@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Logic.PlayerStats;
-using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.UpgradePoints;
 using Cysharp.Threading.Tasks;

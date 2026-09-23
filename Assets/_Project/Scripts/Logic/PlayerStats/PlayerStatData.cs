@@ -4,7 +4,7 @@ using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace _Project.Scripts.Logic.PlayerStats.Data
+namespace _Project.Scripts.Logic.PlayerStats
 {
     public class PlayerStatData
     {

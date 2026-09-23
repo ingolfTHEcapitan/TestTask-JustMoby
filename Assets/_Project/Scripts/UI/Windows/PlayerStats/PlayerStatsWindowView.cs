@@ -1,6 +1,5 @@
 using System;
 using _Project.Scripts.Logic.PlayerStats;
-using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.Sound;
 using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI.Common;

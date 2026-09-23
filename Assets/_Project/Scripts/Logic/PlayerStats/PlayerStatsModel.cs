@@ -3,15 +3,15 @@ using _Project.Scripts.Configs;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 
-namespace _Project.Scripts.Logic.PlayerStats.Data
+namespace _Project.Scripts.Logic.PlayerStats
 {
-    public class PlayerStatsData
+    public class PlayerStatsModel
     {
         private readonly List<PlayerStatConfig> _configs;
         private readonly IUIFactory _uiFactory;
         private readonly Dictionary<StatName, PlayerStatData> _stats = new Dictionary<StatName, PlayerStatData>();
 
-        public PlayerStatsData(IUIFactory uiFactory, List<PlayerStatConfig> configs)
+        public PlayerStatsModel(IUIFactory uiFactory, List<PlayerStatConfig> configs)
         {
             _uiFactory = uiFactory;
             _configs = configs;
