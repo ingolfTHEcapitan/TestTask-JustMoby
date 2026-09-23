@@ -2,7 +2,7 @@ using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Services.IAP;
 using UnityEngine.Purchasing;
 
-namespace _Project.Scripts.UI.Windows.Shop.Item
+namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
     public class ShopItemModel
     {

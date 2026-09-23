@@ -11,7 +11,6 @@ namespace _Project.Scripts.UI.Windows.Settings
     {
         public event Action OnCloseButtonClicked;
         public event Action OnApplyButtonClicked;
-        public event Action OnOpen;
         
         public event Action<float> OnMasterVolumeChanged;
         public event Action<float> OnMusicVolumeChanged;
@@ -57,7 +56,6 @@ namespace _Project.Scripts.UI.Windows.Settings
         {
             _windowContent.SetActive(true);
             _windowAnimation.AnimateOpen();
-            OnOpen?.Invoke();
         }
 
         public async UniTask CloseAsync()

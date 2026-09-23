@@ -1,12 +1,9 @@
 using System;
-using System.Threading.Tasks;
-using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.UI.Factory;
-using _Project.Scripts.UI.Windows.PlayerStats;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace _Project.Scripts.UI.Windows.Shop.Item
+namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
     public class ShopItemPresenter: IDisposable
     {

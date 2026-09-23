@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 2833309081725789548}
   - component: {fileID: 2718083919449820153}
   - component: {fileID: 5802622412799020334}
-  - component: {fileID: 2402063624494436915}
+  - component: {fileID: 2232627146143289557}
   - component: {fileID: 2413235532081861522}
   m_Layer: 0
   m_Name: ShopWindow
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &2402063624494436915
+--- !u!114 &2232627146143289557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -258,16 +258,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4162335688760663379}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b247b02e6e5745579babc18adb97f5be, type: 3}
+  m_Script: {fileID: 11500000, guid: 5bea7429c1174b179041801eb7bfaa69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _windowAnimation: {fileID: 2413235532081861522}
   _windowContent: {fileID: 6606991808051163792}
   _shopUnavailableObjects:
   - {fileID: 177219416663900178}
-  _productsContainer: {fileID: 1059193019139081545}
   _closeButton: {fileID: 1769913143558821594}
-  _audioSource: {fileID: 3967975953790062513}
+  <ProductsContainer>k__BackingField: {fileID: 1059193019139081545}
+  <AudioSource>k__BackingField: {fileID: 3967975953790062513}
 --- !u!114 &2413235532081861522
 MonoBehaviour:
   m_ObjectHideFlags: 0

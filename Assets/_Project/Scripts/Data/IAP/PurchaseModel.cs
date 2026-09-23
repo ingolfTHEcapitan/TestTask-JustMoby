@@ -6,7 +6,7 @@ namespace _Project.Scripts.Data.IAP
 {
     public class PurchaseModel
     {
-        public event Action OnChanged;
+        public event Action OnPurchaseAdd;
         
         private readonly IProgressService _progress;
         
@@ -24,7 +24,7 @@ namespace _Project.Scripts.Data.IAP
             else
                 BoughtIAPs.Add(new BoughtIAP { IAPid = id, Count = 1});
             
-            OnChanged?.Invoke();
+            OnPurchaseAdd?.Invoke();
         }
     }
 }
