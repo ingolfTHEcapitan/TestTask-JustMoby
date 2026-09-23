@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Data.Player;
+using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.GamePause;
@@ -15,21 +16,23 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         private readonly PlayerStatsData _statsData;
         private readonly PlayerStatsSaveLoad _saveLoad;
+        private readonly PlayerDeath _playerDeath;
         private readonly IGamePauseService _pauseService;
         public int UpgradePoints { get; private set; }
+        public bool IsPlayerDead => _playerDeath.IsDead;
         
-        public PlayerStatsWindowModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad, IGamePauseService pauseService)
+        public PlayerStatsWindowModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad, 
+            PlayerDeath playerDeath, IGamePauseService pauseService)
         {
             _statsData = statsData;
             _saveLoad = saveLoad;
+            _playerDeath = playerDeath;
             _pauseService = pauseService;
         }
 
-        public async UniTask InitializeAsync()
+        public async UniTask Initialize()
         {
-            Dictionary<StatName,PlayerStatData> statsData = await _statsData.CreateStatsAsync();
-
-            foreach (PlayerStatData statData in statsData.Values) 
+            foreach (PlayerStatData statData in _statsData.GetStats()) 
                 statData.OnStatChanged += InvokeStatChanged;
 
             PlayerStatsProgress progress = await _saveLoad.LoadStatsAsync();
@@ -38,7 +41,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public void Dispose()
         {
-            foreach (PlayerStatData stat in GetStatValues())
+            foreach (PlayerStatData stat in GetStats())
                 stat.OnStatChanged -= InvokeStatChanged;
         }
 
@@ -47,7 +50,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             if (!HasAnyChanges()) 
                 return;
             
-            foreach (PlayerStatData stat in GetStatValues()) 
+            foreach (PlayerStatData stat in GetStats()) 
                 stat.ApplyPreviewLevel();
             
             await _saveLoad.SaveStatsAsync(UpgradePoints);
@@ -60,7 +63,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             
             int returnedPoints = 0;
 
-            foreach (PlayerStatData stat in GetStatValues())
+            foreach (PlayerStatData stat in GetStats())
             {
                 returnedPoints += stat.PreviewLevel - stat.Level;
                 stat.DiscardPreviewLevel();
@@ -89,7 +92,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         public bool CanUpgrade(StatName statName)
         {
-            if (UpgradePoints <=0 || !_statsData.GetStats().ContainsKey(statName))
+            if (UpgradePoints <=0 || !_statsData.GetStatDictionary().ContainsKey(statName))
                 return false;
 
             return GetStat(statName).PreviewLevel < GetStat(statName).MaxLevel;
@@ -98,14 +101,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public void SetPaused(bool paused) => 
             _pauseService.SetPaused(paused);
 
-        public List<PlayerStatData> GetStatValues() => 
-            _statsData.GetStatValues();
+        public List<PlayerStatData> GetStats() => 
+            _statsData.GetStats();
 
         public PlayerStatData GetStat(StatName statName) => 
             _statsData.GetStat(statName);
 
         private bool HasAnyChanges() =>
-            GetStatValues().Any(stat => stat.PreviewLevelHasChanged);
+            GetStats().Any(stat => stat.PreviewLevelHasChanged);
 
         private void InvokeStatChanged() => 
             OnStatsChanged?.Invoke();

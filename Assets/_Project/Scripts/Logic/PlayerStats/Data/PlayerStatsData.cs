@@ -17,16 +17,14 @@ namespace _Project.Scripts.Logic.PlayerStats.Data
             _configs = configs;
         }
         
-        public async UniTask<Dictionary<StatName, PlayerStatData>> CreateStatsAsync()
+        public async UniTask CreateStatsAsync()
         {
-            foreach (var config in _configs)
+            foreach (PlayerStatConfig config in _configs)
             {
                 PlayerStatData statData = new PlayerStatData(config);
                 await statData.LoadUIPartsAsync(config, _uiFactory);
                 _stats[config.Name] = statData;
             }
-            
-            return _stats;
         }
         
         public float GetStatValue(StatName statName)
@@ -37,12 +35,12 @@ namespace _Project.Scripts.Logic.PlayerStats.Data
             return 0;
         }
         
-        public List<PlayerStatData> GetStatValues() => 
+        public List<PlayerStatData> GetStats() => 
             new List<PlayerStatData>(_stats.Values);
         
         public PlayerStatData GetStat(StatName statName) => 
             _stats[statName];
-        public Dictionary<StatName, PlayerStatData> GetStats() => 
+        public Dictionary<StatName, PlayerStatData> GetStatDictionary() => 
             _stats;
     }
 }

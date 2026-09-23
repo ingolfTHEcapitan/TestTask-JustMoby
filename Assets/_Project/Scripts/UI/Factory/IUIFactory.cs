@@ -26,7 +26,8 @@ namespace _Project.Scripts.UI.Factory
         HeadUpDisplayView GetHudView();
         LoadingCurtainView GetLoadingWindowView();
         SettingsWindowView GetSettingsWindowView();
-        GameOverWindowView GetGameOverView();
+        GameOverWindowView GetGameOverWindowView();
         ShopWindowView GetShopWindowView();
+        PlayerStatsWindowView GetPlayerStatsWindowView();
     }
 }

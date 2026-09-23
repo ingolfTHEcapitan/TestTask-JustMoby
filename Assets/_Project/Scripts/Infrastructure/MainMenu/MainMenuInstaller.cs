@@ -21,7 +21,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private void BindShopWindow()
         {
-            Container.BindInterfacesAndSelfTo<ShopWindowView>().FromMethod(GetShopWindowView);
+            Container.BindInterfacesAndSelfTo<ShopWindowView>().FromMethod(GetShopWindowView).AsSingle();
             Container.BindInterfacesAndSelfTo<ShopWindowModel>().AsSingle();
             Container.Bind<ShopWindowPresenter>().AsSingle();
             Container.Bind<ShopItemFactory>().AsSingle();
