@@ -23,26 +23,28 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly ISaveConflictResolveService _saveConflictResolveService;
 
         private readonly Transform _uiParent;
-        private readonly CursorController _cursorController;
         private readonly LazyInject<SettingsWindowPresenter> _lazySettingsWindowPresenter;
         private readonly LazyInject<ShopWindowPresenter> _lazyShopWindowPresenter;
+        private readonly LazyInject<MainMenuWindowPresenter> _lazyMainMenuWindowPresenter;
         private SettingsWindowPresenter _settingsWindowPresenter;
         private ShopWindowPresenter _shopWindowPresenter;
+        private MainMenuWindowPresenter _mainMenuWindowPresenter;
 
         public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
             [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory,
-            ISaveConflictResolveService saveConflictResolveService, Transform uiParent, CursorController cursorController,
-            LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, LazyInject<ShopWindowPresenter> lazyShopWindowPresenter)
+            ISaveConflictResolveService saveConflictResolveService, Transform uiParent,
+            LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, LazyInject<ShopWindowPresenter> lazyShopWindowPresenter,
+            LazyInject<MainMenuWindowPresenter> lazyMainMenuWindowPresenter)
         {
             _lazyShopWindowPresenter = lazyShopWindowPresenter;
             _lazySettingsWindowPresenter = lazySettingsWindowPresenter;
+            _lazyMainMenuWindowPresenter = lazyMainMenuWindowPresenter;
             _saveConflictResolveService = saveConflictResolveService;
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _progressService = progressService;
             _saveLoadService = saveLoadService;
             _uiFactory = uiFactory;
             _uiParent = uiParent;
-            _cursorController = cursorController;
         }
 
         public async void Initialize()
@@ -50,18 +52,18 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             _saveConflictResolveService.Initialize();
             _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
-            ShopWindowView shopWindowView = await _uiFactory.CreateShopWindowViewAsync(_uiParent);;
+            await _uiFactory.CreateShopWindowViewAsync(_uiParent);;
             _shopWindowPresenter = _lazyShopWindowPresenter.Value;
             _shopWindowPresenter.Initialize();
 
-            SettingsWindowView settingsWindowView = await _uiFactory.CreateSettingsViewAsync(_uiParent);
+            await _uiFactory.CreateSettingsViewAsync(_uiParent);
             _settingsWindowPresenter = _lazySettingsWindowPresenter.Value;
             _settingsWindowPresenter.Initialize();
             
-            MainMenuWindow mainMenu = await InitMainMenu();
-
-            _cursorController.SetCursorVisible(visible: true);
-            mainMenu.PlayBackGroundMusic();
+            await _uiFactory.CreateMainMenuWindowViewAsync(_uiParent);
+            _mainMenuWindowPresenter = _lazyMainMenuWindowPresenter.Value;
+            _mainMenuWindowPresenter.Initialize();
+            
             _loadingCurtainPresenter.HideLoading();
         }
 
@@ -69,13 +71,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         {
             _settingsWindowPresenter.Dispose();
             _shopWindowPresenter.Dispose();
-        }
-
-        private async UniTask<MainMenuWindow> InitMainMenu()
-        {
-            MainMenuWindow mainMenu = await _uiFactory.CreateMainMenuWindowAsync(_uiParent);
-            mainMenu.Initialize(_shopWindowPresenter, _settingsWindowPresenter);
-            return mainMenu;
+            _mainMenuWindowPresenter.Dispose();
         }
     }
 }
