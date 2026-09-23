@@ -1,5 +1,4 @@
 using _Project.Scripts.Logic.PlayerStats;
-using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
 using UnityEngine;
@@ -14,16 +13,16 @@ namespace _Project.Scripts.Logic.Player
         [SerializeField] private float _gravity = 21f;
 
         private Vector3 _movementDirection;
-        private PlayerStatsData _playerStatsData;
+        private PlayerStatsModel _playerStatsModel;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
 
-        private float Speed => _playerStatsData.GetStatValue(StatName.Speed);
+        private float Speed => _playerStatsModel.GetStatValue(StatName.Speed);
         
         [Inject]
-        private void Construct(PlayerStatsData playerStatsData, IGamePauseService pauseService, IInputService inputService)
+        private void Construct(PlayerStatsModel playerStatsModel, IGamePauseService pauseService, IInputService inputService)
         {
-            _playerStatsData = playerStatsData;
+            _playerStatsModel = playerStatsModel;
             _pauseService = pauseService;
             _inputService = inputService;
         }

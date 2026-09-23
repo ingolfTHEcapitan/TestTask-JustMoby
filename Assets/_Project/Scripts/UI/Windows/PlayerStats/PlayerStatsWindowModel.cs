@@ -4,7 +4,6 @@ using System.Linq;
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
-using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.GamePause;
 using Cysharp.Threading.Tasks;
 
@@ -14,17 +13,17 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     {
         public event Action OnStatsChanged;
         
-        private readonly PlayerStatsData _statsData;
+        private readonly PlayerStatsModel _statsModel;
         private readonly PlayerStatsSaveLoad _saveLoad;
         private readonly PlayerDeath _playerDeath;
         private readonly IGamePauseService _pauseService;
         public int UpgradePoints { get; private set; }
         public bool IsPlayerDead => _playerDeath.IsDead;
         
-        public PlayerStatsWindowModel(PlayerStatsData statsData, PlayerStatsSaveLoad saveLoad, 
+        public PlayerStatsWindowModel(PlayerStatsModel statsModel, PlayerStatsSaveLoad saveLoad, 
             PlayerDeath playerDeath, IGamePauseService pauseService)
         {
-            _statsData = statsData;
+            _statsModel = statsModel;
             _saveLoad = saveLoad;
             _playerDeath = playerDeath;
             _pauseService = pauseService;
@@ -32,7 +31,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public async UniTask Initialize()
         {
-            foreach (PlayerStatData statData in _statsData.GetStats()) 
+            foreach (PlayerStatData statData in _statsModel.GetStats()) 
                 statData.OnStatChanged += InvokeStatChanged;
 
             PlayerStatsProgress progress = await _saveLoad.LoadStatsAsync();
@@ -92,7 +91,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         public bool CanUpgrade(StatName statName)
         {
-            if (UpgradePoints <=0 || !_statsData.GetStatDictionary().ContainsKey(statName))
+            if (UpgradePoints <=0 || !_statsModel.GetStatDictionary().ContainsKey(statName))
                 return false;
 
             return GetStat(statName).PreviewLevel < GetStat(statName).MaxLevel;
@@ -102,10 +101,10 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _pauseService.SetPaused(paused);
 
         public List<PlayerStatData> GetStats() => 
-            _statsData.GetStats();
+            _statsModel.GetStats();
 
         public PlayerStatData GetStat(StatName statName) => 
-            _statsData.GetStat(statName);
+            _statsModel.GetStat(statName);
 
         private bool HasAnyChanges() =>
             GetStats().Any(stat => stat.PreviewLevelHasChanged);

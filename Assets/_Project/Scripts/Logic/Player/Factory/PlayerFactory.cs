@@ -4,7 +4,6 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.Game;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
-using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Services.HealthCalculator;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -18,16 +17,16 @@ namespace _Project.Scripts.Logic.Player.Factory
         private readonly IHealthCalculatorService _healthCalculator;
         private readonly IAssetProvider _assetProvider;
         private readonly Transform _gameParent;
-        private readonly PlayerStatsData _playerStatsData;
+        private readonly PlayerStatsModel _playerStatsModel;
         private Health _playerHealth;
         private PlayerStatData _healthStat;
         private PlayerDeath _playerDeath;
 
-        public PlayerFactory(IInstantiator container, IHealthCalculatorService healthCalculator, PlayerStatsData playerStatsData, Transform gameParent, IAssetProvider assetProvider)
+        public PlayerFactory(IInstantiator container, IHealthCalculatorService healthCalculator, PlayerStatsModel playerStatsModel, Transform gameParent, IAssetProvider assetProvider)
         {
             _container = container;
             _healthCalculator = healthCalculator;
-            _playerStatsData = playerStatsData;
+            _playerStatsModel = playerStatsModel;
             _gameParent = gameParent;
             _assetProvider = assetProvider;
         }
@@ -39,7 +38,7 @@ namespace _Project.Scripts.Logic.Player.Factory
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
             _playerHealth.Initialize(maxHealth);
             
-            _healthStat = _playerStatsData.GetStat(StatName.Health); 
+            _healthStat = _playerStatsModel.GetStat(StatName.Health); 
             _healthStat.OnStatChanged += UpdatePlayerMaxHealth;
 
             _playerDeath = _playerHealth.GetComponent<PlayerDeath>();

@@ -3,7 +3,6 @@ using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.Player.Factory;
 using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Logic.PlayerStats;
-using _Project.Scripts.Logic.PlayerStats.Data;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.UpgradePoints;
@@ -54,7 +53,7 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindPlayerStats()
         {
-            Container.BindInterfacesAndSelfTo<PlayerStatsData>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
             Container.Bind<PlayerStatsWindowModel>().AsSingle();
             Container.Bind<PlayerStatsWindowView>().FromMethod(GetPlayerStatsWindowView).AsSingle();
