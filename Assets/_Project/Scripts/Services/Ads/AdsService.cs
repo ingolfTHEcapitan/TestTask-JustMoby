@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using _Project.Scripts.Configs;
 using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -10,12 +11,6 @@ namespace _Project.Scripts.Services.Ads
 {
     public class AdsService: IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener, IAdsService
     {
-        private const string AndroidGameId = "6036504";
-        private const string IOSGameId = "6036505";
-        private const string AndroidRewardedAdId = "Rewarded_Android";
-        private const string AndroidInterstitialAdId = "Interstitial_Android";
-        private const bool TestMode = true;
-        
         public event Action OnRewardedAdLoaded;
         public event Action OnInterstitialAdLoaded;
 
@@ -23,23 +18,27 @@ namespace _Project.Scripts.Services.Ads
         private Action OnInterstitialAdFinished;
         
         private readonly IProgressService _progressService;
+        private readonly AdsConfig _config;
 
         public bool IsRewardedAdLoaded { get; private set; }
         public bool IsInterstitialAdLoaded { get; private set; }
         public bool IsAdsRemoved => _progressService.PlayerProgress.PurchaseData.IsAdsRemoved;
         
-        public AdsService(IProgressService progressService)
-        {
+        public AdsService(IProgressService progressService, AdsConfig config)
+        { 
             _progressService = progressService;
-            Advertisement.Initialize(GetGameId(), TestMode, this);
+            _config = config;
         }
-        
-        public async void  OnInitializationComplete()
+
+        public void Initialize() => 
+            Advertisement.Initialize(GetGameId(), _config.TestMode, initializationListener: this);
+
+        public async void OnInitializationComplete()
         {
             Debug.Log("Unity Ads Initialization Complete!");
 
-            UniTask rewardedAd = LoadAdAsync(AndroidRewardedAdId);
-            UniTask interstitialAd = LoadAdAsync(AndroidInterstitialAdId);
+            UniTask rewardedAd = LoadAdAsync(_config.AndroidRewardedAdId);
+            UniTask interstitialAd = LoadAdAsync(_config.AndroidInterstitialAdId);
             await UniTask.WhenAll(rewardedAd, interstitialAd);
         }
 
@@ -50,12 +49,12 @@ namespace _Project.Scripts.Services.Ads
         {
             Debug.Log($"Unity Ads Ad Loaded: {placementId}");
 
-            if (placementId == AndroidRewardedAdId)
+            if (placementId == _config.AndroidRewardedAdId)
             {
                 IsRewardedAdLoaded = true;
                 OnRewardedAdLoaded?.Invoke();
             }
-            else if (placementId == AndroidInterstitialAdId)
+            else if (placementId == _config.AndroidInterstitialAdId)
             {
                 IsInterstitialAdLoaded = true;
                 OnInterstitialAdLoaded?.Invoke();
@@ -72,16 +71,16 @@ namespace _Project.Scripts.Services.Ads
         {
             Debug.Log($"On Unity Ads Show Complete: {showCompletionState.ToString()}");
 
-            UniTask rewardedAd = LoadAdAsync(AndroidRewardedAdId);
-            UniTask interstitialAd = LoadAdAsync(AndroidInterstitialAdId);
+            UniTask rewardedAd = LoadAdAsync(_config.AndroidRewardedAdId);
+            UniTask interstitialAd = LoadAdAsync(_config.AndroidInterstitialAdId);
             await UniTask.WhenAll(rewardedAd, interstitialAd);
             
-            if (placementId == AndroidRewardedAdId)
+            if (placementId == _config.AndroidRewardedAdId)
             {
                 OnRewardedAdFinished?.Invoke();
                 OnRewardedAdFinished = null;
             }
-            else if (placementId == AndroidInterstitialAdId)
+            else if (placementId == _config.AndroidInterstitialAdId)
             {
                 OnInterstitialAdFinished?.Invoke();
                 OnInterstitialAdFinished = null;
@@ -94,7 +93,7 @@ namespace _Project.Scripts.Services.Ads
 
         public void ShowRewardedAd(Action onRewardedAdFinished)
         {
-            Advertisement.Show(AndroidRewardedAdId, this);
+            Advertisement.Show(_config.AndroidRewardedAdId, this);
             OnRewardedAdFinished = onRewardedAdFinished;
         }
         
@@ -106,7 +105,7 @@ namespace _Project.Scripts.Services.Ads
                 return;
             }
             
-            Advertisement.Show(AndroidInterstitialAdId, this);
+            Advertisement.Show(_config.AndroidInterstitialAdId, this);
             OnInterstitialAdFinished = onInterstitialAdFinished;
         }
 
@@ -115,11 +114,11 @@ namespace _Project.Scripts.Services.Ads
             string gameId = string.Empty;
 
             if (Application.platform == RuntimePlatform.Android) 
-                gameId = AndroidGameId;
+                gameId = _config.AndroidGameId;
             else if (Application.platform == RuntimePlatform.IPhonePlayer)
-                gameId = IOSGameId;
+                gameId = _config.IOSGameId;
             else if (Application.platform == RuntimePlatform.WindowsEditor)
-                gameId = AndroidGameId;
+                gameId = _config.AndroidGameId;
             else
                 Debug.LogError("Unsupported platform for ads ");
             
