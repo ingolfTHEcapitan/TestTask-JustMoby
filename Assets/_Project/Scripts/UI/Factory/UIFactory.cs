@@ -29,6 +29,7 @@ namespace _Project.Scripts.UI.Factory
         private ShopWindowView _shopWindowView;
         private PlayerStatsWindowView _playerStatsWindowView;
         private MainMenuWindowView _mainMenuWindowView;
+        private SaveConflictResolveWindowView _saveConflictResolveWindow;
 
         public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
@@ -66,37 +67,30 @@ namespace _Project.Scripts.UI.Factory
             return _playerStatsWindowView;
         }
 
-        public async UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent)=> 
-            await CreateViewAsync<PlayerStatItemView>(AssetAddress.PlayerStatItem, uiParent);
-        
-        public async UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent)=> 
-            await CreateViewAsync<SaveConflictResolveWindow>(AssetAddress.SaveConflictResolveWindow, uiParent);
-        
+        public async UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync()
+        {
+            _saveConflictResolveWindow = await CreateViewAsync<SaveConflictResolveWindowView>(AssetAddress.SaveConflictResolveWindow);
+            return _saveConflictResolveWindow;
+        }
+
         public async UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent)
         {
             _settingsWindowView = await CreateViewAsync<SettingsWindowView>(AssetAddress.SettingsWindow, uiParent);
             return _settingsWindowView;
         }
-        
+
         public async UniTask<ShopWindowView> CreateShopWindowViewAsync(Transform uiParent)
         {
             _shopWindowView = await CreateViewAsync<ShopWindowView>(AssetAddress.ShopWindow, uiParent);
             return _shopWindowView;
         }
 
+        public async UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent)=> 
+            await CreateViewAsync<PlayerStatItemView>(AssetAddress.PlayerStatItem, uiParent);
+
         public async UniTask<Sprite> LoadSpriteAsync(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
 
-        public HeadUpDisplayView GetHudView()
-        {
-            if (_hudView)
-                return _hudView;
-            
-            throw new InvalidConstraintException
-            ($"{_hudView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
-        }
-        
         public LoadingCurtainView GetLoadingWindowView()
         {
             if (_loadingCurtainView)
@@ -106,7 +100,7 @@ namespace _Project.Scripts.UI.Factory
             ($"{_loadingCurtainView.gameObject.name} view requested before creation. " +
              $"Ensure presenter depending on it is not resolved before {nameof(ProjectBootstrapper)} runs");
         }
-        
+
         public SettingsWindowView GetSettingsWindowView()
         {
             if (_settingsWindowView)
@@ -115,16 +109,6 @@ namespace _Project.Scripts.UI.Factory
             throw new InvalidConstraintException
             ($"{_settingsWindowView.gameObject.name} view requested before creation. " +
              $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
-        }
-
-        public PlayerStatsWindowView GetPlayerStatsWindowView()
-        {
-            if (_playerStatsWindowView)
-                return _playerStatsWindowView;
-            
-            throw new InvalidConstraintException
-            ($"{_playerStatsWindowView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
         }
 
         public ShopWindowView GetShopWindowView()
@@ -145,6 +129,35 @@ namespace _Project.Scripts.UI.Factory
             throw new InvalidConstraintException
             ($"{_mainMenuWindowView.gameObject.name} view requested before creation. " +
              $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
+        }
+        public SaveConflictResolveWindowView GetSaveConflictResolveWindowView()
+        {
+            if (_saveConflictResolveWindow)
+                return _saveConflictResolveWindow;
+            
+            throw new InvalidConstraintException
+            ($"{_saveConflictResolveWindow.gameObject.name} view requested before creation. " +
+             $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
+        }
+
+        public HeadUpDisplayView GetHudView()
+        {
+            if (_hudView)
+                return _hudView;
+            
+            throw new InvalidConstraintException
+            ($"{_hudView.gameObject.name} view requested before creation. " +
+             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
+        }
+
+        public PlayerStatsWindowView GetPlayerStatsWindowView()
+        {
+            if (_playerStatsWindowView)
+                return _playerStatsWindowView;
+            
+            throw new InvalidConstraintException
+            ($"{_playerStatsWindowView.gameObject.name} view requested before creation. " +
+             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
         }
 
         public GameOverWindowView GetGameOverWindowView()

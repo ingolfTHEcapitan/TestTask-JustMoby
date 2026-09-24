@@ -19,7 +19,7 @@ namespace _Project.Scripts.UI.Factory
         UniTask<MainMenuWindowView> CreateMainMenuWindowViewAsync(Transform uiParent);
         UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent);
         UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent);
-        UniTask<SaveConflictResolveWindow> CreateSaveConflictResolveWindowAsync(Transform uiParent);
+        UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync();
         UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent);
         UniTask<ShopWindowView> CreateShopWindowViewAsync(Transform uiParent);
         UniTask<Sprite> LoadSpriteAsync(string assetAddress);
@@ -30,5 +30,6 @@ namespace _Project.Scripts.UI.Factory
         ShopWindowView GetShopWindowView();
         PlayerStatsWindowView GetPlayerStatsWindowView();
         MainMenuWindowView GetMainMenuWindowView();
+        SaveConflictResolveWindowView GetSaveConflictResolveWindowView();
     }
 }

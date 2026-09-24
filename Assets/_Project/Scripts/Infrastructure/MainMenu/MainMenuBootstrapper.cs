@@ -20,26 +20,26 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly IProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
         private readonly IUIFactory _uiFactory;
-        private readonly ISaveConflictResolveService _saveConflictResolveService;
 
         private readonly Transform _uiParent;
         private readonly LazyInject<SettingsWindowPresenter> _lazySettingsWindowPresenter;
         private readonly LazyInject<ShopWindowPresenter> _lazyShopWindowPresenter;
         private readonly LazyInject<MainMenuWindowPresenter> _lazyMainMenuWindowPresenter;
+        private readonly LazyInject<SaveConflictResolveWindowPresenter> _lazySaveConflictResolveWindowPresenter;
         private SettingsWindowPresenter _settingsWindowPresenter;
         private ShopWindowPresenter _shopWindowPresenter;
         private MainMenuWindowPresenter _mainMenuWindowPresenter;
+        private SaveConflictResolveWindowPresenter _saveConflictResolveWindowPresenter;
 
         public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
-            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory,
-            ISaveConflictResolveService saveConflictResolveService, Transform uiParent,
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent,
             LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, LazyInject<ShopWindowPresenter> lazyShopWindowPresenter,
-            LazyInject<MainMenuWindowPresenter> lazyMainMenuWindowPresenter)
+            LazyInject<MainMenuWindowPresenter> lazyMainMenuWindowPresenter,LazyInject<SaveConflictResolveWindowPresenter> lazySaveConflictResolveWindowPresenter)
         {
             _lazyShopWindowPresenter = lazyShopWindowPresenter;
             _lazySettingsWindowPresenter = lazySettingsWindowPresenter;
             _lazyMainMenuWindowPresenter = lazyMainMenuWindowPresenter;
-            _saveConflictResolveService = saveConflictResolveService;
+            _lazySaveConflictResolveWindowPresenter = lazySaveConflictResolveWindowPresenter;
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _progressService = progressService;
             _saveLoadService = saveLoadService;
@@ -49,10 +49,13 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         public async void Initialize()
         {
-            _saveConflictResolveService.Initialize();
+            await _uiFactory.CreateSaveConflictResolveWindowViewAsync();
+            _saveConflictResolveWindowPresenter = _lazySaveConflictResolveWindowPresenter.Value;
+            _saveConflictResolveWindowPresenter.Initialize();
+            
             _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
-            await _uiFactory.CreateShopWindowViewAsync(_uiParent);;
+            await _uiFactory.CreateShopWindowViewAsync(_uiParent);
             _shopWindowPresenter = _lazyShopWindowPresenter.Value;
             _shopWindowPresenter.Initialize();
 
