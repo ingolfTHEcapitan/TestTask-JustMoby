@@ -4,6 +4,7 @@ using System.Linq;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.UpgradePoints;
+using _Project.Scripts.UI.Common;
 using Cysharp.Threading.Tasks;
 using Object = UnityEngine.Object;
 
@@ -15,18 +16,20 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private readonly IUpgradePointsService _pointsService;
         private readonly PlayerStatsWindowModel _model;
         private readonly PlayerStatsWindowView _view;
+        private readonly CursorController _cursorController;
 
         private readonly Dictionary<StatName, PlayerStatItemView> _statItemsView = new Dictionary<StatName, PlayerStatItemView>();
 
         private bool _isOpen;
 
-        public PlayerStatsWindowPresenter(IInputService inputService, IUpgradePointsService pointsService, 
-            PlayerStatsWindowModel model, PlayerStatsWindowView view)
+        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view,
+            IInputService inputService, IUpgradePointsService pointsService, CursorController cursorController)
         {
-            _inputService = inputService;
-            _pointsService = pointsService;
             _model = model;
             _view = view;
+            _inputService = inputService;
+            _pointsService = pointsService;
+            _cursorController = cursorController;
         }
         
         public async UniTask InitializeAsync()
@@ -85,6 +88,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             
             _isOpen = true;
             _model.SetPaused(true);
+            _cursorController.SetCursorVisible(true);
             _view.ShowWindow();
             UpdateAllStatItems();
         }
@@ -93,6 +97,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         {
             _isOpen = false;
             _model.SetPaused(false);
+            _cursorController.SetCursorVisible(false);
             await _view.HideWindowAsync();
             _model.DiscardPreviewChanges();
         }

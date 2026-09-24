@@ -35,7 +35,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _view.OnExitButtonClicked += ExitGame;
             
             _view.PlayBackgroundMusic();
-            _cursorController.SetCursorVisible(visible: true);
+            _cursorController.SetCursorVisible(true);
         }
 
         public void Dispose()
@@ -48,7 +48,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
 
         private async void StartGame()
         {
-            _cursorController.SetCursorVisible(visible: false);
+            _cursorController.SetCursorVisible(false);
             _view.StopBackgroundMusic();
             _loadingCurtainPresenter.ShowLoading();
             await _model.LoadGameplayScene();

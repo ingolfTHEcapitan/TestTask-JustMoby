@@ -14,23 +14,20 @@ namespace _Project.Scripts.Infrastructure.Game
         
         private readonly AudioSource _audioSource;
         private readonly AudioClip _dungeonMusic;
-        private readonly CursorController _cursorController;
         
         public GameStarter(IAnalyticsService analyticsService, IAudioService audioService, LoadingCurtainPresenter loadingCurtainPresenter, 
-            AudioSource audioSource, AudioClip dungeonMusic, CursorController cursorController)
+            AudioSource audioSource, AudioClip dungeonMusic)
         {
             _analyticsService = analyticsService;
             _audioService = audioService;
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _audioSource = audioSource;
             _dungeonMusic = dungeonMusic;
-            _cursorController = cursorController;
         }
 
         public void StartGame()
         {
             _analyticsService.LogGameStart();
-            _cursorController.SetCursorVisible(visible: false);
             _audioService.Play(_dungeonMusic, _audioSource);
             _loadingCurtainPresenter.HideLoading();
         }
