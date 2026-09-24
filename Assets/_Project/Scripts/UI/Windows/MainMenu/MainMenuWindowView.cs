@@ -1,7 +1,6 @@
 using System;
 using _Project.Scripts.Services.Sound;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 

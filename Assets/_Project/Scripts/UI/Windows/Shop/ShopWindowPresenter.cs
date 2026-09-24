@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using _Project.Scripts.Configs.IAP;
-using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.Shop.ShopItem;
 using Cysharp.Threading.Tasks;
 using Object = UnityEngine.Object;
