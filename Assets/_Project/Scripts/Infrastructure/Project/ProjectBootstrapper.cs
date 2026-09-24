@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Authentication;
 using _Project.Scripts.Services.IAP;
@@ -22,6 +23,7 @@ namespace _Project.Scripts.Infrastructure.Project
         private readonly IAnalyticsService _analyticsService;
         private readonly ISceneLoaderService _sceneLoader;
         private readonly IUIFactory _uiFactory;
+        private readonly IAdsService _adsService;
         private readonly LazyInject<IIAPService> _lazyIapService;
         private readonly LazyInject<LoadingCurtainPresenter> _lazyLoadingWindowPresenter;
         private IIAPService _iapService;
@@ -29,7 +31,7 @@ namespace _Project.Scripts.Infrastructure.Project
 
         public ProjectBootstrapper(LazyInject<LoadingCurtainPresenter> lazyLoadingWindowPresenter, IRemoteConfigService remoteConfigService, 
             IRemoteConfigFactory remoteConfigFactory, IAuthService authService, IAssetProvider assetProvider, IUIFactory uiFactory,
-            IAnalyticsService analyticsService, LazyInject<IIAPService> lazyIapService, ISceneLoaderService sceneLoader)
+            IAnalyticsService analyticsService, LazyInject<IIAPService> lazyIapService, ISceneLoaderService sceneLoader, IAdsService adsService)
         {
             _lazyIapService = lazyIapService;
             _lazyLoadingWindowPresenter = lazyLoadingWindowPresenter;
@@ -40,6 +42,7 @@ namespace _Project.Scripts.Infrastructure.Project
             _uiFactory = uiFactory;
             _analyticsService = analyticsService;
             _sceneLoader = sceneLoader;
+            _adsService = adsService;
         }
 
         public async void Initialize()
@@ -55,6 +58,8 @@ namespace _Project.Scripts.Infrastructure.Project
             await UniTask.WhenAll(analyticsServiceTask, remoteConfigServiceTask, authServiceTask);
 
             _remoteConfigFactory.ApplyRemoteConfigs();
+            
+            _adsService.Initialize();
             
             _iapService = _lazyIapService.Value;
             _iapService.Initialize();

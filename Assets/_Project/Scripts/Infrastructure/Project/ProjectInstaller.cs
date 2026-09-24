@@ -47,6 +47,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.Bind<EnemyConfig>().AsSingle();
             Container.Bind<LocalSaveServiceConfig>().AsSingle();
             Container.Bind<ProductConfigWrapper>().AsSingle();
+            Container.Bind<AdsConfig>().AsSingle();
             Container.Bind<List<PlayerStatConfig>>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<RemoteConfigService>().AsSingle();

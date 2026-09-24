@@ -10,5 +10,6 @@ namespace _Project.Scripts.Services.Ads
         bool IsInterstitialAdLoaded { get; }
         void ShowRewardedAd(Action onRewardedAdFinished);
         void ShowInterstitialAd(Action onInterstitialAdFinished);
+        void Initialize();
     }
 }
