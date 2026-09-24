@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using _Project.Scripts.UI.Common;
 using Cysharp.Threading.Tasks;
 

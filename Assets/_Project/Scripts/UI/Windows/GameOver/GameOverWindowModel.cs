@@ -5,7 +5,6 @@ using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.SceneLoader;
 using Cysharp.Threading.Tasks;
-using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.UI.Windows.GameOver
 {
@@ -34,7 +33,6 @@ namespace _Project.Scripts.UI.Windows.GameOver
         
         public void Initialize()
         {
-            // M + 
             _playerDeath.OnDied += InvokeOnPlayerDied;
             _adsService.OnRewardedAdLoaded += InvokeOnRewardedAdLoaded;
         }
