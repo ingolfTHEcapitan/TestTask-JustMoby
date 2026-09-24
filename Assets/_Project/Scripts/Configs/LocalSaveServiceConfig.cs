@@ -10,19 +10,18 @@ namespace _Project.Scripts.Configs
     public class LocalSaveServiceConfig
     {
         [SerializeField] private LocalSaveType saveType = LocalSaveType.PlayerPrefs;
+        private IInstantiator _container;
 
         [Inject]
-        private void Construct()
-        {
-            
-        }
-        
+        private void Construct(IInstantiator container) => 
+            _container = container;
+
         public ISaveLoadService GetInstance()
         {
             return saveType switch
             {
-                LocalSaveType.File => new FileSaveService(),
-                LocalSaveType.PlayerPrefs => new PlayerPrefsSaveService(),
+                LocalSaveType.File => _container.Instantiate<FileSaveService>(),
+                LocalSaveType.PlayerPrefs => _container.Instantiate<PlayerPrefsSaveService>(),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
