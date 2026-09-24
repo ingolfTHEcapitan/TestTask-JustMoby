@@ -22,14 +22,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private void OnDestroy() => 
             _upgradeButton.onClick.RemoveListener(InvokeOnUpgradeButtonClicked);
 
-        public void Initialize(PlayerStatData stat, AudioSource audioSource)
+        public void Initialize(PlayerStatData stat, Sprite iconFrame, Sprite icon, AudioSource audioSource)
         {
             _upgradeButton.onClick.AddListener(InvokeOnUpgradeButtonClicked);
             
             _statName = stat.Name;
             _nameText.SetText(_statName.ToString());
-            _iconFrame.sprite = stat.IconFrame;
-            _icon.sprite = stat.Icon;
+            _iconFrame.sprite = iconFrame;
+            _icon.sprite = icon;
 
             ButtonSoundEffect buttonSoundEffect = _upgradeButton.GetComponent<ButtonSoundEffect>();
             buttonSoundEffect.Initialize(audioSource);

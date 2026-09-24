@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
@@ -14,6 +17,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     {
         private readonly IInputService _inputService;
         private readonly IUpgradePointsService _pointsService;
+        private readonly IUIFactory _uiFactory;
         private readonly PlayerStatsWindowModel _model;
         private readonly PlayerStatsWindowView _view;
         private readonly CursorController _cursorController;
@@ -22,11 +26,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private bool _isOpen;
 
-        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view,
+        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, IUIFactory uiFactory,
             IInputService inputService, IUpgradePointsService pointsService, CursorController cursorController)
         {
             _model = model;
             _view = view;
+            _uiFactory = uiFactory;
             _inputService = inputService;
             _pointsService = pointsService;
             _cursorController = cursorController;
@@ -70,11 +75,23 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             
             foreach (PlayerStatData stat in _model.GetStats())
             {
-                PlayerStatItemView statItemView = await _view.CreatePlayerStatItemAsync(stat);
+                PlayerStatConfig statConfig = _model.FindStatConfigByName(stat.Name);
+                PlayerStatItemView statItemView = await CreatePlayerStatItemAsync(stat, statConfig);
                 _statItemsView[stat.Name] = statItemView;
             }
         }
 
+        private async UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(PlayerStatData stat, PlayerStatConfig statConfig)
+        {
+            PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemViewAsync(_view.StatsContainer);
+            
+            Sprite iconFrame = await _uiFactory.LoadSpriteAsync(statConfig.IconFrameAddress);
+            Sprite icon = await _uiFactory.LoadSpriteAsync(statConfig.IconAddress);
+            
+            statItem.Initialize(stat, iconFrame, icon, _view.AudioSource);
+            return statItem;
+        }
+        
         private void UpgradeStatItem(StatName statName)
         {
             _model.UpgradeStat(statName);
@@ -133,7 +150,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             
             _statItemsView.Clear();
         }
-        
+
         private List<PlayerStatItemView> GetStatItems() => 
             _statItemsView.Values.ToList();
     }

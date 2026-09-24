@@ -1,7 +1,5 @@
 using System;
 using _Project.Scripts.Configs;
-using _Project.Scripts.UI.Factory;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.PlayerStats
@@ -21,9 +19,6 @@ namespace _Project.Scripts.Logic.PlayerStats
         public int MaxLevel => Mathf.FloorToInt((MaxMultiplier - 1) / IncrementPerLevel);
         public bool PreviewLevelHasChanged => PreviewLevel != Level;
 
-        public Sprite IconFrame { get; private set; }
-        public Sprite Icon { get; private set; }
-
         public PlayerStatData(PlayerStatConfig config)
         {
             Name = config.Name;
@@ -34,13 +29,7 @@ namespace _Project.Scripts.Logic.PlayerStats
             PreviewLevel = 0;
             RecalculateCurrentValue();
         }
-
-        public async UniTask LoadUIPartsAsync(PlayerStatConfig config, IUIFactory uiFactory)
-        {
-            IconFrame = await uiFactory.LoadSpriteAsync(config.IconFrameAddress);
-            Icon = await uiFactory.LoadSpriteAsync(config.IconAddress);
-        }
-
+        
         public void RecalculateCurrentValue()
         {
             CurrentValue = Mathf.Min(

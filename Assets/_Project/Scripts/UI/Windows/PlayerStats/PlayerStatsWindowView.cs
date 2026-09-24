@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.Sound;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
@@ -22,24 +21,18 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [SerializeField] private GameObject _windowContent;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
-        [SerializeField] private Transform _statsContainer;
         [SerializeField] private TextMeshProUGUI _pointsText;
         
-        [Header("Audio")]
-        [SerializeField] private AudioSource _audioSource;
+        [field: SerializeField] public Transform StatsContainer { get; private set; }
+        [field: SerializeField, Header("Audio")] public AudioSource AudioSource { get; private set;}
         
         private IAudioService _audioService;
-        private IUIFactory _uiFactory;
         private AudioClip _levelUpSound;
         private Button _openButton;
 
-
         [Inject]
-        private void Construct(IUIFactory uiFactory, IAudioService audioService)
-        {
-            _uiFactory = uiFactory;
+        private void Construct(IUIFactory uiFactory, IAudioService audioService) => 
             _audioService = audioService;
-        }
 
         public void Initialize(Button openButton, AudioClip levelUpSound)
         {
@@ -61,23 +54,16 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public void UpdatePointsText(string points) => 
             _pointsText.SetText($"Points {points}");
         
-        public async UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(PlayerStatData stat)
-        {
-            PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemViewAsync(_statsContainer);
-            statItem.Initialize(stat, _audioSource);
-            return statItem;
-        }
-
         public void ClearStatsContainer()
         {
-            foreach (Transform child in _statsContainer) 
+            foreach (Transform child in StatsContainer) 
                 Destroy(child.gameObject);
         }
         
-        public void UpdateStatItem(PlayerStatItemView statItem, int level, bool canUpgrade)
+        public void UpdateStatItem(PlayerStatItemView statItemView, int level, bool canUpgrade)
         {
-            statItem.UpdateLevelText(level);
-            statItem.ToggleUpgradeButton(canUpgrade);
+            statItemView.UpdateLevelText(level);
+            statItemView.ToggleUpgradeButton(canUpgrade);
         }
         
         public void ShowWindow()
@@ -93,7 +79,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         }
         
         public void PlayLevelUpSound() => 
-            _audioService.PlayOneShot(_levelUpSound, _audioSource);
+            _audioService.PlayOneShot(_levelUpSound, AudioSource);
         
         private void InvokeOnOpenButtonClicked() => 
             OnOpenButtonClicked?.Invoke();
@@ -101,7 +87,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private void InvokeOnCloseButtonClicked() => 
             OnCloseButtonClicked?.Invoke();
 
-        private void InvokeOnApplyChangesButtonClicked() => 
+        private void InvokeOnApplyChangesButtonClicked() =>
             OnApplyChangesButtonClicked?.Invoke();
     }
 }

@@ -1,28 +1,21 @@
 using System.Collections.Generic;
 using _Project.Scripts.Configs;
-using _Project.Scripts.UI.Factory;
-using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Logic.PlayerStats
 {
     public class PlayerStatsModel
     {
         private readonly List<PlayerStatConfig> _configs;
-        private readonly IUIFactory _uiFactory;
         private readonly Dictionary<StatName, PlayerStatData> _stats = new Dictionary<StatName, PlayerStatData>();
 
-        public PlayerStatsModel(IUIFactory uiFactory, List<PlayerStatConfig> configs)
-        {
-            _uiFactory = uiFactory;
+        public PlayerStatsModel(List<PlayerStatConfig> configs) => 
             _configs = configs;
-        }
-        
-        public async UniTask CreateStatsAsync()
+
+        public void CreateStats()
         {
             foreach (PlayerStatConfig config in _configs)
             {
                 PlayerStatData statData = new PlayerStatData(config);
-                await statData.LoadUIPartsAsync(config, _uiFactory);
                 _stats[config.Name] = statData;
             }
         }

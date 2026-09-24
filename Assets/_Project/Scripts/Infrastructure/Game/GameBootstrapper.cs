@@ -32,7 +32,7 @@ namespace _Project.Scripts.Infrastructure.Game
         public async void Initialize()
         {
             await _effectsService.WarmUpAsync();
-            await _playerStatsModel.CreateStatsAsync();
+            _playerStatsModel.CreateStats();
             
             Health playerHealth = await _playerSpawner.SpawnAsync();
             
