@@ -2,6 +2,7 @@ using System;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.SaveLoad.LocalSave;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Configs
 {
@@ -9,6 +10,12 @@ namespace _Project.Scripts.Configs
     public class LocalSaveServiceConfig
     {
         [SerializeField] private LocalSaveType saveType = LocalSaveType.PlayerPrefs;
+
+        [Inject]
+        private void Construct()
+        {
+            
+        }
         
         public ISaveLoadService GetInstance()
         {

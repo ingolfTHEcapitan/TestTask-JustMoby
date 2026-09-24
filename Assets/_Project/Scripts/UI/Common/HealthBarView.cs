@@ -29,7 +29,7 @@ namespace _Project.Scripts.UI.Common
         private float CurrentValue => _health.CurrentHealth / _health.MaxHealth;
 
         [Inject]
-        public void Construct(IAudioService audioService) => 
+        private void Construct(IAudioService audioService) => 
             _audioService = audioService;
 
         public void Construct(IHealth health) => 
