@@ -22,8 +22,12 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             BindMainMenuBootstrapper();
         }
 
-        private void BindSaveConflictResolver() => 
-            Container.BindInterfacesAndSelfTo<SaveConflictResolveService>().AsSingle().WithArguments(_uiParent);
+        private void BindSaveConflictResolver()
+        {
+            Container.BindInterfacesAndSelfTo<SaveConflictResolveWindowView>().FromMethod(GetSaveConflictWindowView).AsSingle();
+            Container.Bind<SaveConflictResolveWindowModel>().AsSingle();
+            Container.Bind<SaveConflictResolveWindowPresenter>().AsSingle();
+        }
 
         private void BindShopWindow()
         {
@@ -58,5 +62,8 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private MainMenuWindowView GetMainMenuWindowView(InjectContext context) => 
             context.Container.Resolve<IUIFactory>().GetMainMenuWindowView();
+
+        private SaveConflictResolveWindowView GetSaveConflictWindowView(InjectContext context) => 
+            context.Container.Resolve<IUIFactory>().GetSaveConflictResolveWindowView();
     }
 }

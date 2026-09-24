@@ -547,7 +547,7 @@ GameObject:
   - component: {fileID: 5481916757340218157}
   - component: {fileID: 7400717569723280100}
   - component: {fileID: 1434984473905565853}
-  - component: {fileID: 5197648688991274276}
+  - component: {fileID: 2232791374297417919}
   - component: {fileID: 2597983676206841509}
   m_Layer: 5
   m_Name: SaveConflictResolveWindow
@@ -640,7 +640,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5197648688991274276
+--- !u!114 &2232791374297417919
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -649,16 +649,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8209728965362642076}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 084e79ffa9744c79871a510cfd2d37d7, type: 3}
+  m_Script: {fileID: 11500000, guid: dd9031bc20664abf91c8605d93237e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _windowAnimation: {fileID: 2597983676206841509}
+  _windowContent: {fileID: 7751938652566454413}
   _localSaveButton: {fileID: 1028018683385085395}
   _cloudSaveButton: {fileID: 3051685171113125117}
   _localDateText: {fileID: 4423123478442232339}
   _cloudDateText: {fileID: 1175491760493368305}
-  _newSaveColor: {r: 0.34901962, g: 0.85882354, b: 0.23137255, a: 1}
-  _oldSaveColor: {r: 0.85882354, g: 0.28235295, b: 0.23137255, a: 1}
+  _newSaveColor: {r: 0.34901962, g: 0.8588236, b: 0.23137257, a: 1}
+  _oldSaveColor: {r: 0.8588236, g: 0.28235295, b: 0.23137257, a: 1}
   _defaultSaveColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &2597983676206841509
 MonoBehaviour:
