@@ -74,6 +74,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
         {
             _model.SetPaused(true);
             _view.Open();
+            _cursorController.SetCursorVisible(true);
         }
         
         private void RefreshReviveButtonState()
