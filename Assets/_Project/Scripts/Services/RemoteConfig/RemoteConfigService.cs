@@ -12,28 +12,41 @@ namespace _Project.Scripts.Services.RemoteConfig
         
         public async UniTask FetchDataAsync()
         {
-            Debug.Log("Fetching data...");
+            FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.DefaultInstance;
 
-            Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(TimeSpan.Zero);
-            await fetchTask;
-            
-            if (!fetchTask.IsCompleted)
+            try
             {
-                Debug.LogError("Retrieval hasn't finished.");
+                await remoteConfig.FetchAsync(TimeSpan.Zero);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[REMOTE CONFIG] Fetch request threw exception: {e.Message}");
+                Debug.LogException(e);
                 return;
             }
             
-            FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.DefaultInstance;
             ConfigInfo info = remoteConfig.Info;
             if (info.LastFetchStatus != LastFetchStatus.Success)
             {
-                Debug.LogError($"fetchComplete was unsuccessful\n{nameof(info.LastFetchStatus)}: {info.LastFetchStatus}");
+                Debug.LogError(
+                    "[REMOTE CONFIG] Fetch failed. " +
+                    $"Status: {info.LastFetchStatus}, " +
+                    $"Reason: {info.LastFetchFailureReason}, " +
+                    $"FetchTime: {info.FetchTime:g}");
                 return;
             }
 
-            await remoteConfig.ActivateAsync();
-
-            Debug.Log($"Remote data loaded and ready for use. Last fetch time {info.FetchTime}.");
+            try
+            {
+                await remoteConfig.ActivateAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[REMOTE CONFIG] Activation failed, message {e.Message}");
+                Debug.LogException(e);
+                return;
+            }
+            
             RemoteConfig = remoteConfig;
         }
     }

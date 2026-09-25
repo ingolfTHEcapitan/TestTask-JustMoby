@@ -89,9 +89,9 @@ namespace _Project.Scripts.Services.IAP
                 await _saveLoadService.SaveProgressAsync(_progressService);
                 _purchaseTaskCompletionSource.TrySetResult(true);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                Debug.LogError($"Во время покупки не удалось сохранить прогресс {exception}");
+                Debug.LogError($"[IAP UNITY] Progress could not be saved during purchase.\nMessage: {e.Message}");
                 _purchaseTaskCompletionSource.TrySetResult(false);
             }
         }

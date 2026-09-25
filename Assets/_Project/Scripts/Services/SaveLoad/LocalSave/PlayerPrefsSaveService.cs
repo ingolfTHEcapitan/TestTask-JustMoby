@@ -13,7 +13,6 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
         {
             string json = JsonUtility.ToJson(progressService.PlayerProgress, false);
             PlayerPrefs.SetString(PlayerProgressKey, json);
-            Debug.Log("Progress saved to PlayerPrefs");
             return UniTask.CompletedTask;
         }
 
@@ -23,7 +22,6 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
             {
                 string json = PlayerPrefs.GetString(PlayerProgressKey);
                 PlayerProgress playerProgress = JsonUtility.FromJson<PlayerProgress>(json);
-                Debug.Log("Progress loaded from PlayerPrefs");
                 return await UniTask.FromResult(playerProgress);
             }
             

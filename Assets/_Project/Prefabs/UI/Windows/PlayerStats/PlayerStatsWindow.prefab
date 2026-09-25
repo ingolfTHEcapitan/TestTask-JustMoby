@@ -130,9 +130,9 @@ MonoBehaviour:
   _windowContent: {fileID: 7323893893723566572}
   _closeButton: {fileID: 5870514858417081442}
   _applyButton: {fileID: 5148200155104352265}
-  _statsContainer: {fileID: 4676276165602575277}
   _pointsText: {fileID: 3727540272828494550}
-  _audioSource: {fileID: 3566154429157603283}
+  <StatsContainer>k__BackingField: {fileID: 4676276165602575277}
+  <AudioSource>k__BackingField: {fileID: 3566154429157603283}
 --- !u!114 &4477786048016309279
 MonoBehaviour:
   m_ObjectHideFlags: 0

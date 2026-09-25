@@ -20,15 +20,15 @@ namespace _Project.Scripts.Services.Authentication
             try
             {
                 await AuthenticationService.Instance.SignInAnonymouslyAsync();
-                Debug.Log("Sign in anonymously succeeded! is IsSignedIn");
-                Debug.Log("Player ID " + AuthenticationService.Instance.PlayerId);
             }
             catch (AuthenticationException exception)
             {
+                Debug.LogError($"[AUTH SERVICE] Anonymous sign-in failed (auth): {exception.Message}");
                 Debug.LogException(exception);
             }
             catch (RequestFailedException exception)
             {
+                Debug.LogError($"[AUTH SERVICE] Anonymous sign-in failed (network): {exception.Message}");
                 Debug.LogException(exception);
             }
         }
