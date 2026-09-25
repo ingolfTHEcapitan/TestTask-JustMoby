@@ -41,9 +41,9 @@ namespace _Project.Scripts.Services.SaveLoad
                 {
                     await _cloudSaveService.SaveProgressAsync(progressService);
                 }
-                catch (Exception exception)
+                catch (Exception e)
                 {
-                    Debug.LogWarning($"[{GetType().Name}] Не удалось сохранить в облако: {exception.Message}");
+                    Debug.LogWarning($"[SAVE COORDINATOR] Failed save to cloud, message: {e.Message}");
                 }
             }
                 
@@ -55,7 +55,7 @@ namespace _Project.Scripts.Services.SaveLoad
             
             if (!await HasInternetAsync() || !_authService.IsSignedIn)
             {
-                Debug.LogWarning($"[{GetType().Name}] Оффлайн режим или нет авторизации. Загружено локальное сохранение");
+                Debug.LogWarning("[SAVE COORDINATOR] No access to internet or no authorization. Local save has been loaded");
                 return localProgress;
             }
 
@@ -76,15 +76,13 @@ namespace _Project.Scripts.Services.SaveLoad
             }
             catch (Exception e)
             {
-                Debug.LogError($"[{GetType().Name}] Ошибка при синхронизации с облаком: {e.Message}. Загружено локальное сохранение");
+                Debug.LogError($"[SAVE COORDINATOR] Synchronization cloud error. Local save has been loaded. Message: {e.Message}");
                 return localProgress;
             }
         }
 
         private async UniTask<PlayerProgress> ResolveSaveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
-            Debug.LogWarning($"[{GetType().Name}] Обнаружен конфликт: Локальное сохранение новее облачного");
-            
             if (OnSaveConflictHappened == null)
                 return await LoadLocalSaveAsync(localProgress);
             
@@ -100,7 +98,6 @@ namespace _Project.Scripts.Services.SaveLoad
         {
             _progressService.PlayerProgress = cloudProgress;
             await _localSaveService.SaveProgressAsync(_progressService);
-            Debug.Log($"[{GetType().Name}] Загружено облачное сохранение, локальное было обновлено");
             return cloudProgress;
         }
 
@@ -108,7 +105,6 @@ namespace _Project.Scripts.Services.SaveLoad
         {
             _progressService.PlayerProgress = localProgress;
             await _cloudSaveService.SaveProgressAsync(_progressService);
-            Debug.Log($"[{GetType().Name}] Загружено локально сохранение, Облачное было обновлено");
             return localProgress;
         }
 

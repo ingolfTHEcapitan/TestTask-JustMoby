@@ -17,33 +17,24 @@ namespace _Project.Scripts.Services.Analytics
         {
             DependencyStatus dependencyStatus = await FirebaseApp.CheckAndFixDependenciesAsync().AsUniTask();
 
-            if (dependencyStatus == DependencyStatus.Available)
-                Debug.Log("Firebase analytics service initialize successfully");
-            else
-                Debug.LogError($"Could not resolve all Firebase dependencies: {dependencyStatus}");
+            if (dependencyStatus != DependencyStatus.Available)
+                Debug.LogError($"[FIREBASE ANALYTICS] Can't resolve all Firebase dependencies: {dependencyStatus}");
         }
 
-        public void LogGameStart()
-        {
+        public void LogGameStart() => 
             FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLevelStart);
-            Debug.Log("EventGameEnd");
-        }
 
         public void LogGameEnd(int shotsFired, int enemiesKilled)
         {
             FirebaseAnalytics.LogEvent(EventGameEnd, 
                 new Parameter(ParameterShotsFired, shotsFired),
                 new Parameter(ParameterEnemiesKilled, enemiesKilled));
-
-            Debug.Log($" GameEnd: {ParameterShotsFired}: {shotsFired}, {ParameterEnemiesKilled}: {enemiesKilled}");
         }
         
         public void LogPlayerRevive(int reviveCount)
         {
             FirebaseAnalytics.LogEvent(EventPlayerRevive, 
                 new Parameter(ParameterReviveCount, reviveCount));
-            
-            Debug.Log("EventPlayerRevive");
         }
     }
 }

@@ -32,7 +32,7 @@ namespace _Project.Scripts.Services.NetworkAccessibility
                     if (request.result == UnityWebRequest.Result.Success)
                         return true;
 
-                    Debug.LogWarning("Нет доступа к интернету по url: " + PingUrl);
+                    Debug.LogWarning("[NETWORK ACCESS SERVICE] No internet access via URL: " + PingUrl);
                     return false;
                 }
             }
@@ -40,9 +40,9 @@ namespace _Project.Scripts.Services.NetworkAccessibility
             {
                 return false;
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                Debug.LogError($"Нет доступа к интернету по url: {PingUrl}, [ОШИБКА] {exception.Message}");
+                Debug.LogError($"[NETWORK ACCESS SERVICE] No internet access via URL: {PingUrl}, message {e.Message}");
                 return  false;
             }
         }

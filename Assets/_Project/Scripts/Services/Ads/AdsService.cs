@@ -35,20 +35,16 @@ namespace _Project.Scripts.Services.Ads
 
         public async void OnInitializationComplete()
         {
-            Debug.Log("Unity Ads Initialization Complete!");
-
             UniTask rewardedAd = LoadAdAsync(_config.AndroidRewardedAdId);
             UniTask interstitialAd = LoadAdAsync(_config.AndroidInterstitialAdId);
             await UniTask.WhenAll(rewardedAd, interstitialAd);
         }
 
         public void OnInitializationFailed(UnityAdsInitializationError error, string message) => 
-            Debug.Log($"Unity Ads Initialization Failed: {error.ToString()} - {message}");
+            Debug.LogError($"[ADS SERVICE] Initialization Failed: {error.ToString()} - {message}");
 
         public void OnUnityAdsAdLoaded(string placementId)
         {
-            Debug.Log($"Unity Ads Ad Loaded: {placementId}");
-
             if (placementId == _config.AndroidRewardedAdId)
             {
                 IsRewardedAdLoaded = true;
@@ -62,15 +58,13 @@ namespace _Project.Scripts.Services.Ads
         }
 
         public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message) => 
-            Debug.Log($"Unity Ads Failed To Load: {placementId} {error.ToString()} - {message}");
+            Debug.LogError($"[ADS SERVICE] Failed To Load: {placementId} {error.ToString()} - {message}");
 
         public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message) => 
-            Debug.Log($"Unity Ads Failed To Load: {placementId} {error.ToString()} - {message}");
+            Debug.LogError($"[ADS SERVICE] Failed To Show: {placementId} {error.ToString()} - {message}");
 
         public async void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
         {
-            Debug.Log($"On Unity Ads Show Complete: {showCompletionState.ToString()}");
-
             UniTask rewardedAd = LoadAdAsync(_config.AndroidRewardedAdId);
             UniTask interstitialAd = LoadAdAsync(_config.AndroidInterstitialAdId);
             await UniTask.WhenAll(rewardedAd, interstitialAd);
@@ -120,16 +114,15 @@ namespace _Project.Scripts.Services.Ads
             else if (Application.platform == RuntimePlatform.WindowsEditor)
                 gameId = _config.AndroidGameId;
             else
-                Debug.LogError("Unsupported platform for ads ");
+                Debug.LogWarning($"[ADS SERVICE] Platform '{Application.platform}' is not supported. ");
             
             return gameId;
         }
 
         private UniTask LoadAdAsync(string placementId)
         {
-            Debug.Log($"Loading {placementId} Ad");
             Advertisement.Load(placementId, this);
-            return Task.CompletedTask.AsUniTask();
+            return UniTask.CompletedTask;
         }
     }
 }
