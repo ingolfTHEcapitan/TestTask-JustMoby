@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using _Project.Scripts.Services.SaveLoad.LocalSave;
+using Cysharp.Threading.Tasks;
 using Unity.Services.CloudSave;
 using UnityEditor;
 using UnityEngine;
@@ -10,21 +11,13 @@ namespace _Project.Scripts.Tools.Editor
     public class EditorTools
     {
         [MenuItem("Tools/Project/Clear cloud save")]
-        public static async void ClearCloudSave()
+        public static void ClearCloudSave()
         {
-            try
-            {
-                await CloudSaveService.Instance.Data.Player.DeleteAllAsync();
-                Debug.Log("[EDITOR TOOLS] Progress was deleted from cloud");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[EDITOR TOOLS] Failed to delete cloud save: {e}");
-            }
+            ClearCloudSaveAsync().Forget();
         }
 
         [MenuItem("Tools/Project/Clear file save")]
-        public  static void ClearLocalFileSave()
+        public static void ClearLocalFileSave()
         {
             string saveDirectoryPath = Path.Combine(Application.persistentDataPath, FileSaveService.FolderName);
 
@@ -36,16 +29,16 @@ namespace _Project.Scripts.Tools.Editor
             else
                 Debug.Log("[EDITOR TOOLS] Nothing to delete — folder not exist");
         }
-        
+
         [MenuItem("Tools/Project/Clear playerPrefs save")]
-        public  static void ClearLocalPlayerPrefsSave()
+        public static void ClearLocalPlayerPrefsSave()
         {
            PlayerPrefs.DeleteAll();
            Debug.Log("[EDITOR TOOLS] Progress was deleted from playerPrefs");
         }
 
         [MenuItem("Tools/Project/Clear addressable remote cache")]
-        public  static void ClearAddressableRemoteCache()
+        public static void ClearAddressableRemoteCache()
         {
             bool success = Caching.ClearCache();
 
@@ -53,6 +46,19 @@ namespace _Project.Scripts.Tools.Editor
                 Debug.Log("[EDITOR TOOLS] Successfully cleared local cache");
             else
                 Debug.LogWarning("[EDITOR TOOLS] Unable to clear cache");
+        }
+
+        private static async UniTaskVoid ClearCloudSaveAsync()
+        {
+            try
+            {
+                await CloudSaveService.Instance.Data.Player.DeleteAllAsync().AsUniTask();
+                Debug.Log("[EDITOR TOOLS] Progress was deleted from cloud");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[EDITOR TOOLS] Failed to delete cloud save: {e}");
+            }
         }
     }
 }
