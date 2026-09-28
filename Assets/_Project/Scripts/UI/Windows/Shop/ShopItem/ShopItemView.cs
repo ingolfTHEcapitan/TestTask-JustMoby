@@ -33,12 +33,24 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
             _icon.sprite = icon;
             _productNameText.text = productName;
             _buyButtonPriceText.text = price;
-            _availablePurchasesLeftText.text = purchasesLeft.ToString();
+            UpdateAvailablePurchasesLeft(purchasesLeft);
         }
 
+        public void UpdateAvailablePurchasesLeft(int purchasesLeft) => 
+            _availablePurchasesLeftText.text = purchasesLeft.ToString();
+
+        public void SetBuyButtonInteractable(bool isInteractable) =>
+            _buyButton.interactable = isInteractable;
+        
+        public void HideBuyButton() => 
+            _buyButton.gameObject.SetActive(false);
+        
+        public void ShowBuyButton() => 
+            _buyButton.gameObject.SetActive(true);
+        
         public void UpdateQuantityText(int quantity) => 
             _quantityText.text = quantity.ToString();
-
+        
         public void HideQuantityText() => 
             _quantityText.gameObject.SetActive(false);
 

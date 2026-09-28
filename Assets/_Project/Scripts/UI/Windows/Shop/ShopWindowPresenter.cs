@@ -27,11 +27,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         public void Initialize()
         {
             _view.Initialize();
-            _model.Initialize();
-            
             _view.OnCloseButtonClicked += Close;
-            _model.OnPurchaseAdd += RefreshAvailableShopItems;
-
             _view.ClearProductsContainer();
             RefreshAvailableShopItems();
         }
@@ -45,9 +41,8 @@ namespace _Project.Scripts.UI.Windows.Shop
         public void Dispose()
         {
             _view.OnCloseButtonClicked -= Close;
-            _model.OnPurchaseAdd -= RefreshAvailableShopItems;
-            _model.Dispose();
             _shopItemFactory.Dispose();
+            ClearShopItems();
         }
 
         private void Close() => 

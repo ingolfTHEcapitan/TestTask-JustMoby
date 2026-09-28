@@ -8,44 +8,81 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
     public class ShopItemPresenter: IDisposable
     {
         private readonly IUIFactory _uiFactory;
-        private readonly ShopItemModel _model;
-        private readonly ShopItemView _view;
+        private readonly ShopItemModel _itemModel;
+        private readonly ShopItemView _itemView;
 
-        public ShopItemPresenter(IUIFactory uiFactory, ShopItemView view, ShopItemModel model)
+        private bool _isPurchased;
+        
+        public ShopItemPresenter(IUIFactory uiFactory, ShopItemView itemView, ShopItemModel itemModel)
         {
             _uiFactory = uiFactory;
-            _view = view;
-            _model = model;
+            _itemView = itemView;
+            _itemModel = itemModel;
         }
 
         public async UniTask<ShopItemView> Initialize(AudioSource audioSource)
         {
-            _view.OnBuyButtonClicked += StartPurchase;
-            _view.Initialize(audioSource);
+            _itemView.OnBuyButtonClicked += StartPurchaseAsync;
+            _itemView.Initialize(audioSource);
 
             await FillShopItemAsync();
-            return _view;
+            return _itemView;
         }
 
         public void Dispose() => 
-            _view.OnBuyButtonClicked -= StartPurchase;
+            _itemView.OnBuyButtonClicked -= StartPurchaseAsync;
 
         private async UniTask FillShopItemAsync()
         {
-            Sprite icon = await _uiFactory.LoadSpriteAsync(_model.IconAddress);
-            _view.UpdateItemData(icon, _model.ProductName, _model.Price, _model.PurchasesLeft);
+            Sprite icon = await _uiFactory.LoadSpriteAsync(_itemModel.IconAddress);
+            _itemView.UpdateItemData(icon, _itemModel.ProductName, _itemModel.Price, _itemModel.PurchasesLeft);
             ToggleQuantityTextVisibility();
         }
 
-        private void StartPurchase() => 
-            _model.StartPurchase();
+        private async void StartPurchaseAsync()
+        {
+            if (_isPurchased)
+                return;
+            
+            _isPurchased = true;
+            _itemView.SetBuyButtonInteractable(false);
+            
+            try
+            {
+                bool success = await _itemModel.TryStartPurchaseAsync();
+
+                if (success)
+                    _itemView.UpdateAvailablePurchasesLeft(_itemModel.PurchasesLeft);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[SHOP WINDOW] Purchase failed, message: {e.Message}");
+                Debug.LogException(e);
+            }
+            finally
+            {
+                _isPurchased = false;
+                RefreshBuyButtonState();
+            }
+        }
 
         private void ToggleQuantityTextVisibility()
         {
-            if (_model.IsConsumableProductType()) 
-                _view.UpdateQuantityText(_model.Quantity);
+            if (_itemModel.IsConsumableProductType()) 
+                _itemView.UpdateQuantityText(_itemModel.Quantity);
             else
-                _view.HideQuantityText();
+                _itemView.HideQuantityText();
+        }
+
+        private void RefreshBuyButtonState()
+        {
+            bool canBuy = _itemModel.CanBuy;
+            _itemView.SetBuyButtonInteractable(canBuy);
+            
+            if (canBuy)
+                _itemView.ShowBuyButton();
+            else
+                _itemView.HideBuyButton();
         }
     }
 }

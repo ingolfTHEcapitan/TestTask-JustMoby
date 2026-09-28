@@ -45,7 +45,7 @@ namespace _Project.Scripts.Services.IAP
             _iapProvider.OnPurchaseFailedAction -= HandlePurchaseFailed;
         }
 
-        public async UniTask<bool> StartPurchaseAsync(ProductDescription productDescription)
+        public async UniTask<bool> TryStartPurchaseAsync(ProductDescription productDescription)
         {
             if (_purchaseTaskCompletionSource != null)
                 return false;
@@ -61,6 +61,9 @@ namespace _Project.Scripts.Services.IAP
 
         public List<ProductDescription> GetProducts() =>
             GetProductDescriptions().ToList();
+
+        public ProductDescription GetProductById(string productId) =>
+            BuildProductDescription(productId);
 
         private PurchaseProcessingResult ProcessPurchase(Product purchaseProduct)
         {
@@ -98,27 +101,33 @@ namespace _Project.Scripts.Services.IAP
 
         private IEnumerable<ProductDescription> GetProductDescriptions()
         {
-            PurchaseData purchaseData = _progressService.PlayerProgress.PurchaseData;
-
             foreach (string productId in _iapProvider.GetProductIds())
             {
-                Product product = _iapProvider.GetProduct(productId);
-                ProductConfig productConfig = _iapProvider.GetProductConfig(productId);
-                BoughtIAP boughtIAP = purchaseData.BoughtIAPs.Find(x => x.IAPid == productId);
+                ProductDescription productDescription = BuildProductDescription(productId);
                 
-                if (ProductBoughtOut(boughtIAP, productConfig))
+                if (productDescription.AvailablePurchasesLeft <= 0)
                     continue;
-
-                yield return new ProductDescription
-                {
-                    Id = productId,
-                    Product = product,
-                    ProductConfig = productConfig,
-                    AvailablePurchasesLeft = boughtIAP != null 
-                        ? productConfig.MaxPurchaseCount - boughtIAP.Count 
-                        : productConfig.MaxPurchaseCount,
-                };
+                
+                yield return productDescription;
             }
+        }
+
+        private ProductDescription BuildProductDescription(string productId)
+        {
+            PurchaseData purchaseData = _progressService.PlayerProgress.PurchaseData;
+            Product product = _iapProvider.GetProduct(productId);
+            ProductConfig productConfig = _iapProvider.GetProductConfig(productId);
+            BoughtIAP boughtIAP = purchaseData.BoughtIAPs.Find(x => x.IAPid == productId);
+            
+            return new ProductDescription
+            {
+                Id = productId,
+                Product = product,
+                ProductConfig = productConfig,
+                AvailablePurchasesLeft = boughtIAP != null 
+                    ? productConfig.MaxPurchaseCount - boughtIAP.Count 
+                    : productConfig.MaxPurchaseCount,
+            };
         }
 
         private bool ProductBoughtOut(BoughtIAP boughtIAP, ProductConfig productConfig) => 
