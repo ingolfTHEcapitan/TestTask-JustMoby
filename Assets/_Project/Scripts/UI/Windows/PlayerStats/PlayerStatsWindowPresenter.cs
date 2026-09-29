@@ -67,6 +67,9 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             
             _model.Dispose();
         }
+
+        private void Close() => 
+            CloseAsync().Forget();
         
         private async UniTask CreateStatItemsAsync()
         {
@@ -110,7 +113,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             UpdateAllStatItems();
         }
 
-        private async void Close()
+        private async UniTask CloseAsync()
         {
             _isOpen = false;
             _model.SetPaused(false);
@@ -119,10 +122,17 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _model.DiscardPreviewChanges();
         }
 
-        private void ApplyChanges()
+        private async void ApplyChanges()
         {
-            _model.ApplyChanges();
-            Close();
+            try
+            {
+                await _model.ApplyChanges();
+                await CloseAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
         private void UpdateAllStatItems()

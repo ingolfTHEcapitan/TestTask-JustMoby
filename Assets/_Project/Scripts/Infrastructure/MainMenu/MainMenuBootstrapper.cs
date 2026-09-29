@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.UI.Common;
@@ -47,27 +48,37 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             _uiParent = uiParent;
         }
 
-        public async void Initialize()
-        {
-            await _uiFactory.CreateSaveConflictResolveWindowViewAsync();
-            _saveConflictResolveWindowPresenter = _lazySaveConflictResolveWindowPresenter.Value;
-            _saveConflictResolveWindowPresenter.Initialize();
-            
-            _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
-            
-            await _uiFactory.CreateShopWindowViewAsync(_uiParent);
-            _shopWindowPresenter = _lazyShopWindowPresenter.Value;
-            _shopWindowPresenter.Initialize();
+        public void Initialize() => 
+            InitializeAsync().Forget();
 
-            await _uiFactory.CreateSettingsViewAsync(_uiParent);
-            _settingsWindowPresenter = _lazySettingsWindowPresenter.Value;
-            _settingsWindowPresenter.Initialize();
+        private async UniTaskVoid InitializeAsync()
+        {
+            try
+            {
+                await _uiFactory.CreateSaveConflictResolveWindowViewAsync();
+                _saveConflictResolveWindowPresenter = _lazySaveConflictResolveWindowPresenter.Value;
+                _saveConflictResolveWindowPresenter.Initialize();
             
-            await _uiFactory.CreateMainMenuWindowViewAsync(_uiParent);
-            _mainMenuWindowPresenter = _lazyMainMenuWindowPresenter.Value;
-            _mainMenuWindowPresenter.Initialize();
+                _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
-            _loadingCurtainPresenter.HideLoading();
+                await _uiFactory.CreateShopWindowViewAsync(_uiParent);
+                _shopWindowPresenter = _lazyShopWindowPresenter.Value;
+                await _shopWindowPresenter.Initialize();
+
+                await _uiFactory.CreateSettingsViewAsync(_uiParent);
+                _settingsWindowPresenter = _lazySettingsWindowPresenter.Value;
+                _settingsWindowPresenter.Initialize();
+            
+                await _uiFactory.CreateMainMenuWindowViewAsync(_uiParent);
+                _mainMenuWindowPresenter = _lazyMainMenuWindowPresenter.Value;
+                _mainMenuWindowPresenter.Initialize();
+            
+                _loadingCurtainPresenter.HideLoading();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[MAIN MENU BOOTSTRAPPER] init error: {e}");
+            }
         }
 
         public void Dispose()

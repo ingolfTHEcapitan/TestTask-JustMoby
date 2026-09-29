@@ -1,6 +1,7 @@
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Services.Effects;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -35,12 +36,12 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet
         private void Update() => 
             transform.Translate(_direction * (_speed * Time.deltaTime), Space.World);
 
-        private async void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.TryGetComponent(out IHealth health))
             {
                 health.TakeDamage(_damage);
-                await _effectsService.PlayHitFxAsync(_targetPoint, other.gameObject.transform);
+                _effectsService.PlayHitFxAsync(_targetPoint, other.gameObject.transform).Forget(Debug.LogException);
                 DestroyBullet();
             }
         }

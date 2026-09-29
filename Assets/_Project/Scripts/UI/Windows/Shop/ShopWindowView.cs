@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.UI.Common;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,7 +35,7 @@ namespace _Project.Scripts.UI.Windows.Shop
             _windowAnimation.AnimateOpen();
         }
         
-        public async void Close()
+        public async UniTask Close()
         {
             await _windowAnimation.AnimateCloseAsync();
             _windowContent.SetActive(false);

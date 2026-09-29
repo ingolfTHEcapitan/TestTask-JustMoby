@@ -24,17 +24,17 @@ namespace _Project.Scripts.UI.Windows.Shop
             _shopItemFactory = shopItemFactory;
         }
 
-        public void Initialize()
+        public async UniTask Initialize()
         {
             _view.Initialize();
             _view.OnCloseButtonClicked += Close;
             _view.ClearProductsContainer();
-            RefreshAvailableShopItems();
+            await RefreshAvailableShopItems();
         }
 
-        public void Open()
+        public async UniTask Open()
         {
-            RefreshAvailableShopItems();
+            await RefreshAvailableShopItems();
             _view.Open();
         }
         
@@ -46,17 +46,15 @@ namespace _Project.Scripts.UI.Windows.Shop
         }
 
         private void Close() => 
-            _view.Close();
+            _view.Close().Forget();
 
-        private async void RefreshAvailableShopItems()
+        private async UniTask RefreshAvailableShopItems()
         {
             ClearShopItems();
             _view.UpdateShopUnavailableObjects(IapServiceIsInitialized);
 
-            if (IapServiceIsInitialized)
-            {
+            if (IapServiceIsInitialized) 
                 await FillShopItemsAsync();
-            }
         }
         
         private async UniTask FillShopItemsAsync()

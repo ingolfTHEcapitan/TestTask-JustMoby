@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 
         public async UniTask<ShopItemView> Initialize(AudioSource audioSource)
         {
-            _itemView.OnBuyButtonClicked += StartPurchaseAsync;
+            _itemView.OnBuyButtonClicked += StartPurchase;
             _itemView.Initialize(audioSource);
 
             await FillShopItemAsync();
@@ -30,7 +31,7 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
         }
 
         public void Dispose() => 
-            _itemView.OnBuyButtonClicked -= StartPurchaseAsync;
+            _itemView.OnBuyButtonClicked -= StartPurchase;
 
         private async UniTask FillShopItemAsync()
         {
@@ -39,16 +40,21 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
             ToggleQuantityTextVisibility();
         }
 
-        private async void StartPurchaseAsync()
+        private void StartPurchase()
         {
             if (_isPurchased)
                 return;
-            
-            _isPurchased = true;
-            _itemView.SetBuyButtonInteractable(false);
-            
+
+            StartPurchaseAsync().Forget();
+        }
+
+        private async UniTask StartPurchaseAsync()
+        {
             try
             {
+                _isPurchased = true;
+                _itemView.SetBuyButtonInteractable(false);
+                
                 bool success = await _itemModel.TryStartPurchaseAsync();
 
                 if (success)

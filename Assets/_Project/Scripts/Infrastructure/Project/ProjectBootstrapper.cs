@@ -10,6 +10,7 @@ using _Project.Scripts.Services.SceneLoader;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project
@@ -45,26 +46,36 @@ namespace _Project.Scripts.Infrastructure.Project
             _adsService = adsService;
         }
 
-        public async void Initialize()
+        public void Initialize() => 
+            InitializeAsync().Forget();
+
+        private async UniTaskVoid InitializeAsync()
         {
-            await _assetProvider.InitializeAsync();
-            await _uiFactory.CreateLoadingCurtainViewAsync();
-            _lazyLoadingWindowPresenter.Value.ShowLoading();
+            try
+            {
+                await _assetProvider.InitializeAsync();
+                await _uiFactory.CreateLoadingCurtainViewAsync();
+                _lazyLoadingWindowPresenter.Value.ShowLoading();
             
-            UniTask analyticsServiceTask = _analyticsService.InitializeAsync();
-            UniTask remoteConfigServiceTask = _remoteConfigService.FetchDataAsync();
-            UniTask authServiceTask = _authService.SignUpAsync();
+                UniTask analyticsServiceTask = _analyticsService.InitializeAsync();
+                UniTask remoteConfigServiceTask = _remoteConfigService.FetchDataAsync();
+                UniTask authServiceTask = _authService.SignUpAsync();
 
-            await UniTask.WhenAll(analyticsServiceTask, remoteConfigServiceTask, authServiceTask);
+                await UniTask.WhenAll(analyticsServiceTask, remoteConfigServiceTask, authServiceTask);
 
-            _remoteConfigFactory.ApplyRemoteConfigs();
+                _remoteConfigFactory.ApplyRemoteConfigs();
             
-            _adsService.Initialize();
+                _adsService.Initialize();
             
-            _iapService = _lazyIapService.Value;
-            _iapService.Initialize();
+                _iapService = _lazyIapService.Value;
+                _iapService.Initialize();
 
-            await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
+                await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[PROJECT BOOTSTRAPPER] init error: {e}");
+            }
         }
 
         public void Dispose() => 

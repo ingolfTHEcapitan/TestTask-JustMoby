@@ -1,6 +1,8 @@
 ﻿using System;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.UI.Common;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace _Project.Scripts.UI.HUD
 {
@@ -27,13 +29,16 @@ namespace _Project.Scripts.UI.HUD
             _inputService.OnMainMenuButtonPressed += BackToOnMainMenu;
         }
 
-        public void Dispose() =>
+        public void Dispose()
+        {
             _view.OnBackToMainMenuButtonClicked -= BackToOnMainMenu;
+            _inputService.OnMainMenuButtonPressed -= BackToOnMainMenu;
+        }
 
-        private async void BackToOnMainMenu()
+        private void BackToOnMainMenu()
         {
             _cursorController.SetCursorVisible(visible: false);
-            await _model.LoadMainMenu();
+            _model.LoadMainMenu().Forget(Debug.LogError);
         }
     }
 }

@@ -57,10 +57,10 @@ namespace _Project.Scripts.Logic.Enemy
             _health.OnZeroHealth -= EnemyDie;
         
         [UsedImplicitly]
-        public async void OnDeathPose()
+        public void OnDeathPose()
         {
             _dissolveShader.PlayDissolveFx();
-            await _effectsService.PlayEnemyDeathFxAsync(transform.position, transform);
+            _effectsService.PlayEnemyDeathFxAsync(transform.position, transform).Forget(Debug.LogError);
         }
         
         public void KillEnemy()
@@ -69,10 +69,10 @@ namespace _Project.Scripts.Logic.Enemy
             _isForcedKilling = true;
         }
 
-        private async void EnemyDie()
+        private void EnemyDie()
         {
             if (!_isDead)
-                await DieAsync();
+                DieAsync().Forget(Debug.LogError);
         }
 
         private async UniTask DieAsync()
@@ -86,7 +86,6 @@ namespace _Project.Scripts.Logic.Enemy
             {
                 _statistics.RecordEnemyKilled();
                 await _upgradePoints.AddPointAsync();
-                
             }
         }
 

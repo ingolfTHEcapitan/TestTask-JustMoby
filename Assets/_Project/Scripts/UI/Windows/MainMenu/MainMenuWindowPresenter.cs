@@ -3,6 +3,8 @@ using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
 using _Project.Scripts.UI.Windows.Settings;
 using _Project.Scripts.UI.Windows.Shop;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace _Project.Scripts.UI.Windows.MainMenu
 {
@@ -46,19 +48,19 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _view.OnExitButtonClicked -= ExitGame;
         }
 
-        private async void StartGame()
+        private void StartGame()
         {
             _cursorController.SetCursorVisible(false);
             _view.StopBackgroundMusic();
             _loadingCurtainPresenter.ShowLoading();
-            await _model.LoadGameplayScene();
+            _model.LoadGameplayScene().Forget(Debug.LogError);
         }
 
         private void OpenSettingsWindow() => 
             _settingsWindowPresenter.Open();
 
         private void OpenShopWindow() => 
-            _shopWindowPresenter.Open();
+            _shopWindowPresenter.Open().Forget(Debug.LogError);
 
         private void ExitGame() => 
             _model.ExitGame();

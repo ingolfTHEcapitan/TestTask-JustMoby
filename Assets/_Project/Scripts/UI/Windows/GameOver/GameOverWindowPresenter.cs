@@ -1,6 +1,7 @@
 ﻿using System;
 using _Project.Scripts.UI.Common;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace _Project.Scripts.UI.Windows.GameOver
 {
@@ -42,32 +43,46 @@ namespace _Project.Scripts.UI.Windows.GameOver
 
         private async void LoadSave()
         {
-            await _view.CloseAsync();
-            _model.SetPaused(false);
+            try
+            {
+                await _view.CloseAsync();
+                _model.SetPaused(false);
             
-            _cursorController.SetCursorVisible(true);
-            _model.TryShowInterstitialAd();
-            await ReloadScene();
+                _cursorController.SetCursorVisible(true);
+                _model.TryShowInterstitialAd();
+                ReloadScene();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
-        private async UniTask ReloadScene()
+        private void ReloadScene()
         {
             _cursorController.SetCursorVisible(false);
-           await _model.ReloadSceneAsync();
+            _model.ReloadSceneAsync().Forget();
         }
 
         private async void ShowRewardedAdAndReviveAnd()
         {
-            await _view.CloseAsync();
-            _model.SetPaused(false);
-            
-            _cursorController.SetCursorVisible(true);
-
-            _model.TryShowRewardedAd(() =>
+            try
             {
-                _cursorController.SetCursorVisible(false);
-                RefreshReviveButtonState();
-            });
+                await _view.CloseAsync();
+                _model.SetPaused(false);
+            
+                _cursorController.SetCursorVisible(true);
+
+                _model.TryShowRewardedAd(() =>
+                {
+                    _cursorController.SetCursorVisible(false);
+                    RefreshReviveButtonState();
+                });
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
         private void Open()

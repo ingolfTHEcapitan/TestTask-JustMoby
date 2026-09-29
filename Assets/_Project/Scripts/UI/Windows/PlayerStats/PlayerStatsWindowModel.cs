@@ -47,7 +47,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
                 stat.OnStatChanged -= InvokeStatChanged;
         }
 
-        public async void ApplyChanges()
+        public async UniTask ApplyChanges()
         {
             if (!HasAnyChanges()) 
                 return;

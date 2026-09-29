@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Data.Player;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {
@@ -64,9 +65,9 @@ namespace _Project.Scripts.UI.Windows.Settings
             await _model.SaveSettingsAsync();
         }
 
-        private async void Close()
+        private void Close()
         {
-            await _view.CloseAsync();
+            _view.CloseAsync().Forget();
             UpdateAudioMixerAndSlidersValues();
         }
 
