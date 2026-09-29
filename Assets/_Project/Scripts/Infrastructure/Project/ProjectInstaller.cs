@@ -60,7 +60,6 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<AuthService>().AsSingle();
             Container.BindInterfacesAndSelfTo<ProgressService>().AsSingle();
             Container.Bind<PurchaseModel>().AsSingle();
-            Container.Bind<SaveTimeFormatter>().AsSingle();
             Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
@@ -75,7 +74,6 @@ namespace _Project.Scripts.Infrastructure.Project
             
             Container.BindInterfacesAndSelfTo<IAPProvider>().AsSingle();
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<EffectsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<AudioService>().AsSingle();
         }
 

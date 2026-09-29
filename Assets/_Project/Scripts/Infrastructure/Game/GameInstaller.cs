@@ -4,6 +4,7 @@ using _Project.Scripts.Logic.Player.Factory;
 using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
+using _Project.Scripts.Services.Effects;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.Services.Statistics;
@@ -48,6 +49,7 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameStatistics>().AsSingle();
+            Container.BindInterfacesAndSelfTo<EffectsService>().AsSingle();
         }
 
         private void BindHealthCalculatorService() => 

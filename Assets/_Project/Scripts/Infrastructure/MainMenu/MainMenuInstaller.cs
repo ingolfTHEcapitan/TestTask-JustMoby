@@ -1,4 +1,5 @@
-﻿using _Project.Scripts.UI.Factory;
+﻿using _Project.Scripts.Services.SaveLoad;
+using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
@@ -24,6 +25,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private void BindSaveConflictResolver()
         {
+            Container.Bind<SaveTimeFormatter>().AsSingle();
             Container.BindInterfacesAndSelfTo<SaveConflictResolveWindowView>().FromMethod(GetSaveConflictWindowView).AsSingle();
             Container.Bind<SaveConflictResolveWindowModel>().AsSingle();
             Container.Bind<SaveConflictResolveWindowPresenter>().AsSingle();
