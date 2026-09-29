@@ -4,7 +4,9 @@ using _Project.Scripts.Logic.Player.Factory;
 using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
+using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.HealthCalculator;
+using _Project.Scripts.Services.Statistics;
 using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.HUD;
@@ -30,6 +32,7 @@ namespace _Project.Scripts.Infrastructure.Game
         
         public override void InstallBindings()
         {
+            BindServices();
             BindPlayer();
             BindPlayerStats();
             BindHeadUpDisplay();
@@ -41,6 +44,12 @@ namespace _Project.Scripts.Infrastructure.Game
             BindGame();
         }
         
+        private void BindServices()
+        {
+            Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameStatistics>().AsSingle();
+        }
+
         private void BindHealthCalculatorService() => 
             Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
 
