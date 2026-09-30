@@ -15,7 +15,7 @@ namespace _Project.Scripts.UI.HUD
             _sceneLoader = sceneLoader;
         }
 
-        public async UniTask LoadMainMenu()
+        public async UniTask LoadMainMenuAsync()
         {
             _loadingCurtainPresenter.ShowLoading();
             await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);

@@ -24,7 +24,7 @@ namespace _Project.Scripts.Services.SceneLoader
             await LoadSceneAsync(sceneBuildIndex);
         }
 
-        private async Task LoadSceneAsync(int buildIndex)
+        private async UniTask LoadSceneAsync(int buildIndex)
         {
             BeforeSceneUnload?.Invoke();
             await SceneManager.LoadSceneAsync(buildIndex).ToUniTask();

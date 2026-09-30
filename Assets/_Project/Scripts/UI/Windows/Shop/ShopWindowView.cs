@@ -29,13 +29,13 @@ namespace _Project.Scripts.UI.Windows.Shop
         private void OnDestroy() => 
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
         
-        public async UniTask Open()
+        public async UniTask OpenAsync()
         {
             _windowContent.SetActive(true);
-            await _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpenAsync();
         }
         
-        public async UniTask Close()
+        public async UniTask CloseAsync()
         {
             await _windowAnimation.AnimateCloseAsync();
             _windowContent.SetActive(false);

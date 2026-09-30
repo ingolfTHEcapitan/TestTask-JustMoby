@@ -34,7 +34,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
         public async UniTask OpenAsync()
         {
             _windowContent.SetActive(true);
-            await _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpenAsync();
         }
 
         public void UpdateReviveButtonState(bool state) => 

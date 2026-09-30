@@ -24,7 +24,7 @@ namespace _Project.Scripts.UI.Windows.Shop
             _shopItemFactory = shopItemFactory;
         }
 
-        public async UniTask Initialize()
+        public async UniTask InitializeAsync()
         {
             _view.Initialize();
             _view.OnCloseButtonClicked += Close;
@@ -35,7 +35,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         public async UniTask OpenAsync()
         {
             await RefreshAvailableShopItemsAsync();
-            await _view.Open();
+            await _view.OpenAsync();
         }
         
         public void Dispose()
@@ -46,7 +46,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         }
 
         private void Close() => 
-            _view.Close().Forget();
+            _view.CloseAsync().Forget();
 
         private async UniTask RefreshAvailableShopItemsAsync()
         {

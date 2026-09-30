@@ -53,7 +53,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _cursorController.SetCursorVisible(false);
             _view.StopBackgroundMusic();
             _loadingCurtainPresenter.ShowLoading();
-            _model.LoadGameplayScene().Forget(Debug.LogError);
+            _model.LoadGameplaySceneAsync().Forget(Debug.LogError);
         }
 
         private void OpenSettingsWindow() => 

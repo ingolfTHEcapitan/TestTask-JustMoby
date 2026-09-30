@@ -38,7 +38,7 @@ namespace _Project.Scripts.UI.HUD
         private void BackToOnMainMenu()
         {
             _cursorController.SetCursorVisible(visible: false);
-            _model.LoadMainMenu().Forget(Debug.LogError);
+            _model.LoadMainMenuAsync().Forget(Debug.LogError);
         }
     }
 }

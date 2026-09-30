@@ -17,7 +17,7 @@ namespace _Project.Scripts.Services.UpgradePoints
 
         public async UniTask AddPointAsync()
         {
-            await _playerStatsWindowModel.AddUpgradePoint();
+            await _playerStatsWindowModel.AddUpgradePointAsync();
             CurrentPoints = _playerStatsWindowModel.UpgradePoints;
             OnPointAdded?.Invoke();
         }

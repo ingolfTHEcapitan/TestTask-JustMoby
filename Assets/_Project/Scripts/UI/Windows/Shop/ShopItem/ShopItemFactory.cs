@@ -36,7 +36,7 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 
             ShopItemModel model = _container.Instantiate<ShopItemModel>(new object[] {productDescription});
             ShopItemPresenter presenter = _container.Instantiate<ShopItemPresenter>(new object[] {view, model});
-            await presenter.Initialize(audioSource);
+            await presenter.InitializeAsync(audioSource);
             
             _presenters.Add(presenter);
             

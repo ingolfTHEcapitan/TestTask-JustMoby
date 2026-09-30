@@ -21,7 +21,7 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
             _itemModel = itemModel;
         }
 
-        public async UniTask<ShopItemView> Initialize(AudioSource audioSource)
+        public async UniTask<ShopItemView> InitializeAsync(AudioSource audioSource)
         {
             _itemView.OnBuyButtonClicked += StartPurchase;
             _itemView.Initialize(audioSource);

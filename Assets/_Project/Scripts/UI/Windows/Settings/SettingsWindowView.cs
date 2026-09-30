@@ -55,7 +55,7 @@ namespace _Project.Scripts.UI.Windows.Settings
         public async UniTask OpenAsync()
         {
             _windowContent.SetActive(true);
-            await _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpenAsync();
         }
 
         public async UniTask CloseAsync()

@@ -54,11 +54,11 @@ namespace _Project.Scripts.Infrastructure.Game
             _hudPresenter = _lazyHudPresenter.Value;
             _hudPresenter.Initialize();
             
-            PlayerStatsWindowView playerStatsWindowView = await InitPlayerStatsView(hudView, _levelUpSound);
+            await InitPlayerStatsViewAsync(hudView, _levelUpSound);
             _playerStatsWindowPresenter = _lazyPlayerStatsWindowPresenter.Value;
             await _playerStatsWindowPresenter.InitializeAsync();
             
-            GameOverWindowView gameOverWindowView = await _uiFactory.CreateGameOverWindowViewAsync(_uiParent);
+            await _uiFactory.CreateGameOverWindowViewAsync(_uiParent);
             _gameOverWindowPresenter = _lazyGameOverWindowPresenter.Value;
             _gameOverWindowPresenter.Initialize();
         }
@@ -70,7 +70,7 @@ namespace _Project.Scripts.Infrastructure.Game
             playerHealthBarView.Initialize();
         }
 
-        private async UniTask<PlayerStatsWindowView> InitPlayerStatsView(HeadUpDisplayView hud, AudioClip levelUpSound)
+        private async UniTask<PlayerStatsWindowView> InitPlayerStatsViewAsync(HeadUpDisplayView hud, AudioClip levelUpSound)
         {
             Button openButton = hud.OpenStatsWindowButton;
             

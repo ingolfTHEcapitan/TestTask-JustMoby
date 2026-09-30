@@ -22,7 +22,7 @@ namespace _Project.Scripts.UI.Common
         private void OnDestroy() => 
             KillAnimationIfActive();
 
-        public async UniTask AnimateOpen()
+        public async UniTask AnimateOpenAsync()
         {
             KillAnimationIfActive();
             

@@ -69,7 +69,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public async UniTask ShowWindowAsync()
         {
             _windowContent.SetActive(true);
-            await _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpenAsync();
         }
 
         public async UniTask HideWindowAsync()

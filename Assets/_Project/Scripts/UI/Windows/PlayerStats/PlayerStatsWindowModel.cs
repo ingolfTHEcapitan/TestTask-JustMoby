@@ -32,7 +32,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _pauseService = pauseService;
         }
 
-        public async UniTask Initialize()
+        public async UniTask InitializeAsync()
         {
             foreach (PlayerStatData statData in _statsModel.GetStats()) 
                 statData.OnStatChanged += InvokeStatChanged;
@@ -47,7 +47,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
                 stat.OnStatChanged -= InvokeStatChanged;
         }
 
-        public async UniTask ApplyChanges()
+        public async UniTask ApplyChangesAsync()
         {
             if (!HasAnyChanges()) 
                 return;
@@ -75,7 +75,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             OnStatsChanged?.Invoke();
         }
 
-        public async UniTask AddUpgradePoint(int points = 1)
+        public async UniTask AddUpgradePointAsync(int points = 1)
         {
             UpgradePoints += points;
             OnStatsChanged?.Invoke();

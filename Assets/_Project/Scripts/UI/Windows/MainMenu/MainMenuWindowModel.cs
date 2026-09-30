@@ -10,7 +10,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         public MainMenuWindowModel(ISceneLoaderService sceneLoader) => 
             _sceneLoader = sceneLoader;
 
-        public async UniTask LoadGameplayScene() => 
+        public async UniTask LoadGameplaySceneAsync() => 
             await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.Gameplay);
         
         public void ExitGame()

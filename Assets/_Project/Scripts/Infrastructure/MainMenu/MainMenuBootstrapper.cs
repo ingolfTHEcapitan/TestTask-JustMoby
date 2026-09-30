@@ -63,7 +63,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             
                 await _uiFactory.CreateShopWindowViewAsync(_uiParent);
                 _shopWindowPresenter = _lazyShopWindowPresenter.Value;
-                await _shopWindowPresenter.Initialize();
+                await _shopWindowPresenter.InitializeAsync();
 
                 await _uiFactory.CreateSettingsViewAsync(_uiParent);
                 _settingsWindowPresenter = _lazySettingsWindowPresenter.Value;

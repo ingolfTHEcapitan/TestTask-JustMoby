@@ -60,9 +60,9 @@ namespace _Project.Scripts.Services.Ads
             Debug.LogError($"[ADS SERVICE] Failed To Show: {placementId} {error.ToString()} - {message}");
 
         public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState) => 
-            OnAdFinished(placementId).Forget();
+            OnAdFinishedAsync(placementId).Forget();
 
-        private async UniTask OnAdFinished(string placementId)
+        private async UniTask OnAdFinishedAsync(string placementId)
         {
             await LoadAdAsync();
 
