@@ -1,6 +1,4 @@
 using System;
-using System.Threading;
-using System.Threading.Tasks;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
@@ -83,22 +81,6 @@ namespace _Project.Scripts.Services.Ads
         public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState) => 
             OnAdFinishedAsync(placementId).Forget();
 
-        private async UniTask OnAdFinishedAsync(string placementId)
-        {
-            await LoadAdsAsync();
-
-            if (placementId == _config.AndroidRewardedAdId)
-            {
-                OnRewardedAdFinished?.Invoke();
-                OnRewardedAdFinished = null;
-            }
-            else if (placementId == _config.AndroidInterstitialAdId)
-            {
-                OnInterstitialAdFinished?.Invoke();
-                OnInterstitialAdFinished = null;
-            }
-        }
-
         public void OnUnityAdsShowStart(string placementId) { }
 
         public void OnUnityAdsShowClick(string placementId) { }
@@ -119,6 +101,22 @@ namespace _Project.Scripts.Services.Ads
             
             Advertisement.Show(_config.AndroidInterstitialAdId, this);
             OnInterstitialAdFinished = onInterstitialAdFinished;
+        }
+
+        private async UniTask OnAdFinishedAsync(string placementId)
+        {
+            await LoadAdsAsync();
+
+            if (placementId == _config.AndroidRewardedAdId)
+            {
+                OnRewardedAdFinished?.Invoke();
+                OnRewardedAdFinished = null;
+            }
+            else if (placementId == _config.AndroidInterstitialAdId)
+            {
+                OnInterstitialAdFinished?.Invoke();
+                OnInterstitialAdFinished = null;
+            }
         }
 
         private string GetGameId()

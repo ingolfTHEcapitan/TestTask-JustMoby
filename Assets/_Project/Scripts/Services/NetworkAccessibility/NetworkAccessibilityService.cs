@@ -13,7 +13,6 @@ namespace _Project.Scripts.Services.NetworkAccessibility
 
         private CancellationTokenSource _cancellationTokenSource;
         
-
         public async UniTask<bool> CheckNetworkConnectionAsync()
         {
             if (Application.internetReachability == NetworkReachability.NotReachable)

@@ -18,8 +18,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         [SerializeField] private Button _closeButton;
         
         [field: SerializeField] public RectTransform ProductsContainer { get; private set; }
-        [field: Header("Audio")]
-        [field: SerializeField] public AudioSource AudioSource { get; private set;}
+        [field: SerializeField, Header("Audio")] public AudioSource AudioSource { get; private set;}
 
         public void Initialize()
         {

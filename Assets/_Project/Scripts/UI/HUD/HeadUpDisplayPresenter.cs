@@ -1,5 +1,4 @@
-﻿using System;
-using _Project.Scripts.Services.PlayerInput;
+﻿using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.UI.Common;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

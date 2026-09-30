@@ -45,11 +45,15 @@ namespace _Project.Scripts.UI.Common
 
         private void OnDestroy()
         {
+            if (_health != null)
+            {
+                _health.OnHealthChanged -= UpdateHealthBar;
+                _health.OnTakeDamage -= PlayHitSound;
+                _health.OnTakeHeal -= PlayHealSound;
+            }
+
             _cts?.Cancel();
             _cts?.Dispose();
-            
-            if (_health != null)
-                _health.OnHealthChanged -= UpdateHealthBar;
         }
 
         public async UniTask HideAsync()

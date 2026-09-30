@@ -66,12 +66,6 @@ namespace _Project.Scripts.Logic.Enemy.States
             _enemyRotateToPlayer.enabled = false;
         }
 
-        private void StartAttack()
-        {
-            IsAttacking = true;
-            OnAttackStarted?.Invoke();
-        }
-
         public void DealDamage()
         {
             if (Hit(out Collider hit))
@@ -94,9 +88,15 @@ namespace _Project.Scripts.Logic.Enemy.States
                 _audioService.PlayOneShotRandom(_swordMissSounds, _audioSource);
             }
         }
-        
+
         public void AttackEnded() =>
             IsAttacking = false;
+
+        private void StartAttack()
+        {
+            IsAttacking = true;
+            OnAttackStarted?.Invoke();
+        }
 
         private bool Hit(out Collider hit)
         {

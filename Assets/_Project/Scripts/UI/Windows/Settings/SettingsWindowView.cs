@@ -101,10 +101,13 @@ namespace _Project.Scripts.UI.Windows.Settings
         
         private void InvokeOnMasterVolumeChanged(float value) => 
             OnMasterVolumeChanged?.Invoke(value);
+        
         private void InvokeOnMusicVolumeChanged(float value) => 
             OnMusicVolumeChanged?.Invoke(value);
+        
         private void InvokeOnEffectsVolumeChanged(float value) => 
             OnEffectsVolumeChanged?.Invoke(value);
+        
         private void InvokeOnUIVolumeChanged(float value) => 
             OnUIVolumeChanged?.Invoke(value);
     }

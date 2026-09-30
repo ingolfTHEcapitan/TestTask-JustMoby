@@ -29,15 +29,7 @@ namespace _Project.Scripts.Logic.PlayerStats
             PreviewLevel = 0;
             RecalculateCurrentValue();
         }
-        
-        public void RecalculateCurrentValue()
-        {
-            CurrentValue = Mathf.Min(
-                BaseValue * (1 + IncrementPerLevel * Level), 
-                BaseValue * MaxMultiplier);
-            OnStatChanged?.Invoke();
-        }
-        
+
         public void SetLevel(int level)
         {
             Level = level;
@@ -60,6 +52,14 @@ namespace _Project.Scripts.Logic.PlayerStats
         public void IncreasePreviewLevel()
         {
             PreviewLevel++;
+            OnStatChanged?.Invoke();
+        }
+
+        private void RecalculateCurrentValue()
+        {
+            CurrentValue = Mathf.Min(
+                BaseValue * (1 + IncrementPerLevel * Level), 
+                BaseValue * MaxMultiplier);
             OnStatChanged?.Invoke();
         }
     }

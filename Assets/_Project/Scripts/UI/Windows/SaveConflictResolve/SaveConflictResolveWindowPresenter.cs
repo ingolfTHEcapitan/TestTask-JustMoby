@@ -1,4 +1,3 @@
-using System;
 using _Project.Scripts.Data.Player;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.UI.Common;
@@ -34,6 +33,16 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             _model.OnSaveConflictHappened += ResolveConflictAsync;
         }
 
+        private void CleanUp()
+        {
+            _view.OnWindowDestroy -= CleanUp;
+            _view.OnLocalSaveButtonClicked -= ChoiceLocalSave;
+            _view.OnCloudSaveButtonClicked -= ChoiceCloudSave;
+            _model.OnSaveConflictHappened -= ResolveConflictAsync;
+            _taskCompletionSource = null;
+            _model.Dispose();
+        }
+
         private async UniTask<SaveType> ResolveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
             string local = _saveTimeFormatter.Format(localProgress.LastSaveTimeUnix);
@@ -53,16 +62,6 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             await _view.CloseAsync();
 
             return result;
-        }
-
-        private void CleanUp()
-        {
-            _view.OnWindowDestroy -= CleanUp;
-            _view.OnLocalSaveButtonClicked -= ChoiceLocalSave;
-            _view.OnCloudSaveButtonClicked -= ChoiceCloudSave;
-            _model.OnSaveConflictHappened -= ResolveConflictAsync;
-            _taskCompletionSource = null;
-            _model.Dispose();
         }
 
         private void ChoiceSaveDateTextColor()

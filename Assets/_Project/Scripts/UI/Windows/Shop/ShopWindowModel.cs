@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using _Project.Scripts.Configs.IAP;
-using _Project.Scripts.Data.IAP;
 using _Project.Scripts.Services.IAP;
 
 namespace _Project.Scripts.UI.Windows.Shop

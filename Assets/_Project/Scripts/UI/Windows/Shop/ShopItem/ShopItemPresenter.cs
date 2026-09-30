@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

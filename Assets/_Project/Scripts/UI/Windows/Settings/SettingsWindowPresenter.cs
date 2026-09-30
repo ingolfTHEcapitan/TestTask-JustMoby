@@ -2,7 +2,6 @@ using System;
 using _Project.Scripts.Data.Player;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {

@@ -14,10 +14,8 @@ namespace _Project.Scripts.UI.Common
 		private IAudioService _audioService;
 
 		[Inject]
-		private void Construct(IAudioService audioService)
-		{
+		private void Construct(IAudioService audioService) => 
 			_audioService = audioService;
-		}
 
 		public void Initialize(AudioSource audioSource) => 
 			_audioSource = audioSource;
@@ -26,7 +24,6 @@ namespace _Project.Scripts.UI.Common
 		{
 			if (_pointerDown != null) 
 				_audioService.PlayOneShot(_pointerDown, _audioSource);
-			
 		}
 
 		public void OnPointerEnter(PointerEventData eventData)

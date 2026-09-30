@@ -81,20 +81,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             OnStatsChanged?.Invoke();
         }
 
-        private async void AddUpgradePoints(int points)
-        {
-            try
-            {
-                UpgradePoints += points;
-                OnStatsChanged?.Invoke();
-                await _saveLoad.SaveStatsAsync(UpgradePoints);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
-        }
-
         public void UpgradeStat(StatName statName)
         {
             if (!CanUpgrade(statName))
@@ -104,7 +90,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             UpgradePoints--;
             OnStatsChanged?.Invoke();
         }
-        
+
         public bool CanUpgrade(StatName statName)
         {
             if (UpgradePoints <=0 || !_statsModel.GetStatDictionary().ContainsKey(statName))
@@ -121,9 +107,23 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public PlayerStatData GetStat(StatName statName) => 
             _statsModel.GetStat(statName);
-        
+
         public PlayerStatConfig FindStatConfigByName(StatName statName) => 
             _statConfigs.Find(statConfig => statConfig.Name == statName);
+
+        private async void AddUpgradePoints(int points)
+        {
+            try
+            {
+                UpgradePoints += points;
+                OnStatsChanged?.Invoke();
+                await _saveLoad.SaveStatsAsync(UpgradePoints);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
 
         private bool HasAnyChanges() =>
             GetStats().Any(stat => stat.PreviewLevelHasChanged);

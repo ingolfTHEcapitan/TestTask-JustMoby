@@ -16,8 +16,8 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
         public int Quantity => ProductConfig.Quantity;
         public int PurchasesLeft => ProductDescription.AvailablePurchasesLeft;
         public bool CanBuy => PurchasesLeft > 0;
-        public ProductDescription ProductDescription => _iapService.GetProductById(_productId);
-        public ProductConfig ProductConfig => ProductDescription.ProductConfig;
+        private ProductDescription ProductDescription => _iapService.GetProductById(_productId);
+        private ProductConfig ProductConfig => ProductDescription.ProductConfig;
 
         public ShopItemModel(IIAPService iapService, ProductDescription productDescription)
         {

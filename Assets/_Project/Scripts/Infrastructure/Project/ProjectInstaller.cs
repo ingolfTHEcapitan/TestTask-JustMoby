@@ -8,7 +8,6 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
 using _Project.Scripts.Services.Authentication;
-using _Project.Scripts.Services.Effects;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.Services.NetworkAccessibility;
 using _Project.Scripts.Services.PlayerInput;

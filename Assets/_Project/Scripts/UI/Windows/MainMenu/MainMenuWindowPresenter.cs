@@ -1,4 +1,3 @@
-using System;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
 using _Project.Scripts.UI.Windows.Settings;

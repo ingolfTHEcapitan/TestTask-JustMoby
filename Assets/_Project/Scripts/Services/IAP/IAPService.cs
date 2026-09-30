@@ -130,9 +130,6 @@ namespace _Project.Scripts.Services.IAP
             };
         }
 
-        private bool ProductBoughtOut(BoughtIAP boughtIAP, ProductConfig productConfig) => 
-            boughtIAP != null && boughtIAP.Count >= productConfig.MaxPurchaseCount;
-        
         private void HandlePurchaseFailed(string obj) => 
             _purchaseTaskCompletionSource.TrySetResult(false);
     }
