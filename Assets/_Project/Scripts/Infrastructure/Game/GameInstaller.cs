@@ -7,8 +7,8 @@ using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services.Effects;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.HealthCalculator;
+using _Project.Scripts.Services.Score;
 using _Project.Scripts.Services.Statistics;
-using _Project.Scripts.Services.UpgradePoints;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
@@ -86,7 +86,7 @@ namespace _Project.Scripts.Infrastructure.Game
         }
 
         private void BindUpgradePointsService() => 
-            Container.BindInterfacesAndSelfTo<UpgradePointsService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
 
         private void BindEnemy()
         {

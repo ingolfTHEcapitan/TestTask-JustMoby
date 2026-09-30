@@ -4,7 +4,7 @@ using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.PlayerInput;
-using _Project.Scripts.Services.UpgradePoints;
+using _Project.Scripts.Services.Score;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
@@ -16,7 +16,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     public class PlayerStatsWindowPresenter
     {
         private readonly IInputService _inputService;
-        private readonly IUpgradePointsService _pointsService;
+        private readonly IScoreService _scoreService;
         private readonly IUIFactory _uiFactory;
         private readonly PlayerStatsWindowModel _model;
         private readonly PlayerStatsWindowView _view;
@@ -27,13 +27,13 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private bool _isOpen;
 
         public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, IUIFactory uiFactory,
-            IInputService inputService, IUpgradePointsService pointsService, CursorController cursorController)
+            IInputService inputService, IScoreService scoreService, CursorController cursorController)
         {
             _model = model;
             _view = view;
             _uiFactory = uiFactory;
             _inputService = inputService;
-            _pointsService = pointsService;
+            _scoreService = scoreService;
             _cursorController = cursorController;
         }
         
@@ -47,7 +47,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _view.OnApplyChangesButtonClicked += ApplyChanges;
             _model.OnStatsChanged += UpdateAllStatItems;
             _inputService.OnOpenStatsButtonPressed += Open;
-            _pointsService.OnPointAdded += _view.PlayLevelUpSound;
+            _scoreService.OnScoreChanged += _view.PlayLevelUpSound;
             
             await CreateStatItemsAsync();
             
@@ -63,7 +63,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
             _model.OnStatsChanged -= UpdateAllStatItems;
             _inputService.OnOpenStatsButtonPressed -= Open;
-            _pointsService.OnPointAdded -= _view.PlayLevelUpSound;
+            _scoreService.OnScoreChanged -= _view.PlayLevelUpSound;
             
             foreach (PlayerStatItemView statItemView in GetStatItems())
                 statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;

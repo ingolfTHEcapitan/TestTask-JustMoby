@@ -1,8 +1,4 @@
-﻿using System;
-using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Player;
-using _Project.Scripts.Logic.Spawners;
-using _Project.Scripts.Services.UpgradePoints;
+﻿using _Project.Scripts.Logic.Common;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.HUD;
