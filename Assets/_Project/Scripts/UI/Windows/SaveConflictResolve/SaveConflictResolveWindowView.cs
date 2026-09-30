@@ -27,7 +27,6 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
         private void Awake()
         {
             _windowContent.SetActive(false);
-            DontDestroyOnLoad(gameObject);
         }
 
         public void Initialize()

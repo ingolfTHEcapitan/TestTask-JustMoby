@@ -49,7 +49,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         {
             try
             {
-                await _uiFactory.CreateSaveConflictResolveWindowViewAsync();
+                await _uiFactory.CreateSaveConflictResolveWindowViewAsync(_uiParent);
                 _lazySaveConflictResolveWindowPresenter.Value.Initialize();
             
                 _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();

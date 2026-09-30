@@ -45,8 +45,8 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent) => 
             await CreateWindowViewAsync<PlayerStatsWindowView>(AssetAddress.PlayerStatsWindow, uiParent);
 
-        public async UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync() => 
-            await CreateWindowViewAsync<SaveConflictResolveWindowView>(AssetAddress.SaveConflictResolveWindow);
+        public async UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync(Transform uiParent) => 
+            await CreateWindowViewAsync<SaveConflictResolveWindowView>(AssetAddress.SaveConflictResolveWindow, uiParent);
 
         public async UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent) => 
             await CreateWindowViewAsync<SettingsWindowView>(AssetAddress.SettingsWindow, uiParent);

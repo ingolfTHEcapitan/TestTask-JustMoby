@@ -19,7 +19,7 @@ namespace _Project.Scripts.UI.Factory
         UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync();
         UniTask<MainMenuWindowView> CreateMainMenuWindowViewAsync(Transform uiParent);
         UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent);
-        UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync();
+        UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync(Transform uiParent);
         UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent);
         UniTask<ShopWindowView> CreateShopWindowViewAsync(Transform uiParent);
         UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent);
