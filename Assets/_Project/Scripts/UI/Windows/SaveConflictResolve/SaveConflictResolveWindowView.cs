@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 {
-    public class SaveConflictResolveWindowView: MonoBehaviour, IWindow
+    public class SaveConflictResolveWindowView: MonoBehaviour
     {
         public event Action OnLocalSaveButtonClicked;
         public event Action OnCloudSaveButtonClicked;
@@ -41,10 +41,10 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             _cloudSaveButton.onClick.RemoveListener(InvokeOnCloudSaveButtonClicked);
         }
 
-        public void Open()
+        public async UniTask OpenAsync()
         {
             _windowContent.SetActive(true); 
-            _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpen();
         }
         
         public async UniTask CloseAsync()

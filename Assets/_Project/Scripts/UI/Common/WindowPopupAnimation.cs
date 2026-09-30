@@ -22,12 +22,12 @@ namespace _Project.Scripts.UI.Common
         private void OnDestroy() => 
             KillAnimationIfActive();
 
-        public void AnimateOpen()
+        public async UniTask AnimateOpen()
         {
             KillAnimationIfActive();
             
             _animation = DOTween.Sequence();
-            _animation
+            await _animation
                 .Join(_canvasGroup.DOFade(1f, _openFadeDuration).From(0))
                 .Join(_transform.DOScale(Vector3.one, _animationDuration).From(_animationStartScale).SetEase(_openEase));
         }
@@ -37,9 +37,8 @@ namespace _Project.Scripts.UI.Common
             KillAnimationIfActive();
             
             _animation = DOTween.Sequence();
-            _animation
+            await _animation
                 .Join(_transform.DOScale(_animationStartScale, _animationDuration).SetEase(_closeEase));
-            await _animation.ToUniTask();
         }
 
         private void KillAnimationIfActive()

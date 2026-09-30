@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.Shop
 {
-    public class ShopWindowView: MonoBehaviour, IWindow
+    public class ShopWindowView: MonoBehaviour
     {
         public event Action OnCloseButtonClicked;
         
@@ -29,10 +29,10 @@ namespace _Project.Scripts.UI.Windows.Shop
         private void OnDestroy() => 
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
         
-        public void Open()
+        public async UniTask Open()
         {
             _windowContent.SetActive(true);
-            _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpen();
         }
         
         public async UniTask Close()

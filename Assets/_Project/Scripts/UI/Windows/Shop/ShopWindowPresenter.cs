@@ -29,13 +29,13 @@ namespace _Project.Scripts.UI.Windows.Shop
             _view.Initialize();
             _view.OnCloseButtonClicked += Close;
             _view.ClearProductsContainer();
-            await RefreshAvailableShopItems();
+            await RefreshAvailableShopItemsAsync();
         }
 
-        public async UniTask Open()
+        public async UniTask OpenAsync()
         {
-            await RefreshAvailableShopItems();
-            _view.Open();
+            await RefreshAvailableShopItemsAsync();
+            await _view.Open();
         }
         
         public void Dispose()
@@ -48,7 +48,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         private void Close() => 
             _view.Close().Forget();
 
-        private async UniTask RefreshAvailableShopItems()
+        private async UniTask RefreshAvailableShopItemsAsync()
         {
             ClearShopItems();
             _view.UpdateShopUnavailableObjects(IapServiceIsInitialized);

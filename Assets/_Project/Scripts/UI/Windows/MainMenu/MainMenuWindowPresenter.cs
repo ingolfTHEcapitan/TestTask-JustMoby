@@ -57,10 +57,10 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         }
 
         private void OpenSettingsWindow() => 
-            _settingsWindowPresenter.Open();
+            _settingsWindowPresenter.OpenAsync().Forget(Debug.LogError);
 
         private void OpenShopWindow() => 
-            _shopWindowPresenter.Open().Forget(Debug.LogError);
+            _shopWindowPresenter.OpenAsync().Forget(Debug.LogError);
 
         private void ExitGame() => 
             _model.ExitGame();

@@ -4,7 +4,7 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.LoadingCurtain
 {
-    public class LoadingCurtainView : MonoBehaviour, IWindow
+    public class LoadingCurtainView : MonoBehaviour
     {
         [SerializeField] private GameObject _loadingIndicator;
         [SerializeField] private float _indicatorRotationSpeed = 100f;

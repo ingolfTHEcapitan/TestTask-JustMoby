@@ -60,6 +60,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _view.OnOpenButtonClicked -= Open;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
+            _inputService.OnOpenStatsButtonPressed -= Open;
             _pointsService.OnPointAdded -= _view.PlayLevelUpSound;
             
             foreach (PlayerStatItemView statItemView in GetStatItems())
@@ -68,9 +69,22 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _model.Dispose();
         }
 
-        private void Close() => 
-            CloseAsync().Forget();
-        
+        private async void Close()
+        {
+            try
+            {
+                _isOpen = false;
+                _model.SetPaused(false);
+                _cursorController.SetCursorVisible(false);
+                await _view.HideWindowAsync();
+                _model.DiscardPreviewChanges();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+
         private async UniTask CreateStatItemsAsync()
         {
             _view.ClearStatsContainer();
@@ -101,25 +115,23 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             UpdateStatItem(statName);
         }
 
-        private void Open()
+        private async void Open()
         {
-            if (_isOpen || _model.IsPlayerDead)
-                return;
+            try
+            {
+                if (_isOpen || _model.IsPlayerDead)
+                    return;
             
-            _isOpen = true;
-            _model.SetPaused(true);
-            _cursorController.SetCursorVisible(true);
-            _view.ShowWindow();
-            UpdateAllStatItems();
-        }
-
-        private async UniTask CloseAsync()
-        {
-            _isOpen = false;
-            _model.SetPaused(false);
-            _cursorController.SetCursorVisible(false);
-            await _view.HideWindowAsync();
-            _model.DiscardPreviewChanges();
+                _isOpen = true;
+                _model.SetPaused(true);
+                _cursorController.SetCursorVisible(true);
+                await _view.ShowWindowAsync();
+                UpdateAllStatItems();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
         private async void ApplyChanges()
@@ -127,7 +139,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             try
             {
                 await _model.ApplyChanges();
-                await CloseAsync();
+                UniTask ret;
+                _isOpen = false;
+                _model.SetPaused(false);
+                _cursorController.SetCursorVisible(false);
+                await _view.HideWindowAsync();
+                _model.DiscardPreviewChanges();
             }
             catch (Exception e)
             {

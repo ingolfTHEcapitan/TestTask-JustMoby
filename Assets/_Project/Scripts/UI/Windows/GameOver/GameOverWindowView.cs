@@ -31,10 +31,10 @@ namespace _Project.Scripts.UI.Windows.GameOver
             _loadSaveButton.onClick.RemoveListener(InvokeOnLoadSaveButtonClicked);
         }
         
-        public void Open()
+        public async UniTask OpenAsync()
         {
             _windowContent.SetActive(true);
-            _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpen();
         }
 
         public void UpdateReviveButtonState(bool state) => 

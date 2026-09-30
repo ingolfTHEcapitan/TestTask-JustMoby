@@ -1,6 +1,8 @@
 using System;
 using _Project.Scripts.Data.Player;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {
@@ -46,29 +48,43 @@ namespace _Project.Scripts.UI.Windows.Settings
             _view.OnUIVolumeChanged -= UpdateUIVolume;
         }
 
-        public void Open()
+        public async UniTask OpenAsync()
         {
             UpdateAudioMixerAndSlidersValues();
-            _view.Open();
+            await _view.OpenAsync();
         }
         
         private async void SaveSettingsAndClose()
         {
-            AudioSettingsData audioData = _model.AudioSettingsData;
+            try
+            {
+                AudioSettingsData audioData = _model.AudioSettingsData;
 
-            audioData.MasterVolume = _view.MasterVolume;
-            audioData.MusicVolume = _view.MusicVolume;
-            audioData.EffectsVolume = _view.EffectsVolume;
-            audioData.UIVolume = _view.UIVolume;
+                audioData.MasterVolume = _view.MasterVolume;
+                audioData.MusicVolume = _view.MusicVolume;
+                audioData.EffectsVolume = _view.EffectsVolume;
+                audioData.UIVolume = _view.UIVolume;
 
-            await _view.CloseAsync();
-            await _model.SaveSettingsAsync();
+                await _view.CloseAsync();
+                await _model.SaveSettingsAsync();
+            }
+            catch (Exception e)
+            {
+               Debug.LogError(e);
+            }
         }
 
-        private void Close()
+        private async void Close()
         {
-            _view.CloseAsync().Forget();
-            UpdateAudioMixerAndSlidersValues();
+            try
+            {
+                await _view.CloseAsync();
+                UpdateAudioMixerAndSlidersValues();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
 
         private void UpdateAudioMixerAndSlidersValues()

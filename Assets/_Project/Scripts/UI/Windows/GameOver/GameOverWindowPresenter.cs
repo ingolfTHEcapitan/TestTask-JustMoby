@@ -85,11 +85,18 @@ namespace _Project.Scripts.UI.Windows.GameOver
             }
         }
 
-        private void Open()
+        private async void Open()
         {
-            _model.SetPaused(true);
-            _view.Open();
-            _cursorController.SetCursorVisible(true);
+            try
+            {
+                _model.SetPaused(true);
+                await _view.OpenAsync();
+                _cursorController.SetCursorVisible(true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
         }
         
         private void RefreshReviveButtonState()

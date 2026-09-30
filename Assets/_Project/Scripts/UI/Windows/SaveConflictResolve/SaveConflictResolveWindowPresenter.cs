@@ -28,14 +28,14 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             _model.Initialize();
             _view.Initialize();
 
-            _model.OnSaveConflictHappened += ResolveConflict;
+            _model.OnSaveConflictHappened += ResolveConflictAsync;
             _view.OnLocalSaveButtonClicked += ChoiceLocalSave;
             _view.OnCloudSaveButtonClicked += ChoiceCloudSave;
         }
 
-        private async UniTask<SaveType> ResolveConflict(PlayerProgress localProgress, PlayerProgress cloudProgress)
+        private async UniTask<SaveType> ResolveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
-            _view.Open();
+            await _view.OpenAsync();
             _cursorController.SetCursorVisible(true);
             
             string local = _saveTimeFormatter.Format(localProgress.LastSaveTimeUnix);
@@ -58,7 +58,7 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
         {
             _taskCompletionSource = null;
             _model.Dispose();
-            _model.OnSaveConflictHappened -= ResolveConflict;
+            _model.OnSaveConflictHappened -= ResolveConflictAsync;
             _view.OnLocalSaveButtonClicked -= ChoiceLocalSave;
             _view.OnCloudSaveButtonClicked -= ChoiceCloudSave;
         }

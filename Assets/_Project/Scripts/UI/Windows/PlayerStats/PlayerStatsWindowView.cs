@@ -66,10 +66,10 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             statItemView.ToggleUpgradeButton(canUpgrade);
         }
         
-        public void ShowWindow()
+        public async UniTask ShowWindowAsync()
         {
             _windowContent.SetActive(true);
-            _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpen();
         }
 
         public async UniTask HideWindowAsync()

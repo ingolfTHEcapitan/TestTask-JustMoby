@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {
-    public class SettingsWindowView: MonoBehaviour, IWindow
+    public class SettingsWindowView: MonoBehaviour
     {
         public event Action OnCloseButtonClicked;
         public event Action OnApplyButtonClicked;
@@ -52,10 +52,10 @@ namespace _Project.Scripts.UI.Windows.Settings
             UnSubscribeSliderEvents();
         }
         
-        public void Open()
+        public async UniTask OpenAsync()
         {
             _windowContent.SetActive(true);
-            _windowAnimation.AnimateOpen();
+            await _windowAnimation.AnimateOpen();
         }
 
         public async UniTask CloseAsync()
