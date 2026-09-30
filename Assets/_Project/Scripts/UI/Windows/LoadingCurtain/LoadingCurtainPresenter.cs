@@ -5,7 +5,7 @@ namespace _Project.Scripts.UI.Windows.LoadingCurtain
     public class LoadingCurtainPresenter
     {
         private readonly LoadingCurtainView _view;
-        private CursorController _cursorController;
+        private readonly CursorController _cursorController;
 
         public LoadingCurtainPresenter(LoadingCurtainView view, CursorController cursorController)
         {

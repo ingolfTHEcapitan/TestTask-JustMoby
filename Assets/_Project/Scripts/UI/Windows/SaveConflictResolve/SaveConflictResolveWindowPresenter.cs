@@ -35,22 +35,22 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 
         private async UniTask<SaveType> ResolveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
-            await _view.OpenAsync();
-            _cursorController.SetCursorVisible(true);
-            
             string local = _saveTimeFormatter.Format(localProgress.LastSaveTimeUnix);
             string cloud = _saveTimeFormatter.Format(cloudProgress.LastSaveTimeUnix);
-            
+
             _view.UpdateSaveDateText(local, cloud);
             ChoiceSaveDateTextColor();
             
+            await _view.OpenAsync();
+            _cursorController.SetCursorVisible(true);
+
             _taskCompletionSource = new UniTaskCompletionSource<SaveType>();
             SaveType result = await _taskCompletionSource.Task;
             _taskCompletionSource = null;
-            
-            await _view.CloseAsync();
+
             _cursorController.SetCursorVisible(false);
-            
+            await _view.CloseAsync();
+
             return result;
         }
 

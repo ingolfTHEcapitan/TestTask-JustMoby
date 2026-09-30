@@ -51,8 +51,8 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         private void StartGame()
         {
             _cursorController.SetCursorVisible(false);
-            _view.StopBackgroundMusic();
             _loadingCurtainPresenter.ShowLoading();
+            _view.StopBackgroundMusic();
             _model.LoadGameplaySceneAsync().Forget(Debug.LogError);
         }
 

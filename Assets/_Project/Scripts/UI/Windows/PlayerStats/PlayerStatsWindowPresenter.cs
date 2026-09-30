@@ -73,11 +73,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         {
             try
             {
-                _isOpen = false;
+                await _view.HideWindowAsync();
                 _model.SetPaused(false);
                 _cursorController.SetCursorVisible(false);
-                await _view.HideWindowAsync();
+                
                 _model.DiscardPreviewChanges();
+                _isOpen = false;
             }
             catch (Exception e)
             {
@@ -125,8 +126,8 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
                 _isOpen = true;
                 _model.SetPaused(true);
                 _cursorController.SetCursorVisible(true);
-                await _view.ShowWindowAsync();
                 UpdateAllStatItems();
+                await _view.ShowWindowAsync();
             }
             catch (Exception e)
             {
@@ -138,13 +139,13 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         {
             try
             {
-                await _model.ApplyChangesAsync();
-                UniTask ret;
-                _isOpen = false;
+                await _view.HideWindowAsync();
                 _model.SetPaused(false);
                 _cursorController.SetCursorVisible(false);
-                await _view.HideWindowAsync();
+
+                await _model.ApplyChangesAsync();
                 _model.DiscardPreviewChanges();
+                _isOpen = false;
             }
             catch (Exception e)
             {

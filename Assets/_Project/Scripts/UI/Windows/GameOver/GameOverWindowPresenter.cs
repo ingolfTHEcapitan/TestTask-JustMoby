@@ -26,7 +26,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
             _model.OnPlayerDied += Open;
             _model.OnRewardedAdLoaded += RefreshReviveButtonState;
 
-            _view.OnReviveButtonClicked += ShowRewardedAdAndReviveAnd;
+            _view.OnReviveButtonClicked += ShowRewardedAdAndRevive;
             _view.OnLoadSaveButtonClicked += LoadSave;
 
             RefreshReviveButtonState();
@@ -37,7 +37,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
             _model.OnPlayerDied -= Open;
             _model.OnRewardedAdLoaded -= RefreshReviveButtonState;
 
-            _view.OnReviveButtonClicked -= ShowRewardedAdAndReviveAnd;
+            _view.OnReviveButtonClicked -= ShowRewardedAdAndRevive;
             _view.OnLoadSaveButtonClicked -= LoadSave;
         }
 
@@ -47,10 +47,11 @@ namespace _Project.Scripts.UI.Windows.GameOver
             {
                 await _view.CloseAsync();
                 _model.SetPaused(false);
-            
                 _cursorController.SetCursorVisible(true);
+                
                 _model.TryShowInterstitialAd();
-                ReloadScene();
+                _cursorController.SetCursorVisible(false);
+                _model.ReloadSceneAsync().Forget(Debug.LogError);
             }
             catch (Exception e)
             {
@@ -58,19 +59,12 @@ namespace _Project.Scripts.UI.Windows.GameOver
             }
         }
 
-        private void ReloadScene()
-        {
-            _cursorController.SetCursorVisible(false);
-            _model.ReloadSceneAsync().Forget();
-        }
-
-        private async void ShowRewardedAdAndReviveAnd()
+        private async void ShowRewardedAdAndRevive()
         {
             try
             {
                 await _view.CloseAsync();
                 _model.SetPaused(false);
-            
                 _cursorController.SetCursorVisible(true);
 
                 _model.TryShowRewardedAd(() =>
