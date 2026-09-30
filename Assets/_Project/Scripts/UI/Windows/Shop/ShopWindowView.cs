@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.Shop
 {
-    public class ShopIWindowView: MonoBehaviour, IWindow
+    public class ShopWindowView: MonoBehaviour, IWindow
     {
         public event Action OnWindowDestroy;
         public event Action OnCloseButtonClicked;

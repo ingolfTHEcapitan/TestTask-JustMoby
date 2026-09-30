@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.GameOver
 {
-    public class GameOverIWindowView : MonoBehaviour, IWindow
+    public class GameOverWindowView : MonoBehaviour, IWindow
     {
         public event Action OnWindowDestroy;
         public event Action OnReviveButtonClicked;

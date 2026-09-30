@@ -7,17 +7,17 @@ using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.UI.Windows.Shop
 {
-    public class ShopWindowPresenter: IDisposable
+    public class ShopWindowPresenter
     {
-        private readonly ShopIWindowView _view;
+        private readonly ShopWindowView _view;
         private readonly ShopWindowModel _model;
         private readonly ShopItemFactory _shopItemFactory;
         
         private readonly List<ShopItemView> _shopItemViews = new List<ShopItemView>();
+
+        private bool IapServiceIsInitialized => _model.IapServiceIsInitialized;
         
-        public bool IapServiceIsInitialized => _model.IapServiceIsInitialized;
-        
-        public ShopWindowPresenter(ShopIWindowView view, ShopWindowModel model, ShopItemFactory shopItemFactory)
+        public ShopWindowPresenter(ShopWindowView view, ShopWindowModel model, ShopItemFactory shopItemFactory)
         {
             _view = view;
             _model = model;
@@ -27,6 +27,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         public async UniTask InitializeAsync()
         {
             _view.Initialize();
+            _view.OnWindowDestroy += CleanUp;
             _view.OnCloseButtonClicked += Close;
             _view.ClearProductsContainer();
             await RefreshAvailableShopItemsAsync();
@@ -37,9 +38,10 @@ namespace _Project.Scripts.UI.Windows.Shop
             await RefreshAvailableShopItemsAsync();
             await _view.OpenAsync();
         }
-        
-        public void Dispose()
+
+        private void CleanUp()
         {
+            _view.OnWindowDestroy -= CleanUp;
             _view.OnCloseButtonClicked -= Close;
             _shopItemFactory.Dispose();
             ClearShopItems();

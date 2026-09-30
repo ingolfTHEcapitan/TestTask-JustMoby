@@ -33,57 +33,35 @@ namespace _Project.Scripts.UI.Factory
             _assetProvider = assetProvider;
         }
         
-        public async UniTask<HeadUpDisplayView> CreateHudViewAsync(Transform uiParent)
-        {
-            _hudView = await CreateWindowViewAsync<HeadUpDisplayView>(AssetAddress.HeadUpDisplay, uiParent);
-            return _hudView;
-        }
+        public async UniTask<HeadUpDisplayView> CreateHudViewAsync(Transform uiParent) => 
+            await CreateWindowViewAsync<HeadUpDisplayView>(AssetAddress.HeadUpDisplay, uiParent);
 
-        public async UniTask<GameOverIWindowView> CreateGameOverWindowViewAsync(Transform uiParent)
-        {
-            _gameOverIView = await CreateWindowViewAsync<GameOverIWindowView>(AssetAddress.GameOverWindow, uiParent);
-            return _gameOverIView;
-        }
+        public async UniTask<GameOverWindowView> CreateGameOverWindowViewAsync(Transform uiParent) => 
+            await CreateWindowViewAsync<GameOverWindowView>(AssetAddress.GameOverWindow, uiParent);
 
-        public async UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync()
-        {
-            _loadingCurtainView = await CreateWindowViewAsync<LoadingCurtainView>(AssetAddress.LoadingCurtain, isGlobal: true);
-            return _loadingCurtainView;
-        }
+        public async UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync() => 
+            await CreateWindowViewAsync<LoadingCurtainView>(AssetAddress.LoadingCurtain, isGlobal: true);
 
-        public async UniTask<MainMenuWindowView> CreateMainMenuWindowViewAsync(Transform uiParent)
-        {
-            _mainMenuWindowView = await CreateWindowViewAsync<MainMenuWindowView>(AssetAddress.MainMenuWindow, uiParent);
-            return _mainMenuWindowView;
-        }
+        public async UniTask<MainMenuWindowView> CreateMainMenuWindowViewAsync(Transform uiParent) => 
+            await CreateWindowViewAsync<MainMenuWindowView>(AssetAddress.MainMenuWindow, uiParent);
 
-        public async UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent)
-        {
-            _playerStatsWindowView = await CreateWindowViewAsync<PlayerStatsWindowView>(AssetAddress.PlayerStatsWindow, uiParent);
-            return _playerStatsWindowView;
-        }
+        public async UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent) => 
+            await CreateWindowViewAsync<PlayerStatsWindowView>(AssetAddress.PlayerStatsWindow, uiParent);
 
-        public async UniTask<SaveConflictResolveIWindowView> CreateSaveConflictResolveWindowViewAsync()
-        {
-            _saveConflictResolveIWindow = await CreateWindowViewAsync<SaveConflictResolveIWindowView>(AssetAddress.SaveConflictResolveWindow);
-            return _saveConflictResolveIWindow;
-        }
+        public async UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync() => 
+            await CreateWindowViewAsync<SaveConflictResolveWindowView>(AssetAddress.SaveConflictResolveWindow);
 
-        public async UniTask<SettingsIWindowView> CreateSettingsViewAsync(Transform uiParent)
-        {
-            _settingsIWindowView = await CreateWindowViewAsync<SettingsIWindowView>(AssetAddress.SettingsWindow, uiParent);
-            return _settingsIWindowView;
-        }
+        public async UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent) => 
+            await CreateWindowViewAsync<SettingsWindowView>(AssetAddress.SettingsWindow, uiParent);
 
-        public async UniTask<ShopIWindowView> CreateShopWindowViewAsync(Transform uiParent) => 
-            await CreateWindowViewAsync<ShopIWindowView>(AssetAddress.ShopWindow, uiParent);
+        public async UniTask<ShopWindowView> CreateShopWindowViewAsync(Transform uiParent) => 
+            await CreateWindowViewAsync<ShopWindowView>(AssetAddress.ShopWindow, uiParent);
 
         public async UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent)=> 
             await CreateViewAsync<PlayerStatItemView>(AssetAddress.PlayerStatItem, uiParent);
 
         public async UniTask<Sprite> LoadSpriteAsync(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
-
         
         public TWindow GetWindowView<TWindow>() where TWindow : Component, IWindow
         {
@@ -93,7 +71,7 @@ namespace _Project.Scripts.UI.Factory
                 return (TWindow)windowView;
             
             throw new InvalidConstraintException(
-                $"{viewType.Name} view requested before creation. Ensure it created before presenter resolution");
+                $"{viewType.Name} requested before creation. Ensure it created before presenter resolution");
         }
         
         private async UniTask<TWindow> CreateWindowViewAsync<TWindow>(string assetAddress, Transform uiParent = null, bool isGlobal = false) where TWindow : Component, IWindow
@@ -101,10 +79,7 @@ namespace _Project.Scripts.UI.Factory
             Type viewType = typeof(TWindow);
             
             if (_windowViews.TryGetValue(viewType, out IWindow windowView))
-            {
-                Debug.LogWarning($"[UI FACTORY] Window view {viewType.Name} is already registered.");
                 return (TWindow)windowView;
-            }
             
             TWindow view = await CreateViewAsync<TWindow>(assetAddress, uiParent, isGlobal);
             

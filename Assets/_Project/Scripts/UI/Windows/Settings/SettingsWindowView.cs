@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {
-    public class SettingsIWindowView: MonoBehaviour, IWindow
+    public class SettingsWindowView: MonoBehaviour, IWindow
     {
         public event Action OnWindowDestroy;
         public event Action OnCloseButtonClicked;

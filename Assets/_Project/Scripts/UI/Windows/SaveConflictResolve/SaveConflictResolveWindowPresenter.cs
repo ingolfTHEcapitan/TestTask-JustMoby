@@ -6,16 +6,16 @@ using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 {
-    public class SaveConflictResolveWindowPresenter: IDisposable
+    public class SaveConflictResolveWindowPresenter
     {
         private readonly SaveConflictResolveWindowModel _model;
-        private readonly SaveConflictResolveIWindowView _view;
+        private readonly SaveConflictResolveWindowView _view;
         private readonly CursorController _cursorController;
         private readonly SaveTimeFormatter _saveTimeFormatter;
         
         private UniTaskCompletionSource<SaveType> _taskCompletionSource;
         
-        public SaveConflictResolveWindowPresenter(SaveConflictResolveWindowModel model, SaveConflictResolveIWindowView view, CursorController cursorController, SaveTimeFormatter saveTimeFormatter)
+        public SaveConflictResolveWindowPresenter(SaveConflictResolveWindowModel model, SaveConflictResolveWindowView view, CursorController cursorController, SaveTimeFormatter saveTimeFormatter)
         {
             _model = model;
             _view = view;
@@ -28,9 +28,10 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             _model.Initialize();
             _view.Initialize();
 
-            _model.OnSaveConflictHappened += ResolveConflictAsync;
+            _view.OnWindowDestroy += CleanUp;
             _view.OnLocalSaveButtonClicked += ChoiceLocalSave;
             _view.OnCloudSaveButtonClicked += ChoiceCloudSave;
+            _model.OnSaveConflictHappened += ResolveConflictAsync;
         }
 
         private async UniTask<SaveType> ResolveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
@@ -54,13 +55,14 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             return result;
         }
 
-        public void Dispose()
+        private void CleanUp()
         {
-            _taskCompletionSource = null;
-            _model.Dispose();
-            _model.OnSaveConflictHappened -= ResolveConflictAsync;
+            _view.OnWindowDestroy -= CleanUp;
             _view.OnLocalSaveButtonClicked -= ChoiceLocalSave;
             _view.OnCloudSaveButtonClicked -= ChoiceCloudSave;
+            _model.OnSaveConflictHappened -= ResolveConflictAsync;
+            _taskCompletionSource = null;
+            _model.Dispose();
         }
 
         private void ChoiceSaveDateTextColor()

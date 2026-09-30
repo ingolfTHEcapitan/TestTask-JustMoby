@@ -13,7 +13,7 @@ using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
-    public class PlayerStatsWindowPresenter : IDisposable
+    public class PlayerStatsWindowPresenter
     {
         private readonly IInputService _inputService;
         private readonly IUpgradePointsService _pointsService;
@@ -40,11 +40,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public async UniTask InitializeAsync()
         {
             _model.Initialize();
-            
-            _model.OnStatsChanged += UpdateAllStatItems;
+
+            _view.OnWindowDestroy += CleanUp;
             _view.OnOpenButtonClicked += Open;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
+            _model.OnStatsChanged += UpdateAllStatItems;
             _inputService.OnOpenStatsButtonPressed += Open;
             _pointsService.OnPointAdded += _view.PlayLevelUpSound;
             
@@ -54,12 +55,13 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
                 statItemView.OnUpgradeButtonClicked += UpgradeStatItem;
         }
 
-        public void Dispose()
+        private void CleanUp()
         {
-            _model.OnStatsChanged -= UpdateAllStatItems;
+            _view.OnWindowDestroy -= CleanUp;
             _view.OnOpenButtonClicked -= Open;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
+            _model.OnStatsChanged -= UpdateAllStatItems;
             _inputService.OnOpenStatsButtonPressed -= Open;
             _pointsService.OnPointAdded -= _view.PlayLevelUpSound;
             

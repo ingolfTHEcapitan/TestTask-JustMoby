@@ -90,6 +90,6 @@ namespace _Project.Scripts.Infrastructure.Project
             context.Container.Resolve<LocalSaveServiceConfig>().GetInstance();
 
         private LoadingCurtainView GetLoadingWindowView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetLoadingWindowView();
+            context.Container.Resolve<IUIFactory>().GetWindowView<LoadingCurtainView>();
     }
 }

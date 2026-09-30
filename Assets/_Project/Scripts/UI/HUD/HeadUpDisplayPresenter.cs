@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.UI.HUD
 {
-    public class HeadUpDisplayPresenter: IDisposable
+    public class HeadUpDisplayPresenter
     {
         private readonly IInputService _inputService;
         private readonly CursorController _cursorController;
@@ -25,12 +25,14 @@ namespace _Project.Scripts.UI.HUD
 
         public void Initialize()
         {
+            _view.OnWindowDestroy += CleanUp;
             _view.OnBackToMainMenuButtonClicked += BackToOnMainMenu;
             _inputService.OnMainMenuButtonPressed += BackToOnMainMenu;
         }
 
-        public void Dispose()
+        private void CleanUp()
         {
+            _view.OnWindowDestroy -= CleanUp;
             _view.OnBackToMainMenuButtonClicked -= BackToOnMainMenu;
             _inputService.OnMainMenuButtonPressed -= BackToOnMainMenu;
         }

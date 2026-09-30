@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.UI.Windows.MainMenu
 {
-    public class MainMenuWindowPresenter: IDisposable
+    public class MainMenuWindowPresenter
     {
         private readonly MainMenuWindowView _view;
         private readonly MainMenuWindowModel _model;
@@ -30,7 +30,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         public void Initialize()
         {
             _view.Initialize();
-            
+            _view.OnWindowDestroy += CleanUp;
             _view.OnPlayButtonClicked += StartGame;
             _view.OnSettingsButtonClicked += OpenSettingsWindow;
             _view.OnShopButtonClicked += OpenShopWindow;
@@ -40,8 +40,9 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _cursorController.SetCursorVisible(true);
         }
 
-        public void Dispose()
+        private void CleanUp()
         {
+            _view.OnWindowDestroy -= CleanUp;
             _view.OnPlayButtonClicked -= StartGame;
             _view.OnSettingsButtonClicked -= OpenSettingsWindow;
             _view.OnShopButtonClicked -= OpenShopWindow;

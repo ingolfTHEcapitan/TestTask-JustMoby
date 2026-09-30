@@ -15,7 +15,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Game
 {
-    public class GameUIInitializer: IDisposable
+    public class GameUIInitializer
     {
         private readonly IUIFactory _uiFactory;
         private readonly Transform _uiParent;
@@ -24,9 +24,6 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly LazyInject<HeadUpDisplayPresenter> _lazyHudPresenter;
         private readonly LazyInject<GameOverWindowPresenter> _lazyGameOverWindowPresenter;
         private readonly LazyInject<PlayerStatsWindowPresenter> _lazyPlayerStatsWindowPresenter;
-        private HeadUpDisplayPresenter _hudPresenter;
-        private GameOverWindowPresenter _gameOverWindowPresenter;
-        private PlayerStatsWindowPresenter _playerStatsWindowPresenter;
 
         public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, 
             LazyInject<PlayerStatsWindowPresenter> lazyPlayerStatsWindowPresenter, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter,
@@ -39,28 +36,18 @@ namespace _Project.Scripts.Infrastructure.Game
             _lazyGameOverWindowPresenter = lazyGameOverWindowPresenter;
             _lazyHudPresenter = lazyHudPresenter;
         }
-
-        public void Dispose()
-        {
-            _hudPresenter.Dispose();
-            _playerStatsWindowPresenter.Dispose();
-            _gameOverWindowPresenter.Dispose();
-        }
-
+        
         public async UniTask InitUIAsync(Health playerHealth)
         {
             HeadUpDisplayView hudView = await _uiFactory.CreateHudViewAsync(_uiParent);
             InitPlayerHealthBarView(hudView, playerHealth);
-            _hudPresenter = _lazyHudPresenter.Value;
-            _hudPresenter.Initialize();
+            _lazyHudPresenter.Value.Initialize();
             
-            await InitPlayerStatsViewAsync(hudView, _levelUpSound);
-            _playerStatsWindowPresenter = _lazyPlayerStatsWindowPresenter.Value;
-            await _playerStatsWindowPresenter.InitializeAsync();
+            await InitPlayerStatsViewAsync(hudView, _levelUpSound); 
+            await _lazyPlayerStatsWindowPresenter.Value.InitializeAsync();
             
             await _uiFactory.CreateGameOverWindowViewAsync(_uiParent);
-            _gameOverWindowPresenter = _lazyGameOverWindowPresenter.Value;
-            _gameOverWindowPresenter.Initialize();
+            _lazyGameOverWindowPresenter.Value.Initialize();
         }
 
         private void InitPlayerHealthBarView(HeadUpDisplayView hud, Health playerHealth)

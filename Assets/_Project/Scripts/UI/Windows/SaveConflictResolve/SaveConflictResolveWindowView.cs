@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 {
-    public class SaveConflictResolveIWindowView: MonoBehaviour, IWindow
+    public class SaveConflictResolveWindowView: MonoBehaviour, IWindow
     {
         public event Action OnWindowDestroy;
         public event Action OnLocalSaveButtonClicked;

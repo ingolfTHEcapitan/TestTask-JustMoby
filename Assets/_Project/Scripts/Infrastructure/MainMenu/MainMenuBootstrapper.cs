@@ -15,7 +15,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.MainMenu
 {
-    public class MainMenuBootstrapper: IInitializable, IDisposable
+    public class MainMenuBootstrapper: IInitializable
     {
         private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         private readonly IProgressService _progressService;
@@ -27,10 +27,6 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly LazyInject<ShopWindowPresenter> _lazyShopWindowPresenter;
         private readonly LazyInject<MainMenuWindowPresenter> _lazyMainMenuWindowPresenter;
         private readonly LazyInject<SaveConflictResolveWindowPresenter> _lazySaveConflictResolveWindowPresenter;
-        private SettingsWindowPresenter _settingsWindowPresenter;
-        private ShopWindowPresenter _shopWindowPresenter;
-        private MainMenuWindowPresenter _mainMenuWindowPresenter;
-        private SaveConflictResolveWindowPresenter _saveConflictResolveWindowPresenter;
 
         public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
             [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent,
@@ -56,22 +52,18 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             try
             {
                 await _uiFactory.CreateSaveConflictResolveWindowViewAsync();
-                _saveConflictResolveWindowPresenter = _lazySaveConflictResolveWindowPresenter.Value;
-                _saveConflictResolveWindowPresenter.Initialize();
+                _lazySaveConflictResolveWindowPresenter.Value.Initialize();
             
                 _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
                 await _uiFactory.CreateShopWindowViewAsync(_uiParent);
-                _shopWindowPresenter = _lazyShopWindowPresenter.Value;
-                await _shopWindowPresenter.InitializeAsync();
+                await _lazyShopWindowPresenter.Value.InitializeAsync();
 
                 await _uiFactory.CreateSettingsViewAsync(_uiParent);
-                _settingsWindowPresenter = _lazySettingsWindowPresenter.Value;
-                _settingsWindowPresenter.Initialize();
+                _lazySettingsWindowPresenter.Value.Initialize();
             
-                await _uiFactory.CreateMainMenuWindowViewAsync(_uiParent);
-                _mainMenuWindowPresenter = _lazyMainMenuWindowPresenter.Value;
-                _mainMenuWindowPresenter.Initialize();
+                await _uiFactory.CreateMainMenuWindowViewAsync(_uiParent); 
+                _lazyMainMenuWindowPresenter.Value.Initialize();
             
                 _loadingCurtainPresenter.HideLoading();
             }
@@ -79,13 +71,6 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             {
                 Debug.LogError($"[MAIN MENU BOOTSTRAPPER] init error: {e}");
             }
-        }
-
-        public void Dispose()
-        {
-            _settingsWindowPresenter.Dispose();
-            _shopWindowPresenter.Dispose();
-            _mainMenuWindowPresenter.Dispose();
         }
     }
 }

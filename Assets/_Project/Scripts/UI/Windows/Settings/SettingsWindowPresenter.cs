@@ -6,17 +6,17 @@ using UnityEngine.Rendering;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {
-    public class SettingsWindowPresenter: IDisposable
+    public class SettingsWindowPresenter
     {
         private const string MasterVolumeName = "MasterVolume";
         private const string MusicVolumeName = "MusicVolume";
         private const string EffectsVolumeName = "EffectsVolume";
         private const string UIVolumeName = "UIVolume";
         
-        private readonly SettingsIWindowView _view;
+        private readonly SettingsWindowView _view;
         private readonly SettingsWindowModel _model;
 
-        public SettingsWindowPresenter(SettingsWindowModel model, SettingsIWindowView view)
+        public SettingsWindowPresenter(SettingsWindowModel model, SettingsWindowView view)
         {
             _model = model;
             _view = view;
@@ -26,6 +26,7 @@ namespace _Project.Scripts.UI.Windows.Settings
         {
             _view.Initialize();
             
+            _view.OnWindowDestroy += CleanUp;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyButtonClicked += SaveSettingsAndClose;
 
@@ -37,8 +38,15 @@ namespace _Project.Scripts.UI.Windows.Settings
             UpdateAudioMixerAndSlidersValues();
         }
 
-        public void Dispose()
+        public async UniTask OpenAsync()
         {
+            UpdateAudioMixerAndSlidersValues();
+            await _view.OpenAsync();
+        }
+
+        private void CleanUp()
+        {
+            _view.OnWindowDestroy -= CleanUp;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyButtonClicked -= SaveSettingsAndClose;
 
@@ -48,12 +56,6 @@ namespace _Project.Scripts.UI.Windows.Settings
             _view.OnUIVolumeChanged -= UpdateUIVolume;
         }
 
-        public async UniTask OpenAsync()
-        {
-            UpdateAudioMixerAndSlidersValues();
-            await _view.OpenAsync();
-        }
-        
         private async void SaveSettingsAndClose()
         {
             try

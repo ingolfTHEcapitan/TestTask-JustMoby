@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace _Project.Scripts.UI.Windows.GameOver
 {
-    public class GameOverWindowPresenter: IDisposable
+    public class GameOverWindowPresenter
     {
-        private readonly GameOverIWindowView _view;
+        private readonly GameOverWindowView _view;
         private readonly GameOverWindowModel _model;
         private readonly CursorController _cursorController;
 
-        public GameOverWindowPresenter(GameOverIWindowView view, GameOverWindowModel model, CursorController cursorController)
+        public GameOverWindowPresenter(GameOverWindowView view, GameOverWindowModel model, CursorController cursorController)
         {
             _model = model;
             _view = view;
@@ -23,22 +23,23 @@ namespace _Project.Scripts.UI.Windows.GameOver
             _view.Initialize();
             _model.Initialize();
 
-            _model.OnPlayerDied += Open;
-            _model.OnRewardedAdLoaded += RefreshReviveButtonState;
-
+            _view.OnWindowDestroy += CleanUp;
             _view.OnReviveButtonClicked += ShowRewardedAdAndRevive;
             _view.OnLoadSaveButtonClicked += LoadSave;
+            _model.OnRewardedAdLoaded += RefreshReviveButtonState;
+            _model.OnPlayerDied += Open;
 
             RefreshReviveButtonState();
         }
 
-        public void Dispose()
+        private void CleanUp()
         {
-            _model.OnPlayerDied -= Open;
-            _model.OnRewardedAdLoaded -= RefreshReviveButtonState;
-
+            _view.OnWindowDestroy -= CleanUp;
             _view.OnReviveButtonClicked -= ShowRewardedAdAndRevive;
             _view.OnLoadSaveButtonClicked -= LoadSave;
+            _model.OnRewardedAdLoaded -= RefreshReviveButtonState;
+            _model.OnPlayerDied -= Open;
+            _model.Dispose();
         }
 
         private async void LoadSave()
