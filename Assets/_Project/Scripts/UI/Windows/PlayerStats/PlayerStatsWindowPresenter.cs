@@ -39,7 +39,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         public async UniTask InitializeAsync()
         {
-            await _model.InitializeAsync();
+            _model.Initialize();
             
             _model.OnStatsChanged += UpdateAllStatItems;
             _view.OnOpenButtonClicked += Open;

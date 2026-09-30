@@ -13,6 +13,8 @@ namespace _Project.Scripts.Logic.PlayerStats
         private readonly IProgressService _progressService;
         private readonly Dictionary<StatName, PlayerStatData> _stats;
 
+        private PlayerStatsProgress Progress => _progressService.PlayerProgress.PlayerStatsProgress;
+
         public PlayerStatsSaveLoad(PlayerStatsModel statsModel, [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, 
             IProgressService progressService)
         {
@@ -21,31 +23,26 @@ namespace _Project.Scripts.Logic.PlayerStats
             _progressService = progressService;
         }
         
-        public async UniTask<PlayerStatsProgress> LoadStatsAsync()
+        public PlayerStatsProgress LoadStats()
         {
-            PlayerProgress playerProgress = await _saveLoadService.LoadProgressAsync();
-            PlayerStatsProgress progress = playerProgress.PlayerStatsProgress;
-            
             if (_stats.TryGetValue(StatName.Health, out PlayerStatData health))
-                health.SetLevel(progress.HealthLevel);
+                health.SetLevel(Progress.HealthLevel);
            
             if (_stats.TryGetValue(StatName.Speed, out PlayerStatData speed))
-                speed.SetLevel(progress.SpeedLevel);
+                speed.SetLevel(Progress.SpeedLevel);
            
             if (_stats.TryGetValue(StatName.Damage, out PlayerStatData damage))
-                damage.SetLevel(progress.DamageLevel);
+                damage.SetLevel(Progress.DamageLevel);
             
-            return progress;
+            return Progress;
         }
 
         public async UniTask SaveStatsAsync(int upgradePoints)
         {
-            PlayerStatsProgress progress = _progressService.PlayerProgress.PlayerStatsProgress;
-
-            progress.UpgradePoints = upgradePoints;
-            progress.HealthLevel = _stats.TryGetValue(StatName.Health, out PlayerStatData health) ? health.Level : 0;
-            progress.SpeedLevel = _stats.TryGetValue(StatName.Speed, out PlayerStatData speed) ? speed.Level : 0;
-            progress.DamageLevel = _stats.TryGetValue(StatName.Damage, out PlayerStatData damage) ? damage.Level : 0;
+            Progress.UpgradePoints = upgradePoints;
+            Progress.HealthLevel = _stats.TryGetValue(StatName.Health, out PlayerStatData health) ? health.Level : 0;
+            Progress.SpeedLevel = _stats.TryGetValue(StatName.Speed, out PlayerStatData speed) ? speed.Level : 0;
+            Progress.DamageLevel = _stats.TryGetValue(StatName.Damage, out PlayerStatData damage) ? damage.Level : 0;
             
             await _saveLoadService.SaveProgressAsync(_progressService);
         }

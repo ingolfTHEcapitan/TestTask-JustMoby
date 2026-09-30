@@ -32,13 +32,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _pauseService = pauseService;
         }
 
-        public async UniTask InitializeAsync()
+        public void Initialize()
         {
             foreach (PlayerStatData statData in _statsModel.GetStats()) 
                 statData.OnStatChanged += InvokeStatChanged;
 
-            PlayerStatsProgress progress = await _saveLoad.LoadStatsAsync();
-            UpgradePoints = progress.UpgradePoints;
+            UpgradePoints = _saveLoad.LoadStats().UpgradePoints;
         }
 
         public void Dispose()
