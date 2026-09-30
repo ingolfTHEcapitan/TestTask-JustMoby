@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Services.Progress;
@@ -19,6 +20,9 @@ namespace _Project.Scripts.Services.Ads
         
         private readonly IProgressService _progressService;
         private readonly AdsConfig _config;
+        
+        private UniTaskCompletionSource<bool> _rewardedAdTcs;
+        private UniTaskCompletionSource<bool> _interstitialAdTcs;
 
         public bool IsRewardedAdLoaded { get; private set; }
         public bool IsInterstitialAdLoaded { get; private set; }
@@ -34,7 +38,7 @@ namespace _Project.Scripts.Services.Ads
             Advertisement.Initialize(GetGameId(), _config.TestMode, initializationListener: this);
 
         public void OnInitializationComplete() => 
-            LoadAdAsync().Forget();
+            LoadAdsAsync().Forget();
 
         public void OnInitializationFailed(UnityAdsInitializationError error, string message) => 
             Debug.LogError($"[ADS SERVICE] Initialization Failed: {error.ToString()} - {message}");
@@ -44,17 +48,34 @@ namespace _Project.Scripts.Services.Ads
             if (placementId == _config.AndroidRewardedAdId)
             {
                 IsRewardedAdLoaded = true;
+                _rewardedAdTcs.TrySetResult(true);
                 OnRewardedAdLoaded?.Invoke();
             }
             else if (placementId == _config.AndroidInterstitialAdId)
             {
                 IsInterstitialAdLoaded = true;
+                _interstitialAdTcs.TrySetResult(true);
                 OnInterstitialAdLoaded?.Invoke();
             }
+            
+            Debug.LogError($"[ADS SERVICE] ads loaded: {placementId}");
         }
 
-        public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message) => 
+        public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
+        {
             Debug.LogError($"[ADS SERVICE] Failed To Load: {placementId} {error.ToString()} - {message}");
+            
+            if (placementId == _config.AndroidRewardedAdId)
+            {
+                IsRewardedAdLoaded = false;
+                _rewardedAdTcs.TrySetResult(false);
+            }
+            else if (placementId == _config.AndroidInterstitialAdId)
+            {
+                IsInterstitialAdLoaded = false;
+                _interstitialAdTcs.TrySetResult(false);
+            }
+        }
 
         public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message) => 
             Debug.LogError($"[ADS SERVICE] Failed To Show: {placementId} {error.ToString()} - {message}");
@@ -64,7 +85,7 @@ namespace _Project.Scripts.Services.Ads
 
         private async UniTask OnAdFinishedAsync(string placementId)
         {
-            await LoadAdAsync();
+            await LoadAdsAsync();
 
             if (placementId == _config.AndroidRewardedAdId)
             {
@@ -116,7 +137,7 @@ namespace _Project.Scripts.Services.Ads
             return gameId;
         }
 
-        private async UniTask LoadAdAsync()
+        private async UniTask LoadAdsAsync()
         {
             try
             {
@@ -132,8 +153,15 @@ namespace _Project.Scripts.Services.Ads
 
         private UniTask LoadAdAsync(string placementId)
         {
+            var tcs = new UniTaskCompletionSource<bool>();
+            
+            if (placementId == _config.AndroidRewardedAdId)
+                _rewardedAdTcs = tcs;
+            else if (placementId == _config.AndroidInterstitialAdId) 
+                _interstitialAdTcs = tcs;
+            
             Advertisement.Load(placementId, this);
-            return UniTask.CompletedTask;
+            return tcs.Task.AsUniTask();
         }
     }
 }
