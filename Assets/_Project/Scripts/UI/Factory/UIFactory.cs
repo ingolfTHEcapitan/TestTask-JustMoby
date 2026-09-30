@@ -51,7 +51,7 @@ namespace _Project.Scripts.UI.Factory
 
         public async UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync()
         {
-            _loadingCurtainView = await CreateViewAsync<LoadingCurtainView>(AssetAddress.LoadingCurtain);
+            _loadingCurtainView = await CreateViewAsync<LoadingCurtainView>(AssetAddress.LoadingCurtain, isGlobal: true);
             return _loadingCurtainView;
         }
 
@@ -170,9 +170,9 @@ namespace _Project.Scripts.UI.Factory
              $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
         }
 
-        private async UniTask<TView> CreateViewAsync<TView>(string assetAddress,Transform uiParent = null) where TView : MonoBehaviour
+        private async UniTask<TView> CreateViewAsync<TView>(string assetAddress, Transform uiParent = null, bool isGlobal = false) where TView : MonoBehaviour
         {
-            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(assetAddress);
+            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(assetAddress, isGlobal);
             TView view = _container.InstantiatePrefabForComponent<TView>(prefab, uiParent);
             return view;
         }
