@@ -9,13 +9,13 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
     public class SaveConflictResolveWindowPresenter: IDisposable
     {
         private readonly SaveConflictResolveWindowModel _model;
-        private readonly SaveConflictResolveWindowView _view;
+        private readonly SaveConflictResolveIWindowView _view;
         private readonly CursorController _cursorController;
         private readonly SaveTimeFormatter _saveTimeFormatter;
         
         private UniTaskCompletionSource<SaveType> _taskCompletionSource;
         
-        public SaveConflictResolveWindowPresenter(SaveConflictResolveWindowModel model, SaveConflictResolveWindowView view, CursorController cursorController, SaveTimeFormatter saveTimeFormatter)
+        public SaveConflictResolveWindowPresenter(SaveConflictResolveWindowModel model, SaveConflictResolveIWindowView view, CursorController cursorController, SaveTimeFormatter saveTimeFormatter)
         {
             _model = model;
             _view = view;

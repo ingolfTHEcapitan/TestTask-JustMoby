@@ -80,7 +80,7 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindGameOverWindow()
         {
-            Container.Bind<GameOverWindowView>().FromMethod(GetGameOverView).AsSingle();
+            Container.Bind<GameOverIWindowView>().FromMethod(GetGameOverView).AsSingle();
             Container.Bind<GameOverWindowModel>().AsSingle();
             Container.Bind<GameOverWindowPresenter>().AsSingle();
         }
@@ -107,13 +107,13 @@ namespace _Project.Scripts.Infrastructure.Game
         private HeadUpDisplayView GetHudView(InjectContext context) =>
             context.Container.Resolve<IUIFactory>().GetHudView();
 
-        private GameOverWindowView GetGameOverView(InjectContext context) => 
+        private GameOverIWindowView GetGameOverView(InjectContext context) => 
             context.Container.Resolve<IUIFactory>().GetGameOverWindowView();
 
         private PlayerDeath GetPlayerDeath(InjectContext context) => 
             context.Container.Resolve<IPlayerFactory>().GetPlayerDeath();
         
         private PlayerStatsWindowView GetPlayerStatsWindowView(InjectContext context)=> 
-            context.Container.Resolve<IUIFactory>().GetPlayerStatsWindowView();
+            context.Container.Resolve<IUIFactory>().GetWindowView();
     }
 }

@@ -1,11 +1,14 @@
+using System;
 using _Project.Scripts.Services.Sound;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.UI.Windows.LoadingCurtain
 {
-    public class LoadingCurtainView : MonoBehaviour
+    public class LoadingCurtainView : MonoBehaviour, IWindow
     {
+        public event Action OnWindowDestroy;
+        
         [SerializeField] private GameObject _loadingIndicator;
         [SerializeField] private float _indicatorRotationSpeed = 100f;
         
@@ -21,6 +24,9 @@ namespace _Project.Scripts.UI.Windows.LoadingCurtain
 
         private void Awake() => 
             DontDestroyOnLoad(gameObject);
+
+        private void OnDestroy() => 
+            OnWindowDestroy?.Invoke();
 
         public void Open()
         {

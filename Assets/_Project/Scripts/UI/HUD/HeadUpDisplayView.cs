@@ -1,12 +1,14 @@
 ﻿using System;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Windows;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.HUD
 {
-    public class HeadUpDisplayView : MonoBehaviour
+    public class HeadUpDisplayView : MonoBehaviour, IWindow
     {
+        public event Action OnWindowDestroy;
         public event Action OnBackToMainMenuButtonClicked;
         
         [SerializeField] private Button _backMainMenuButton;
@@ -15,9 +17,12 @@ namespace _Project.Scripts.UI.HUD
         
         public void Awake() => 
             _backMainMenuButton.onClick.AddListener(InvokeOnBackToMainMenuButtonClicked);
-        
-        private void OnDestroy() => 
+
+        public void OnDestroy()
+        {
+            OnWindowDestroy?.Invoke();
             _backMainMenuButton.onClick.RemoveListener(InvokeOnBackToMainMenuButtonClicked);
+        }
 
         private void InvokeOnBackToMainMenuButtonClicked() => 
             OnBackToMainMenuButtonClicked?.Invoke();

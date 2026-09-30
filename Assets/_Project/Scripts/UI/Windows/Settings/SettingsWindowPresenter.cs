@@ -13,10 +13,10 @@ namespace _Project.Scripts.UI.Windows.Settings
         private const string EffectsVolumeName = "EffectsVolume";
         private const string UIVolumeName = "UIVolume";
         
-        private readonly SettingsWindowView _view;
+        private readonly SettingsIWindowView _view;
         private readonly SettingsWindowModel _model;
 
-        public SettingsWindowPresenter(SettingsWindowModel model, SettingsWindowView view)
+        public SettingsWindowPresenter(SettingsWindowModel model, SettingsIWindowView view)
         {
             _model = model;
             _view = view;

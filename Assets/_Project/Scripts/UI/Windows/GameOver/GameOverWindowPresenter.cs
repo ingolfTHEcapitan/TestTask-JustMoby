@@ -7,11 +7,11 @@ namespace _Project.Scripts.UI.Windows.GameOver
 {
     public class GameOverWindowPresenter: IDisposable
     {
-        private readonly GameOverWindowView _view;
+        private readonly GameOverIWindowView _view;
         private readonly GameOverWindowModel _model;
         private readonly CursorController _cursorController;
 
-        public GameOverWindowPresenter(GameOverWindowView view, GameOverWindowModel model, CursorController cursorController)
+        public GameOverWindowPresenter(GameOverIWindowView view, GameOverWindowModel model, CursorController cursorController)
         {
             _model = model;
             _view = view;

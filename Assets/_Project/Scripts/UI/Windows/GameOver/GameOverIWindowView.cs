@@ -6,8 +6,9 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.GameOver
 {
-    public class GameOverWindowView : MonoBehaviour
+    public class GameOverIWindowView : MonoBehaviour, IWindow
     {
+        public event Action OnWindowDestroy;
         public event Action OnReviveButtonClicked;
         public event Action OnLoadSaveButtonClicked;
         
@@ -27,6 +28,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
         
         private void OnDestroy()
         {
+            OnWindowDestroy?.Invoke();
             _reviveButton.onClick.RemoveListener(InvokeOnReviveButtonClicked);
             _loadSaveButton.onClick.RemoveListener(InvokeOnLoadSaveButtonClicked);
         }

@@ -6,8 +6,9 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.MainMenu
 {
-    public class MainMenuWindowView: MonoBehaviour
+    public class MainMenuWindowView: MonoBehaviour, IWindow
     {
+        public event Action OnWindowDestroy;
         public event Action OnPlayButtonClicked;
         public event Action OnSettingsButtonClicked;
         public event Action OnShopButtonClicked;
@@ -38,6 +39,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         
         private void OnDestroy()
         {
+            OnWindowDestroy?.Invoke();
             _playButton.onClick.RemoveListener(InvokeOnPlayButtonClicked);
             _settingsButton.onClick.RemoveListener(InvokeOnSettingsButtonClicked);
             _shopButton.onClick.RemoveListener(InvokeOnShopButtonClicked);

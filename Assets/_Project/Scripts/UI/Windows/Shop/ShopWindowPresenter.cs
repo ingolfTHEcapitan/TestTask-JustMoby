@@ -9,7 +9,7 @@ namespace _Project.Scripts.UI.Windows.Shop
 {
     public class ShopWindowPresenter: IDisposable
     {
-        private readonly ShopWindowView _view;
+        private readonly ShopIWindowView _view;
         private readonly ShopWindowModel _model;
         private readonly ShopItemFactory _shopItemFactory;
         
@@ -17,7 +17,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         
         public bool IapServiceIsInitialized => _model.IapServiceIsInitialized;
         
-        public ShopWindowPresenter(ShopWindowView view, ShopWindowModel model, ShopItemFactory shopItemFactory)
+        public ShopWindowPresenter(ShopIWindowView view, ShopWindowModel model, ShopItemFactory shopItemFactory)
         {
             _view = view;
             _model = model;

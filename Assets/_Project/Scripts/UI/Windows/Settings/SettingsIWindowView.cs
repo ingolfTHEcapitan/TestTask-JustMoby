@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.Settings
 {
-    public class SettingsWindowView: MonoBehaviour
+    public class SettingsIWindowView: MonoBehaviour, IWindow
     {
+        public event Action OnWindowDestroy;
         public event Action OnCloseButtonClicked;
         public event Action OnApplyButtonClicked;
         
@@ -47,6 +48,7 @@ namespace _Project.Scripts.UI.Windows.Settings
         
         private void OnDestroy()
         {
+            OnWindowDestroy?.Invoke();
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.RemoveListener(InvokeOnApplyButtonClicked);
             UnSubscribeSliderEvents();

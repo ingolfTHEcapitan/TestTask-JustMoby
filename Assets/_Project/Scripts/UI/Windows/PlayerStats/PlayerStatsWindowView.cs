@@ -10,8 +10,9 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
-    public class PlayerStatsWindowView: MonoBehaviour
+    public class PlayerStatsWindowView: MonoBehaviour, IWindow
     {
+        public event Action OnWindowDestroy;
         public event Action OnOpenButtonClicked;
         public event Action OnCloseButtonClicked;
         public event Action OnApplyChangesButtonClicked;
@@ -46,6 +47,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void OnDestroy()
         {
+            OnWindowDestroy?.Invoke();
             _openButton.onClick.RemoveListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.RemoveListener(InvokeOnApplyChangesButtonClicked);

@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.Game;
 using _Project.Scripts.Infrastructure.MainMenu;
 using _Project.Scripts.Infrastructure.Project;
 using _Project.Scripts.UI.HUD;
+using _Project.Scripts.UI.Windows;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
 using _Project.Scripts.UI.Windows.MainMenu;
@@ -22,15 +25,8 @@ namespace _Project.Scripts.UI.Factory
         private readonly IInstantiator _container;
         private readonly IAssetProvider _assetProvider;
         
-        private HeadUpDisplayView _hudView;
-        private LoadingCurtainView _loadingCurtainView;
-        private SettingsWindowView _settingsWindowView;
-        private GameOverWindowView _gameOverView;
-        private ShopWindowView _shopWindowView;
-        private PlayerStatsWindowView _playerStatsWindowView;
-        private MainMenuWindowView _mainMenuWindowView;
-        private SaveConflictResolveWindowView _saveConflictResolveWindow;
-
+        private readonly Dictionary<Type, IWindow> _windowViews = new Dictionary<Type, IWindow>();
+        
         public UIFactory(IInstantiator container, IAssetProvider assetProvider)
         {
             _container = container;
@@ -39,51 +35,48 @@ namespace _Project.Scripts.UI.Factory
         
         public async UniTask<HeadUpDisplayView> CreateHudViewAsync(Transform uiParent)
         {
-            _hudView = await CreateViewAsync<HeadUpDisplayView>(AssetAddress.HeadUpDisplay, uiParent);
+            _hudView = await CreateWindowViewAsync<HeadUpDisplayView>(AssetAddress.HeadUpDisplay, uiParent);
             return _hudView;
         }
 
-        public async UniTask<GameOverWindowView> CreateGameOverWindowViewAsync(Transform uiParent)
+        public async UniTask<GameOverIWindowView> CreateGameOverWindowViewAsync(Transform uiParent)
         {
-            _gameOverView = await CreateViewAsync<GameOverWindowView>(AssetAddress.GameOverWindow, uiParent);
-            return _gameOverView;
+            _gameOverIView = await CreateWindowViewAsync<GameOverIWindowView>(AssetAddress.GameOverWindow, uiParent);
+            return _gameOverIView;
         }
 
         public async UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync()
         {
-            _loadingCurtainView = await CreateViewAsync<LoadingCurtainView>(AssetAddress.LoadingCurtain, isGlobal: true);
+            _loadingCurtainView = await CreateWindowViewAsync<LoadingCurtainView>(AssetAddress.LoadingCurtain, isGlobal: true);
             return _loadingCurtainView;
         }
 
         public async UniTask<MainMenuWindowView> CreateMainMenuWindowViewAsync(Transform uiParent)
         {
-            _mainMenuWindowView = await CreateViewAsync<MainMenuWindowView>(AssetAddress.MainMenuWindow, uiParent);
+            _mainMenuWindowView = await CreateWindowViewAsync<MainMenuWindowView>(AssetAddress.MainMenuWindow, uiParent);
             return _mainMenuWindowView;
         }
 
         public async UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent)
         {
-            _playerStatsWindowView = await CreateViewAsync<PlayerStatsWindowView>(AssetAddress.PlayerStatsWindow, uiParent);
+            _playerStatsWindowView = await CreateWindowViewAsync<PlayerStatsWindowView>(AssetAddress.PlayerStatsWindow, uiParent);
             return _playerStatsWindowView;
         }
 
-        public async UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync()
+        public async UniTask<SaveConflictResolveIWindowView> CreateSaveConflictResolveWindowViewAsync()
         {
-            _saveConflictResolveWindow = await CreateViewAsync<SaveConflictResolveWindowView>(AssetAddress.SaveConflictResolveWindow);
-            return _saveConflictResolveWindow;
+            _saveConflictResolveIWindow = await CreateWindowViewAsync<SaveConflictResolveIWindowView>(AssetAddress.SaveConflictResolveWindow);
+            return _saveConflictResolveIWindow;
         }
 
-        public async UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent)
+        public async UniTask<SettingsIWindowView> CreateSettingsViewAsync(Transform uiParent)
         {
-            _settingsWindowView = await CreateViewAsync<SettingsWindowView>(AssetAddress.SettingsWindow, uiParent);
-            return _settingsWindowView;
+            _settingsIWindowView = await CreateWindowViewAsync<SettingsIWindowView>(AssetAddress.SettingsWindow, uiParent);
+            return _settingsIWindowView;
         }
 
-        public async UniTask<ShopWindowView> CreateShopWindowViewAsync(Transform uiParent)
-        {
-            _shopWindowView = await CreateViewAsync<ShopWindowView>(AssetAddress.ShopWindow, uiParent);
-            return _shopWindowView;
-        }
+        public async UniTask<ShopIWindowView> CreateShopWindowViewAsync(Transform uiParent) => 
+            await CreateWindowViewAsync<ShopIWindowView>(AssetAddress.ShopWindow, uiParent);
 
         public async UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent)=> 
             await CreateViewAsync<PlayerStatItemView>(AssetAddress.PlayerStatItem, uiParent);
@@ -91,86 +84,43 @@ namespace _Project.Scripts.UI.Factory
         public async UniTask<Sprite> LoadSpriteAsync(string assetAddress) => 
             await _assetProvider.LoadAsync<Sprite>(assetAddress);
 
-        public LoadingCurtainView GetLoadingWindowView()
+        
+        public TWindow GetWindowView<TWindow>() where TWindow : Component, IWindow
         {
-            if (_loadingCurtainView)
-                return _loadingCurtainView;
+            Type viewType = typeof(TWindow);
             
-            throw new InvalidConstraintException
-            ($"{_loadingCurtainView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(ProjectBootstrapper)} runs");
+            if (_windowViews.TryGetValue(viewType, out IWindow windowView))
+                return (TWindow)windowView;
+            
+            throw new InvalidConstraintException(
+                $"{viewType.Name} view requested before creation. Ensure it created before presenter resolution");
         }
+        
+        private async UniTask<TWindow> CreateWindowViewAsync<TWindow>(string assetAddress, Transform uiParent = null, bool isGlobal = false) where TWindow : Component, IWindow
+        {
+            Type viewType = typeof(TWindow);
+            
+            if (_windowViews.TryGetValue(viewType, out IWindow windowView))
+            {
+                Debug.LogWarning($"[UI FACTORY] Window view {viewType.Name} is already registered.");
+                return (TWindow)windowView;
+            }
+            
+            TWindow view = await CreateViewAsync<TWindow>(assetAddress, uiParent, isGlobal);
+            
+            _windowViews[viewType] = view;
+            view.OnWindowDestroy += DestroyView;
 
-        public SettingsWindowView GetSettingsWindowView()
-        {
-            if (_settingsWindowView)
-                return _settingsWindowView;
-            
-            throw new InvalidConstraintException
-            ($"{_settingsWindowView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
-        }
+            return view;
 
-        public ShopWindowView GetShopWindowView()
-        {
-            if (_shopWindowView)
-                return _shopWindowView;
-            
-            throw new InvalidConstraintException
-            ($"{_shopWindowView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
+            void DestroyView()
+            {
+                view.OnWindowDestroy -= DestroyView;
+                _windowViews.Remove(viewType);
+            }
         }
-
-        public MainMenuWindowView GetMainMenuWindowView()
-        {
-            if (_mainMenuWindowView)
-                return _mainMenuWindowView;
-            
-            throw new InvalidConstraintException
-            ($"{_mainMenuWindowView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
-        }
-        public SaveConflictResolveWindowView GetSaveConflictResolveWindowView()
-        {
-            if (_saveConflictResolveWindow)
-                return _saveConflictResolveWindow;
-            
-            throw new InvalidConstraintException
-            ($"{_saveConflictResolveWindow.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(MainMenuBootstrapper)} runs");
-        }
-
-        public HeadUpDisplayView GetHudView()
-        {
-            if (_hudView)
-                return _hudView;
-            
-            throw new InvalidConstraintException
-            ($"{_hudView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
-        }
-
-        public PlayerStatsWindowView GetPlayerStatsWindowView()
-        {
-            if (_playerStatsWindowView)
-                return _playerStatsWindowView;
-            
-            throw new InvalidConstraintException
-            ($"{_playerStatsWindowView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
-        }
-
-        public GameOverWindowView GetGameOverWindowView()
-        {
-            if (_gameOverView)
-                return _gameOverView;
-            
-            throw new InvalidConstraintException
-            ($"{_gameOverView.gameObject.name} view requested before creation. " +
-             $"Ensure presenter depending on it is not resolved before {nameof(GameUIInitializer)} runs");
-        }
-
-        private async UniTask<TView> CreateViewAsync<TView>(string assetAddress, Transform uiParent = null, bool isGlobal = false) where TView : MonoBehaviour
+        
+        private async UniTask<TView> CreateViewAsync<TView>(string assetAddress, Transform uiParent = null, bool isGlobal = false) where TView : Component
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(assetAddress, isGlobal);
             TView view = _container.InstantiatePrefabForComponent<TView>(prefab, uiParent);

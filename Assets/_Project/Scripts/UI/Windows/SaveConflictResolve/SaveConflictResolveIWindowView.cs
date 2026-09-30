@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 {
-    public class SaveConflictResolveWindowView: MonoBehaviour
+    public class SaveConflictResolveIWindowView: MonoBehaviour, IWindow
     {
+        public event Action OnWindowDestroy;
         public event Action OnLocalSaveButtonClicked;
         public event Action OnCloudSaveButtonClicked;
             
@@ -37,6 +38,7 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 
         private void OnDestroy()
         {
+            OnWindowDestroy?.Invoke();
             _localSaveButton.onClick.RemoveListener(InvokeOnLocalSaveButtonClicked);
             _cloudSaveButton.onClick.RemoveListener(InvokeOnCloudSaveButtonClicked);
         }

@@ -14,22 +14,22 @@ namespace _Project.Scripts.UI.Factory
     public interface IUIFactory
     {
         UniTask<HeadUpDisplayView> CreateHudViewAsync(Transform uiParent);
-        UniTask<GameOverWindowView> CreateGameOverWindowViewAsync(Transform uiParent);
+        UniTask<GameOverIWindowView> CreateGameOverWindowViewAsync(Transform uiParent);
         UniTask<LoadingCurtainView> CreateLoadingCurtainViewAsync();
         UniTask<MainMenuWindowView> CreateMainMenuWindowViewAsync(Transform uiParent);
         UniTask<PlayerStatsWindowView> CreatePlayerStatsViewAsync(Transform uiParent);
         UniTask<PlayerStatItemView> CreatePlayerStatItemViewAsync(Transform uiParent);
-        UniTask<SaveConflictResolveWindowView> CreateSaveConflictResolveWindowViewAsync();
-        UniTask<SettingsWindowView> CreateSettingsViewAsync(Transform uiParent);
-        UniTask<ShopWindowView> CreateShopWindowViewAsync(Transform uiParent);
+        UniTask<SaveConflictResolveIWindowView> CreateSaveConflictResolveWindowViewAsync();
+        UniTask<SettingsIWindowView> CreateSettingsViewAsync(Transform uiParent);
+        UniTask<ShopIWindowView> CreateShopWindowViewAsync(Transform uiParent);
         UniTask<Sprite> LoadSpriteAsync(string assetAddress);
         HeadUpDisplayView GetHudView();
         LoadingCurtainView GetLoadingWindowView();
-        SettingsWindowView GetSettingsWindowView();
-        GameOverWindowView GetGameOverWindowView();
-        ShopWindowView GetShopWindowView();
-        PlayerStatsWindowView GetPlayerStatsWindowView();
+        SettingsIWindowView GetSettingsWindowView();
+        GameOverIWindowView GetGameOverWindowView();
+        ShopIWindowView GetShopWindowView();
+        PlayerStatsWindowView GetWindowView();
         MainMenuWindowView GetMainMenuWindowView();
-        SaveConflictResolveWindowView GetSaveConflictResolveWindowView();
+        SaveConflictResolveIWindowView GetSaveConflictResolveWindowView();
     }
 }
