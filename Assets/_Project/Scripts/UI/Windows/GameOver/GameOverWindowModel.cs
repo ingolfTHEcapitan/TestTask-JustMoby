@@ -43,35 +43,17 @@ namespace _Project.Scripts.UI.Windows.GameOver
             _adsService.OnRewardedAdLoaded -= InvokeOnRewardedAdLoaded;
         }
 
-        public bool TryShowInterstitialAd(Action onInterstitialAdFinished = null)
-        {
-            if (_adsService.IsInterstitialAdLoaded)
-            {
-                _adsService.ShowInterstitialAd(onInterstitialAdFinished);
-                return true;
-            }
-            
-            onInterstitialAdFinished?.Invoke();
-            return false;
-        }
+        public async UniTask<bool> TryShowInterstitialAd() => 
+            await _adsService.TryShowInterstitialAd();
 
-        public bool TryShowRewardedAd(Action onRewardedAdFinished = null)
+        public async UniTask<bool> TryShowRewardedAd() => 
+            await _adsService.TryShowRewardedAd();
+
+        public void Revive()
         {
-            if (!_adsService.IsRewardedAdLoaded)
-            {
-                onRewardedAdFinished?.Invoke();
-                return false;
-            }
-            
-            _adsService.ShowRewardedAd(() =>
-            {
-                _playerDeath.Revive();
-                _enemySpawner.KillAllEnemies();
-                _reviveInThisSession = true;
-                onRewardedAdFinished?.Invoke();
-            });
-            
-            return true;
+            _playerDeath.Revive();
+            _enemySpawner.KillAllEnemies();
+            _reviveInThisSession = true;
         }
 
         public void SetPaused(bool paused) => 

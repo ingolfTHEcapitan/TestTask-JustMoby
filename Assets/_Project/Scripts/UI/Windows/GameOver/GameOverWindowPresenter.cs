@@ -50,9 +50,10 @@ namespace _Project.Scripts.UI.Windows.GameOver
                 _model.SetPaused(false);
                 _cursorController.SetCursorVisible(true);
                 
-                _model.TryShowInterstitialAd();
+                await _model.TryShowInterstitialAd();
+                
                 _cursorController.SetCursorVisible(false);
-                _model.ReloadSceneAsync().Forget(Debug.LogError);
+                await _model.ReloadSceneAsync();
             }
             catch (Exception e)
             {
@@ -65,14 +66,23 @@ namespace _Project.Scripts.UI.Windows.GameOver
             try
             {
                 await _view.CloseAsync();
-                _model.SetPaused(false);
                 _cursorController.SetCursorVisible(true);
 
-                _model.TryShowRewardedAd(() =>
+                bool isSuccess = await _model.TryShowRewardedAd();
+                if (isSuccess)
                 {
+                    _model.Revive();
+                    _model.SetPaused(false);
                     _cursorController.SetCursorVisible(false);
-                    RefreshReviveButtonState();
-                });
+                }
+                else
+                {
+                    _model.SetPaused(true);
+                    await _view.OpenAsync();
+                    _cursorController.SetCursorVisible(true);
+                }
+                
+                RefreshReviveButtonState();
             }
             catch (Exception e)
             {

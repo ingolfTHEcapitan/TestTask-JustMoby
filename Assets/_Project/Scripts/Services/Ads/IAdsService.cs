@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Services.Ads
 {
@@ -8,8 +9,8 @@ namespace _Project.Scripts.Services.Ads
         event Action OnInterstitialAdLoaded;
         bool IsRewardedAdLoaded { get; }
         bool IsInterstitialAdLoaded { get; }
-        void ShowRewardedAd(Action onRewardedAdFinished);
-        void ShowInterstitialAd(Action onInterstitialAdFinished);
         void Initialize();
+        UniTask<bool> TryShowRewardedAd();
+        UniTask<bool> TryShowInterstitialAd();
     }
 }

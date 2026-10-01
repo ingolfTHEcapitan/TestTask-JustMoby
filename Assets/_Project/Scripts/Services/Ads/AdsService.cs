@@ -12,15 +12,13 @@ namespace _Project.Scripts.Services.Ads
     {
         public event Action OnRewardedAdLoaded;
         public event Action OnInterstitialAdLoaded;
-
-        private Action OnRewardedAdFinished;
-        private Action OnInterstitialAdFinished;
         
         private readonly IProgressService _progressService;
         private readonly AdsConfig _config;
         
         private UniTaskCompletionSource<bool> _rewardedAdTcs;
         private UniTaskCompletionSource<bool> _interstitialAdTcs;
+        private UniTaskCompletionSource<bool> _showAdTcs;
 
         public bool IsRewardedAdLoaded { get; private set; }
         public bool IsInterstitialAdLoaded { get; private set; }
@@ -75,50 +73,57 @@ namespace _Project.Scripts.Services.Ads
             }
         }
 
-        public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message) => 
-            Debug.LogError($"[ADS SERVICE] Failed To Show: {placementId} {error.ToString()} - {message}");
+        public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
+        {
+            if (placementId == _config.AndroidRewardedAdId)
+            {
+                bool isSuccess = showCompletionState == UnityAdsShowCompletionState.COMPLETED;
+                _showAdTcs.TrySetResult(isSuccess);
+                _showAdTcs = null;
+            }
+            else if (placementId == _config.AndroidInterstitialAdId)
+            {
+                _showAdTcs.TrySetResult(true);
+                _showAdTcs = null;
+            }
+            
+            LoadAdsAsync().Forget();
+        }
 
-        public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState) => 
-            OnAdFinishedAsync(placementId).Forget();
+        public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
+        {
+            Debug.LogError($"[ADS SERVICE] Failed To Show: {placementId} {error.ToString()} - {message}");
+            _showAdTcs.TrySetResult(false);
+            _showAdTcs = null;
+        }
 
         public void OnUnityAdsShowStart(string placementId) { }
 
         public void OnUnityAdsShowClick(string placementId) { }
 
-        public void ShowRewardedAd(Action onRewardedAdFinished)
+        public async UniTask<bool> TryShowRewardedAd()
         {
-            Advertisement.Show(_config.AndroidRewardedAdId, this);
-            OnRewardedAdFinished = onRewardedAdFinished;
-        }
-
-        public void ShowInterstitialAd(Action onInterstitialAdFinished)
-        {
-            if (IsAdsRemoved)
-            {
-                onInterstitialAdFinished?.Invoke();
-                return;
-            }
+            if (!IsRewardedAdLoaded)
+                return false;
             
-            Advertisement.Show(_config.AndroidInterstitialAdId, this);
-            OnInterstitialAdFinished = onInterstitialAdFinished;
+            _showAdTcs = new UniTaskCompletionSource<bool>();
+            Advertisement.Show(_config.AndroidRewardedAdId, this);
+            return await _showAdTcs.Task;
         }
 
-        private async UniTask OnAdFinishedAsync(string placementId)
+        public async UniTask<bool> TryShowInterstitialAd()
         {
-            await LoadAdsAsync();
-
-            if (placementId == _config.AndroidRewardedAdId)
-            {
-                OnRewardedAdFinished?.Invoke();
-                OnRewardedAdFinished = null;
-            }
-            else if (placementId == _config.AndroidInterstitialAdId)
-            {
-                OnInterstitialAdFinished?.Invoke();
-                OnInterstitialAdFinished = null;
-            }
+            if (!IsRewardedAdLoaded)
+                return false;
+            
+            if (IsAdsRemoved)
+                return true;
+            
+            _showAdTcs = new UniTaskCompletionSource<bool>();
+            Advertisement.Show(_config.AndroidInterstitialAdId, this);
+            return await _showAdTcs.Task;
         }
-
+        
         private string GetGameId()
         {
             string gameId = string.Empty;
