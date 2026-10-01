@@ -79,7 +79,7 @@ namespace _Project.Scripts.Logic.Enemy.States
                 }
                 else
                 {
-                    throw new NullReferenceException($"No IHealth component found on {hit.gameObject.name}");
+                    throw new NullReferenceException($"[ENEMY] No IHealth component found on {hit.gameObject.name}");
                 }
             }
             else

@@ -53,8 +53,6 @@ namespace _Project.Scripts.Services.Ads
                 _interstitialAdTcs.TrySetResult(true);
                 OnInterstitialAdLoaded?.Invoke();
             }
-            
-            Debug.LogError($"[ADS SERVICE] ads loaded: {placementId}");
         }
 
         public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
