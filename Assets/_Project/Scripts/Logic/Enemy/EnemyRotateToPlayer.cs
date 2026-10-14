@@ -1,24 +1,33 @@
+using System;
 using _Project.Scripts.Configs;
+using _Project.Scripts.Services.GamePause;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy
 {
-    public class EnemyRotateToPlayer: MonoBehaviour
+    public class EnemyRotateToPlayer : MonoBehaviour
     {
         private Transform _playerTransform;
         private Vector3 _positionToLook;
         private EnemyConfig _config;
+        private IGamePauseService _pauseService;
 
         [Inject]
-        private void Construct(EnemyConfig config) => 
+        private void Construct(EnemyConfig config, IGamePauseService pauseService)
+        {
             _config = config;
+            _pauseService = pauseService;
+        }
 
-        public void Initialize(Transform playerTransform) => 
+        public void Initialize(Transform playerTransform)
+        {
             _playerTransform = playerTransform;
+            _pauseService.OnPausableUpdate += RotateTowardsPlayer;
+        }
 
-        private void Update() =>
-            RotateTowardsPlayer();
+        private void OnDisable() => 
+            _pauseService.OnPausableUpdate -= RotateTowardsPlayer;
 
         private void RotateTowardsPlayer() => 
             transform.rotation = SmoothRotation(transform.rotation, GetPositionToLook());

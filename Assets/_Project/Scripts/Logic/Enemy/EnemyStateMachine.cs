@@ -12,7 +12,7 @@ using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy
 {
-    public class EnemyStateMachine: MonoBehaviour
+    public class EnemyStateMachine : MonoBehaviour
     {
         [SerializeField] private NavMeshAgent _agent;
         
@@ -44,6 +44,8 @@ namespace _Project.Scripts.Logic.Enemy
         
         public void Initialize(Vector3 spawnPoint, Transform playerTransform, EnemyRotateToPlayer enemyRotateToPlayer)
         {
+            _pauseService.OnPausableUpdate += PausableUpdate;
+            
             _playerTransform = playerTransform;
             _agent.speed = _config.MoveSpeed;
             _agent.stoppingDistance = _config.AttackDistance;
@@ -68,16 +70,10 @@ namespace _Project.Scripts.Logic.Enemy
             
             _stateMachine.SetState(spawnState);
         }
-        
-        private void Update()
-        { 
-            if (_pauseService.IsPaused)
-                return;
-            
-            _stateMachine.Update();
-            UpdateAttackCoolDown();
-        }
-        
+
+        private void OnDisable() => 
+            _pauseService.OnPausableUpdate -= PausableUpdate;
+
         [UsedImplicitly]
         public void OnAttackEnded()
         {
@@ -92,10 +88,16 @@ namespace _Project.Scripts.Logic.Enemy
         [UsedImplicitly]
         public void OnSpawnAnimationEnded() => 
             _isSpawnAnimationEnded = true;
-        
+
         public TState GetState<TState>() where TState: EnemyBaseState => 
             _stateMachine.GetState<TState>() as TState;
-        
+
+        private void PausableUpdate()
+        { 
+            _stateMachine.Update();
+            UpdateAttackCoolDown();
+        }
+
         private void UpdateAttackCoolDown()
         {
             if (!AttackCooldownIsUp()) 

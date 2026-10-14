@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Services.Effects
 {
-    public class DissolveShader: MonoBehaviour
+    public class DissolveShader : MonoBehaviour
     {
         private const float MaxThreshold = 1f;
         private const string DissolveAmountKey = "_DissolveAmount";

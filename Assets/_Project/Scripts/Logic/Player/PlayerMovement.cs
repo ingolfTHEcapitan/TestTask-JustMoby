@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
@@ -6,7 +7,7 @@ using Zenject;
 
 namespace _Project.Scripts.Logic.Player
 {
-    public class PlayerMovement: MonoBehaviour
+    public class PlayerMovement : MonoBehaviour
     {
         [SerializeField] private CharacterController _characterController;
         [Header("Settings")]
@@ -26,12 +27,17 @@ namespace _Project.Scripts.Logic.Player
             _pauseService = pauseService;
             _inputService = inputService;
         }
-        
-        private void Update()
-        {
-            if (_pauseService.IsPaused)
-                return;
 
+        private void Start() => 
+            _pauseService.OnPausableUpdate += PausableUpdate;
+
+        private void OnDestroy()
+        {
+            _pauseService.OnPausableUpdate -= PausableUpdate;
+        }
+
+        private void PausableUpdate()
+        {
             Vector2 movementInput = _inputService.GetMovementAxis();
             Move(movementInput);
         }

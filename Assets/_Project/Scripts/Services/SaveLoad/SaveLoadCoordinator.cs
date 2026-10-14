@@ -9,7 +9,7 @@ using Zenject;
 
 namespace _Project.Scripts.Services.SaveLoad
 {
-    public class SaveLoadCoordinator: ISaveLoadCoordinator
+    public class SaveLoadCoordinator : ISaveLoadCoordinator
     {
         public event Func<PlayerProgress, PlayerProgress, UniTask<SaveType>> OnSaveConflictHappened;
         

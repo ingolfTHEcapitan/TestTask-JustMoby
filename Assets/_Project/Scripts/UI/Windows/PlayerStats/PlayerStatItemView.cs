@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
-    public class PlayerStatItemView: MonoBehaviour
+    public class PlayerStatItemView : MonoBehaviour
     {
         public event Action<StatName> OnUpgradeButtonClicked;
         

@@ -15,7 +15,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project
 {
-    public class ProjectBootstrapper: IInitializable, IDisposable
+    public class ProjectBootstrapper : IInitializable, IDisposable
     {
         private readonly IRemoteConfigService _remoteConfigService;
         private readonly IRemoteConfigFactory _remoteConfigFactory;
@@ -57,11 +57,11 @@ namespace _Project.Scripts.Infrastructure.Project
                 await _uiFactory.CreateLoadingCurtainViewAsync();
                 _lazyLoadingWindowPresenter.Value.ShowLoading();
             
-                UniTask analyticsServiceTask = _analyticsService.InitializeAsync();
+                await _analyticsService.InitializeAsync();
                 UniTask remoteConfigServiceTask = _remoteConfigService.FetchDataAsync();
                 UniTask authServiceTask = _authService.SignUpAsync();
 
-                await UniTask.WhenAll(analyticsServiceTask, remoteConfigServiceTask, authServiceTask);
+                await UniTask.WhenAll(remoteConfigServiceTask, authServiceTask);
 
                 _remoteConfigFactory.ApplyRemoteConfigs();
             

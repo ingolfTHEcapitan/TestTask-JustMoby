@@ -52,11 +52,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f5690ec389786384984df95b40be4241
-    m_Address: PlayerStatsWindow
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fc2d6471bb2c0ca499ad3175b231c21b
     m_Address: SaveConflictResolveWindow
     m_ReadOnly: 0

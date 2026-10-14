@@ -6,7 +6,7 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.MainMenu
 {
-    public class MainMenuWindowView: MonoBehaviour, IWindow
+    public class MainMenuWindowView : MonoBehaviour, IWindow
     {
         public event Action OnWindowDestroy;
         public event Action OnPlayButtonClicked;

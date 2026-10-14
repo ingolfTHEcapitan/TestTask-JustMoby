@@ -8,7 +8,7 @@ using Application = UnityEngine.Device.Application;
 
 namespace _Project.Scripts.Services.Ads
 {
-    public class AdsService: IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener, IAdsService
+    public class AdsService : IUnityAdsInitializationListener, IUnityAdsLoadListener, IUnityAdsShowListener, IAdsService
     {
         public event Action OnRewardedAdLoaded;
         public event Action OnInterstitialAdLoaded;
@@ -111,7 +111,7 @@ namespace _Project.Scripts.Services.Ads
 
         public async UniTask<bool> TryShowInterstitialAd()
         {
-            if (!IsRewardedAdLoaded)
+            if (!IsInterstitialAdLoaded)
                 return false;
             
             if (IsAdsRemoved)

@@ -7,11 +7,10 @@ using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.Score;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
-    public class PlayerStatsWindowModel: IDisposable
+    public class PlayerStatsWindowModel : IDisposable
     {
         public event Action OnStatsChanged;
         
@@ -41,9 +40,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
                 statData.OnStatChanged += InvokeStatChanged;
 
             _scoreService.OnScoreAdded += AddUpgradePoints;
+            _playerDeath.OnDied += UpdateStatsProgressAndSave;
             
             UpgradePoints = _saveLoad.LoadStats().UpgradePoints;
         }
+
+       
 
         public void Dispose()
         {
@@ -51,6 +53,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
                 stat.OnStatChanged -= InvokeStatChanged;
             
             _scoreService.OnScoreAdded -= AddUpgradePoints;
+            _playerDeath.OnDied -= UpdateStatsProgressAndSave;
         }
 
         public async UniTask ApplyChangesAsync()
@@ -61,7 +64,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             foreach (PlayerStatData stat in GetStats()) 
                 stat.ApplyPreviewLevel();
             
-            await _saveLoad.SaveStatsAsync(UpgradePoints);
+            await UpdateStatsProgressAndSaveAsync();
         }
 
         public void DiscardPreviewChanges()
@@ -86,43 +89,39 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             if (!CanUpgrade(statName))
                 return;
 
-            GetStat(statName).IncreasePreviewLevel();
+            _statsModel.TryGetStat(statName, out PlayerStatData stat);
+            stat.IncreasePreviewLevel();
             UpgradePoints--;
             OnStatsChanged?.Invoke();
         }
 
         public bool CanUpgrade(StatName statName)
         {
-            if (UpgradePoints <=0 || !_statsModel.GetStatDictionary().ContainsKey(statName))
+            if (UpgradePoints <=0 || !_statsModel.TryGetStat(statName, out _))
                 return false;
 
-            return GetStat(statName).PreviewLevel < GetStat(statName).MaxLevel;
+            _statsModel.TryGetStat(statName, out PlayerStatData stat);
+            
+            return stat.PreviewLevel < stat.MaxLevel;
         }
 
         public void SetPaused(bool paused) => 
             _pauseService.SetPaused(paused);
 
-        public List<PlayerStatData> GetStats() => 
+        public IReadOnlyList<PlayerStatData> GetStats() => 
             _statsModel.GetStats();
 
-        public PlayerStatData GetStat(StatName statName) => 
-            _statsModel.GetStat(statName);
+        public bool TryGetStat(StatName statName, out PlayerStatData stat) => 
+            _statsModel.TryGetStat(statName, out stat);
 
         public PlayerStatConfig FindStatConfigByName(StatName statName) => 
             _statConfigs.Find(statConfig => statConfig.Name == statName);
 
-        private async void AddUpgradePoints(int points)
+        private  void AddUpgradePoints(int points)
         {
-            try
-            {
-                UpgradePoints += points;
-                OnStatsChanged?.Invoke();
-                await _saveLoad.SaveStatsAsync(UpgradePoints);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
+            UpgradePoints += points;
+            OnStatsChanged?.Invoke();
+            _saveLoad.UpdateStatsProgress(UpgradePoints);
         }
 
         private bool HasAnyChanges() =>
@@ -130,5 +129,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void InvokeStatChanged() => 
             OnStatsChanged?.Invoke();
+
+        private async UniTask UpdateStatsProgressAndSaveAsync()
+        {
+            _saveLoad.UpdateStatsProgress(UpgradePoints);
+            await _saveLoad.SaveStatAsync();
+        }
+        
+        private void UpdateStatsProgressAndSave() => 
+            UpdateStatsProgressAndSaveAsync().Forget();
     }
 }

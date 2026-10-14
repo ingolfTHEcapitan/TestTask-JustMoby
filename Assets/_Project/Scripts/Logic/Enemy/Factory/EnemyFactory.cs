@@ -1,6 +1,7 @@
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy.States;
+using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.HealthCalculator;
 using _Project.Scripts.UI.Common;
 using Cysharp.Threading.Tasks;
@@ -9,20 +10,22 @@ using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy.Factory
 {
-    public class EnemyFactory: IEnemyFactory
+    public class EnemyFactory : IEnemyFactory
     {
         private readonly IInstantiator _container;
         private readonly Transform _dynamicObjectsParent;
         private readonly IHealthCalculatorService _healthCalculator;
         private readonly IAssetProvider _assetProvider;
+        private readonly IGamePauseService _pauseService;
 
         public EnemyFactory(IInstantiator container, IHealthCalculatorService healthCalculator, 
-            IAssetProvider assetProvider, Transform dynamicObjectsParent)
+            IAssetProvider assetProvider, Transform dynamicObjectsParent, IGamePauseService pauseService)
         {
             _container = container;
             _healthCalculator = healthCalculator;
             _assetProvider = assetProvider;
             _dynamicObjectsParent = dynamicObjectsParent;
+            _pauseService = pauseService;
         }
 
         public async UniTask<EnemyDeath> CreateEnemyAsync(Vector3 spawnPoint, Transform playerTransform)
@@ -49,7 +52,7 @@ namespace _Project.Scripts.Logic.Enemy.Factory
             enemyDeath.Initialize();
             
             EnemyAnimator enemyAnimator = enemyStateMachine.GetComponent<EnemyAnimator>();
-            enemyAnimator.Construct(enemyStateMachine.GetState<EnemyAttackState>());
+            enemyAnimator.Construct(enemyStateMachine.GetState<EnemyAttackState>(), _pauseService);
             enemyAnimator.Initialize();
             return enemyDeath;
         }

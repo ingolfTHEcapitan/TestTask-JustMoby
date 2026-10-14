@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
-    public class ShopItemView: MonoBehaviour
+    public class ShopItemView : MonoBehaviour
     {
         public event Action OnBuyButtonClicked;
     

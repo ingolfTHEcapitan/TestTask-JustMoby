@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
 using _Project.Scripts.Services.GamePause;
@@ -49,22 +50,22 @@ namespace _Project.Scripts.Logic.Player.Weapon
         
         public void Initialize(Camera playerCamera)
         {
+            _pauseService.OnPausableUpdate += Shoot;
             _playerCamera = playerCamera;
             _fireRate = _weaponConfig.FireRate;
         }
 
-        private void Update()
-        {
-            if (_pauseService.IsPaused)
-                return;
+        private void OnDestroy() => 
+            _pauseService.OnPausableUpdate -= Shoot;
 
+        private void Shoot()
+        {
             if (_inputService.IsFireButtonPressed() && CanShoot())
             {
-                 ShootAsync().Forget(Debug.LogException);
+                ShootAsync().Forget(Debug.LogException);
                 _statistics.RecordShot();
                 _audioService.PlayOneShot(_shotSound, _audioSource);
             }
-                
         }
 
         private async UniTask ShootAsync()

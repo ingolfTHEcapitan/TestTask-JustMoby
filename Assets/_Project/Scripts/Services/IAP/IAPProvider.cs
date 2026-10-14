@@ -9,7 +9,7 @@ using ProductDescription = _Project.Scripts.Configs.IAP.ProductDescription;
 
 namespace _Project.Scripts.Services.IAP
 {
-    public class IAPProvider: IDetailedStoreListener
+    public class IAPProvider : IDetailedStoreListener
     {
         public event Action<string> OnPurchaseFailedAction;
         public event Func<Product, PurchaseProcessingResult> OnProcessPurchase;

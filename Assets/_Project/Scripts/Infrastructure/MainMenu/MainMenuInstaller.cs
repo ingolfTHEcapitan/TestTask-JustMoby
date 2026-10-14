@@ -10,7 +10,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.MainMenu
 {
-    public class MainMenuInstaller: MonoInstaller
+    public class MainMenuInstaller : MonoInstaller
     {
         [SerializeField] private Transform _uiParent;
         

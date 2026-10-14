@@ -14,7 +14,7 @@ using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy
 {
-    public class EnemyDeath: MonoBehaviour
+    public class EnemyDeath : MonoBehaviour
     {
         public event Action<EnemyDeath> OnDied;
 
@@ -30,7 +30,6 @@ namespace _Project.Scripts.Logic.Enemy
 
         private bool _isDead;
         private bool _isForcedKilling;
-        private WaitForSeconds _waitForSeconds;
 
         private EnemyConfig _config;
         private IEffectsService _effectsService;
@@ -47,11 +46,8 @@ namespace _Project.Scripts.Logic.Enemy
             _scoreService = scoreService;
         }
 
-        public void Initialize()
-        {
+        public void Initialize() => 
             _health.OnZeroHealth += EnemyDie;
-            _waitForSeconds = new WaitForSeconds(_config.DestroyDelay);
-        }
 
         private void OnDestroy() => 
             _health.OnZeroHealth -= EnemyDie;
@@ -80,18 +76,24 @@ namespace _Project.Scripts.Logic.Enemy
             _isDead = true;
             DisableEnemyComponents();
             await _healthBarView.HideAsync();
-            StartCoroutine(DestroyTimer());
-
+            
             if (!_isForcedKilling)
             {
                 _statistics.RecordEnemyKilled();
                 _scoreService.Add();
             }
+
+            await DestroyAsync();
         }
 
-        private IEnumerator DestroyTimer()
+        private async UniTask DestroyAsync()
         { 
-            yield return _waitForSeconds;
+            bool isCancelled = await UniTask.WaitForSeconds(_config.DestroyDelay, cancellationToken: destroyCancellationToken)
+                .SuppressCancellationThrow();
+            
+            if (isCancelled)
+                return;
+            
             OnDied?.Invoke(this);
             Destroy(gameObject);
         }

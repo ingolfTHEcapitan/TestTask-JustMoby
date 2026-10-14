@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 {
-    public class SaveConflictResolveWindowModel: IDisposable
+    public class SaveConflictResolveWindowModel : IDisposable
     {
         public event Func<PlayerProgress, PlayerProgress, UniTask<SaveType>> OnSaveConflictHappened;
 

@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Logic.Spawners
 {
-    public class EnemySpawner: IDisposable
+    public class EnemySpawner : IDisposable
     {
         private readonly IGamePauseService _pauseService;
         private readonly IEnemyFactory _factory;
@@ -54,20 +54,28 @@ namespace _Project.Scripts.Logic.Spawners
         {
             while (true)
             {
-                token.ThrowIfCancellationRequested();
-                
-                await UniTask.WaitWhile(() => _pauseService.IsPaused, cancellationToken: token);
-                
-                if (_spawnedEnemies.Count < _config.EnemiesAtTime)
-                {
-                    await UniTask.Delay(TimeSpan.FromSeconds(_config.SpawnDelay), cancellationToken: token);
-                    await InitEnemyAsync(target, playerTransform);
-                }
-                
                 await UniTask.WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime, cancellationToken: token);
+                
+                await PausableDelay(_config.SpawnDelay, token);
+              
+                if (_spawnedEnemies.Count < _config.EnemiesAtTime) 
+                    await InitEnemyAsync(target, playerTransform);
             }
         }
 
+        private async UniTask PausableDelay(float spawnDelay, CancellationToken token)
+        {
+            float timer = 0f;
+            
+            while (timer < spawnDelay)
+            {
+                await UniTask.Yield(PlayerLoopTiming.Update, token);
+                
+                if (!_pauseService.IsPaused)
+                    timer += Time.deltaTime;
+            }
+        }
+        
         private async UniTask InitEnemyAsync(Transform target, Transform playerTransform)
         {
             EnemyDeath enemyDeath = await _factory.CreateEnemyAsync(GetSpawnPosition(target), playerTransform);

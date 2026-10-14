@@ -28,12 +28,10 @@ namespace _Project.Scripts.Logic.PlayerStats
             return 0;
         }
         
-        public List<PlayerStatData> GetStats() => 
+        public IReadOnlyList<PlayerStatData> GetStats() => 
             new List<PlayerStatData>(_stats.Values);
         
-        public PlayerStatData GetStat(StatName statName) => 
-            _stats[statName];
-        public Dictionary<StatName, PlayerStatData> GetStatDictionary() => 
-            _stats;
+        public bool TryGetStat(StatName statName, out PlayerStatData stat) => 
+            _stats.TryGetValue(statName, out stat);
     }
 }

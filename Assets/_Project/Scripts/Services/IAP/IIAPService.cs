@@ -6,7 +6,7 @@ using Zenject;
 
 namespace _Project.Scripts.Services.IAP
 {
-    public interface IIAPService: IDisposable, IInitializable
+    public interface IIAPService : IDisposable, IInitializable
     {
         bool IsInitialized { get; }
         UniTask<bool> TryStartPurchaseAsync(ProductDescription productDescription);

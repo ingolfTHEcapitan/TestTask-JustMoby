@@ -1,8 +1,12 @@
+using System;
+
 namespace _Project.Scripts.Services.GamePause
 {
-    public interface IGamePauseService
+    public interface IGamePauseService : IPauseHandler
     {
+        event Action OnPausableUpdate;
         bool IsPaused { get; }
-        void SetPaused(bool paused);
+        void Register(IPauseHandler handler);
+        void UnRegister(IPauseHandler handler);
     }
 }

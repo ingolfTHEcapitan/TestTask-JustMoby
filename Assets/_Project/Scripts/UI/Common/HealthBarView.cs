@@ -10,7 +10,7 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Common
 {
-    public class HealthBarView: MonoBehaviour
+    public class HealthBarView : MonoBehaviour
     {
         [SerializeField] private Slider _healthSlider;
         [SerializeField] private TextMeshProUGUI _healthText;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Logic.Common
 {
-    public class Health: MonoBehaviour, IHealth
+    public class Health : MonoBehaviour, IHealth
     {
         public event Action OnHealthChanged;
         public event Action OnTakeDamage;

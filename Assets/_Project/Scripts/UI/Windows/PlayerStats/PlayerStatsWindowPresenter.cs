@@ -165,7 +165,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void UpdateStatItem(StatName statName)
         {
-            PlayerStatData stat = _model.GetStat(statName);
+            _model.TryGetStat(statName, out PlayerStatData stat);
             bool canUpgrade = _model.CanUpgrade(statName);
            
             if (_statItemsView.TryGetValue(statName, out PlayerStatItemView statItemView)) 

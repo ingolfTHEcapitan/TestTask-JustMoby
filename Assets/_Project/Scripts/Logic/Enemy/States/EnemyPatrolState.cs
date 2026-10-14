@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Logic.Enemy.States
 {
-    public class EnemyPatrolState: EnemyBaseState
+    public class EnemyPatrolState : EnemyBaseState
     {
         private const float MaxSampleDistance = 4f;
 

@@ -13,7 +13,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.MainMenu
 {
-    public class MainMenuBootstrapper: IInitializable
+    public class MainMenuBootstrapper : IInitializable
     {
         private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         private readonly IProgressService _progressService;

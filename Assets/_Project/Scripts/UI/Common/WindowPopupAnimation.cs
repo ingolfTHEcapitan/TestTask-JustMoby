@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.UI.Common
 {
-    public class WindowPopupAnimation: MonoBehaviour
+    public class WindowPopupAnimation : MonoBehaviour
     {
         [Header("Scale Animation")]
         [SerializeField] private Transform _transform;

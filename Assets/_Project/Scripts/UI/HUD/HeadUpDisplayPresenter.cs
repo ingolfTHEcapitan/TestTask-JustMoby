@@ -38,6 +38,9 @@ namespace _Project.Scripts.UI.HUD
 
         private void BackToOnMainMenu()
         {
+            if (_model.GameIsPaused)
+                return;
+            
             _cursorController.SetCursorVisible(visible: false);
             _model.LoadMainMenuAsync().Forget(Debug.LogError);
         }

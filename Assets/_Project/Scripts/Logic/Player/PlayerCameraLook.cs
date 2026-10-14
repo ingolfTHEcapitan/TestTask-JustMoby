@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
 using UnityEngine;
@@ -28,15 +29,17 @@ namespace _Project.Scripts.Logic.Player
 
         private void Start()
         {
+            _pauseService.OnPausableUpdate += PausableUpdate;
+            
             _cameraTransform = _camera.transform;
             _playerTransform = _characterController.transform;
         }
-        
-        private void Update()
+
+        private void OnDestroy() => 
+            _pauseService.OnPausableUpdate -= PausableUpdate;
+
+        private void PausableUpdate()
         {
-            if (_pauseService.IsPaused)
-                return;
-            
             Vector2 lookInput = _inputService.GetLookAxis();
             RotateCamera(lookInput);
         }

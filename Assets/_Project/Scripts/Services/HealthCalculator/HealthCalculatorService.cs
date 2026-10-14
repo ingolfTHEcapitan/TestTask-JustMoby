@@ -14,8 +14,8 @@ namespace _Project.Scripts.Services.HealthCalculator
             _playerStatsModel = playerStatsModel;
 
         public float CalculateEnemyMaxHealth()
-        {
-            PlayerStatData damageStat = _playerStatsModel.GetStat(StatName.Damage);
+        { 
+            _playerStatsModel.TryGetStat(StatName.Damage, out PlayerStatData damageStat);
             
             int randomShootsCount = UnityEngine.Random.Range(MinShotsToKill, MaxShotsToKill + ExclusiveOffset);
             float maxHealth = damageStat.BaseValue * randomShootsCount;

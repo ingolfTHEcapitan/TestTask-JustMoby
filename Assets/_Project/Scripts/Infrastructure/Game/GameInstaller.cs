@@ -18,7 +18,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Game
 {
-    public class GameInstaller: MonoInstaller
+    public class GameInstaller : MonoInstaller
     {
         [Header("Transforms")]
         [SerializeField] private Transform _dynamicObjectsParent;

@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.Services.SaveLoad
 {
-    public interface ISaveLoadCoordinator: ISaveLoadService
+    public interface ISaveLoadCoordinator : ISaveLoadService
     {
         event Func<PlayerProgress, PlayerProgress, UniTask<SaveType>> OnSaveConflictHappened;
     }

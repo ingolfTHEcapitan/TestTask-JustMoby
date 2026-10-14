@@ -38,7 +38,7 @@ namespace _Project.Scripts.Logic.Player.Factory
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
             _playerHealth.Initialize(maxHealth);
             
-            _healthStat = _playerStatsModel.GetStat(StatName.Health); 
+            _playerStatsModel.TryGetStat(StatName.Health, out _healthStat); 
             _healthStat.OnStatChanged += UpdatePlayerMaxHealth;
 
             _playerDeath = _playerHealth.GetComponent<PlayerDeath>();

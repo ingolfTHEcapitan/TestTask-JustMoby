@@ -8,7 +8,7 @@ using Zenject;
 
 namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
-    public class ShopItemFactory: IDisposable
+    public class ShopItemFactory : IDisposable
     {
         private readonly IInstantiator _container;
         private readonly IAssetProvider _assetProvider;

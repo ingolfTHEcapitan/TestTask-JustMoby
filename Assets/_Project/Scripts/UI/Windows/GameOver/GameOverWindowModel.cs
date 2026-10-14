@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.UI.Windows.GameOver
 {
-    public class GameOverWindowModel: IDisposable
+    public class GameOverWindowModel : IDisposable
     {
         public event Action OnPlayerDied;
         public event Action OnRewardedAdLoaded;

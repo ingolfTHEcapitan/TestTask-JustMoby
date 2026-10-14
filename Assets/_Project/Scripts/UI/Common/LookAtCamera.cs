@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.UI.Common
 {
-    public class LookAtCamera: MonoBehaviour
+    public class LookAtCamera : MonoBehaviour
     {
         private Camera _camera;
 

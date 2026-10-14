@@ -1,10 +1,12 @@
+using System;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy.States;
+using _Project.Scripts.Services.GamePause;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.Enemy
 {
-    public class EnemyAnimator: MonoBehaviour
+    public class EnemyAnimator : MonoBehaviour, IPauseHandler
     {
         [SerializeField] private Animator _animator;
         [SerializeField] private Health _health;
@@ -15,15 +17,22 @@ namespace _Project.Scripts.Logic.Enemy
         private readonly int _attackHash = Animator.StringToHash("Attack");
         
         private EnemyAttackState _attackState;
+        private IGamePauseService _pauseService;
+        private float _tempAnimationSpeed;
 
-        public void Construct(EnemyAttackState attackState) => 
+        public void Construct(EnemyAttackState attackState, IGamePauseService pauseService)
+        {
             _attackState = attackState;
+            _pauseService = pauseService;
+        }
 
         public void Initialize()
         {
             _health.OnTakeDamage += PlayHit;
             _health.OnZeroHealth += PlayDeath;
             _attackState.OnAttackStarted += PlayAttack;
+            _pauseService.Register(this);
+            SetAnimatorSpeed(_pauseService.IsPaused);
         }
 
         private void OnDestroy()
@@ -31,14 +40,21 @@ namespace _Project.Scripts.Logic.Enemy
             _health.OnTakeDamage -= PlayHit;
             _health.OnZeroHealth -= PlayDeath;
             _attackState.OnAttackStarted -= PlayAttack;
+            _pauseService.UnRegister(this);
         }
+
+        public void SetPaused(bool isPaused) => 
+            SetAnimatorSpeed(isPaused);
+
+        private void SetAnimatorSpeed(bool isPaused) => 
+            _animator.speed = isPaused ? 0f : 1f;
 
         private void PlayHit() => 
             _animator.SetTrigger(_hitHash);
 
         private void PlayDeath() => 
             _animator.SetTrigger(_dieHash);
-        
+
         private void PlayAttack() => 
             _animator.SetTrigger(_attackHash);
     }

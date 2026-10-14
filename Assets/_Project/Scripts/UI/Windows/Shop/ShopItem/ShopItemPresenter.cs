@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
-    public class ShopItemPresenter: IDisposable
+    public class ShopItemPresenter : IDisposable
     {
         private readonly IUIFactory _uiFactory;
         private readonly ShopItemModel _itemModel;

@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace _Project.Scripts.Services.NetworkAccessibility
 {
-    public class NetworkAccessibilityService: INetworkAccessibilityService, IDisposable
+    public class NetworkAccessibilityService : INetworkAccessibilityService, IDisposable
     {
         private const string PingUrl = "https://www.google.com";
         private const int TimeoutSeconds = 10;

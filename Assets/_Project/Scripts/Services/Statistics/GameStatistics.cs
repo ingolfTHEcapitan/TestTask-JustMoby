@@ -2,7 +2,7 @@ using System;
 
 namespace _Project.Scripts.Services.Statistics
 {
-    public class GameStatistics: IGameStatistics, IDisposable
+    public class GameStatistics : IGameStatistics, IDisposable
     {
         public int ShotsFired { get; private set; }
         public int EnemiesKilled { get; private set; }
