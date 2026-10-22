@@ -56,14 +56,14 @@ namespace _Project.Scripts.Logic.Spawners
             {
                 await UniTask.WaitUntil(() => _spawnedEnemies.Count < _config.EnemiesAtTime, cancellationToken: token);
                 
-                await PausableDelay(_config.SpawnDelay, token);
+                await PausableDelayAsync(_config.SpawnDelay, token);
               
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime) 
                     await InitEnemyAsync(target, playerTransform);
             }
         }
 
-        private async UniTask PausableDelay(float spawnDelay, CancellationToken token)
+        private async UniTask PausableDelayAsync(float spawnDelay, CancellationToken token)
         {
             float timer = 0f;
             
