@@ -1,7 +1,7 @@
 ﻿using System;
-using _Project.Scripts.Services.Progress;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.SaveLoad;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
 using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
@@ -16,9 +16,9 @@ namespace _Project.Scripts.Infrastructure.MainMenu
     public class MainMenuBootstrapper : IInitializable
     {
         private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
-        private readonly IProgressService _progressService;
+        private readonly ProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
-        private readonly IUIFactory _uiFactory;
+        private readonly WindowFactory _windowFactory;
 
         private readonly Transform _uiParent;
         private readonly LazyInject<SettingsWindowPresenter> _lazySettingsWindowPresenter;
@@ -26,8 +26,8 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly LazyInject<MainMenuWindowPresenter> _lazyMainMenuWindowPresenter;
         private readonly LazyInject<SaveConflictResolveWindowPresenter> _lazySaveConflictResolveWindowPresenter;
 
-        public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
-            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent,
+        public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, ProgressService progressService,
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, WindowFactory windowFactory, Transform uiParent,
             LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, LazyInject<ShopWindowPresenter> lazyShopWindowPresenter,
             LazyInject<MainMenuWindowPresenter> lazyMainMenuWindowPresenter,LazyInject<SaveConflictResolveWindowPresenter> lazySaveConflictResolveWindowPresenter)
         {
@@ -38,7 +38,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _progressService = progressService;
             _saveLoadService = saveLoadService;
-            _uiFactory = uiFactory;
+            _windowFactory = windowFactory;
             _uiParent = uiParent;
         }
 
@@ -49,18 +49,18 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         {
             try
             {
-                await _uiFactory.CreateSaveConflictResolveWindowViewAsync(_uiParent);
+                await _windowFactory.CreateAsync<SaveConflictResolveWindowView>(_uiParent);
                 _lazySaveConflictResolveWindowPresenter.Value.Initialize();
             
                 _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
-                await _uiFactory.CreateShopWindowViewAsync(_uiParent);
+                await _windowFactory.CreateAsync<ShopWindowView>(_uiParent);
                 await _lazyShopWindowPresenter.Value.InitializeAsync();
 
-                await _uiFactory.CreateSettingsViewAsync(_uiParent);
+                await _windowFactory.CreateAsync<SettingsWindowView>(_uiParent);
                 _lazySettingsWindowPresenter.Value.Initialize();
             
-                await _uiFactory.CreateMainMenuWindowViewAsync(_uiParent); 
+                await _windowFactory.CreateAsync<MainMenuWindowView>(_uiParent); 
                 _lazyMainMenuWindowPresenter.Value.Initialize();
             
                 _loadingCurtainPresenter.HideLoading();
@@ -68,6 +68,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             catch (Exception e)
             {
                 Debug.LogError($"[MAIN MENU BOOTSTRAPPER] init error: {e}");
+                Debug.LogException(e);
             }
         }
     }

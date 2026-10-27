@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Enemy;
-using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Services.GamePause;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -14,30 +13,30 @@ namespace _Project.Scripts.Logic.Spawners
     public class EnemySpawner : IDisposable
     {
         private readonly IGamePauseService _pauseService;
-        private readonly IEnemyFactory _factory;
-        private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
+        private readonly EnemyFactory _factory;
+        private readonly List<EnemyContainer> _spawnedEnemies = new List<EnemyContainer>();
         private readonly EnemySpawnerConfig _config;
         
         private CancellationTokenSource _cancellationTokenSource;
 
-        public EnemySpawner(IGamePauseService pauseService, IEnemyFactory factory, EnemySpawnerConfig config)
+        public EnemySpawner(IGamePauseService pauseService, EnemyFactory factory, EnemySpawnerConfig config)
         {
             _pauseService = pauseService;
             _factory = factory;
             _config = config;
         }
         
-        public void SpawnAround(Transform target, Transform playerTransform)
+        public void SpawnAround(Transform target)
         {
             StopSpawning();
             _cancellationTokenSource = new CancellationTokenSource();
-            SpawnAroundAsync(target, playerTransform, _cancellationTokenSource.Token).Forget();
+            SpawnAroundAsync(target, _cancellationTokenSource.Token).Forget();
         }
 
         public void KillAllEnemies()
         {
-            foreach (EnemyDeath enemy in _spawnedEnemies) 
-                enemy.KillEnemy();
+            foreach (EnemyContainer enemy in _spawnedEnemies) 
+                enemy.EnemyDeath.KillEnemy();
         }
         
         public void StopSpawning()
@@ -50,7 +49,7 @@ namespace _Project.Scripts.Logic.Spawners
         public void Dispose() => 
             StopSpawning();
 
-        private async UniTaskVoid SpawnAroundAsync(Transform target, Transform playerTransform, CancellationToken token)
+        private async UniTaskVoid SpawnAroundAsync(Transform target, CancellationToken token)
         {
             while (true)
             {
@@ -59,7 +58,7 @@ namespace _Project.Scripts.Logic.Spawners
                 await PausableDelayAsync(_config.SpawnDelay, token);
               
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime) 
-                    await InitEnemyAsync(target, playerTransform);
+                    await InitEnemyAsync(target);
             }
         }
 
@@ -76,11 +75,18 @@ namespace _Project.Scripts.Logic.Spawners
             }
         }
         
-        private async UniTask InitEnemyAsync(Transform target, Transform playerTransform)
+        private async UniTask InitEnemyAsync(Transform target)
         {
-            EnemyDeath enemyDeath = await _factory.CreateEnemyAsync(GetSpawnPosition(target), playerTransform);
-            enemyDeath.OnDied += OnEnemyDeath;
-            _spawnedEnemies.Add(enemyDeath);
+            EnemyContainer enemy = await _factory.CreateEnemyAsync(GetSpawnPosition(target));
+            enemy.EnemyDeath.OnDied += OnEnemyDeath;
+            _spawnedEnemies.Add(enemy);
+            return;
+
+            void OnEnemyDeath()
+            {
+                enemy.EnemyDeath.OnDied -= OnEnemyDeath;
+                _spawnedEnemies.Remove(enemy);
+            }
         }
 
         private Vector3 GetSpawnPosition(Transform target)
@@ -89,12 +95,6 @@ namespace _Project.Scripts.Logic.Spawners
             Vector3 offset = new Vector3(spawnDirection.x, 0, spawnDirection.y);
             Vector3 spawnPosition = target.position + offset;
             return spawnPosition;
-        }
-
-        private void OnEnemyDeath(EnemyDeath enemyDeath)
-        {
-            enemyDeath.OnDied -= OnEnemyDeath;
-            _spawnedEnemies.Remove(enemyDeath);
         }
     }
 }

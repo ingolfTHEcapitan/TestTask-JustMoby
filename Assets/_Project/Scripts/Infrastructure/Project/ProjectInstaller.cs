@@ -5,28 +5,34 @@ using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Data.IAP;
 using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
+using _Project.Scripts.Services.Audio;
 using _Project.Scripts.Services.Authentication;
 using _Project.Scripts.Services.IAP;
-using _Project.Scripts.Services.NetworkAccessibility;
 using _Project.Scripts.Services.PlayerInput;
-using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.RemoteConfig;
-using _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.SaveLoad.CloudSave;
+using _Project.Scripts.Services.SaveLoad.SaveCoordinator;
 using _Project.Scripts.Services.SceneLoader;
-using _Project.Scripts.Services.Sound;
+using _Project.Scripts.Tools;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project
 {
     public class ProjectInstaller : MonoInstaller
     {
+        [Header("Audio")] 
+        [SerializeField] private AudioSource _musicAudioSource;
+        
         public override void InstallBindings()
         {
             BindRemoteConfig();
@@ -48,7 +54,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.Bind<List<PlayerStatConfig>>().AsSingle();
             
             Container.BindInterfacesAndSelfTo<RemoteConfigService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<RemoteConfigFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<RemoteConfigApplier>().AsSingle();
         }
 
         private void BindServices()
@@ -60,10 +66,10 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<ProgressService>().AsSingle();
             Container.Bind<PurchaseModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle();
-            Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<AdsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<FirebaseAnalyticsService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WindowFactory>().AsSingle();
 
             Container.Bind<ISaveLoadService>().WithId(SaveType.Local).FromMethod(GetLocalSaveInstance).AsCached();
             Container.Bind<ISaveLoadService>().WithId(SaveType.Cloud).To<CloudSaveLoadService>().AsCached();
@@ -73,12 +79,12 @@ namespace _Project.Scripts.Infrastructure.Project
             
             Container.BindInterfacesAndSelfTo<IAPProvider>().AsSingle();
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<AudioService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<AudioService>().AsSingle().WithArguments(_musicAudioSource);
         }
 
         private void BindLoadingCurtain()
         {
-            Container.Bind<LoadingCurtainView>().FromMethod(GetLoadingWindowView).AsSingle();
+            Container.BindWindow<LoadingCurtainView>();
             Container.Bind<LoadingCurtainPresenter>().AsSingle();
         }
 
@@ -87,8 +93,5 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private ISaveLoadService GetLocalSaveInstance(InjectContext context) => 
             context.Container.Resolve<LocalSaveServiceConfig>().GetInstance();
-
-        private LoadingCurtainView GetLoadingWindowView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<LoadingCurtainView>();
     }
 }

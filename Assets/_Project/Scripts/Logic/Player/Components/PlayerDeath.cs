@@ -1,0 +1,68 @@
+using System;
+using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Services;
+using _Project.Scripts.Services.Analytics;
+using UnityEngine;
+using Zenject;
+
+namespace _Project.Scripts.Logic.Player.Components
+{
+    public class PlayerDeath : MonoBehaviour
+    {
+        private const float HealPercent = 0.5f;
+        public event Action OnDied;
+
+        [SerializeField] private Health _health;
+        [SerializeField] private PlayerCameraLook _playerCameraLook;
+        [SerializeField] private PlayerMovement _playerMovement;
+        [SerializeField] private Weapon.Weapon _weapon;
+        
+        private IAnalyticsService _analyticsService;
+        private GameStatistics _statistics;
+
+        public bool IsDead { get; private set; }
+        
+        [Inject]
+        private void Construct(IAnalyticsService analyticsService, GameStatistics statistics)
+        {
+            _analyticsService = analyticsService;
+            _statistics = statistics;
+        }
+        
+        public void Initialize() => 
+            _health.OnZeroHealth += PlayerDie;
+
+        private void OnDestroy() => 
+            _health.OnZeroHealth -= PlayerDie;
+
+        public void Revive()
+        {
+            IsDead = false;
+            _statistics.RecordRevive();
+            _health.TakeHeal(_health.MaxHealth * HealPercent);
+            EnablePlayerComponents(true);
+            _analyticsService.LogPlayerRevive(_statistics.ReviveCount);
+        }
+        
+        private void PlayerDie()
+        {
+            if (!IsDead) 
+                Die();
+        }
+
+        private void Die()
+        {
+            IsDead = true;
+            EnablePlayerComponents(false);
+            OnDied?.Invoke();
+            _analyticsService.LogGameEnd(_statistics.ShotsFired, _statistics.EnemiesKilled);
+        }
+        
+        private void EnablePlayerComponents(bool enable)
+        {
+            _playerCameraLook.enabled = enable;
+            _playerMovement.enabled = enable;
+            _weapon.enabled = enable;
+        }
+    }
+}

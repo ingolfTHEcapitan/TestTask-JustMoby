@@ -1,7 +1,8 @@
 using System;
-using _Project.Scripts.Services.Sound;
+using _Project.Scripts.Services;
+using _Project.Scripts.Services.Audio;
 using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -13,7 +14,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     public class PlayerStatsWindowView : MonoBehaviour, IWindow
     {
         public event Action OnWindowDestroy;
-        public event Action OnOpenButtonClicked;
         public event Action OnCloseButtonClicked;
         public event Action OnApplyChangesButtonClicked;
         
@@ -23,24 +23,21 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
         [SerializeField] private TextMeshProUGUI _pointsText;
+        [Header("Audio")]
+        [SerializeField] private AudioClip _levelUpSound;
+
+        [field: SerializeField] public AudioSource AudioSource { get; private set;}
+        [field: SerializeField, Space] public Transform StatsContainer { get; private set; }
         
-        [field: SerializeField] public Transform StatsContainer { get; private set; }
-        [field: SerializeField, Header("Audio")] public AudioSource AudioSource { get; private set;}
-        
-        private IAudioService _audioService;
-        private AudioClip _levelUpSound;
-        private Button _openButton;
+        private ISoundService _audioService;
 
         [Inject]
-        private void Construct(IUIFactory uiFactory, IAudioService audioService) => 
+        private void Construct(WindowFactory windowFactory, ISoundService audioService) => 
             _audioService = audioService;
 
-        public void Initialize(Button openButton, AudioClip levelUpSound)
+        public void Initialize()
         {
             _windowContent.SetActive(false);
-            _levelUpSound = levelUpSound;
-            _openButton = openButton;
-            _openButton.onClick.AddListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.AddListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.AddListener(InvokeOnApplyChangesButtonClicked);
         }
@@ -48,7 +45,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private void OnDestroy()
         {
             OnWindowDestroy?.Invoke();
-            _openButton.onClick.RemoveListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.RemoveListener(InvokeOnApplyChangesButtonClicked);
         }
@@ -82,9 +78,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         public void PlayLevelUpSound() => 
             _audioService.PlayOneShot(_levelUpSound, AudioSource);
-        
-        private void InvokeOnOpenButtonClicked() => 
-            OnOpenButtonClicked?.Invoke();
 
         private void InvokeOnCloseButtonClicked() => 
             OnCloseButtonClicked?.Invoke();

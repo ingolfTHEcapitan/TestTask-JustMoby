@@ -29,14 +29,16 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
             _presenters.Clear();
         }
 
-        public async UniTask<ShopItemView> CreateShopItemAsync(Transform parent, ProductDescription productDescription, AudioSource audioSource)
+        public async UniTask<ShopItemView> CreateAsync(Transform parent, ProductDescription productDescription, AudioSource audioSource)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.ShopItem);
             ShopItemView view = _container.InstantiatePrefabForComponent<ShopItemView>(prefab, parent);
 
             ShopItemModel model = _container.Instantiate<ShopItemModel>(new object[] {productDescription});
+            Sprite icon = await _assetProvider.LoadAsync<Sprite>(model.IconAddress);
+            
             ShopItemPresenter presenter = _container.Instantiate<ShopItemPresenter>(new object[] {view, model});
-            await presenter.InitializeAsync(audioSource);
+            presenter.Initialize(audioSource, icon);
             
             _presenters.Add(presenter);
             

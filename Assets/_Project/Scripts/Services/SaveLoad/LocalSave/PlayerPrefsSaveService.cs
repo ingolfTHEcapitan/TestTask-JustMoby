@@ -1,5 +1,4 @@
 using _Project.Scripts.Data.Player;
-using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -9,9 +8,9 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
     {
         private const string PlayerProgressKey = "PlayerProgress";
         
-        public UniTask SaveProgressAsync(IProgressService progressService)
+        public UniTask SaveProgressAsync(PlayerProgress playerProgress)
         {
-            string json = JsonUtility.ToJson(progressService.PlayerProgress, false);
+            string json = JsonUtility.ToJson(playerProgress, false);
             PlayerPrefs.SetString(PlayerProgressKey, json);
             return UniTask.CompletedTask;
         }

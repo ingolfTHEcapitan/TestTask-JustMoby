@@ -1,6 +1,5 @@
 using System.IO;
 using _Project.Scripts.Data.Player;
-using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -20,12 +19,12 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
             _savePath = Path.Combine(_saveDirectoryPath, FileName);
         }
         
-        public async UniTask SaveProgressAsync(IProgressService progressService)
+        public async UniTask SaveProgressAsync(PlayerProgress playerProgress)
         {
             if (!Directory.Exists(_saveDirectoryPath)) 
                 Directory.CreateDirectory(_saveDirectoryPath);
             
-            string json = JsonUtility.ToJson(progressService.PlayerProgress, prettyPrint: true);
+            string json = JsonUtility.ToJson(playerProgress, prettyPrint: true);
             await File.WriteAllTextAsync(_savePath, json).AsUniTask();
         }
 

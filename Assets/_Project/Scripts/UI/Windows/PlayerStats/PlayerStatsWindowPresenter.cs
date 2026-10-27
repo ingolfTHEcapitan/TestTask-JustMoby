@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.PlayerInput;
-using _Project.Scripts.Services.Score;
 using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -16,8 +16,8 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     public class PlayerStatsWindowPresenter
     {
         private readonly IInputService _inputService;
-        private readonly IScoreService _scoreService;
-        private readonly IUIFactory _uiFactory;
+        private readonly ScoreService _scoreService;
+        private readonly PlayerStatItemFactory _statItemFactory;
         private readonly PlayerStatsWindowModel _model;
         private readonly PlayerStatsWindowView _view;
         private readonly CursorController _cursorController;
@@ -26,15 +26,15 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private bool _isOpen;
 
-        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, IUIFactory uiFactory,
-            IInputService inputService, IScoreService scoreService, CursorController cursorController)
+        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, IInputService inputService, 
+            ScoreService scoreService, CursorController cursorController, PlayerStatItemFactory statItemFactory)
         {
             _model = model;
             _view = view;
-            _uiFactory = uiFactory;
             _inputService = inputService;
             _scoreService = scoreService;
             _cursorController = cursorController;
+            _statItemFactory = statItemFactory;
         }
         
         public async UniTask InitializeAsync()
@@ -42,7 +42,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _model.Initialize();
 
             _view.OnWindowDestroy += CleanUp;
-            _view.OnOpenButtonClicked += Open;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
             _model.OnStatsChanged += UpdateAllStatItems;
@@ -58,7 +57,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private void CleanUp()
         {
             _view.OnWindowDestroy -= CleanUp;
-            _view.OnOpenButtonClicked -= Open;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
             _model.OnStatsChanged -= UpdateAllStatItems;
@@ -96,20 +94,9 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             foreach (PlayerStatData stat in _model.GetStats())
             {
                 PlayerStatConfig statConfig = _model.FindStatConfigByName(stat.Name);
-                PlayerStatItemView statItemView = await CreatePlayerStatItemAsync(stat, statConfig);
+                PlayerStatItemView statItemView = await _statItemFactory.CreateAsync(_view.StatsContainer, stat, statConfig, _view.AudioSource);
                 _statItemsView[stat.Name] = statItemView;
             }
-        }
-
-        private async UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(PlayerStatData stat, PlayerStatConfig statConfig)
-        {
-            PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemViewAsync(_view.StatsContainer);
-            
-            Sprite iconFrame = await _uiFactory.LoadSpriteAsync(statConfig.IconFrameAddress);
-            Sprite icon = await _uiFactory.LoadSpriteAsync(statConfig.IconAddress);
-            
-            statItem.Initialize(stat, iconFrame, icon, _view.AudioSource);
-            return statItem;
         }
         
         private void UpgradeStatItem(StatName statName)
@@ -118,7 +105,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             UpdateStatItem(statName);
         }
 
-        private async void Open()
+        public async void Open()
         {
             try
             {

@@ -86,8 +86,10 @@ GameObject:
   - component: {fileID: 3117825465392412960}
   - component: {fileID: 4082514023670906441}
   - component: {fileID: 6797133231648955068}
-  - component: {fileID: 5434324020669320190}
+  - component: {fileID: 6586184735384548672}
   - component: {fileID: 3726465050056379465}
+  - component: {fileID: 4423455930423028511}
+  - component: {fileID: 5434324020669320190}
   - component: {fileID: 3373863833424226122}
   - component: {fileID: 666391151365057433}
   - component: {fileID: 8941394685515629623}
@@ -211,7 +213,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &5434324020669320190
+--- !u!114 &6586184735384548672
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -220,10 +222,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 4217187639714539394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 756673f78a2641c196467ad834527449, type: 3}
+  m_Script: {fileID: 11500000, guid: 07706cd9e8534ee0aff7c221da6d5592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _agent: {fileID: 3117825465392412960}
+  <StateMachine>k__BackingField: {fileID: 666391151365057433}
+  <Visuals>k__BackingField: {fileID: 3726465050056379465}
+  <EnemyDeath>k__BackingField: {fileID: 1388457686687828344}
+  <Health>k__BackingField: {fileID: 3373863833424226122}
+  <RotateToPlayer>k__BackingField: {fileID: 8941394685515629623}
+  <HealthBarView>k__BackingField: {fileID: 2843691845193707160}
 --- !u!114 &3726465050056379465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,7 +245,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 1784392016738993417}
   _health: {fileID: 3373863833424226122}
-  _death: {fileID: 1388457686687828344}
+  _enemyAudioSource: {fileID: 3619087064373259428}
+  _swordHitSounds:
+  - {fileID: 8300000, guid: ce9896da6dfa7c343ba4dff8ad555ad5, type: 3}
+  - {fileID: 8300000, guid: 34e54c2b67b9b0248a41abe80836c241, type: 3}
+  - {fileID: 8300000, guid: 7d1b34ccbd3693e4cb6cab17748b032a, type: 3}
+  _swordMissSounds:
+  - {fileID: 8300000, guid: 63a6ffe054e1ce4438291a649bc75786, type: 3}
+  - {fileID: 8300000, guid: b6905da4d9cf8aa45b2e5593305b12d4, type: 3}
+  - {fileID: 8300000, guid: b9e9d6c43dd4ef94cb49ebd54d6470f2, type: 3}
+  _takeDamageSounds:
+  - {fileID: 8300000, guid: 507eb340d89be8c4ab4647e00aaf49e5, type: 3}
+  _dissolveShader: {fileID: 2359227429214316021}
+--- !u!114 &4423455930423028511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4217187639714539394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfbc0e2688c842d2aed6d6118c319143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1784392016738993417}
+--- !u!114 &5434324020669320190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4217187639714539394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756673f78a2641c196467ad834527449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _agent: {fileID: 3117825465392412960}
 --- !u!114 &3373863833424226122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,15 +308,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _agent: {fileID: 3117825465392412960}
-  _audioSource: {fileID: 3619087064373259428}
-  _swordHitSounds:
-  - {fileID: 8300000, guid: ce9896da6dfa7c343ba4dff8ad555ad5, type: 3}
-  - {fileID: 8300000, guid: 34e54c2b67b9b0248a41abe80836c241, type: 3}
-  - {fileID: 8300000, guid: 7d1b34ccbd3693e4cb6cab17748b032a, type: 3}
-  _swordMissSounds:
-  - {fileID: 8300000, guid: 63a6ffe054e1ce4438291a649bc75786, type: 3}
-  - {fileID: 8300000, guid: b6905da4d9cf8aa45b2e5593305b12d4, type: 3}
-  - {fileID: 8300000, guid: b9e9d6c43dd4ef94cb49ebd54d6470f2, type: 3}
 --- !u!114 &8941394685515629623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -298,8 +333,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: {fileID: 3373863833424226122}
-  _healthBarView: {fileID: 5198877129523753653}
-  _dissolveShader: {fileID: 2359227429214316021}
   _agent: {fileID: 3117825465392412960}
   _enemyStateMachine: {fileID: 666391151365057433}
   _enemyRotateToPlayer: {fileID: 8941394685515629623}
@@ -656,6 +689,16 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 507eb340d89be8c4ab4647e00aaf49e5, type: 3}
     - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
         type: 3}
       propertyPath: _hitSounds.Array.size
@@ -687,16 +730,16 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 53122739899882}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5198877129523753653 stripped
+--- !u!114 &2843691845193707160 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+  m_CorrespondingSourceObject: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
     type: 3}
   m_PrefabInstance: {fileID: 53122739899882}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 230e87c51fd84cf5bfaa6f2f672c7907, type: 3}
+  m_Script: {fileID: 11500000, guid: d67ef60674124a449f98dd10548b0044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &2623635283280196149

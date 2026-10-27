@@ -1,5 +1,5 @@
 using _Project.Scripts.Data.Player;
-using _Project.Scripts.Services.Progress;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.SaveLoad;
 using Cysharp.Threading.Tasks;
 using Zenject;
@@ -9,13 +9,13 @@ namespace _Project.Scripts.Logic.PlayerStats
     public class PlayerStatsSaveLoad
     {
         private readonly ISaveLoadService _saveLoadService;
-        private readonly IProgressService _progressService;
+        private readonly ProgressService _progressService;
         private readonly PlayerStatsModel _statsModel;
 
         private PlayerStatsProgress Progress => _progressService.PlayerProgress.PlayerStatsProgress;
 
         public PlayerStatsSaveLoad(PlayerStatsModel statsModel, [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, 
-            IProgressService progressService)
+            ProgressService progressService)
         {
             _statsModel = statsModel;
             _saveLoadService = saveLoadService;
@@ -45,6 +45,6 @@ namespace _Project.Scripts.Logic.PlayerStats
         }
 
         public async UniTask SaveStatAsync() => 
-            await _saveLoadService.SaveProgressAsync(_progressService);
+            await _saveLoadService.SaveProgressAsync(_progressService.PlayerProgress);
     }
 }

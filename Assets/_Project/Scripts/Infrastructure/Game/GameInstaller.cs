@@ -1,19 +1,19 @@
-using _Project.Scripts.Logic.Enemy.Factory;
+using _Project.Scripts.Logic;
+using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Logic.Player;
-using _Project.Scripts.Logic.Player.Factory;
-using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
+using _Project.Scripts.Logic.Player.Weapon.Bullet;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
-using _Project.Scripts.Services.Effects;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
-using _Project.Scripts.Services.HealthCalculator;
-using _Project.Scripts.Services.Score;
-using _Project.Scripts.Services.Statistics;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.Tools;
+using _Project.Scripts.UI.Common.HealthBar;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
+using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Game
@@ -27,9 +27,7 @@ namespace _Project.Scripts.Infrastructure.Game
         [SerializeField] private Transform _enemySpawnPoint;
         
         [Header("Audio")]
-        [SerializeField] private AudioSource _musicSource;
-        [SerializeField] private AudioClip _dungeonMusic;
-        [SerializeField] private AudioClip _levelUpSounds;
+        [SerializeField] private AudioClip _gameplayMusic;
         
         public override void InstallBindings()
         {
@@ -37,14 +35,15 @@ namespace _Project.Scripts.Infrastructure.Game
             BindPlayer();
             BindPlayerStats();
             BindHeadUpDisplay();
+            BindHealthBarFactory();
             BindGameOverWindow();
-            BindHealthCalculatorService();
+            BindHealthCalculator();
             BindUpgradePointsService();
             BindEnemy();
             BindWeapon();
             BindGame();
         }
-        
+
         private void BindServices()
         {
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
@@ -52,35 +51,39 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.BindInterfacesAndSelfTo<EffectsService>().AsSingle();
         }
 
-        private void BindHealthCalculatorService() => 
-            Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
+        private void BindHealthCalculator() => 
+            Container.Bind<HealthCalculator>().AsSingle();
+
+        private void BindHealthBarFactory() => 
+            Container.Bind<HealthBarFactory>().AsSingle();
 
         private void BindPlayer()
         {
             Container.BindInterfacesAndSelfTo<PlayerFactory>().AsSingle().WithArguments(_gameParent);
             Container.Bind<PlayerSpawner>().AsSingle();
-            Container.Bind<PlayerDeath>().FromMethod(GetPlayerDeath).AsSingle();
+            Container.Bind<PlayerContainer>().FromMethod(GetPlayer).AsSingle();
         }
 
         private void BindPlayerStats()
         {
+            Container.BindInterfacesAndSelfTo<PlayerStatItemFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
             Container.Bind<PlayerStatsWindowModel>().AsSingle();
-            Container.Bind<PlayerStatsWindowView>().FromMethod(GetPlayerStatsWindowView).AsSingle();
+            Container.BindWindow<PlayerStatsWindowView>();
             Container.Bind<PlayerStatsWindowPresenter>().AsSingle();
         }
         
         private void BindHeadUpDisplay()
         {
-            Container.Bind<HeadUpDisplayView>().FromMethod(GetHudView).AsSingle();
+            Container.BindWindow<HeadUpDisplayView>();
             Container.BindInterfacesAndSelfTo<HeadUpDisplayModel>().AsSingle();
             Container.Bind<HeadUpDisplayPresenter>().AsSingle();
         }
 
         private void BindGameOverWindow()
         {
-            Container.Bind<GameOverWindowView>().FromMethod(GetGameOverView).AsSingle();
+            Container.BindWindow<GameOverWindowView>();
             Container.Bind<GameOverWindowModel>().AsSingle();
             Container.Bind<GameOverWindowPresenter>().AsSingle();
         }
@@ -99,21 +102,11 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindGame()
         {
-            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent, _levelUpSounds);
-            Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _dungeonMusic);
-            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
+            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent);
+            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint, _gameplayMusic);
         }
-
-        private HeadUpDisplayView GetHudView(InjectContext context) =>
-            context.Container.Resolve<IUIFactory>().GetWindowView<HeadUpDisplayView>();
-
-        private GameOverWindowView GetGameOverView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<GameOverWindowView>();
-
-        private PlayerStatsWindowView GetPlayerStatsWindowView(InjectContext context)=> 
-            context.Container.Resolve<IUIFactory>().GetWindowView<PlayerStatsWindowView>();
-
-        private PlayerDeath GetPlayerDeath(InjectContext context) => 
-            context.Container.Resolve<IPlayerFactory>().GetPlayerDeath();
+        
+        private PlayerContainer GetPlayer(InjectContext context) => 
+            context.Container.Resolve<PlayerFactory>().GetPlayer();
     }
 }

@@ -5,9 +5,9 @@ namespace _Project.Scripts.UI.Windows.MainMenu
 {
     public class MainMenuWindowModel
     {
-        private readonly ISceneLoaderService _sceneLoader;
+        private readonly SceneLoaderService _sceneLoader;
 
-        public MainMenuWindowModel(ISceneLoaderService sceneLoader) => 
+        public MainMenuWindowModel(SceneLoaderService sceneLoader) => 
             _sceneLoader = sceneLoader;
 
         public async UniTask LoadGameplaySceneAsync() => 
@@ -18,7 +18,7 @@ namespace _Project.Scripts.UI.Windows.MainMenu
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+            UnityEngine.Application.Quit();
 #endif
         }
     }

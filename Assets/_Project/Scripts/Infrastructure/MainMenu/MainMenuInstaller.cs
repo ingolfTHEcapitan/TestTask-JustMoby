@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Services.SaveLoad;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.Tools;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
@@ -26,14 +27,14 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private void BindSaveConflictResolver()
         {
             Container.Bind<SaveTimeFormatter>().AsSingle();
-            Container.BindInterfacesAndSelfTo<SaveConflictResolveWindowView>().FromMethod(GetSaveConflictWindowView).AsSingle();
+            Container.BindWindow<SaveConflictResolveWindowView>();
             Container.Bind<SaveConflictResolveWindowModel>().AsSingle();
             Container.Bind<SaveConflictResolveWindowPresenter>().AsSingle();
         }
 
         private void BindShopWindow()
         {
-            Container.BindInterfacesAndSelfTo<ShopWindowView>().FromMethod(GetShopWindowView).AsSingle();
+            Container.BindWindow<ShopWindowView>();
             Container.BindInterfacesAndSelfTo<ShopWindowModel>().AsSingle();
             Container.Bind<ShopWindowPresenter>().AsSingle();
             Container.Bind<ShopItemFactory>().AsSingle();
@@ -41,31 +42,20 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private void BindSettingsWindow()
         {
-            Container.BindInterfacesAndSelfTo<SettingsWindowView>().FromMethod(GetSettingsWindowView).AsSingle();
+            Container.BindWindow<SettingsWindowView>();
             Container.BindInterfacesAndSelfTo<SettingsWindowModel>().AsSingle();
             Container.Bind<SettingsWindowPresenter>().AsSingle();
         }
 
         private void BindMainMenuWindow()
         {
-            Container.Bind<MainMenuWindowView>().FromMethod(GetMainMenuWindowView).AsSingle();
+            Container.BindWindow<MainMenuWindowView>();
             Container.BindInterfacesAndSelfTo<MainMenuWindowModel>().AsSingle();
             Container.Bind<MainMenuWindowPresenter>().AsSingle();
         }
 
         private void BindMainMenuBootstrapper() => 
             Container.BindInterfacesAndSelfTo<MainMenuBootstrapper>().AsSingle().WithArguments(_uiParent);
-
-        private SettingsWindowView GetSettingsWindowView(InjectContext context) =>
-            context.Container.Resolve<IUIFactory>().GetWindowView<SettingsWindowView>();
-
-        private ShopWindowView GetShopWindowView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<ShopWindowView>();
-
-        private MainMenuWindowView GetMainMenuWindowView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<MainMenuWindowView>();
-
-        private SaveConflictResolveWindowView GetSaveConflictWindowView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<SaveConflictResolveWindowView>();
+        
     }
 }

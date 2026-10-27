@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Logic.Common
 {
-    public class Health : MonoBehaviour, IHealth
+    public class Health : MonoBehaviour, IDamageable
     {
         public event Action OnHealthChanged;
         public event Action OnTakeDamage;
@@ -14,6 +14,7 @@ namespace _Project.Scripts.Logic.Common
 
         public float CurrentHealth {get; private set;}
         public float MaxHealth { get; private set; }
+        public float NormalizedHealth => CurrentHealth / MaxHealth;
         
         public void Initialize(float maxHealth)
         {

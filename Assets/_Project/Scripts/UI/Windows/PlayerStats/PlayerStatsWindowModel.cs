@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Player;
+using _Project.Scripts.Logic.Player.Components;
 using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
-using _Project.Scripts.Services.Score;
 using Cysharp.Threading.Tasks;
+using Zenject;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
@@ -16,26 +18,31 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         private readonly PlayerStatsModel _statsModel;
         private readonly PlayerStatsSaveLoad _saveLoad;
-        private readonly PlayerDeath _playerDeath;
         private readonly IGamePauseService _pauseService;
-        private readonly IScoreService _scoreService;
+        private readonly ScoreService _scoreService;
         private readonly List<PlayerStatConfig> _statConfigs;
+        private readonly LazyInject<PlayerContainer> _lazyPlayer;
+        
+        private  PlayerDeath _playerDeath;
+        
         public int UpgradePoints { get; private set; }
         public bool IsPlayerDead => _playerDeath.IsDead;
         
-        public PlayerStatsWindowModel(PlayerStatsModel statsModel, PlayerStatsSaveLoad saveLoad, PlayerDeath playerDeath, 
-            IGamePauseService pauseService, IScoreService scoreService, List<PlayerStatConfig> statConfigs)
+        public PlayerStatsWindowModel(PlayerStatsModel statsModel, PlayerStatsSaveLoad saveLoad, IGamePauseService pauseService, 
+            ScoreService scoreService, List<PlayerStatConfig> statConfigs, LazyInject<PlayerContainer> lazyPlayer)
         {
             _statsModel = statsModel;
             _saveLoad = saveLoad;
-            _playerDeath = playerDeath;
             _pauseService = pauseService;
             _scoreService = scoreService;
             _statConfigs = statConfigs;
+            _lazyPlayer = lazyPlayer;
         }
 
         public void Initialize()
         {
+            _playerDeath = _lazyPlayer.Value.PlayerDeath;
+            
             foreach (PlayerStatData statData in _statsModel.GetStats()) 
                 statData.OnStatChanged += InvokeStatChanged;
 
@@ -44,9 +51,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             
             UpgradePoints = _saveLoad.LoadStats().UpgradePoints;
         }
-
-       
-
+        
         public void Dispose()
         {
             foreach (PlayerStatData stat in GetStats())

@@ -1,6 +1,7 @@
 ﻿using _Project.Scripts.Logic.Common;
-using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.Logic.Player;
+using _Project.Scripts.UI;
+using _Project.Scripts.UI.Common.HealthBar;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
@@ -13,53 +14,48 @@ namespace _Project.Scripts.Infrastructure.Game
 {
     public class GameUIInitializer
     {
-        private readonly IUIFactory _uiFactory;
+        private readonly WindowFactory _windowFactory;
         private readonly Transform _uiParent;
-
-        private readonly AudioClip _levelUpSound;
+        private readonly HealthBarFactory _healthBarFactory;
         private readonly LazyInject<HeadUpDisplayPresenter> _lazyHudPresenter;
         private readonly LazyInject<GameOverWindowPresenter> _lazyGameOverWindowPresenter;
         private readonly LazyInject<PlayerStatsWindowPresenter> _lazyPlayerStatsWindowPresenter;
+        private readonly LazyInject<PlayerContainer> _lazyPlayer;
 
-        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, 
+        public GameUIInitializer(WindowFactory windowFactory, Transform uiParent, HealthBarFactory healthBarFactory,
             LazyInject<PlayerStatsWindowPresenter> lazyPlayerStatsWindowPresenter, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter,
-            LazyInject<GameOverWindowPresenter> lazyGameOverWindowPresenter)
+            LazyInject<GameOverWindowPresenter> lazyGameOverWindowPresenter, LazyInject<PlayerContainer> lazyPlayer)
         {
-            _uiFactory = uiFactory;
+            _windowFactory = windowFactory;
             _uiParent = uiParent;
-            _levelUpSound = levelUpSound;
             _lazyPlayerStatsWindowPresenter = lazyPlayerStatsWindowPresenter;
             _lazyGameOverWindowPresenter = lazyGameOverWindowPresenter;
             _lazyHudPresenter = lazyHudPresenter;
+            _healthBarFactory = healthBarFactory;
+            _lazyPlayer = lazyPlayer;
         }
         
-        public async UniTask InitUIAsync(Health playerHealth)
+        public async UniTask InitUIAsync()
         {
-            HeadUpDisplayView hudView = await _uiFactory.CreateHudViewAsync(_uiParent);
-            InitPlayerHealthBarView(hudView, playerHealth);
-            _lazyHudPresenter.Value.Initialize();
-            
-            await InitPlayerStatsViewAsync(hudView, _levelUpSound); 
+            await InitPlayerStatsViewAsync(); 
             await _lazyPlayerStatsWindowPresenter.Value.InitializeAsync();
             
-            await _uiFactory.CreateGameOverWindowViewAsync(_uiParent);
+            HeadUpDisplayView hudView = await _windowFactory.CreateAsync<HeadUpDisplayView>(_uiParent);
+            _lazyHudPresenter.Value.Initialize();
+
+            CreatePlayerHealthBar(hudView, _lazyPlayer.Value.Health);
+
+            await _windowFactory.CreateAsync<GameOverWindowView>(_uiParent);
             _lazyGameOverWindowPresenter.Value.Initialize();
         }
 
-        private void InitPlayerHealthBarView(HeadUpDisplayView hud, Health playerHealth)
-        {
-            HealthBarView playerHealthBarView = hud.HealthBarView;
-            playerHealthBarView.Construct(playerHealth);
-            playerHealthBarView.Initialize();
-        }
+        private void CreatePlayerHealthBar(HeadUpDisplayView hud, Health playerHealthModel) => 
+            _healthBarFactory.Create(hud.HealthBarView, playerHealthModel, hideOnZeroHealth: false);
 
-        private async UniTask<PlayerStatsWindowView> InitPlayerStatsViewAsync(HeadUpDisplayView hud, AudioClip levelUpSound)
+        private async UniTask InitPlayerStatsViewAsync()
         {
-            Button openButton = hud.OpenStatsWindowButton;
-            
-            PlayerStatsWindowView playerStatsWindowView = await _uiFactory.CreatePlayerStatsViewAsync(_uiParent);
-            playerStatsWindowView.Initialize(openButton, levelUpSound);
-            return playerStatsWindowView;
+            PlayerStatsWindowView playerStatsWindowView = await _windowFactory.CreateAsync<PlayerStatsWindowView>(_uiParent);
+            playerStatsWindowView.Initialize();
         }
     }
 }

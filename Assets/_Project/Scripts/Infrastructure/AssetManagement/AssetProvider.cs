@@ -10,14 +10,14 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
 {
     public class AssetProvider : IAssetProvider, IDisposable
     {
-        private readonly ISceneLoaderService _sceneLoader;
+        private readonly SceneLoaderService _sceneLoader;
         private readonly Dictionary<string, AsyncOperationHandle> _completedCache = new Dictionary<string, AsyncOperationHandle>();
         private readonly Dictionary<string, List<AsyncOperationHandle>> _sceneHandles = new Dictionary<string, List<AsyncOperationHandle>>();
         private readonly Dictionary<string, List<AsyncOperationHandle>> _globalHandles = new Dictionary<string, List<AsyncOperationHandle>>();
 
         private AsyncOperationHandle<IResourceLocator> _asyncOperationHandle;
 
-        public AssetProvider(ISceneLoaderService sceneLoader) => 
+        public AssetProvider(SceneLoaderService sceneLoader) => 
             _sceneLoader = sceneLoader;
         
         public async UniTask InitializeAsync()

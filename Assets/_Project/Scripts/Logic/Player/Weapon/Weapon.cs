@@ -1,10 +1,9 @@
 using System;
 using _Project.Scripts.Configs.Weapon;
-using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
+using _Project.Scripts.Logic.Player.Weapon.Bullet;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
-using _Project.Scripts.Services.Sound;
-using _Project.Scripts.Services.Statistics;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -13,14 +12,13 @@ namespace _Project.Scripts.Logic.Player.Weapon
 {
     public class Weapon : MonoBehaviour
     {
+        public event Action<Vector3, Transform> OnBulletHit;
+        public event Action OnShoot;
+        
         private const float MaxRayDistance = 100f;
         private const int AllLayers = -1;
 
         [SerializeField] private Transform _shootPoint;
-        
-        [Header("Audio")]
-        [SerializeField] private AudioSource _audioSource;
-        [SerializeField] private AudioClip _shotSound;
         
         private float _fireRate;
         private float _nextTimeToFire;
@@ -29,21 +27,19 @@ namespace _Project.Scripts.Logic.Player.Weapon
         private Camera _playerCamera;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
-        private IBulletFactory _factory;
-        private IGameStatistics _statistics;
-        private IAudioService _audioService;
+        private BulletFactory _factory;
+        private GameStatistics _statistics;
         private WeaponConfig _weaponConfig;
         private BulletConfig _bulletConfig;
 
         [Inject]
-        private void Construct(IGamePauseService pauseService, IInputService inputService, IBulletFactory factory, 
-            IGameStatistics statistics, IAudioService audioService, WeaponConfig weaponConfig, BulletConfig bulletConfig)
+        private void Construct(IGamePauseService pauseService, IInputService inputService, BulletFactory factory, 
+            GameStatistics statistics, WeaponConfig weaponConfig, BulletConfig bulletConfig)
         {
             _pauseService = pauseService;
             _inputService = inputService;
             _factory = factory;
             _statistics = statistics;
-            _audioService = audioService;
             _weaponConfig = weaponConfig;
             _bulletConfig = bulletConfig;
         }
@@ -63,8 +59,8 @@ namespace _Project.Scripts.Logic.Player.Weapon
             if (_inputService.IsFireButtonPressed() && CanShoot())
             {
                 ShootAsync().Forget(Debug.LogException);
+                OnShoot?.Invoke();
                 _statistics.RecordShot();
-                _audioService.PlayOneShot(_shotSound, _audioSource);
             }
         }
 
@@ -73,9 +69,22 @@ namespace _Project.Scripts.Logic.Player.Weapon
             _nextTimeToFire = Time.time + 1 / _fireRate;
             Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
             Vector3 targetPoint = GetTargetPoint(ray);
-            await _factory.CreateBulletAsync(_bulletConfig, _shootPoint, GetShootDirection(targetPoint), targetPoint);
+            
+            Bullet.Bullet bullet = await _factory.CreateBulletAsync(_bulletConfig, _shootPoint, GetShootDirection(targetPoint), targetPoint);
+            bullet.OnBulletDestroy += UnSubscribe;
+            bullet.OnHit += InvokeOnBulletHit;
+            return;
+
+            void UnSubscribe()
+            {
+                bullet.OnHit -= InvokeOnBulletHit;
+                bullet.OnBulletDestroy -= UnSubscribe;
+            }
         }
 
+        private void InvokeOnBulletHit(Vector3 hitPosition, Transform targetContainer) => 
+            OnBulletHit?.Invoke(hitPosition, targetContainer);
+        
         private Vector3 GetShootDirection(Vector3 targetPoint)
         {
             return (targetPoint - _shootPoint.position).normalized;

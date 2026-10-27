@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using _Project.Scripts.Logic.Common.StateMachine.States;
-using _Project.Scripts.Logic.Common.StateMachine.Transitions;
+using _Project.Scripts.Logic.Common.StateMachine.Predicates;
 
 namespace _Project.Scripts.Logic.Common.StateMachine
 {
@@ -9,13 +8,13 @@ namespace _Project.Scripts.Logic.Common.StateMachine
     {
         private StateNode _currentStateNode;
         private readonly Dictionary<Type, StateNode> _nodes = new Dictionary<Type, StateNode>();
-        private readonly HashSet<ITransition> _anyTransitions = new HashSet<ITransition>();
+        private readonly HashSet<Transition> _anyTransitions = new HashSet<Transition>();
         
         public IState CurrentState => _currentStateNode.State;
 
         public void Update()
         {
-            ITransition transition = GetTransition();
+            Transition transition = GetTransition();
             
             if (transition != null)
                 ChangeState(transition.To);
@@ -51,13 +50,13 @@ namespace _Project.Scripts.Logic.Common.StateMachine
             _currentStateNode = _nodes[state.GetType()];
         }
 
-        private ITransition GetTransition()
+        private Transition GetTransition()
         {
-            foreach (ITransition transition in _anyTransitions)
+            foreach (Transition transition in _anyTransitions)
                 if (transition.Condition.Evaluate())
                     return transition;
             
-            foreach (ITransition transition in _currentStateNode.Transitions)
+            foreach (Transition transition in _currentStateNode.Transitions)
                 if (transition.Condition.Evaluate())
                     return transition;
             
@@ -81,12 +80,12 @@ namespace _Project.Scripts.Logic.Common.StateMachine
         {
             public IState State { get; }
             
-            public HashSet<ITransition> Transitions { get; }
+            public HashSet<Transition> Transitions { get; }
 
             public StateNode(IState state)
             {
                 State = state;
-                Transitions = new HashSet<ITransition>();
+                Transitions = new HashSet<Transition>();
             }
 
             public void AddTransition(IState to, IPredicate condition) => 

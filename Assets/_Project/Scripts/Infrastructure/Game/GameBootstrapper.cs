@@ -1,8 +1,10 @@
 using System;
-using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
-using _Project.Scripts.Services.Effects;
+using _Project.Scripts.Services;
+using _Project.Scripts.Services.Analytics;
+using _Project.Scripts.Services.Audio;
+using _Project.Scripts.UI.Windows.LoadingCurtain;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -11,24 +13,31 @@ namespace _Project.Scripts.Infrastructure.Game
 {
     public class GameBootstrapper : IInitializable
     {
-        private readonly IEffectsService _effectsService;
+        private readonly EffectsService _effectsService;
         private readonly PlayerSpawner _playerSpawner;
         private readonly EnemySpawner _enemySpawner;
         private readonly Transform _enemySpawnPoint;
         private readonly GameUIInitializer _uiInitializer;
-        private readonly GameStarter _gameStarter;
         private readonly PlayerStatsModel _playerStatsModel;
+        private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
+        private readonly IMusicService _audioService;
+        private readonly IAnalyticsService _analyticsService;
+        private readonly AudioClip _gameplayMusic;
         
-        public GameBootstrapper(IEffectsService effectsService, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            Transform enemySpawnPoint, GameUIInitializer uiInitializer, GameStarter gameStarter, PlayerStatsModel playerStatsModel)
+        public GameBootstrapper(EffectsService effectsService, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
+            Transform enemySpawnPoint, GameUIInitializer uiInitializer, PlayerStatsModel playerStatsModel, AudioClip gameplayMusic,
+            LoadingCurtainPresenter loadingCurtainPresenter, IAnalyticsService analyticsService, IMusicService audioService)
         {
             _effectsService = effectsService;
             _playerSpawner = playerSpawner;
             _enemySpawner = enemySpawner;
             _enemySpawnPoint = enemySpawnPoint;
             _uiInitializer = uiInitializer;
-            _gameStarter = gameStarter;
             _playerStatsModel = playerStatsModel;
+            _loadingCurtainPresenter = loadingCurtainPresenter;
+            _analyticsService = analyticsService;
+            _audioService = audioService;
+            _gameplayMusic = gameplayMusic;
         }
 
         public void Initialize() => 
@@ -40,18 +49,18 @@ namespace _Project.Scripts.Infrastructure.Game
             {
                 await _effectsService.WarmUpAsync();
                 _playerStatsModel.CreateStats();
-            
-                Health playerHealth = await _playerSpawner.SpawnAsync();
-            
-                await _uiInitializer.InitUIAsync(playerHealth);
-            
-                _enemySpawner.SpawnAround( _enemySpawnPoint, playerHealth.transform);
-            
-                _gameStarter.StartGame();
+                await _playerSpawner.SpawnAsync();
+                _enemySpawner.SpawnAround(_enemySpawnPoint);
+                await _uiInitializer.InitUIAsync();
+                
+                _analyticsService.LogGameStart();
+                _audioService.PlayMusic(_gameplayMusic);
+                _loadingCurtainPresenter.HideLoading();
             }
             catch (Exception e)
             {
                 Debug.LogError($"[GAME BOOTSTRAPPER] init error: {e}");
+                Debug.LogException(e);
             }
         }
     }

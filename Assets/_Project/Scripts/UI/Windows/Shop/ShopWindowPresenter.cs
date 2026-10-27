@@ -42,7 +42,6 @@ namespace _Project.Scripts.UI.Windows.Shop
         {
             _view.OnWindowDestroy -= CleanUp;
             _view.OnCloseButtonClicked -= Close;
-            _shopItemFactory.Dispose();
             ClearShopItems();
         }
 
@@ -63,13 +62,15 @@ namespace _Project.Scripts.UI.Windows.Shop
             foreach (ProductDescription productDescription in _model.GetProducts())
             {
                 ShopItemView shopItemView = 
-                    await _shopItemFactory.CreateShopItemAsync(_view.ProductsContainer, productDescription, _view.AudioSource);
+                    await _shopItemFactory.CreateAsync(_view.ProductsContainer, productDescription, _view.AudioSource);
                 _shopItemViews.Add(shopItemView);
             }
         }
         
         private void ClearShopItems()
         {
+            _shopItemFactory.Dispose();
+            
             foreach (ShopItemView shopItemView in _shopItemViews)
                 if (shopItemView)
                     Object.Destroy(shopItemView.gameObject);
