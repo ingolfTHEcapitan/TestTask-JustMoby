@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Services.Sound;
+using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.Services;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -22,14 +23,14 @@ namespace _Project.Scripts.UI.Common
         [SerializeField] private List<AudioClip> _takeDamageSounds;
         
         private IHealth _health;
-        private IAudioService _audioService;
+        private AudioService _audioService;
         private UniTask _currentLerpTask;
         private CancellationTokenSource _cts;
 
         private float CurrentValue => _health.CurrentHealth / _health.MaxHealth;
 
         [Inject]
-        private void Construct(IAudioService audioService) => 
+        private void Construct(AudioService audioService) => 
             _audioService = audioService;
 
         public void Construct(IHealth health) => 

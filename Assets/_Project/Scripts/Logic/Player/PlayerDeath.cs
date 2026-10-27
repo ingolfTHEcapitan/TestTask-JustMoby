@@ -1,8 +1,8 @@
 using System;
 using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.Analytics;
-using _Project.Scripts.Services.Sound;
-using _Project.Scripts.Services.Statistics;
 using UnityEngine;
 using Zenject;
 
@@ -24,13 +24,13 @@ namespace _Project.Scripts.Logic.Player
         [SerializeField] private AudioClip _deathSound;
         
         private IAnalyticsService _analyticsService;
-        private IGameStatistics _statistics;
-        private IAudioService _audioService;
+        private GameStatistics _statistics;
+        private AudioService _audioService;
 
         public bool IsDead { get; private set; }
         
         [Inject]
-        private void Construct(IAnalyticsService analyticsService, IGameStatistics statistics, IAudioService audioService)
+        private void Construct(IAnalyticsService analyticsService, GameStatistics statistics, AudioService audioService)
         {
             _analyticsService = analyticsService;
             _statistics = statistics;

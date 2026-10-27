@@ -4,8 +4,8 @@ using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
-using _Project.Scripts.Services.Score;
 using Cysharp.Threading.Tasks;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
@@ -18,13 +18,13 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private readonly PlayerStatsSaveLoad _saveLoad;
         private readonly PlayerDeath _playerDeath;
         private readonly IGamePauseService _pauseService;
-        private readonly IScoreService _scoreService;
+        private readonly ScoreService _scoreService;
         private readonly List<PlayerStatConfig> _statConfigs;
         public int UpgradePoints { get; private set; }
         public bool IsPlayerDead => _playerDeath.IsDead;
         
         public PlayerStatsWindowModel(PlayerStatsModel statsModel, PlayerStatsSaveLoad saveLoad, PlayerDeath playerDeath, 
-            IGamePauseService pauseService, IScoreService scoreService, List<PlayerStatConfig> statConfigs)
+            IGamePauseService pauseService, ScoreService scoreService, List<PlayerStatConfig> statConfigs)
         {
             _statsModel = statsModel;
             _saveLoad = saveLoad;

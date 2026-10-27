@@ -1,7 +1,8 @@
 using System;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Services.Effects;
+using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -18,11 +19,11 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet
         private float _currentLifeTime;
         private Vector3 _targetPoint;
 
-        private IEffectsService _effectsService;
+        private EffectsService _effectsService;
         private IGamePauseService _pauseService;
 
         [Inject]
-        private void Construct(IEffectsService effectsService, IGamePauseService pauseService)
+        private void Construct(EffectsService effectsService, IGamePauseService pauseService)
         {
             _effectsService = effectsService;
             _pauseService = pauseService;

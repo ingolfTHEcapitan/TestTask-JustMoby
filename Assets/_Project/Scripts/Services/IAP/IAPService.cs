@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.Data.IAP;
-using _Project.Scripts.Services.Progress;
 using _Project.Scripts.Services.SaveLoad;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -17,13 +16,13 @@ namespace _Project.Scripts.Services.IAP
     {
         private readonly PurchaseData _purchaseData;
         private readonly IAPProvider _iapProvider;
-        private readonly IProgressService _progressService;
+        private readonly ProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
         private readonly PurchaseModel _purchaseModel;
         private UniTaskCompletionSource<bool> _purchaseTaskCompletionSource;
 
         public bool IsInitialized => _iapProvider.IsInitialized;
-        public IAPService(IProgressService progressService, IAPProvider iapProvider, PurchaseModel purchaseModel,
+        public IAPService(ProgressService progressService, IAPProvider iapProvider, PurchaseModel purchaseModel,
             [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService)
         {
             _iapProvider = iapProvider;

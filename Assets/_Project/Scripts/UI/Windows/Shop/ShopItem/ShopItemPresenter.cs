@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -7,13 +6,13 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
     public class ShopItemPresenter : IDisposable
     {
-        private readonly IUIFactory _uiFactory;
+        private readonly UIFactory _uiFactory;
         private readonly ShopItemModel _itemModel;
         private readonly ShopItemView _itemView;
 
         private bool _isPurchased;
         
-        public ShopItemPresenter(IUIFactory uiFactory, ShopItemView itemView, ShopItemModel itemModel)
+        public ShopItemPresenter(UIFactory uiFactory, ShopItemView itemView, ShopItemModel itemModel)
         {
             _uiFactory = uiFactory;
             _itemView = itemView;

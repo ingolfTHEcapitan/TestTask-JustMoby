@@ -15,13 +15,13 @@ namespace _Project.Scripts.UI.Windows.GameOver
         
         private readonly IGamePauseService _pauseService;
         private readonly IAdsService _adsService;
-        private readonly ISceneLoaderService _sceneLoader;
+        private readonly SceneLoaderService _sceneLoader;
         private readonly PlayerDeath _playerDeath;
         private readonly EnemySpawner _enemySpawner;
         
         private bool _reviveInThisSession;
         
-        public GameOverWindowModel(IGamePauseService pauseService, IAdsService adsService, ISceneLoaderService sceneLoader,
+        public GameOverWindowModel(IGamePauseService pauseService, IAdsService adsService, SceneLoaderService sceneLoader,
             EnemySpawner enemySpawner, PlayerDeath playerDeath)
         {
             _pauseService = pauseService;

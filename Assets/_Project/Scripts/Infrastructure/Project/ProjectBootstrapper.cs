@@ -7,7 +7,7 @@ using _Project.Scripts.Services.IAP;
 using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory;
 using _Project.Scripts.Services.SceneLoader;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -18,12 +18,12 @@ namespace _Project.Scripts.Infrastructure.Project
     public class ProjectBootstrapper : IInitializable, IDisposable
     {
         private readonly IRemoteConfigService _remoteConfigService;
-        private readonly IRemoteConfigFactory _remoteConfigFactory;
+        private readonly RemoteConfigApplier _remoteConfigApplier;
         private readonly IAuthService _authService;
         private readonly IAssetProvider _assetProvider;
         private readonly IAnalyticsService _analyticsService;
-        private readonly ISceneLoaderService _sceneLoader;
-        private readonly IUIFactory _uiFactory;
+        private readonly SceneLoaderService _sceneLoader;
+        private readonly UIFactory _uiFactory;
         private readonly IAdsService _adsService;
         private readonly LazyInject<IIAPService> _lazyIapService;
         private readonly LazyInject<LoadingCurtainPresenter> _lazyLoadingWindowPresenter;
@@ -31,13 +31,13 @@ namespace _Project.Scripts.Infrastructure.Project
 
 
         public ProjectBootstrapper(LazyInject<LoadingCurtainPresenter> lazyLoadingWindowPresenter, IRemoteConfigService remoteConfigService, 
-            IRemoteConfigFactory remoteConfigFactory, IAuthService authService, IAssetProvider assetProvider, IUIFactory uiFactory,
-            IAnalyticsService analyticsService, LazyInject<IIAPService> lazyIapService, ISceneLoaderService sceneLoader, IAdsService adsService)
+            RemoteConfigApplier remoteConfigApplier, IAuthService authService, IAssetProvider assetProvider, UIFactory uiFactory,
+            IAnalyticsService analyticsService, LazyInject<IIAPService> lazyIapService, SceneLoaderService sceneLoader, IAdsService adsService)
         {
             _lazyIapService = lazyIapService;
             _lazyLoadingWindowPresenter = lazyLoadingWindowPresenter;
             _remoteConfigService = remoteConfigService;
-            _remoteConfigFactory = remoteConfigFactory;
+            _remoteConfigApplier = remoteConfigApplier;
             _authService = authService;
             _assetProvider = assetProvider;
             _uiFactory = uiFactory;
@@ -63,7 +63,7 @@ namespace _Project.Scripts.Infrastructure.Project
 
                 await UniTask.WhenAll(remoteConfigServiceTask, authServiceTask);
 
-                _remoteConfigFactory.ApplyRemoteConfigs();
+                _remoteConfigApplier.ApplyRemoteConfigs();
             
                 _adsService.Initialize();
             

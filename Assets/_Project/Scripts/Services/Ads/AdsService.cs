@@ -1,6 +1,5 @@
 using System;
 using _Project.Scripts.Configs;
-using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -13,7 +12,7 @@ namespace _Project.Scripts.Services.Ads
         public event Action OnRewardedAdLoaded;
         public event Action OnInterstitialAdLoaded;
         
-        private readonly IProgressService _progressService;
+        private readonly ProgressService _progressService;
         private readonly AdsConfig _config;
         
         private UniTaskCompletionSource<bool> _rewardedAdTcs;
@@ -24,7 +23,7 @@ namespace _Project.Scripts.Services.Ads
         public bool IsInterstitialAdLoaded { get; private set; }
         public bool IsAdsRemoved => _progressService.PlayerProgress.PurchaseData.IsAdsRemoved;
         
-        public AdsService(IProgressService progressService, AdsConfig config)
+        public AdsService(ProgressService progressService, AdsConfig config)
         { 
             _progressService = progressService;
             _config = config;

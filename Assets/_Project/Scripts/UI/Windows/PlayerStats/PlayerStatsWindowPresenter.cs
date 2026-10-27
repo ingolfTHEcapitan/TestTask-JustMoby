@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.PlayerStats;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.PlayerInput;
-using _Project.Scripts.Services.Score;
 using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -16,8 +15,8 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     public class PlayerStatsWindowPresenter
     {
         private readonly IInputService _inputService;
-        private readonly IScoreService _scoreService;
-        private readonly IUIFactory _uiFactory;
+        private readonly ScoreService _scoreService;
+        private readonly UIFactory _uiFactory;
         private readonly PlayerStatsWindowModel _model;
         private readonly PlayerStatsWindowView _view;
         private readonly CursorController _cursorController;
@@ -26,8 +25,8 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private bool _isOpen;
 
-        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, IUIFactory uiFactory,
-            IInputService inputService, IScoreService scoreService, CursorController cursorController)
+        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, UIFactory uiFactory,
+            IInputService inputService, ScoreService scoreService, CursorController cursorController)
         {
             _model = model;
             _view = view;

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common.StateMachine;
-using _Project.Scripts.Logic.Common.StateMachine.Transitions;
+using _Project.Scripts.Logic.Common.StateMachine.Predicates;
 using _Project.Scripts.Logic.Enemy.States;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
-using _Project.Scripts.Services.Sound;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,7 +22,7 @@ namespace _Project.Scripts.Logic.Enemy
         [SerializeField] private List<AudioClip> _swordMissSounds;
         
         private IGamePauseService _pauseService;
-        private IAudioService _audioService;
+        private AudioService _audioService;
         private EnemyConfig _config;
         private EnemyRotateToPlayer _enemyRotateToPlayer;
         private Transform _playerTransform;
@@ -35,7 +35,7 @@ namespace _Project.Scripts.Logic.Enemy
         private bool _isSpawnAnimationEnded;
 
         [Inject]
-        private void Construct(IGamePauseService pauseService, IAudioService audioService, EnemyConfig config)
+        private void Construct(IGamePauseService pauseService, AudioService audioService, EnemyConfig config)
         {
             _pauseService = pauseService;
             _audioService = audioService;

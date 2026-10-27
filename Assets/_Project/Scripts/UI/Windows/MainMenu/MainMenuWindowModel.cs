@@ -5,9 +5,9 @@ namespace _Project.Scripts.UI.Windows.MainMenu
 {
     public class MainMenuWindowModel
     {
-        private readonly ISceneLoaderService _sceneLoader;
+        private readonly SceneLoaderService _sceneLoader;
 
-        public MainMenuWindowModel(ISceneLoaderService sceneLoader) => 
+        public MainMenuWindowModel(SceneLoaderService sceneLoader) => 
             _sceneLoader = sceneLoader;
 
         public async UniTask LoadGameplaySceneAsync() => 

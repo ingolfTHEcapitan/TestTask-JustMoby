@@ -1,5 +1,5 @@
 using System;
-using _Project.Scripts.Services.Sound;
+using _Project.Scripts.Services;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -23,10 +23,10 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         [SerializeField] private AudioSource _musicAudioSource;
         [SerializeField] private AudioClip _backgroundMusic;
         
-        private IAudioService _audioService;
+        private AudioService _audioService;
         
         [Inject] 
-        private void Construct(IAudioService audioService) => 
+        private void Construct(AudioService audioService) => 
             _audioService = audioService;
         
         public void Initialize()

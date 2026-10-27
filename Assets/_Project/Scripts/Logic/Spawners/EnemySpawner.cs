@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Enemy;
-using _Project.Scripts.Logic.Enemy.Factory;
 using _Project.Scripts.Services.GamePause;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -14,13 +13,13 @@ namespace _Project.Scripts.Logic.Spawners
     public class EnemySpawner : IDisposable
     {
         private readonly IGamePauseService _pauseService;
-        private readonly IEnemyFactory _factory;
+        private readonly EnemyFactory _factory;
         private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
         private readonly EnemySpawnerConfig _config;
         
         private CancellationTokenSource _cancellationTokenSource;
 
-        public EnemySpawner(IGamePauseService pauseService, IEnemyFactory factory, EnemySpawnerConfig config)
+        public EnemySpawner(IGamePauseService pauseService, EnemyFactory factory, EnemySpawnerConfig config)
         {
             _pauseService = pauseService;
             _factory = factory;

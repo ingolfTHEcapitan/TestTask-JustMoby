@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using _Project.Scripts.Data.Player;
-using _Project.Scripts.Services.Progress;
 using Cysharp.Threading.Tasks;
 using Unity.Services.CloudSave;
 using Unity.Services.CloudSave.Models;
@@ -12,7 +11,7 @@ namespace _Project.Scripts.Services.SaveLoad.CloudSave
     {
         private const string CloudSaveKey = "PlayerProgress";
         
-        public async UniTask SaveProgressAsync(IProgressService progressService)
+        public async UniTask SaveProgressAsync(ProgressService progressService)
         {
             string json = JsonUtility.ToJson(progressService.PlayerProgress, false);
             

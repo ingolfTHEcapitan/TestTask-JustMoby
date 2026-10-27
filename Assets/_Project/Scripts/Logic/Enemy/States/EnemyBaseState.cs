@@ -1,5 +1,5 @@
 using _Project.Scripts.Configs;
-using _Project.Scripts.Logic.Common.StateMachine.States;
+using _Project.Scripts.Logic.Common.StateMachine;
 using UnityEngine.AI;
 
 namespace _Project.Scripts.Logic.Enemy.States

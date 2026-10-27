@@ -1,6 +1,7 @@
 ﻿using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Factory;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
@@ -13,7 +14,7 @@ namespace _Project.Scripts.Infrastructure.Game
 {
     public class GameUIInitializer
     {
-        private readonly IUIFactory _uiFactory;
+        private readonly UIFactory _uiFactory;
         private readonly Transform _uiParent;
 
         private readonly AudioClip _levelUpSound;
@@ -21,7 +22,7 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly LazyInject<GameOverWindowPresenter> _lazyGameOverWindowPresenter;
         private readonly LazyInject<PlayerStatsWindowPresenter> _lazyPlayerStatsWindowPresenter;
 
-        public GameUIInitializer(IUIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, 
+        public GameUIInitializer(UIFactory uiFactory, Transform uiParent, AudioClip levelUpSound, 
             LazyInject<PlayerStatsWindowPresenter> lazyPlayerStatsWindowPresenter, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter,
             LazyInject<GameOverWindowPresenter> lazyGameOverWindowPresenter)
         {

@@ -1,0 +1,79 @@
+using System;
+using System.Data;
+using _Project.Scripts.Infrastructure.AssetManagement;
+using _Project.Scripts.Infrastructure.Game;
+using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.Logic.PlayerStats;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Zenject;
+
+namespace _Project.Scripts.Logic.Player
+{
+    public class PlayerFactory :  IDisposable
+    {
+        private readonly IInstantiator _container;
+        private readonly HealthCalculator _healthCalculator;
+        private readonly IAssetProvider _assetProvider;
+        private readonly Transform _gameParent;
+        private readonly PlayerStatsModel _playerStatsModel;
+        private Health _playerHealth;
+        private PlayerStatData _healthStat;
+        private PlayerDeath _playerDeath;
+
+        public PlayerFactory(IInstantiator container, HealthCalculator healthCalculator, PlayerStatsModel playerStatsModel, Transform gameParent, IAssetProvider assetProvider)
+        {
+            _container = container;
+            _healthCalculator = healthCalculator;
+            _playerStatsModel = playerStatsModel;
+            _gameParent = gameParent;
+            _assetProvider = assetProvider;
+        }
+
+        public async UniTask<Health> CreatePlayerAsync(Vector3 at)
+        {
+            GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Player);
+            _playerHealth = _container.InstantiatePrefabForComponent<Health>(prefab, at, Quaternion.identity, _gameParent);
+            float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
+            _playerHealth.Initialize(maxHealth);
+            
+            _playerStatsModel.TryGetStat(StatName.Health, out _healthStat); 
+            _healthStat.OnStatChanged += UpdatePlayerMaxHealth;
+
+            _playerDeath = _playerHealth.GetComponent<PlayerDeath>();
+            _playerDeath.Initialize();
+
+            InitWeapon(_playerHealth);
+            
+            return _playerHealth;
+        }
+
+        public PlayerDeath GetPlayerDeath()
+        {
+            if (_playerDeath)
+                return _playerDeath;
+            
+            throw new InvalidConstraintException
+            ($"{_playerDeath.gameObject.name} requested before creation. " +
+             $"Ensure classes depending on it is not resolved before {nameof(GameBootstrapper)} runs");
+        }
+        
+        public void Dispose() => 
+            _healthStat.OnStatChanged -= UpdatePlayerMaxHealth;
+
+        private void UpdatePlayerMaxHealth()
+        {
+            float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
+            _playerHealth.SetMaxHealth(maxHealth);
+        }
+        
+        private void InitWeapon(Health player)
+        {
+            Weapon.Weapon weapon = player.GetComponentInChildren<Weapon.Weapon>();
+            Camera playerCamera = player.GetComponentInChildren<Camera>();
+            weapon.Initialize(playerCamera);
+        }
+        
+        
+    }
+}

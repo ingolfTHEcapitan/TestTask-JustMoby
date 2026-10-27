@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Logic.Enemy.States;
 using _Project.Scripts.Services.GamePause;
 using UnityEngine;

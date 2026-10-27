@@ -1,5 +1,5 @@
 ﻿using _Project.Scripts.Services.SaveLoad;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
 using _Project.Scripts.UI.Windows.Settings;
@@ -57,15 +57,15 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             Container.BindInterfacesAndSelfTo<MainMenuBootstrapper>().AsSingle().WithArguments(_uiParent);
 
         private SettingsWindowView GetSettingsWindowView(InjectContext context) =>
-            context.Container.Resolve<IUIFactory>().GetWindowView<SettingsWindowView>();
+            context.Container.Resolve<UIFactory>().GetWindowView<SettingsWindowView>();
 
         private ShopWindowView GetShopWindowView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<ShopWindowView>();
+            context.Container.Resolve<UIFactory>().GetWindowView<ShopWindowView>();
 
         private MainMenuWindowView GetMainMenuWindowView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<MainMenuWindowView>();
+            context.Container.Resolve<UIFactory>().GetWindowView<MainMenuWindowView>();
 
         private SaveConflictResolveWindowView GetSaveConflictWindowView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<SaveConflictResolveWindowView>();
+            context.Container.Resolve<UIFactory>().GetWindowView<SaveConflictResolveWindowView>();
     }
 }

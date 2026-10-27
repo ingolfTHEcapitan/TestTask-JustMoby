@@ -1,15 +1,12 @@
-using _Project.Scripts.Logic.Enemy.Factory;
+using _Project.Scripts.Logic;
+using _Project.Scripts.Logic.Enemy;
 using _Project.Scripts.Logic.Player;
-using _Project.Scripts.Logic.Player.Factory;
-using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
+using _Project.Scripts.Logic.Player.Weapon.Bullet;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
-using _Project.Scripts.Services.Effects;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
-using _Project.Scripts.Services.HealthCalculator;
-using _Project.Scripts.Services.Score;
-using _Project.Scripts.Services.Statistics;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
@@ -38,7 +35,7 @@ namespace _Project.Scripts.Infrastructure.Game
             BindPlayerStats();
             BindHeadUpDisplay();
             BindGameOverWindow();
-            BindHealthCalculatorService();
+            BindHealthCalculator();
             BindUpgradePointsService();
             BindEnemy();
             BindWeapon();
@@ -52,8 +49,8 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.BindInterfacesAndSelfTo<EffectsService>().AsSingle();
         }
 
-        private void BindHealthCalculatorService() => 
-            Container.BindInterfacesAndSelfTo<HealthCalculatorService>().AsSingle();
+        private void BindHealthCalculator() => 
+            Container.Bind<HealthCalculator>().AsSingle();
 
         private void BindPlayer()
         {
@@ -105,15 +102,15 @@ namespace _Project.Scripts.Infrastructure.Game
         }
 
         private HeadUpDisplayView GetHudView(InjectContext context) =>
-            context.Container.Resolve<IUIFactory>().GetWindowView<HeadUpDisplayView>();
+            context.Container.Resolve<UIFactory>().GetWindowView<HeadUpDisplayView>();
 
         private GameOverWindowView GetGameOverView(InjectContext context) => 
-            context.Container.Resolve<IUIFactory>().GetWindowView<GameOverWindowView>();
+            context.Container.Resolve<UIFactory>().GetWindowView<GameOverWindowView>();
 
         private PlayerStatsWindowView GetPlayerStatsWindowView(InjectContext context)=> 
-            context.Container.Resolve<IUIFactory>().GetWindowView<PlayerStatsWindowView>();
+            context.Container.Resolve<UIFactory>().GetWindowView<PlayerStatsWindowView>();
 
         private PlayerDeath GetPlayerDeath(InjectContext context) => 
-            context.Container.Resolve<IPlayerFactory>().GetPlayerDeath();
+            context.Container.Resolve<PlayerFactory>().GetPlayerDeath();
     }
 }

@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Services.Effects;
-using _Project.Scripts.Services.Score;
-using _Project.Scripts.Services.Statistics;
+using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.Services;
 using _Project.Scripts.UI.Common;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
@@ -32,13 +31,13 @@ namespace _Project.Scripts.Logic.Enemy
         private bool _isForcedKilling;
 
         private EnemyConfig _config;
-        private IEffectsService _effectsService;
-        private IGameStatistics _statistics;
-        private IScoreService _scoreService;
+        private EffectsService _effectsService;
+        private GameStatistics _statistics;
+        private ScoreService _scoreService;
 
         [Inject]
-        private void Construct(EnemyConfig config, IEffectsService effectsService, 
-            IGameStatistics statistics, IScoreService scoreService)
+        private void Construct(EnemyConfig config, EffectsService effectsService, 
+            GameStatistics statistics, ScoreService scoreService)
         {
             _config = config;
             _effectsService = effectsService;

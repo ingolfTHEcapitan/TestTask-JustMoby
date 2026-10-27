@@ -1,7 +1,7 @@
 ﻿using System;
-using _Project.Scripts.Services.Progress;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.SaveLoad;
-using _Project.Scripts.UI.Factory;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
 using _Project.Scripts.UI.Windows.MainMenu;
 using _Project.Scripts.UI.Windows.SaveConflictResolve;
@@ -16,9 +16,9 @@ namespace _Project.Scripts.Infrastructure.MainMenu
     public class MainMenuBootstrapper : IInitializable
     {
         private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
-        private readonly IProgressService _progressService;
+        private readonly ProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
-        private readonly IUIFactory _uiFactory;
+        private readonly UIFactory _uiFactory;
 
         private readonly Transform _uiParent;
         private readonly LazyInject<SettingsWindowPresenter> _lazySettingsWindowPresenter;
@@ -26,8 +26,8 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly LazyInject<MainMenuWindowPresenter> _lazyMainMenuWindowPresenter;
         private readonly LazyInject<SaveConflictResolveWindowPresenter> _lazySaveConflictResolveWindowPresenter;
 
-        public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, IProgressService progressService,
-            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, IUIFactory uiFactory, Transform uiParent,
+        public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, ProgressService progressService,
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, UIFactory uiFactory, Transform uiParent,
             LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, LazyInject<ShopWindowPresenter> lazyShopWindowPresenter,
             LazyInject<MainMenuWindowPresenter> lazyMainMenuWindowPresenter,LazyInject<SaveConflictResolveWindowPresenter> lazySaveConflictResolveWindowPresenter)
         {

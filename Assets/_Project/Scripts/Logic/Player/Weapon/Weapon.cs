@@ -1,10 +1,9 @@
 using System;
 using _Project.Scripts.Configs.Weapon;
-using _Project.Scripts.Logic.Player.Weapon.Bullet.Factory;
+using _Project.Scripts.Logic.Player.Weapon.Bullet;
+using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
-using _Project.Scripts.Services.Sound;
-using _Project.Scripts.Services.Statistics;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
@@ -29,15 +28,15 @@ namespace _Project.Scripts.Logic.Player.Weapon
         private Camera _playerCamera;
         private IGamePauseService _pauseService;
         private IInputService _inputService;
-        private IBulletFactory _factory;
-        private IGameStatistics _statistics;
-        private IAudioService _audioService;
+        private BulletFactory _factory;
+        private GameStatistics _statistics;
+        private AudioService _audioService;
         private WeaponConfig _weaponConfig;
         private BulletConfig _bulletConfig;
 
         [Inject]
-        private void Construct(IGamePauseService pauseService, IInputService inputService, IBulletFactory factory, 
-            IGameStatistics statistics, IAudioService audioService, WeaponConfig weaponConfig, BulletConfig bulletConfig)
+        private void Construct(IGamePauseService pauseService, IInputService inputService, BulletFactory factory, 
+            GameStatistics statistics, AudioService audioService, WeaponConfig weaponConfig, BulletConfig bulletConfig)
         {
             _pauseService = pauseService;
             _inputService = inputService;

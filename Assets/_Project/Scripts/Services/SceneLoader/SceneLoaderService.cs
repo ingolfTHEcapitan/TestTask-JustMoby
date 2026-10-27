@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.Services.SceneLoader
 {
-    public class SceneLoaderService : ISceneLoaderService
+    public class SceneLoaderService
     {
         public event Action BeforeSceneUnload;
         public event Action AfterSceneLoaded;

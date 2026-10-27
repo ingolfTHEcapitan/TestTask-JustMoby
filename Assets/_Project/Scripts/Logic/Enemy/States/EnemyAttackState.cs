@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.StateMachine.Transitions;
-using _Project.Scripts.Services.Sound;
+using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.Logic.Common.StateMachine.Predicates;
+using _Project.Scripts.Services;
 using _Project.Scripts.Tools;
 using UnityEngine;
 using UnityEngine.AI;
@@ -26,7 +27,7 @@ namespace _Project.Scripts.Logic.Enemy.States
         private readonly Collider[] _hits = new Collider[1];
         private readonly int _layerMask;
         
-        private readonly IAudioService _audioService;
+        private readonly AudioService _audioService;
         private readonly AudioSource _audioSource;
         private readonly List<AudioClip> _swordHitSounds;
         private readonly List<AudioClip> _swordMissSounds;
@@ -34,7 +35,7 @@ namespace _Project.Scripts.Logic.Enemy.States
         public bool IsAttacking {get; private set;}
 
         public EnemyAttackState(NavMeshAgent agent, EnemyConfig config, EnemyRotateToPlayer enemyRotateToPlayer, 
-            IPredicate attackCooldownIsUp,Transform enemyTransform, IAudioService audioService, 
+            IPredicate attackCooldownIsUp,Transform enemyTransform, AudioService audioService, 
             AudioSource audioSource, List<AudioClip> swordHitSounds, List<AudioClip> swordMissSounds) : base(agent, config)
         {
             _attackCooldownIsUp = attackCooldownIsUp;

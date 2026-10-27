@@ -1,7 +1,6 @@
 using System;
-using _Project.Scripts.Services.Sound;
+using _Project.Scripts.Services;
 using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Factory;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -27,12 +26,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [field: SerializeField] public Transform StatsContainer { get; private set; }
         [field: SerializeField, Header("Audio")] public AudioSource AudioSource { get; private set;}
         
-        private IAudioService _audioService;
+        private AudioService _audioService;
         private AudioClip _levelUpSound;
         private Button _openButton;
 
         [Inject]
-        private void Construct(IUIFactory uiFactory, IAudioService audioService) => 
+        private void Construct(UIFactory uiFactory, AudioService audioService) => 
             _audioService = audioService;
 
         public void Initialize(Button openButton, AudioClip levelUpSound)
