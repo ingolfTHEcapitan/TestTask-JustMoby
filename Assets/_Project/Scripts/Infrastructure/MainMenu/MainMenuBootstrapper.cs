@@ -18,7 +18,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         private readonly ProgressService _progressService;
         private readonly ISaveLoadService _saveLoadService;
-        private readonly UIFactory _uiFactory;
+        private readonly WindowFactory _windowFactory;
 
         private readonly Transform _uiParent;
         private readonly LazyInject<SettingsWindowPresenter> _lazySettingsWindowPresenter;
@@ -27,7 +27,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly LazyInject<SaveConflictResolveWindowPresenter> _lazySaveConflictResolveWindowPresenter;
 
         public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, ProgressService progressService,
-            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, UIFactory uiFactory, Transform uiParent,
+            [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, WindowFactory windowFactory, Transform uiParent,
             LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, LazyInject<ShopWindowPresenter> lazyShopWindowPresenter,
             LazyInject<MainMenuWindowPresenter> lazyMainMenuWindowPresenter,LazyInject<SaveConflictResolveWindowPresenter> lazySaveConflictResolveWindowPresenter)
         {
@@ -38,7 +38,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _progressService = progressService;
             _saveLoadService = saveLoadService;
-            _uiFactory = uiFactory;
+            _windowFactory = windowFactory;
             _uiParent = uiParent;
         }
 
@@ -49,18 +49,18 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         {
             try
             {
-                await _uiFactory.CreateSaveConflictResolveWindowViewAsync(_uiParent);
+                await _windowFactory.CreateAsync<SaveConflictResolveWindowView>(_uiParent);
                 _lazySaveConflictResolveWindowPresenter.Value.Initialize();
             
                 _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
-                await _uiFactory.CreateShopWindowViewAsync(_uiParent);
+                await _windowFactory.CreateAsync<ShopWindowView>(_uiParent);
                 await _lazyShopWindowPresenter.Value.InitializeAsync();
 
-                await _uiFactory.CreateSettingsViewAsync(_uiParent);
+                await _windowFactory.CreateAsync<ShopWindowView>(_uiParent);
                 _lazySettingsWindowPresenter.Value.Initialize();
             
-                await _uiFactory.CreateMainMenuWindowViewAsync(_uiParent); 
+                await _windowFactory.CreateAsync<MainMenuWindowView>(_uiParent); 
                 _lazyMainMenuWindowPresenter.Value.Initialize();
             
                 _loadingCurtainPresenter.HideLoading();

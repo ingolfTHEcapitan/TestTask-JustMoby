@@ -16,7 +16,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     {
         private readonly IInputService _inputService;
         private readonly ScoreService _scoreService;
-        private readonly UIFactory _uiFactory;
+        private readonly PlayerStatItemFactory _statItemFactory;
         private readonly PlayerStatsWindowModel _model;
         private readonly PlayerStatsWindowView _view;
         private readonly CursorController _cursorController;
@@ -25,15 +25,15 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private bool _isOpen;
 
-        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, UIFactory uiFactory,
-            IInputService inputService, ScoreService scoreService, CursorController cursorController)
+        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, IInputService inputService, 
+            ScoreService scoreService, CursorController cursorController, PlayerStatItemFactory statItemFactory)
         {
             _model = model;
             _view = view;
-            _uiFactory = uiFactory;
             _inputService = inputService;
             _scoreService = scoreService;
             _cursorController = cursorController;
+            _statItemFactory = statItemFactory;
         }
         
         public async UniTask InitializeAsync()
@@ -95,20 +95,9 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             foreach (PlayerStatData stat in _model.GetStats())
             {
                 PlayerStatConfig statConfig = _model.FindStatConfigByName(stat.Name);
-                PlayerStatItemView statItemView = await CreatePlayerStatItemAsync(stat, statConfig);
+                PlayerStatItemView statItemView = await _statItemFactory.CreateAsync(_view.StatsContainer, stat, statConfig, _view.AudioSource);
                 _statItemsView[stat.Name] = statItemView;
             }
-        }
-
-        private async UniTask<PlayerStatItemView> CreatePlayerStatItemAsync(PlayerStatData stat, PlayerStatConfig statConfig)
-        {
-            PlayerStatItemView statItem = await _uiFactory.CreatePlayerStatItemViewAsync(_view.StatsContainer);
-            
-            Sprite iconFrame = await _uiFactory.LoadSpriteAsync(statConfig.IconFrameAddress);
-            Sprite icon = await _uiFactory.LoadSpriteAsync(statConfig.IconAddress);
-            
-            statItem.Initialize(stat, iconFrame, icon, _view.AudioSource);
-            return statItem;
         }
         
         private void UpgradeStatItem(StatName statName)

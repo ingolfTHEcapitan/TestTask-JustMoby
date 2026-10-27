@@ -61,23 +61,24 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindPlayerStats()
         {
+            Container.BindInterfacesAndSelfTo<PlayerStatItemFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
             Container.Bind<PlayerStatsWindowModel>().AsSingle();
-            Container.Bind<PlayerStatsWindowView>().FromMethod(GetPlayerStatsWindowView).AsSingle();
+            Container.BindWindow<PlayerStatsWindowView>();
             Container.Bind<PlayerStatsWindowPresenter>().AsSingle();
         }
         
         private void BindHeadUpDisplay()
         {
-            Container.Bind<HeadUpDisplayView>().FromMethod(GetHudView).AsSingle();
+            Container.BindWindow<HeadUpDisplayView>();
             Container.BindInterfacesAndSelfTo<HeadUpDisplayModel>().AsSingle();
             Container.Bind<HeadUpDisplayPresenter>().AsSingle();
         }
 
         private void BindGameOverWindow()
         {
-            Container.Bind<GameOverWindowView>().FromMethod(GetGameOverView).AsSingle();
+            Container.BindWindow<GameOverWindowView>();
             Container.Bind<GameOverWindowModel>().AsSingle();
             Container.Bind<GameOverWindowPresenter>().AsSingle();
         }
@@ -100,16 +101,7 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _dungeonMusic);
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
         }
-
-        private HeadUpDisplayView GetHudView(InjectContext context) =>
-            context.Container.Resolve<UIFactory>().GetWindowView<HeadUpDisplayView>();
-
-        private GameOverWindowView GetGameOverView(InjectContext context) => 
-            context.Container.Resolve<UIFactory>().GetWindowView<GameOverWindowView>();
-
-        private PlayerStatsWindowView GetPlayerStatsWindowView(InjectContext context)=> 
-            context.Container.Resolve<UIFactory>().GetWindowView<PlayerStatsWindowView>();
-
+        
         private PlayerDeath GetPlayerDeath(InjectContext context) => 
             context.Container.Resolve<PlayerFactory>().GetPlayerDeath();
     }

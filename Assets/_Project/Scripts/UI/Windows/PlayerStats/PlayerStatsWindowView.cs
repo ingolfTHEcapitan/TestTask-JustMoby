@@ -31,7 +31,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private Button _openButton;
 
         [Inject]
-        private void Construct(UIFactory uiFactory, AudioService audioService) => 
+        private void Construct(WindowFactory windowFactory, AudioService audioService) => 
             _audioService = audioService;
 
         public void Initialize(Button openButton, AudioClip levelUpSound)

@@ -62,7 +62,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<FirebaseAnalyticsService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<UIFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WindowFactory>().AsSingle();
 
             Container.Bind<ISaveLoadService>().WithId(SaveType.Local).FromMethod(GetLocalSaveInstance).AsCached();
             Container.Bind<ISaveLoadService>().WithId(SaveType.Cloud).To<CloudSaveLoadService>().AsCached();
@@ -77,7 +77,7 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private void BindLoadingCurtain()
         {
-            Container.Bind<LoadingCurtainView>().FromMethod(GetLoadingWindowView).AsSingle();
+            Container.BindWindow<LoadingCurtainView>();
             Container.Bind<LoadingCurtainPresenter>().AsSingle();
         }
 
@@ -86,8 +86,5 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private ISaveLoadService GetLocalSaveInstance(InjectContext context) => 
             context.Container.Resolve<LocalSaveServiceConfig>().GetInstance();
-
-        private LoadingCurtainView GetLoadingWindowView(InjectContext context) => 
-            context.Container.Resolve<UIFactory>().GetWindowView<LoadingCurtainView>();
     }
 }

@@ -23,7 +23,7 @@ namespace _Project.Scripts.Infrastructure.Project
         private readonly IAssetProvider _assetProvider;
         private readonly IAnalyticsService _analyticsService;
         private readonly SceneLoaderService _sceneLoader;
-        private readonly UIFactory _uiFactory;
+        private readonly WindowFactory _windowFactory;
         private readonly IAdsService _adsService;
         private readonly LazyInject<IIAPService> _lazyIapService;
         private readonly LazyInject<LoadingCurtainPresenter> _lazyLoadingWindowPresenter;
@@ -31,7 +31,7 @@ namespace _Project.Scripts.Infrastructure.Project
 
 
         public ProjectBootstrapper(LazyInject<LoadingCurtainPresenter> lazyLoadingWindowPresenter, IRemoteConfigService remoteConfigService, 
-            RemoteConfigApplier remoteConfigApplier, IAuthService authService, IAssetProvider assetProvider, UIFactory uiFactory,
+            RemoteConfigApplier remoteConfigApplier, IAuthService authService, IAssetProvider assetProvider, WindowFactory windowFactory,
             IAnalyticsService analyticsService, LazyInject<IIAPService> lazyIapService, SceneLoaderService sceneLoader, IAdsService adsService)
         {
             _lazyIapService = lazyIapService;
@@ -40,7 +40,7 @@ namespace _Project.Scripts.Infrastructure.Project
             _remoteConfigApplier = remoteConfigApplier;
             _authService = authService;
             _assetProvider = assetProvider;
-            _uiFactory = uiFactory;
+            _windowFactory = windowFactory;
             _analyticsService = analyticsService;
             _sceneLoader = sceneLoader;
             _adsService = adsService;
@@ -54,7 +54,7 @@ namespace _Project.Scripts.Infrastructure.Project
             try
             {
                 await _assetProvider.InitializeAsync();
-                await _uiFactory.CreateLoadingCurtainViewAsync();
+                await _windowFactory.CreateAsync<LoadingCurtainView>();
                 _lazyLoadingWindowPresenter.Value.ShowLoading();
             
                 await _analyticsService.InitializeAsync();

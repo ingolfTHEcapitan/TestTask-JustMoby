@@ -6,34 +6,30 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 {
     public class ShopItemPresenter : IDisposable
     {
-        private readonly UIFactory _uiFactory;
         private readonly ShopItemModel _itemModel;
         private readonly ShopItemView _itemView;
 
         private bool _isPurchased;
         
-        public ShopItemPresenter(UIFactory uiFactory, ShopItemView itemView, ShopItemModel itemModel)
+        public ShopItemPresenter(ShopItemView itemView, ShopItemModel itemModel)
         {
-            _uiFactory = uiFactory;
             _itemView = itemView;
             _itemModel = itemModel;
         }
 
-        public async UniTask<ShopItemView> InitializeAsync(AudioSource audioSource)
+        public void Initialize(AudioSource audioSource, Sprite icon)
         {
             _itemView.OnBuyButtonClicked += StartPurchase;
             _itemView.Initialize(audioSource);
 
-            await FillShopItemAsync();
-            return _itemView;
+            FillShopItem(icon);
         }
 
         public void Dispose() => 
             _itemView.OnBuyButtonClicked -= StartPurchase;
 
-        private async UniTask FillShopItemAsync()
+        private void FillShopItem(Sprite icon)
         {
-            Sprite icon = await _uiFactory.LoadSpriteAsync(_itemModel.IconAddress);
             _itemView.UpdateItemData(icon, _itemModel.ProductName, _itemModel.Price, _itemModel.PurchasesLeft);
             ToggleQuantityTextVisibility();
         }

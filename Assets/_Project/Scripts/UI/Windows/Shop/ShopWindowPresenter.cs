@@ -63,7 +63,7 @@ namespace _Project.Scripts.UI.Windows.Shop
             foreach (ProductDescription productDescription in _model.GetProducts())
             {
                 ShopItemView shopItemView = 
-                    await _shopItemFactory.CreateShopItemAsync(_view.ProductsContainer, productDescription, _view.AudioSource);
+                    await _shopItemFactory.CreateAsync(_view.ProductsContainer, productDescription, _view.AudioSource);
                 _shopItemViews.Add(shopItemView);
             }
         }
