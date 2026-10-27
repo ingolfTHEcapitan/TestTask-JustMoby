@@ -59,7 +59,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<ProgressService>().AsSingle();
             Container.Bind<PurchaseModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<AssetProvider>().AsSingle();
-            Container.BindInterfacesAndSelfTo<AdsService>().AsSingle().NonLazy();
+            Container.BindInterfacesAndSelfTo<AdsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<FirebaseAnalyticsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<WindowFactory>().AsSingle();

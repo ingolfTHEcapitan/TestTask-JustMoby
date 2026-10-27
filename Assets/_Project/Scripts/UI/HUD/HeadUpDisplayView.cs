@@ -1,5 +1,6 @@
 ﻿using System;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Common.HealthBar;
 using _Project.Scripts.UI.Windows;
 using UnityEngine;
 using UnityEngine.UI;

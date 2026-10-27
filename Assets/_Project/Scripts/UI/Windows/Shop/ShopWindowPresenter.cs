@@ -42,7 +42,6 @@ namespace _Project.Scripts.UI.Windows.Shop
         {
             _view.OnWindowDestroy -= CleanUp;
             _view.OnCloseButtonClicked -= Close;
-            _shopItemFactory.Dispose();
             ClearShopItems();
         }
 
@@ -70,6 +69,8 @@ namespace _Project.Scripts.UI.Windows.Shop
         
         private void ClearShopItems()
         {
+            _shopItemFactory.Dispose();
+            
             foreach (ShopItemView shopItemView in _shopItemViews)
                 if (shopItemView)
                     Object.Destroy(shopItemView.gameObject);

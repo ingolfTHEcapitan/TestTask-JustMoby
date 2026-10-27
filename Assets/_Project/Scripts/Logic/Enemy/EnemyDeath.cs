@@ -5,6 +5,7 @@ using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Services;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Common.HealthBar;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;

@@ -3,6 +3,7 @@ using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Logic.Enemy.States;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Common.HealthBar;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;

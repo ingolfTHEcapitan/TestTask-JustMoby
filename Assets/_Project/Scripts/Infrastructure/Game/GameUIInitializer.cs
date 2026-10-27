@@ -2,6 +2,8 @@
 using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Common.HealthBar;
+using _Project.Scripts.UI;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
