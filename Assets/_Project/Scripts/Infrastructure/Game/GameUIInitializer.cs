@@ -51,7 +51,7 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void InitPlayerHealthBarView(HeadUpDisplayView hud, Health playerHealth)
         {
-            HealthBarView playerHealthBarView = hud.HealthBarView;
+            HealthBarView_Old playerHealthBarView = hud.HealthBarView;
             playerHealthBarView.Construct(playerHealth);
             playerHealthBarView.Initialize();
         }

@@ -19,7 +19,7 @@ namespace _Project.Scripts.Logic.Enemy
         public event Action<EnemyDeath> OnDied;
 
         [SerializeField] private Health _health;
-        [SerializeField] private HealthBarView _healthBarView;
+        [SerializeField] private HealthBarView_Old _healthBarView;
         [SerializeField] private DissolveShader _dissolveShader;
 
         [Header("Components To Disable On Death")]

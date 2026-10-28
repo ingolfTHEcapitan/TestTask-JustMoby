@@ -44,7 +44,7 @@ namespace _Project.Scripts.Logic.Enemy
             Health health = enemyStateMachine.GetComponent<Health>();
             health.Initialize(maxHealth);
             
-            HealthBarView healthBar = enemyStateMachine.GetComponentInChildren<HealthBarView>();
+            HealthBarView_Old healthBar = enemyStateMachine.GetComponentInChildren<HealthBarView_Old>();
             healthBar.Construct(health);
             healthBar.Initialize();
 

@@ -14,7 +14,7 @@ namespace _Project.Scripts.UI.HUD
         
         [SerializeField] private Button _backMainMenuButton;
         [field:SerializeField] public Button OpenStatsWindowButton { get; private set; }
-        [field:SerializeField] public HealthBarView HealthBarView { get; private set; }
+        [field:SerializeField] public HealthBarView_Old HealthBarView { get; private set; }
         
         public void Awake() => 
             _backMainMenuButton.onClick.AddListener(InvokeOnBackToMainMenuButtonClicked);
