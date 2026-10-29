@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common.StateMachine;
 using _Project.Scripts.Logic.Common.StateMachine.Predicates;
-using _Project.Scripts.Logic.Enemy.States;
+using _Project.Scripts.Logic.Enemy.Components.SatteMachine.States;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
 using JetBrains.Annotations;
@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Enemy
+namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine
 {
     public class EnemyStateMachine : MonoBehaviour
     {

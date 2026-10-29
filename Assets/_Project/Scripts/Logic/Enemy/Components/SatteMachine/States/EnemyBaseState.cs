@@ -2,7 +2,7 @@ using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common.StateMachine;
 using UnityEngine.AI;
 
-namespace _Project.Scripts.Logic.Enemy.States
+namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine.States
 {
     public abstract class EnemyBaseState : IState
     {

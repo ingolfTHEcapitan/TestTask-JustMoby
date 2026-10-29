@@ -1,21 +1,19 @@
 using System;
-using System.Collections;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Logic.Enemy.Components.SatteMachine;
 using _Project.Scripts.Services;
-using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Common.HealthBar;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Enemy
+namespace _Project.Scripts.Logic.Enemy.Components
 {
     public class EnemyDeath : MonoBehaviour
     {
-        public event Action<EnemyDeath> OnDied;
+        public event Action OnDied;
 
         [SerializeField] private Health _health;
         [SerializeField] private DissolveShader _dissolveShader;
@@ -91,7 +89,7 @@ namespace _Project.Scripts.Logic.Enemy
             if (isCancelled)
                 return;
             
-            OnDied?.Invoke(this);
+            OnDied?.Invoke();
             Destroy(gameObject);
         }
 

@@ -1,10 +1,9 @@
-using System;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Services.GamePause;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Enemy
+namespace _Project.Scripts.Logic.Enemy.Components
 {
     public class EnemyRotateToPlayer : MonoBehaviour
     {

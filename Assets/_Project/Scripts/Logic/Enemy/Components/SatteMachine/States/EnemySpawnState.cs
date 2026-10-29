@@ -1,7 +1,7 @@
 using _Project.Scripts.Configs;
 using UnityEngine.AI;
 
-namespace _Project.Scripts.Logic.Enemy.States
+namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine.States
 {
     public class EnemySpawnState : EnemyBaseState
     {

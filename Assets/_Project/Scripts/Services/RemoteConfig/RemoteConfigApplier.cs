@@ -6,7 +6,7 @@ using _Project.Scripts.Configs.Weapon;
 using Firebase.RemoteConfig;
 using UnityEngine;
 
-namespace _Project.Scripts.Services.RemoteConfig.RemoteConfigFactory
+namespace _Project.Scripts.Services.RemoteConfig
 {
     public class RemoteConfigApplier
     {

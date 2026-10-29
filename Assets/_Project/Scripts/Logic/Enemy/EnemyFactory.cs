@@ -1,6 +1,8 @@
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Enemy.States;
+using _Project.Scripts.Logic.Enemy.Components;
+using _Project.Scripts.Logic.Enemy.Components.SatteMachine;
+using _Project.Scripts.Logic.Enemy.Components.SatteMachine.States;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Common.HealthBar;
@@ -30,32 +32,31 @@ namespace _Project.Scripts.Logic.Enemy
             _pauseService = pauseService;
         }
 
-        public async UniTask<EnemyDeath> CreateEnemyAsync(Vector3 spawnPoint, Transform playerTransform)
+        public async UniTask<EnemyContainer> CreateEnemyAsync(Vector3 spawnPoint, Transform playerTransform)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Enemy);
             
-            EnemyStateMachine enemyStateMachine = 
-                _container.InstantiatePrefabForComponent<EnemyStateMachine>(prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
+            EnemyContainer enemy = 
+                _container.InstantiatePrefabForComponent<EnemyContainer>(prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
 
-            EnemyRotateToPlayer enemyRotateToPlayer = enemyStateMachine.GetComponent<EnemyRotateToPlayer>();
-            enemyRotateToPlayer.Initialize(playerTransform);
+            EnemyRotateToPlayer rotateToPlayer = enemy.RotateToPlayer;
+            rotateToPlayer.Initialize(playerTransform);
+
+            EnemyStateMachine stateMachine = enemy.StateMachine;
+            stateMachine.Initialize(spawnPoint, playerTransform, rotateToPlayer);
             
-            enemyStateMachine.Initialize(spawnPoint, playerTransform, enemyRotateToPlayer);
-            
+            Health health = enemy.Health;
             float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
-            Health healthModel = enemyStateMachine.GetComponent<Health>();
-            healthModel.Initialize(maxHealth);
+            health.Initialize(maxHealth);
             
-            HealthBarView healthBarView = enemyStateMachine.GetComponentInChildren<HealthBarView>();
-            HealthBarPresenter healthBarPresenter = _healthBarFactory.Create(healthBarView, healthModel);
-
-            EnemyDeath enemyDeath = enemyStateMachine.GetComponent<EnemyDeath>();
-            enemyDeath.Initialize();
+            HealthBarPresenter healthBarPresenter = _healthBarFactory.Create(enemy.HealthBarView, health);
             
-            EnemyAnimator enemyAnimator = enemyStateMachine.GetComponent<EnemyAnimator>();
-            enemyAnimator.Construct(enemyStateMachine.GetState<EnemyAttackState>(), _pauseService, healthBarPresenter);
+            enemy.EnemyDeath.Initialize();
+            
+            EnemyAnimator enemyAnimator = enemy.Animator;
+            enemyAnimator.Construct(stateMachine.GetState<EnemyAttackState>(), _pauseService, healthBarPresenter);
             enemyAnimator.Initialize();
-            return enemyDeath;
+            return enemy;
         }
     }
 }

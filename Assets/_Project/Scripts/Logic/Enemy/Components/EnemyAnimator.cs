@@ -1,17 +1,16 @@
 using System;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Enemy.States;
+using _Project.Scripts.Logic.Enemy.Components.SatteMachine.States;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.UI.Common.HealthBar;
 using UnityEngine;
 
-namespace _Project.Scripts.Logic.Enemy
+namespace _Project.Scripts.Logic.Enemy.Components
 {
     public class EnemyAnimator : MonoBehaviour, IPauseHandler
     {
         [SerializeField] private Animator _animator;
         [SerializeField] private Health _health;
-        [SerializeField] private EnemyDeath _death;
         
         private readonly int _dieHash = Animator.StringToHash("Die");
         private readonly int _hitHash = Animator.StringToHash("Hit");

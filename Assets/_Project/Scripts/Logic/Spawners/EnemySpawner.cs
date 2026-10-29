@@ -14,7 +14,7 @@ namespace _Project.Scripts.Logic.Spawners
     {
         private readonly IGamePauseService _pauseService;
         private readonly EnemyFactory _factory;
-        private readonly List<EnemyDeath> _spawnedEnemies = new List<EnemyDeath>();
+        private readonly List<EnemyContainer> _spawnedEnemies = new List<EnemyContainer>();
         private readonly EnemySpawnerConfig _config;
         
         private CancellationTokenSource _cancellationTokenSource;
@@ -35,8 +35,8 @@ namespace _Project.Scripts.Logic.Spawners
 
         public void KillAllEnemies()
         {
-            foreach (EnemyDeath enemy in _spawnedEnemies) 
-                enemy.KillEnemy();
+            foreach (EnemyContainer enemy in _spawnedEnemies) 
+                enemy.EnemyDeath.KillEnemy();
         }
         
         public void StopSpawning()
@@ -77,9 +77,16 @@ namespace _Project.Scripts.Logic.Spawners
         
         private async UniTask InitEnemyAsync(Transform target, Transform playerTransform)
         {
-            EnemyDeath enemyDeath = await _factory.CreateEnemyAsync(GetSpawnPosition(target), playerTransform);
-            enemyDeath.OnDied += OnEnemyDeath;
-            _spawnedEnemies.Add(enemyDeath);
+            EnemyContainer enemy = await _factory.CreateEnemyAsync(GetSpawnPosition(target), playerTransform);
+            enemy.EnemyDeath.OnDied += OnEnemyDeath;
+            _spawnedEnemies.Add(enemy);
+            return;
+
+            void OnEnemyDeath()
+            {
+                enemy.EnemyDeath.OnDied -= OnEnemyDeath;
+                _spawnedEnemies.Remove(enemy);
+            }
         }
 
         private Vector3 GetSpawnPosition(Transform target)
@@ -88,12 +95,6 @@ namespace _Project.Scripts.Logic.Spawners
             Vector3 offset = new Vector3(spawnDirection.x, 0, spawnDirection.y);
             Vector3 spawnPosition = target.position + offset;
             return spawnPosition;
-        }
-
-        private void OnEnemyDeath(EnemyDeath enemyDeath)
-        {
-            enemyDeath.OnDied -= OnEnemyDeath;
-            _spawnedEnemies.Remove(enemyDeath);
         }
     }
 }

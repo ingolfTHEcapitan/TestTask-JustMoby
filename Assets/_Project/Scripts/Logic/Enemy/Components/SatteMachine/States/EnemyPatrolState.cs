@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
-namespace _Project.Scripts.Logic.Enemy.States
+namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine.States
 {
     public class EnemyPatrolState : EnemyBaseState
     {

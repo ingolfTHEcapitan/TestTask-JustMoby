@@ -9,7 +9,7 @@ using _Project.Scripts.Tools;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace _Project.Scripts.Logic.Enemy.States
+namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine.States
 {
     public class EnemyAttackState : EnemyBaseState
     {
