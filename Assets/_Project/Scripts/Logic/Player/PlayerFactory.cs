@@ -17,9 +17,8 @@ namespace _Project.Scripts.Logic.Player
         private readonly IAssetProvider _assetProvider;
         private readonly Transform _gameParent;
         private readonly PlayerStatsModel _playerStatsModel;
-        private Health _playerHealth;
+        private PlayerContainer _player;
         private PlayerStatData _healthStat;
-        private PlayerDeath _playerDeath;
 
         public PlayerFactory(IInstantiator container, HealthCalculator healthCalculator, PlayerStatsModel playerStatsModel, Transform gameParent, IAssetProvider assetProvider)
         {
@@ -30,32 +29,30 @@ namespace _Project.Scripts.Logic.Player
             _assetProvider = assetProvider;
         }
 
-        public async UniTask<Health> CreatePlayerAsync(Vector3 at)
+        public async UniTask<PlayerContainer> CreatePlayerAsync(Vector3 at)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Player);
-            _playerHealth = _container.InstantiatePrefabForComponent<Health>(prefab, at, Quaternion.identity, _gameParent);
+            _player = _container.InstantiatePrefabForComponent<PlayerContainer>(prefab, at, Quaternion.identity, _gameParent);
+            
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
-            _playerHealth.Initialize(maxHealth);
+            _player.Health.Initialize(maxHealth);
             
             _playerStatsModel.TryGetStat(StatName.Health, out _healthStat); 
             _healthStat.OnStatChanged += UpdatePlayerMaxHealth;
-
-            _playerDeath = _playerHealth.GetComponent<PlayerDeath>();
-            _playerDeath.Initialize();
-
-            InitWeapon(_playerHealth);
             
-            return _playerHealth;
+            _player.PlayerDeath.Initialize();
+            _player.Weapon.Initialize(_player.Camera);;
+            
+            return _player;
         }
 
-        public PlayerDeath GetPlayerDeath()
+        public PlayerContainer GetPlayer()
         {
-            if (_playerDeath)
-                return _playerDeath;
+            if (_player)
+                return _player;
             
             throw new InvalidConstraintException
-            ($"{_playerDeath.gameObject.name} requested before creation. " +
-             $"Ensure classes depending on it is not resolved before {nameof(GameBootstrapper)} runs");
+                ($"{_player.gameObject.name} requested before creation. Ensure it created before resolution");
         }
         
         public void Dispose() => 
@@ -64,14 +61,7 @@ namespace _Project.Scripts.Logic.Player
         private void UpdatePlayerMaxHealth()
         {
             float maxHealth = _healthCalculator.CalculatePlayerMaxHealth();
-            _playerHealth.SetMaxHealth(maxHealth);
-        }
-        
-        private void InitWeapon(Health player)
-        {
-            Weapon.Weapon weapon = player.GetComponentInChildren<Weapon.Weapon>();
-            Camera playerCamera = player.GetComponentInChildren<Camera>();
-            weapon.Initialize(playerCamera);
+            _player.Health.SetMaxHealth(maxHealth);
         }
     }
 }

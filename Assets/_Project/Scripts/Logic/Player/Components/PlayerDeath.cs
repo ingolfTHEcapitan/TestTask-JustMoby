@@ -5,7 +5,7 @@ using _Project.Scripts.Services.Analytics;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Player
+namespace _Project.Scripts.Logic.Player.Components
 {
     public class PlayerDeath : MonoBehaviour
     {

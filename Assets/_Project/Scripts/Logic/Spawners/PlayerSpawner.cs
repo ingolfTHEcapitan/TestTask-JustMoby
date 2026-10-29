@@ -1,5 +1,4 @@
 using _Project.Scripts.Configs.Spawners;
-using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
 using Cysharp.Threading.Tasks;
 
@@ -16,7 +15,7 @@ namespace _Project.Scripts.Logic.Spawners
             _config = config;
         }
 
-        public async UniTask<Health> SpawnAsync() => 
+        public async UniTask<PlayerContainer> SpawnAsync() => 
             await _factory.CreatePlayerAsync(_config.SpawnPosition);
     }
 }

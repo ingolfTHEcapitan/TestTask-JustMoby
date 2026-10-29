@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Logic.Common;
+using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services;
@@ -41,11 +42,11 @@ namespace _Project.Scripts.Infrastructure.Game
                 await _effectsService.WarmUpAsync();
                 _playerStatsModel.CreateStats();
             
-                Health playerHealthModel = await _playerSpawner.SpawnAsync();
+                PlayerContainer player = await _playerSpawner.SpawnAsync();
             
-                await _uiInitializer.InitUIAsync(playerHealthModel);
+                await _uiInitializer.InitUIAsync();
             
-                _enemySpawner.SpawnAround( _enemySpawnPoint, playerHealthModel.transform);
+                _enemySpawner.SpawnAround( _enemySpawnPoint, player.transform);
             
                 _gameStarter.StartGame();
             }

@@ -61,7 +61,7 @@ namespace _Project.Scripts.Infrastructure.Game
         {
             Container.BindInterfacesAndSelfTo<PlayerFactory>().AsSingle().WithArguments(_gameParent);
             Container.Bind<PlayerSpawner>().AsSingle();
-            Container.Bind<PlayerDeath>().FromMethod(GetPlayerDeath).AsSingle();
+            Container.Bind<PlayerContainer>().FromMethod(GetPlayer).AsSingle();
         }
 
         private void BindPlayerStats()
@@ -107,7 +107,7 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
         }
         
-        private PlayerDeath GetPlayerDeath(InjectContext context) => 
-            context.Container.Resolve<PlayerFactory>().GetPlayerDeath();
+        private PlayerContainer GetPlayer(InjectContext context) => 
+            context.Container.Resolve<PlayerFactory>().GetPlayer();
     }
 }

@@ -1,11 +1,10 @@
-using System;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Services.PlayerInput;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Player
+namespace _Project.Scripts.Logic.Player.Components
 {
     public class PlayerMovement : MonoBehaviour
     {

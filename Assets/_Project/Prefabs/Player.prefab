@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3765877632964249062}
   - component: {fileID: 1638125256550281972}
+  - component: {fileID: 7451061872485123912}
   - component: {fileID: 8216705233117684019}
   - component: {fileID: 7795851549087658766}
   - component: {fileID: 5731431232808421805}
@@ -65,6 +66,24 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7451061872485123912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 257879639715284881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58740705484e4799b5f9368dd6c572e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Camera>k__BackingField: {fileID: 366865669097896475}
+  <CameraLook>k__BackingField: {fileID: 8216705233117684019}
+  <PlayerDeath>k__BackingField: {fileID: 7341794655300860022}
+  <Movement>k__BackingField: {fileID: 7795851549087658766}
+  <Health>k__BackingField: {fileID: 5731431232808421805}
+  <Weapon>k__BackingField: {fileID: 1824971623139906259}
 --- !u!114 &8216705233117684019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,14 +126,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e050b2eb5dc432ca3ab0f515127b6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _audioSource: {fileID: 6824860918327923091}
-  _healSound: {fileID: 8300000, guid: 7f0b26dda2e24b747a57a9a43f0b064a, type: 3}
-  _hitSounds:
-  - {fileID: 8300000, guid: 3a0a113fd9fcdba46b5b7152afc908bf, type: 3}
-  - {fileID: 8300000, guid: 2506d2e95025d2748afbd1ce9c444e43, type: 3}
-  - {fileID: 8300000, guid: 108081a777bf3f64fa79c46449ab9343, type: 3}
-  - {fileID: 8300000, guid: cc6bf322f6d6bc545be22be3df62dc47, type: 3}
-  - {fileID: 8300000, guid: 40b38cc22551d3147ad6f891a6bf223b, type: 3}
 --- !u!114 &7341794655300860022
 MonoBehaviour:
   m_ObjectHideFlags: 0
