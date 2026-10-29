@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Logic.Common.StateMachine.Predicates;
 using _Project.Scripts.Services;
 using _Project.Scripts.Tools;
@@ -73,14 +72,14 @@ namespace _Project.Scripts.Logic.Enemy.States
             {
                 PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.green);
 
-                if (hit.TryGetComponent(out IHealth playerHealth))
+                if (hit.TryGetComponent(out Health playerHealth))
                 {
                     playerHealth.TakeDamage(_config.AttackDamage);
                     _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
                 }
                 else
                 {
-                    throw new NullReferenceException($"[ENEMY] No IHealth component found on {hit.gameObject.name}");
+                    throw new NullReferenceException($"[ENEMY] No Health component found on {hit.gameObject.name}");
                 }
             }
             else

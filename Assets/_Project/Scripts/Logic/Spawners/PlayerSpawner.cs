@@ -1,6 +1,5 @@
 using _Project.Scripts.Configs.Spawners;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Logic.Player;
 using Cysharp.Threading.Tasks;
 

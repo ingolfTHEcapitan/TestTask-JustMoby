@@ -22,10 +22,8 @@ namespace _Project.Scripts.UI.Common.HealthBar
 
         public float HealthSliderValue => _healthSlider.value;
         
-        //V+
         private AudioService _audioService;
         
-        //V
         [Inject]
         private void Construct(AudioService audioService) => 
             _audioService = audioService;
@@ -42,11 +40,9 @@ namespace _Project.Scripts.UI.Common.HealthBar
         public void Hide() => 
             gameObject.SetActive(false);
         
-        //V
         public void PlayHitSound() => 
             _audioService.PlayOneShotRandom(_takeDamageSounds, _audioSource);
         
-        //V+
         public void PlayHealSound()
         {
             if (_takeHealSound != null)

@@ -1,6 +1,5 @@
 using System;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.Analytics;
 using UnityEngine;

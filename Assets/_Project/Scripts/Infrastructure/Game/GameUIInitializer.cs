@@ -1,5 +1,4 @@
 ﻿using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Common.HealthBar;

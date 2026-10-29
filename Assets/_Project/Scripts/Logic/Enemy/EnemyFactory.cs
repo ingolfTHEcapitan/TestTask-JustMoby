@@ -1,5 +1,5 @@
 using _Project.Scripts.Infrastructure.AssetManagement;
-using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy.States;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.UI.Common;

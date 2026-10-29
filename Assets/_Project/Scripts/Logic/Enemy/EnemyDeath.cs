@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Services;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Common.HealthBar;

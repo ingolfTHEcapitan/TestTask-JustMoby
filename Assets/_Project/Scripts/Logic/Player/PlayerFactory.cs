@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.Game;
-using _Project.Scripts.Logic.Common.Health;
+using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
 using Cysharp.Threading.Tasks;
 using UnityEngine;

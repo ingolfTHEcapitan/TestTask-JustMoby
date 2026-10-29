@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-namespace _Project.Scripts.Logic.Common.Health
+namespace _Project.Scripts.Logic.Common
 {
-    public class Health : MonoBehaviour, IHealth
+    public class Health : MonoBehaviour
     {
         public event Action OnHealthChanged;
         public event Action OnTakeDamage;

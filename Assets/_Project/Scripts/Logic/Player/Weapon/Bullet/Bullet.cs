@@ -1,7 +1,6 @@
 using System;
 using _Project.Scripts.Configs.Weapon;
 using _Project.Scripts.Logic.Common;
-using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
 using Cysharp.Threading.Tasks;
@@ -47,7 +46,7 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.TryGetComponent(out IHealth health))
+            if (other.gameObject.TryGetComponent(out Health health))
             {
                 health.TakeDamage(_damage);
                 _effectsService.PlayHitFxAsync(_targetPoint, other.gameObject.transform).Forget(Debug.LogException);
