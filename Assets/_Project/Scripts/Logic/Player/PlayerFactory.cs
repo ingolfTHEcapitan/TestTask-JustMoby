@@ -10,7 +10,7 @@ using Zenject;
 
 namespace _Project.Scripts.Logic.Player
 {
-    public class PlayerFactory :  IDisposable
+    public class PlayerFactory : IDisposable
     {
         private readonly IInstantiator _container;
         private readonly HealthCalculator _healthCalculator;
@@ -73,7 +73,5 @@ namespace _Project.Scripts.Logic.Player
             Camera playerCamera = player.GetComponentInChildren<Camera>();
             weapon.Initialize(playerCamera);
         }
-        
-        
     }
 }

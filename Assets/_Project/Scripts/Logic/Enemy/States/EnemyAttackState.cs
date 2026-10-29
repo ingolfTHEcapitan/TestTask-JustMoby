@@ -72,9 +72,9 @@ namespace _Project.Scripts.Logic.Enemy.States
             {
                 PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.green);
 
-                if (hit.TryGetComponent(out Health playerHealth))
+                if (hit.TryGetComponent(out IDamageable player))
                 {
-                    playerHealth.TakeDamage(_config.AttackDamage);
+                    player.TakeDamage(_config.AttackDamage);
                     _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
                 }
                 else

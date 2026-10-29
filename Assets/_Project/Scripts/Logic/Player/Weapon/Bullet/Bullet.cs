@@ -46,9 +46,9 @@ namespace _Project.Scripts.Logic.Player.Weapon.Bullet
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.TryGetComponent(out Health health))
+            if (other.gameObject.TryGetComponent(out IDamageable enemy))
             {
-                health.TakeDamage(_damage);
+                enemy.TakeDamage(_damage);
                 _effectsService.PlayHitFxAsync(_targetPoint, other.gameObject.transform).Forget(Debug.LogException);
                 Destroy(gameObject);
             }
