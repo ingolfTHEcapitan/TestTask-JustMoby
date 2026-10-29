@@ -19,12 +19,12 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
             _savePath = Path.Combine(_saveDirectoryPath, FileName);
         }
         
-        public async UniTask SaveProgressAsync(ProgressService progressService)
+        public async UniTask SaveProgressAsync(PlayerProgress playerProgress)
         {
             if (!Directory.Exists(_saveDirectoryPath)) 
                 Directory.CreateDirectory(_saveDirectoryPath);
             
-            string json = JsonUtility.ToJson(progressService.PlayerProgress, prettyPrint: true);
+            string json = JsonUtility.ToJson(playerProgress, prettyPrint: true);
             await File.WriteAllTextAsync(_savePath, json).AsUniTask();
         }
 

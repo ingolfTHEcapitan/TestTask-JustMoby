@@ -32,7 +32,7 @@ namespace _Project.Scripts.UI.HUD
         public async UniTask LoadMainMenuAsync()
         {
             _loadingCurtainPresenter.ShowLoading();
-            await _saveLoadService.SaveProgressAsync(_progressService);
+            await _saveLoadService.SaveProgressAsync(_progressService.PlayerProgress);
             await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
         }
     }

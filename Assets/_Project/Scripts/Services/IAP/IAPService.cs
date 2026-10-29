@@ -88,7 +88,7 @@ namespace _Project.Scripts.Services.IAP
         {
             try
             {
-                await _saveLoadService.SaveProgressAsync(_progressService);
+                await _saveLoadService.SaveProgressAsync(_progressService.PlayerProgress);
                 _purchaseTaskCompletionSource.TrySetResult(true);
             }
             catch (Exception e)

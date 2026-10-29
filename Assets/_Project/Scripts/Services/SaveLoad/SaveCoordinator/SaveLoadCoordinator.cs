@@ -27,17 +27,17 @@ namespace _Project.Scripts.Services.SaveLoad.SaveCoordinator
             _progressService = progressService;
         }
 
-        public async UniTask SaveProgressAsync(ProgressService progressService)
+        public async UniTask SaveProgressAsync(PlayerProgress playerProgress)
         {
-            progressService.PlayerProgress.LastSaveTimeUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            playerProgress.LastSaveTimeUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             
-            await _localSaveService.SaveProgressAsync(progressService);
+            await _localSaveService.SaveProgressAsync(playerProgress);
             
             if (await HasInternetAsync() && _authService.IsSignedIn)
             {
                 try
                 {
-                    await _cloudSaveService.SaveProgressAsync(progressService);
+                    await _cloudSaveService.SaveProgressAsync(playerProgress);
                 }
                 catch (Exception e)
                 {
@@ -95,14 +95,14 @@ namespace _Project.Scripts.Services.SaveLoad.SaveCoordinator
         private async UniTask<PlayerProgress> LoadCloudSaveAsync(PlayerProgress cloudProgress)
         {
             _progressService.PlayerProgress = cloudProgress;
-            await _localSaveService.SaveProgressAsync(_progressService);
+            await _localSaveService.SaveProgressAsync(cloudProgress);
             return cloudProgress;
         }
 
         private async UniTask<PlayerProgress> LoadLocalSaveAsync(PlayerProgress localProgress)
         {
             _progressService.PlayerProgress = localProgress;
-            await _cloudSaveService.SaveProgressAsync(_progressService);
+            await _cloudSaveService.SaveProgressAsync(localProgress);
             return localProgress;
         }
 

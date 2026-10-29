@@ -22,7 +22,7 @@ namespace _Project.Scripts.UI.Windows.Settings
         }
 
         public async UniTask SaveSettingsAsync() => 
-            await _saveService.SaveProgressAsync(_progressService);
+            await _saveService.SaveProgressAsync(_progressService.PlayerProgress);
         
         public float ConvertVolumeToDecibel(float volume)
         {

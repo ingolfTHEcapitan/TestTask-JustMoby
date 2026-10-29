@@ -5,7 +5,7 @@ namespace _Project.Scripts.Services.SaveLoad
 {
     public interface ISaveLoadService
     {
-        UniTask SaveProgressAsync(ProgressService progressService);
+        UniTask SaveProgressAsync(PlayerProgress playerProgress);
         UniTask<PlayerProgress> LoadProgressAsync();
     }
 }

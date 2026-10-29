@@ -45,6 +45,6 @@ namespace _Project.Scripts.Logic.PlayerStats
         }
 
         public async UniTask SaveStatAsync() => 
-            await _saveLoadService.SaveProgressAsync(_progressService);
+            await _saveLoadService.SaveProgressAsync(_progressService.PlayerProgress);
     }
 }

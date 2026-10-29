@@ -11,14 +11,14 @@ namespace _Project.Scripts.Services.SaveLoad.CloudSave
     {
         private const string CloudSaveKey = "PlayerProgress";
         
-        public async UniTask SaveProgressAsync(ProgressService progressService)
+        public async UniTask SaveProgressAsync(PlayerProgress playerProgress)
         {
-            string json = JsonUtility.ToJson(progressService.PlayerProgress, false);
+            string json = JsonUtility.ToJson(playerProgress, false);
             
-            Dictionary<string, object> playerProgress = new Dictionary<string, object>
+            Dictionary<string, object> progress = new Dictionary<string, object>
             { { CloudSaveKey, json }, };
             
-            await CloudSaveService.Instance.Data.Player.SaveAsync(playerProgress);
+            await CloudSaveService.Instance.Data.Player.SaveAsync(progress);
         }
 
         public async UniTask<PlayerProgress> LoadProgressAsync()

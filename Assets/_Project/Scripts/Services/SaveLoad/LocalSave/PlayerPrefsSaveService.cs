@@ -8,9 +8,9 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
     {
         private const string PlayerProgressKey = "PlayerProgress";
         
-        public UniTask SaveProgressAsync(ProgressService progressService)
+        public UniTask SaveProgressAsync(PlayerProgress playerProgress)
         {
-            string json = JsonUtility.ToJson(progressService.PlayerProgress, false);
+            string json = JsonUtility.ToJson(playerProgress, false);
             PlayerPrefs.SetString(PlayerProgressKey, json);
             return UniTask.CompletedTask;
         }
