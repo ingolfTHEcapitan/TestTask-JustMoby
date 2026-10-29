@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 235504412986314720}
   - component: {fileID: 235504412986314735}
   - component: {fileID: 235504412986314734}
-  - component: {fileID: 5198894929645993823}
+  - component: {fileID: 2843709778930738034}
   m_Layer: 0
   m_Name: HealthBar
   m_TagString: Untagged
@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
---- !u!114 &5198894929645993823
+--- !u!114 &2843709778930738034
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -229,12 +229,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 235504412986314732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 230e87c51fd84cf5bfaa6f2f672c7907, type: 3}
+  m_Script: {fileID: 11500000, guid: d67ef60674124a449f98dd10548b0044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <SliderValuePerSecond>k__BackingField: 1
   _healthSlider: {fileID: 235504412986314735}
   _healthText: {fileID: 235504413541349036}
-  _sliderValuePerSecond: 1
   _audioSource: {fileID: 6592498245057254169}
   _takeHealSound: {fileID: 0}
   _takeDamageSounds: []

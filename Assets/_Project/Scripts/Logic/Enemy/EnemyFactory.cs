@@ -17,13 +17,15 @@ namespace _Project.Scripts.Logic.Enemy
         private readonly HealthCalculator _healthCalculator;
         private readonly IAssetProvider _assetProvider;
         private readonly IGamePauseService _pauseService;
+        private readonly HealthBarFactory _healthBarFactory;
 
-        public EnemyFactory(IInstantiator container, HealthCalculator healthCalculator, 
+        public EnemyFactory(IInstantiator container, HealthCalculator healthCalculator, HealthBarFactory healthBarFactory,
             IAssetProvider assetProvider, Transform dynamicObjectsParent, IGamePauseService pauseService)
         {
             _container = container;
             _healthCalculator = healthCalculator;
             _assetProvider = assetProvider;
+            _healthBarFactory = healthBarFactory;
             _dynamicObjectsParent = dynamicObjectsParent;
             _pauseService = pauseService;
         }
@@ -41,18 +43,17 @@ namespace _Project.Scripts.Logic.Enemy
             enemyStateMachine.Initialize(spawnPoint, playerTransform, enemyRotateToPlayer);
             
             float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
-            Health health = enemyStateMachine.GetComponent<Health>();
-            health.Initialize(maxHealth);
+            Health healthModel = enemyStateMachine.GetComponent<Health>();
+            healthModel.Initialize(maxHealth);
             
-            HealthBarView_Old healthBar = enemyStateMachine.GetComponentInChildren<HealthBarView_Old>();
-            healthBar.Construct(health);
-            healthBar.Initialize();
+            HealthBarView healthBarView = enemyStateMachine.GetComponentInChildren<HealthBarView>();
+            HealthBarPresenter healthBarPresenter = _healthBarFactory.Create(healthBarView, healthModel);
 
             EnemyDeath enemyDeath = enemyStateMachine.GetComponent<EnemyDeath>();
             enemyDeath.Initialize();
             
             EnemyAnimator enemyAnimator = enemyStateMachine.GetComponent<EnemyAnimator>();
-            enemyAnimator.Construct(enemyStateMachine.GetState<EnemyAttackState>(), _pauseService);
+            enemyAnimator.Construct(enemyStateMachine.GetState<EnemyAttackState>(), _pauseService, healthBarPresenter);
             enemyAnimator.Initialize();
             return enemyDeath;
         }

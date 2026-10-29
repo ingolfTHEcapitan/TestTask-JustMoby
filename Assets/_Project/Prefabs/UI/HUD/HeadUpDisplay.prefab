@@ -196,7 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _backMainMenuButton: {fileID: 4097046111520973458}
   <OpenStatsWindowButton>k__BackingField: {fileID: 4997575414914132149}
-  <HealthBarView>k__BackingField: {fileID: 9047778607125785288}
+  <HealthBarView>k__BackingField: {fileID: 1351334057115662053}
 --- !u!1001 &3547150775401372995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -512,6 +512,41 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 45
       objectReference: {fileID: 0}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeHealSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 7f0b26dda2e24b747a57a9a43f0b064a, type: 3}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: 3a0a113fd9fcdba46b5b7152afc908bf, type: 3}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 2506d2e95025d2748afbd1ce9c444e43, type: 3}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 108081a777bf3f64fa79c46449ab9343, type: 3}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: cc6bf322f6d6bc545be22be3df62dc47, type: 3}
+    - target: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
+        type: 3}
+      propertyPath: _takeDamageSounds.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: 40b38cc22551d3147ad6f891a6bf223b, type: 3}
     - target: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
         type: 3}
       propertyPath: _healSound
@@ -577,24 +612,24 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48ee057852bea7e449afe00d4c60d00a, type: 3}
---- !u!224 &3959415951332121210 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 235504412986314733, guid: 48ee057852bea7e449afe00d4c60d00a,
-    type: 3}
-  m_PrefabInstance: {fileID: 3870287322800756119}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9047778607125785288 stripped
+--- !u!114 &1351334057115662053 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5198894929645993823, guid: 48ee057852bea7e449afe00d4c60d00a,
+  m_CorrespondingSourceObject: {fileID: 2843709778930738034, guid: 48ee057852bea7e449afe00d4c60d00a,
     type: 3}
   m_PrefabInstance: {fileID: 3870287322800756119}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 230e87c51fd84cf5bfaa6f2f672c7907, type: 3}
+  m_Script: {fileID: 11500000, guid: d67ef60674124a449f98dd10548b0044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &3959415951332121210 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 235504412986314733, guid: 48ee057852bea7e449afe00d4c60d00a,
+    type: 3}
+  m_PrefabInstance: {fileID: 3870287322800756119}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5529108837727475556
 PrefabInstance:
   m_ObjectHideFlags: 0

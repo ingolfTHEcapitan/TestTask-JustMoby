@@ -14,6 +14,7 @@ namespace _Project.Scripts.Logic.Common.Health
 
         public float CurrentHealth {get; private set;}
         public float MaxHealth { get; private set; }
+        public float NormalizedHealth => CurrentHealth / MaxHealth;
         
         public void Initialize(float maxHealth)
         {

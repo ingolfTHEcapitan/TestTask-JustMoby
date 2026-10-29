@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Project.Scripts.Services;
 using TMPro;
@@ -9,14 +10,17 @@ namespace _Project.Scripts.UI.Common.HealthBar
 {
     public class HealthBarView : MonoBehaviour
     {
-        //V+
+        public event Action OnHealthBarDestroy;
+
+        [field:SerializeField] public float SliderValuePerSecond { get; private set; } = 0.5f;
         [SerializeField] private Slider _healthSlider;
         [SerializeField] private TextMeshProUGUI _healthText;
-        [SerializeField] private float _sliderValuePerSecond = 0.5f;
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource;
         [SerializeField] private AudioClip _takeHealSound;
         [SerializeField] private List<AudioClip> _takeDamageSounds;
+
+        public float HealthSliderValue => _healthSlider.value;
         
         //V+
         private AudioService _audioService;
@@ -26,6 +30,9 @@ namespace _Project.Scripts.UI.Common.HealthBar
         private void Construct(AudioService audioService) => 
             _audioService = audioService;
         
+        private void OnDestroy() => 
+            OnHealthBarDestroy?.Invoke();
+
         public void UpdateHealthSliderValue(float value) => 
             _healthSlider.value = value;
 
@@ -34,5 +41,16 @@ namespace _Project.Scripts.UI.Common.HealthBar
 
         public void Hide() => 
             gameObject.SetActive(false);
+        
+        //V
+        public void PlayHitSound() => 
+            _audioService.PlayOneShotRandom(_takeDamageSounds, _audioSource);
+        
+        //V+
+        public void PlayHealSound()
+        {
+            if (_takeHealSound != null)
+                _audioService.PlayOneShot(_takeHealSound, _audioSource);
+        }
     }
 }

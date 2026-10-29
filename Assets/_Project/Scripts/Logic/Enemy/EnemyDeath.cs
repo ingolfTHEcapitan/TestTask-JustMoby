@@ -19,7 +19,6 @@ namespace _Project.Scripts.Logic.Enemy
         public event Action<EnemyDeath> OnDied;
 
         [SerializeField] private Health _health;
-        [SerializeField] private HealthBarView_Old _healthBarView;
         [SerializeField] private DissolveShader _dissolveShader;
 
         [Header("Components To Disable On Death")]
@@ -75,7 +74,6 @@ namespace _Project.Scripts.Logic.Enemy
         {
             _isDead = true;
             DisableEnemyComponents();
-            await _healthBarView.HideAsync();
             
             if (!_isForcedKilling)
             {

@@ -3,6 +3,7 @@ using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Common.Health;
 using _Project.Scripts.Logic.Enemy.States;
 using _Project.Scripts.Services.GamePause;
+using _Project.Scripts.UI.Common.HealthBar;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.Enemy
@@ -18,19 +19,22 @@ namespace _Project.Scripts.Logic.Enemy
         private readonly int _attackHash = Animator.StringToHash("Attack");
         
         private EnemyAttackState _attackState;
+        private HealthBarPresenter _healthBarPresenter;
         private IGamePauseService _pauseService;
         private float _tempAnimationSpeed;
 
-        public void Construct(EnemyAttackState attackState, IGamePauseService pauseService)
+        public void Construct(EnemyAttackState attackState, IGamePauseService pauseService, HealthBarPresenter healthBarPresenter)
         {
             _attackState = attackState;
             _pauseService = pauseService;
+            _healthBarPresenter = healthBarPresenter;
         }
 
         public void Initialize()
         {
             _health.OnTakeDamage += PlayHit;
             _health.OnZeroHealth += PlayDeath;
+            _health.OnZeroHealth += HideHealthBar;
             _attackState.OnAttackStarted += PlayAttack;
             _pauseService.Register(this);
             SetAnimatorSpeed(_pauseService.IsPaused);
@@ -58,5 +62,17 @@ namespace _Project.Scripts.Logic.Enemy
 
         private void PlayAttack() => 
             _animator.SetTrigger(_attackHash);
+
+        private async void HideHealthBar()
+        {
+            try
+            {
+                await _healthBarPresenter.HideAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.UI;
+using _Project.Scripts.UI.Common.HealthBar;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
@@ -34,6 +35,7 @@ namespace _Project.Scripts.Infrastructure.Game
             BindPlayer();
             BindPlayerStats();
             BindHeadUpDisplay();
+            BindHealthBarFactory();
             BindGameOverWindow();
             BindHealthCalculator();
             BindUpgradePointsService();
@@ -41,7 +43,7 @@ namespace _Project.Scripts.Infrastructure.Game
             BindWeapon();
             BindGame();
         }
-        
+
         private void BindServices()
         {
             Container.BindInterfacesAndSelfTo<GamePauseService>().AsSingle();
@@ -51,6 +53,9 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindHealthCalculator() => 
             Container.Bind<HealthCalculator>().AsSingle();
+
+        private void BindHealthBarFactory() => 
+            Container.Bind<HealthBarFactory>().AsSingle();
 
         private void BindPlayer()
         {

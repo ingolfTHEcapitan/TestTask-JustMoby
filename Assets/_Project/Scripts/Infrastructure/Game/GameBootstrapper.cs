@@ -42,11 +42,11 @@ namespace _Project.Scripts.Infrastructure.Game
                 await _effectsService.WarmUpAsync();
                 _playerStatsModel.CreateStats();
             
-                Health playerHealth = await _playerSpawner.SpawnAsync();
+                Health playerHealthModel = await _playerSpawner.SpawnAsync();
             
-                await _uiInitializer.InitUIAsync(playerHealth);
+                await _uiInitializer.InitUIAsync(playerHealthModel);
             
-                _enemySpawner.SpawnAround( _enemySpawnPoint, playerHealth.transform);
+                _enemySpawner.SpawnAround( _enemySpawnPoint, playerHealthModel.transform);
             
                 _gameStarter.StartGame();
             }
