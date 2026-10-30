@@ -4,7 +4,6 @@ using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy.Components.SatteMachine;
 using _Project.Scripts.Services;
 using Cysharp.Threading.Tasks;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
@@ -16,8 +15,7 @@ namespace _Project.Scripts.Logic.Enemy.Components
         public event Action OnDied;
 
         [SerializeField] private Health _health;
-        [SerializeField] private DissolveShader _dissolveShader;
-
+        
         [Header("Components To Disable On Death")]
         [SerializeField] private NavMeshAgent _agent;
         [SerializeField] private EnemyStateMachine _enemyStateMachine;
@@ -28,16 +26,13 @@ namespace _Project.Scripts.Logic.Enemy.Components
         private bool _isForcedKilling;
 
         private EnemyConfig _config;
-        private EffectsService _effectsService;
         private GameStatistics _statistics;
         private ScoreService _scoreService;
 
         [Inject]
-        private void Construct(EnemyConfig config, EffectsService effectsService, 
-            GameStatistics statistics, ScoreService scoreService)
+        private void Construct(EnemyConfig config, GameStatistics statistics, ScoreService scoreService)
         {
             _config = config;
-            _effectsService = effectsService;
             _statistics = statistics;
             _scoreService = scoreService;
         }
@@ -47,13 +42,6 @@ namespace _Project.Scripts.Logic.Enemy.Components
 
         private void OnDestroy() => 
             _health.OnZeroHealth -= EnemyDie;
-        
-        [UsedImplicitly]
-        public void OnDeathPose()
-        {
-            _dissolveShader.PlayDissolveFx();
-            _effectsService.PlayEnemyDeathFxAsync(transform.position, transform).Forget(Debug.LogError);
-        }
         
         public void KillEnemy()
         {

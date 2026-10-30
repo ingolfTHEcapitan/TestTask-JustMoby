@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Common.StateMachine.Predicates;
-using _Project.Scripts.Services;
 using _Project.Scripts.Tools;
 using UnityEngine;
 using UnityEngine.AI;
@@ -18,6 +16,8 @@ namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine.States
         private const float DebugLifeTime = 3;
 
         public event Action OnAttackStarted;
+        public event Action OnAttackMissed;
+        public event Action OnAttackHit;
 
         private readonly Transform _enemyTransform;
         private readonly EnemyRotateToPlayer _enemyRotateToPlayer;
@@ -26,24 +26,14 @@ namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine.States
         private readonly Collider[] _hits = new Collider[1];
         private readonly int _layerMask;
         
-        private readonly AudioService _audioService;
-        private readonly AudioSource _audioSource;
-        private readonly List<AudioClip> _swordHitSounds;
-        private readonly List<AudioClip> _swordMissSounds;
-
         public bool IsAttacking {get; private set;}
 
         public EnemyAttackState(NavMeshAgent agent, EnemyConfig config, EnemyRotateToPlayer enemyRotateToPlayer, 
-            IPredicate attackCooldownIsUp,Transform enemyTransform, AudioService audioService, 
-            AudioSource audioSource, List<AudioClip> swordHitSounds, List<AudioClip> swordMissSounds) : base(agent, config)
+            IPredicate attackCooldownIsUp,Transform enemyTransform) : base(agent, config)
         {
             _attackCooldownIsUp = attackCooldownIsUp;
             _enemyRotateToPlayer = enemyRotateToPlayer;
             _enemyTransform = enemyTransform;
-            _audioService = audioService;
-            _audioSource = audioSource;
-            _swordHitSounds = swordHitSounds;
-            _swordMissSounds = swordMissSounds;
 
             _layerMask = LayerMask.GetMask(PlayerLayer);
         }
@@ -70,12 +60,11 @@ namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine.States
         {
             if (Hit(out Collider hit))
             {
-                PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.green);
-
                 if (hit.TryGetComponent(out IDamageable player))
                 {
                     player.TakeDamage(_config.AttackDamage);
-                    _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
+                    OnAttackHit?.Invoke();
+                    PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.green);
                 }
                 else
                 {
@@ -84,8 +73,8 @@ namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine.States
             }
             else
             {
+                OnAttackMissed?.Invoke();
                 PhysicsDebug.DrawDebugSphere(GetStartPoint(), _config.AttackRadius, DebugLifeTime, Color.red);
-                _audioService.PlayOneShotRandom(_swordMissSounds, _audioSource);
             }
         }
 

@@ -1,9 +1,8 @@
-using System.Collections.Generic;
+using System;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.Common.StateMachine;
 using _Project.Scripts.Logic.Common.StateMachine.Predicates;
 using _Project.Scripts.Logic.Enemy.Components.SatteMachine.States;
-using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -14,15 +13,13 @@ namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine
 {
     public class EnemyStateMachine : MonoBehaviour
     {
+        public event Action OnAttackStarted;
+        public event Action OnAttackMissed;
+        public event Action OnAttackHit;
+        
         [SerializeField] private NavMeshAgent _agent;
         
-        [Header("Audio")]
-        [SerializeField] private AudioSource _audioSource;
-        [SerializeField] private List<AudioClip> _swordHitSounds;
-        [SerializeField] private List<AudioClip> _swordMissSounds;
-        
         private IGamePauseService _pauseService;
-        private AudioService _audioService;
         private EnemyConfig _config;
         private EnemyRotateToPlayer _enemyRotateToPlayer;
         private Transform _playerTransform;
@@ -35,31 +32,32 @@ namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine
         private bool _isSpawnAnimationEnded;
 
         [Inject]
-        private void Construct(IGamePauseService pauseService, AudioService audioService, EnemyConfig config)
+        private void Construct(IGamePauseService pauseService, EnemyConfig config)
         {
             _pauseService = pauseService;
-            _audioService = audioService;
             _config = config;
         }
         
         public void Initialize(Vector3 spawnPoint, Transform playerTransform, EnemyRotateToPlayer enemyRotateToPlayer)
         {
-            _pauseService.OnPausableUpdate += PausableUpdate;
-            
             _playerTransform = playerTransform;
             _agent.speed = _config.MoveSpeed;
             _agent.stoppingDistance = _config.AttackDistance;
-            
+
             _attackDistanceSquared = _config.AttackDistance * _config.AttackDistance;
             _chaseDistanceSquared = _config.ChaseDistance * _config.ChaseDistance;
-            
+
             _stateMachine = new StateMachine();
-            
+
             EnemySpawnState spawnState = new EnemySpawnState(_agent, _config);
             EnemyPatrolState patrolState = new EnemyPatrolState(_agent, _config, spawnPoint);
-            _attackState = new EnemyAttackState(_agent, _config, enemyRotateToPlayer, new FuncPredicate(AttackCooldownIsUp), 
-                transform, _audioService,_audioSource, _swordHitSounds, _swordMissSounds);
+            _attackState = new EnemyAttackState(_agent, _config, enemyRotateToPlayer, new FuncPredicate(AttackCooldownIsUp), transform);
             EnemyChaseState chaseState = new EnemyChaseState(_agent, _config, enemyRotateToPlayer, playerTransform);
+
+            _pauseService.OnPausableUpdate += PausableUpdate;
+            _attackState.OnAttackStarted += InvokeOnAttackStarted;
+            _attackState.OnAttackHit += InvokeOnAttackHit;
+            _attackState.OnAttackMissed += InvokeOnAttackMissed;
             
             _stateMachine.AddTransition(spawnState, patrolState, new FuncPredicate(() => _isSpawnAnimationEnded));
             _stateMachine.AddTransition(_attackState, chaseState, new FuncPredicate(() => !_attackState.IsAttacking && IsPlayerInChaseRange()));
@@ -70,9 +68,14 @@ namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine
             
             _stateMachine.SetState(spawnState);
         }
-
-        private void OnDisable() => 
+        
+        private void OnDisable()
+        {
             _pauseService.OnPausableUpdate -= PausableUpdate;
+            _attackState.OnAttackStarted -= InvokeOnAttackStarted;
+            _attackState.OnAttackHit -= InvokeOnAttackHit;
+            _attackState.OnAttackMissed -= InvokeOnAttackMissed;
+        }
 
         [UsedImplicitly]
         public void OnAttackEnded()
@@ -121,5 +124,14 @@ namespace _Project.Scripts.Logic.Enemy.Components.SatteMachine
 
         private float GetSqrDistanceToPlayer() => 
             (transform.position - _playerTransform.position).sqrMagnitude;
+        
+        private void InvokeOnAttackMissed() => 
+            OnAttackMissed?.Invoke();
+
+        private void InvokeOnAttackHit() => 
+            OnAttackHit?.Invoke();
+
+        private void InvokeOnAttackStarted() => 
+            OnAttackStarted?.Invoke();
     }
 }

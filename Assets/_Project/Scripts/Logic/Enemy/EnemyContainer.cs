@@ -9,7 +9,7 @@ namespace _Project.Scripts.Logic.Enemy
     public class EnemyContainer: MonoBehaviour
     {
         [field: SerializeField] public EnemyStateMachine StateMachine { get; private set; }
-        [field: SerializeField] public EnemyAnimator Animator { get; private set; }
+        [field: SerializeField] public EnemyVisuals Visuals { get; private set; }
         [field: SerializeField] public EnemyDeath EnemyDeath { get; private set; }
         [field: SerializeField] public Health Health { get; private set; }
         [field: SerializeField] public EnemyRotateToPlayer RotateToPlayer { get; private set; }

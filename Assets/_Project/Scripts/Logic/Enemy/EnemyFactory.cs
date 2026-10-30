@@ -53,9 +53,8 @@ namespace _Project.Scripts.Logic.Enemy
             
             enemy.EnemyDeath.Initialize();
             
-            EnemyAnimator enemyAnimator = enemy.Animator;
-            enemyAnimator.Construct(stateMachine.GetState<EnemyAttackState>(), _pauseService);
-            enemyAnimator.Initialize();
+            EnemyVisuals enemyVisuals = enemy.Visuals;
+            enemyVisuals.Initialize(stateMachine);
             return enemy;
         }
     }
