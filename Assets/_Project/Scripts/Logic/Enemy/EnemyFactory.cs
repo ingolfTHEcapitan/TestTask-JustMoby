@@ -2,9 +2,7 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy.Components;
 using _Project.Scripts.Logic.Enemy.Components.SatteMachine;
-using _Project.Scripts.Logic.Enemy.Components.SatteMachine.States;
-using _Project.Scripts.Services.GamePause;
-using _Project.Scripts.UI.Common;
+using _Project.Scripts.Logic.Player;
 using _Project.Scripts.UI.Common.HealthBar;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -18,26 +16,28 @@ namespace _Project.Scripts.Logic.Enemy
         private readonly Transform _dynamicObjectsParent;
         private readonly HealthCalculator _healthCalculator;
         private readonly IAssetProvider _assetProvider;
-        private readonly IGamePauseService _pauseService;
         private readonly HealthBarFactory _healthBarFactory;
+        private readonly LazyInject<PlayerContainer> _lazyPlayer;
 
         public EnemyFactory(IInstantiator container, HealthCalculator healthCalculator, HealthBarFactory healthBarFactory,
-            IAssetProvider assetProvider, Transform dynamicObjectsParent, IGamePauseService pauseService)
+            IAssetProvider assetProvider, Transform dynamicObjectsParent, LazyInject<PlayerContainer> lazyPlayer)
         {
             _container = container;
             _healthCalculator = healthCalculator;
             _assetProvider = assetProvider;
             _healthBarFactory = healthBarFactory;
             _dynamicObjectsParent = dynamicObjectsParent;
-            _pauseService = pauseService;
+            _lazyPlayer = lazyPlayer;
         }
 
-        public async UniTask<EnemyContainer> CreateEnemyAsync(Vector3 spawnPoint, Transform playerTransform)
+        public async UniTask<EnemyContainer> CreateEnemyAsync(Vector3 spawnPoint)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Enemy);
             
             EnemyContainer enemy = 
                 _container.InstantiatePrefabForComponent<EnemyContainer>(prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
+
+            Transform playerTransform = _lazyPlayer.Value.transform;
 
             EnemyRotateToPlayer rotateToPlayer = enemy.RotateToPlayer;
             rotateToPlayer.Initialize(playerTransform);

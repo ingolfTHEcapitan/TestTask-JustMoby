@@ -26,7 +26,6 @@ namespace _Project.Scripts.Infrastructure.Game
         [SerializeField] private Transform _enemySpawnPoint;
         
         [Header("Audio")]
-        [SerializeField] private AudioSource _musicSource;
         [SerializeField] private AudioClip _gameplayMusic;
         
         public override void InstallBindings()
@@ -103,7 +102,7 @@ namespace _Project.Scripts.Infrastructure.Game
         private void BindGame()
         {
             Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent);
-            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint,  _musicSource, _gameplayMusic);
+            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint, _gameplayMusic);
         }
         
         private PlayerContainer GetPlayer(InjectContext context) => 

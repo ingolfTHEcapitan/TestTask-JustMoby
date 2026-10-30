@@ -26,11 +26,11 @@ namespace _Project.Scripts.Logic.Spawners
             _config = config;
         }
         
-        public void SpawnAround(Transform target, Transform playerTransform)
+        public void SpawnAround(Transform target)
         {
             StopSpawning();
             _cancellationTokenSource = new CancellationTokenSource();
-            SpawnAroundAsync(target, playerTransform, _cancellationTokenSource.Token).Forget();
+            SpawnAroundAsync(target, _cancellationTokenSource.Token).Forget();
         }
 
         public void KillAllEnemies()
@@ -49,7 +49,7 @@ namespace _Project.Scripts.Logic.Spawners
         public void Dispose() => 
             StopSpawning();
 
-        private async UniTaskVoid SpawnAroundAsync(Transform target, Transform playerTransform, CancellationToken token)
+        private async UniTaskVoid SpawnAroundAsync(Transform target, CancellationToken token)
         {
             while (true)
             {
@@ -58,7 +58,7 @@ namespace _Project.Scripts.Logic.Spawners
                 await PausableDelayAsync(_config.SpawnDelay, token);
               
                 if (_spawnedEnemies.Count < _config.EnemiesAtTime) 
-                    await InitEnemyAsync(target, playerTransform);
+                    await InitEnemyAsync(target);
             }
         }
 
@@ -75,9 +75,9 @@ namespace _Project.Scripts.Logic.Spawners
             }
         }
         
-        private async UniTask InitEnemyAsync(Transform target, Transform playerTransform)
+        private async UniTask InitEnemyAsync(Transform target)
         {
-            EnemyContainer enemy = await _factory.CreateEnemyAsync(GetSpawnPosition(target), playerTransform);
+            EnemyContainer enemy = await _factory.CreateEnemyAsync(GetSpawnPosition(target));
             enemy.EnemyDeath.OnDied += OnEnemyDeath;
             _spawnedEnemies.Add(enemy);
             return;

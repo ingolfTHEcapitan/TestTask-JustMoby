@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services;
@@ -50,13 +49,10 @@ namespace _Project.Scripts.Infrastructure.Game
             {
                 await _effectsService.WarmUpAsync();
                 _playerStatsModel.CreateStats();
-            
-                PlayerContainer player = await _playerSpawner.SpawnAsync();
-            
+                await _playerSpawner.SpawnAsync();
+                _enemySpawner.SpawnAround(_enemySpawnPoint);
                 await _uiInitializer.InitUIAsync();
-            
-                _enemySpawner.SpawnAround( _enemySpawnPoint, player.transform);
-            
+                
                 _analyticsService.LogGameStart();
                 _audioService.PlayMusic(_gameplayMusic);
                 _loadingCurtainPresenter.HideLoading();
