@@ -12,10 +12,10 @@ namespace _Project.Scripts.UI.Common
 		[SerializeField] private AudioClip _pointerEnter;
 		[SerializeField] private AudioSource _audioSource;
 		
-		private AudioService _audioService;
+		private ISoundService _audioService;
 
 		[Inject]
-		private void Construct(AudioService audioService) => 
+		private void Construct(ISoundService audioService) => 
 			_audioService = audioService;
 
 		public void Initialize(AudioSource audioSource) => 

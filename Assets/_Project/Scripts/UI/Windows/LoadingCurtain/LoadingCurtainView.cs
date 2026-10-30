@@ -34,11 +34,8 @@ namespace _Project.Scripts.UI.Windows.LoadingCurtain
             _audioService.PlayMusic(_loadingMusic);
         }
 
-        public void Close()
-        {
+        public void Close() => 
             gameObject.SetActive(false);
-            _audioService.StopMusic();
-        }
 
         private void Update() => 
             AnimateLoadingIndicator();

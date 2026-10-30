@@ -23,6 +23,7 @@ using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project
@@ -30,7 +31,7 @@ namespace _Project.Scripts.Infrastructure.Project
     public class ProjectInstaller : MonoInstaller
     {
         [Header("Audio")] 
-        [SerializeField] private AudioSource _globalAudioSource;
+        [SerializeField] private AudioSource _musicAudioSource;
         
         public override void InstallBindings()
         {
@@ -78,7 +79,7 @@ namespace _Project.Scripts.Infrastructure.Project
             
             Container.BindInterfacesAndSelfTo<IAPProvider>().AsSingle();
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<AudioService>().AsSingle().WithArguments(_globalAudioSource);
+            Container.BindInterfacesAndSelfTo<AudioService>().AsSingle().WithArguments(_musicAudioSource);
         }
 
         private void BindLoadingCurtain()

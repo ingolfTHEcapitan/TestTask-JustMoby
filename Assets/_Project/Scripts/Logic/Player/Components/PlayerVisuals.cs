@@ -25,11 +25,11 @@ namespace _Project.Scripts.Logic.Player.Components
         [SerializeField] private AudioClip _healSound;
         [SerializeField] private List<AudioClip> _takeDamageSounds;
         
-        private AudioService _audioService;
+        private ISoundService _audioService;
         private EffectsService _effectsService;
 
         [Inject]
-        private void Construct(AudioService audioService, EffectsService effectsService)
+        private void Construct(ISoundService audioService, EffectsService effectsService)
         {
             _audioService = audioService;
             _effectsService = effectsService;

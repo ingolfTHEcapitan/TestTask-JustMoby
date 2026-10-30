@@ -52,7 +52,6 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         {
             _cursorController.SetCursorVisible(false);
             _loadingCurtainPresenter.ShowLoading();
-            _view.StopBackgroundMusic();
             _model.LoadGameplaySceneAsync().Forget(Debug.LogError);
         }
 

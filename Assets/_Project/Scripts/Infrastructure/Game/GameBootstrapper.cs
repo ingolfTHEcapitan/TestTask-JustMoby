@@ -22,12 +22,12 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly PlayerStatsModel _playerStatsModel;
         private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         private readonly IMusicService _audioService;
-        private readonly AudioClip _gameplayMusic;
         private readonly IAnalyticsService _analyticsService;
+        private readonly AudioClip _gameplayMusic;
         
         public GameBootstrapper(EffectsService effectsService, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
-            Transform enemySpawnPoint, GameUIInitializer uiInitializer, PlayerStatsModel playerStatsModel, LoadingCurtainPresenter loadingCurtainPresenter,
-            IAnalyticsService analyticsService, IMusicService audioService, AudioSource audioSource, AudioClip gameplayMusic)
+            Transform enemySpawnPoint, GameUIInitializer uiInitializer, PlayerStatsModel playerStatsModel, AudioClip gameplayMusic,
+            LoadingCurtainPresenter loadingCurtainPresenter, IAnalyticsService analyticsService, IMusicService audioService)
         {
             _effectsService = effectsService;
             _playerSpawner = playerSpawner;

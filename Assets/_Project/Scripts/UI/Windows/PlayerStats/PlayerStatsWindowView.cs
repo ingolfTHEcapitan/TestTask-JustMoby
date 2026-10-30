@@ -29,11 +29,11 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [field: SerializeField] public AudioSource AudioSource { get; private set;}
         [field: SerializeField, Space] public Transform StatsContainer { get; private set; }
         
-        private AudioService _audioService;
+        private ISoundService _audioService;
         private Button _openButton;
 
         [Inject]
-        private void Construct(WindowFactory windowFactory, AudioService audioService) => 
+        private void Construct(WindowFactory windowFactory, ISoundService audioService) => 
             _audioService = audioService;
 
         public void Initialize(Button openButton)

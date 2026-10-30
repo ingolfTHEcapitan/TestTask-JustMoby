@@ -8,10 +8,10 @@ namespace _Project.Scripts.Services.Audio
         private const float MinPitchValue = 0.9f;
         private const float MaxPitchValue = 1.2f;
 
-        private readonly AudioSource _globalAudioSource;
+        private readonly AudioSource _musicAudioSource;
 
-        public AudioService(AudioSource globalAudioSource) => 
-            _globalAudioSource = globalAudioSource;
+        public AudioService(AudioSource musicAudioSource) => 
+            _musicAudioSource = musicAudioSource;
 
         public void PlayOneShot(AudioClip clip, AudioSource audioSource)
         {
@@ -34,18 +34,13 @@ namespace _Project.Scripts.Services.Audio
 
         public void PlayMusic(AudioClip clip, bool loop = true)
         {
-            if (_globalAudioSource.clip == clip && _globalAudioSource.isPlaying)
-                return;
-            
-            _globalAudioSource.clip = clip;
-            _globalAudioSource.loop = loop;
-            _globalAudioSource.Play();
+            _musicAudioSource.clip = clip;
+            _musicAudioSource.loop = loop;
+            _musicAudioSource.Play();
         }
 
         public void Stop(AudioSource audioSource) => 
             audioSource.Stop();
-        
-        public void StopMusic() => 
-            _globalAudioSource.Stop();
+            
     }
 }

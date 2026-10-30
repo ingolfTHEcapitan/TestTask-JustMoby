@@ -29,14 +29,14 @@ namespace _Project.Scripts.Logic.Enemy.Components
         private readonly int _attackHash = Animator.StringToHash("Attack");
 
         private IGamePauseService _pauseService;
-        private AudioService _audioService;
+        private ISoundService _audioService;
         private EffectsService _effectsService;
         private EnemyStateMachine _stateMachine;
         
         private float _tempAnimationSpeed;
 
         [Inject]
-        private void Construct(IGamePauseService pauseService, AudioService audioService, EffectsService effectsService)
+        private void Construct(IGamePauseService pauseService, ISoundService audioService, EffectsService effectsService)
         {
             _pauseService = pauseService;
             _audioService = audioService;

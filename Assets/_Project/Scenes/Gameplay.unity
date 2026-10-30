@@ -1491,9 +1491,7 @@ MonoBehaviour:
   _gameParent: {fileID: 1485497335}
   _enemySpawnPoint: {fileID: 1760856298}
   _musicSource: {fileID: 1740471785}
-  _soundSource: {fileID: 2063771006}
-  _dungeonMusic: {fileID: 8300000, guid: dda1e9c3317e0704bb9fe835cf30501f, type: 3}
-  _levelUpSounds: {fileID: 8300000, guid: 2c656b44537ebcc4ba739e3a5774046b, type: 3}
+  _gameplayMusic: {fileID: 8300000, guid: dda1e9c3317e0704bb9fe835cf30501f, type: 3}
 --- !u!4 &422285789
 Transform:
   m_ObjectHideFlags: 0

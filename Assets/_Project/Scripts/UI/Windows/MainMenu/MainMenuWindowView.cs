@@ -44,14 +44,10 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _settingsButton.onClick.RemoveListener(InvokeOnSettingsButtonClicked);
             _shopButton.onClick.RemoveListener(InvokeOnShopButtonClicked);
             _exitButton.onClick.RemoveListener(InvokeOnExitButtonClicked);
-            StopBackgroundMusic();
         }
         
         public void PlayBackgroundMusic() => 
             _audioService.PlayMusic(_backgroundMusic);
-
-        public void StopBackgroundMusic() => 
-            _audioService.StopMusic();
 
         private void InvokeOnPlayButtonClicked() => 
             OnPlayButtonClicked?.Invoke();
