@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using _Project.Scripts.Logic.Common;
 using Cysharp.Threading.Tasks;
@@ -10,13 +11,16 @@ namespace _Project.Scripts.UI.Common.HealthBar
         private readonly Health _model;
         private readonly HealthBarView _view;
         
+        private readonly bool _hideOnZeroHealth;
+
         private UniTask _currentLerpTask;
         private CancellationTokenSource _cts;
-
-        public HealthBarPresenter(HealthBarView view, Health model)
+        
+        public HealthBarPresenter(HealthBarView view, Health model, bool hideOnZeroHealth = true)
         {
             _view = view;
             _model = model;
+            _hideOnZeroHealth = hideOnZeroHealth;
         }
         
         public void Initialize()
@@ -25,6 +29,9 @@ namespace _Project.Scripts.UI.Common.HealthBar
             _model.OnHealthChanged += UpdateHealthBar;
             _model.OnTakeDamage += _view.PlayHitSound;
             _model.OnTakeHeal += _view.PlayHealSound;
+            
+            if (_hideOnZeroHealth) 
+                _model.OnZeroHealth += HideHealthBar;
             
             _view.UpdateHealthText(_model.CurrentHealth, _model.MaxHealth);
             _view.UpdateHealthSliderValue(_model.NormalizedHealth);
@@ -37,11 +44,26 @@ namespace _Project.Scripts.UI.Common.HealthBar
             _model.OnTakeDamage -= _view.PlayHitSound;
             _model.OnTakeHeal -= _view.PlayHealSound;
             
+            if (_hideOnZeroHealth) 
+                _model.OnZeroHealth -= HideHealthBar;
+            
             _cts?.Cancel();
             _cts?.Dispose();
         }
         
-        public async UniTask HideAsync()
+        private async void HideHealthBar()
+        {
+            try
+            {
+                await HideAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+        }
+        
+        private async UniTask HideAsync()
         {
             if (_currentLerpTask.Status == UniTaskStatus.Pending) 
                 await _currentLerpTask;
@@ -83,7 +105,7 @@ namespace _Project.Scripts.UI.Common.HealthBar
                 
                 _view.UpdateHealthSliderValue(Mathf.Lerp(startValue, targetValue, time));
                 
-                await UniTask.Yield(token);
+                await UniTask.Yield(token).SuppressCancellationThrow();
             }
         }
     }

@@ -49,12 +49,12 @@ namespace _Project.Scripts.Logic.Enemy
             float maxHealth = _healthCalculator.CalculateEnemyMaxHealth();
             health.Initialize(maxHealth);
             
-            HealthBarPresenter healthBarPresenter = _healthBarFactory.Create(enemy.HealthBarView, health);
+            _healthBarFactory.Create(enemy.HealthBarView, health);
             
             enemy.EnemyDeath.Initialize();
             
             EnemyAnimator enemyAnimator = enemy.Animator;
-            enemyAnimator.Construct(stateMachine.GetState<EnemyAttackState>(), _pauseService, healthBarPresenter);
+            enemyAnimator.Construct(stateMachine.GetState<EnemyAttackState>(), _pauseService);
             enemyAnimator.Initialize();
             return enemy;
         }

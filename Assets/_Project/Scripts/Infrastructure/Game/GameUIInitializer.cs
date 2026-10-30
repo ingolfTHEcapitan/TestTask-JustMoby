@@ -53,7 +53,7 @@ namespace _Project.Scripts.Infrastructure.Game
         }
 
         private void CreatePlayerHealthBar(HeadUpDisplayView hud, Health playerHealthModel) => 
-            _healthBarFactory.Create(hud.HealthBarView, playerHealthModel);
+            _healthBarFactory.Create(hud.HealthBarView, playerHealthModel, hideOnZeroHealth: false);
 
         private async UniTask<PlayerStatsWindowView> InitPlayerStatsViewAsync(HeadUpDisplayView hud, AudioClip levelUpSound)
         {

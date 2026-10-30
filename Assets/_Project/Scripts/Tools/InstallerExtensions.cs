@@ -3,7 +3,7 @@ using _Project.Scripts.UI.Windows;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Infrastructure
+namespace _Project.Scripts.Tools
 {
     public static class InstallerExtensions
     {

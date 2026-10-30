@@ -10,11 +10,11 @@ namespace _Project.Scripts.UI.Common.HealthBar
         public HealthBarFactory(IInstantiator container) => 
             _container = container;
 
-        public HealthBarPresenter Create(HealthBarView healthBarView, Health healthModel)
+        public void Create(HealthBarView healthBarView, Health healthModel, bool hideOnZeroHealth = true)
         {
-            HealthBarPresenter presenter = _container.Instantiate<HealthBarPresenter>(new object[] { healthBarView, healthModel });
+            HealthBarPresenter presenter = 
+                _container.Instantiate<HealthBarPresenter>(new object[] { healthBarView, healthModel, hideOnZeroHealth });
             presenter.Initialize();
-            return presenter;
         }
     }
 }
