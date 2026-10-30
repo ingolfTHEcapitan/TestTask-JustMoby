@@ -13,7 +13,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
     public class PlayerStatsWindowView : MonoBehaviour, IWindow
     {
         public event Action OnWindowDestroy;
-        public event Action OnOpenButtonClicked;
         public event Action OnCloseButtonClicked;
         public event Action OnApplyChangesButtonClicked;
         
@@ -30,17 +29,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [field: SerializeField, Space] public Transform StatsContainer { get; private set; }
         
         private ISoundService _audioService;
-        private Button _openButton;
 
         [Inject]
         private void Construct(WindowFactory windowFactory, ISoundService audioService) => 
             _audioService = audioService;
 
-        public void Initialize(Button openButton)
+        public void Initialize()
         {
             _windowContent.SetActive(false);
-            _openButton = openButton;
-            _openButton.onClick.AddListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.AddListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.AddListener(InvokeOnApplyChangesButtonClicked);
         }
@@ -48,7 +44,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private void OnDestroy()
         {
             OnWindowDestroy?.Invoke();
-            _openButton.onClick.RemoveListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
             _applyButton.onClick.RemoveListener(InvokeOnApplyChangesButtonClicked);
         }
@@ -82,9 +77,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         
         public void PlayLevelUpSound() => 
             _audioService.PlayOneShot(_levelUpSound, AudioSource);
-        
-        private void InvokeOnOpenButtonClicked() => 
-            OnOpenButtonClicked?.Invoke();
 
         private void InvokeOnCloseButtonClicked() => 
             OnCloseButtonClicked?.Invoke();

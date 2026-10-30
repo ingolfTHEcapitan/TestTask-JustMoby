@@ -37,13 +37,14 @@ namespace _Project.Scripts.Infrastructure.Game
         
         public async UniTask InitUIAsync()
         {
-            HeadUpDisplayView hudView = await _windowFactory.CreateAsync<HeadUpDisplayView>(_uiParent);
-            CreatePlayerHealthBar(hudView, _lazyPlayer.Value.Health);
-            _lazyHudPresenter.Value.Initialize();
-            
-            await InitPlayerStatsViewAsync(hudView); 
+            await InitPlayerStatsViewAsync(); 
             await _lazyPlayerStatsWindowPresenter.Value.InitializeAsync();
             
+            HeadUpDisplayView hudView = await _windowFactory.CreateAsync<HeadUpDisplayView>(_uiParent);
+            _lazyHudPresenter.Value.Initialize();
+
+            CreatePlayerHealthBar(hudView, _lazyPlayer.Value.Health);
+
             await _windowFactory.CreateAsync<GameOverWindowView>(_uiParent);
             _lazyGameOverWindowPresenter.Value.Initialize();
         }
@@ -51,13 +52,10 @@ namespace _Project.Scripts.Infrastructure.Game
         private void CreatePlayerHealthBar(HeadUpDisplayView hud, Health playerHealthModel) => 
             _healthBarFactory.Create(hud.HealthBarView, playerHealthModel, hideOnZeroHealth: false);
 
-        private async UniTask<PlayerStatsWindowView> InitPlayerStatsViewAsync(HeadUpDisplayView hud)
+        private async UniTask InitPlayerStatsViewAsync()
         {
-            Button openButton = hud.OpenStatsWindowButton;
-            
             PlayerStatsWindowView playerStatsWindowView = await _windowFactory.CreateAsync<PlayerStatsWindowView>(_uiParent);
-            playerStatsWindowView.Initialize(openButton);
-            return playerStatsWindowView;
+            playerStatsWindowView.Initialize();
         }
     }
 }

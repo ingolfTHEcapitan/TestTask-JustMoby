@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _backMainMenuButton: {fileID: 4097046111520973458}
-  <OpenStatsWindowButton>k__BackingField: {fileID: 4997575414914132149}
+  _openStatsWindowButton: {fileID: 4997575414914132149}
   <HealthBarView>k__BackingField: {fileID: 1351334057115662053}
 --- !u!1001 &3547150775401372995
 PrefabInstance:

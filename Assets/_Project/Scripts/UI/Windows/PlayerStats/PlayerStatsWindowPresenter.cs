@@ -41,7 +41,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _model.Initialize();
 
             _view.OnWindowDestroy += CleanUp;
-            _view.OnOpenButtonClicked += Open;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
             _model.OnStatsChanged += UpdateAllStatItems;
@@ -57,7 +56,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private void CleanUp()
         {
             _view.OnWindowDestroy -= CleanUp;
-            _view.OnOpenButtonClicked -= Open;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
             _model.OnStatsChanged -= UpdateAllStatItems;
@@ -106,7 +104,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             UpdateStatItem(statName);
         }
 
-        private async void Open()
+        public async void Open()
         {
             try
             {
