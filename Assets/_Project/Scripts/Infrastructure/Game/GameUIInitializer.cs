@@ -1,9 +1,7 @@
 ﻿using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
 using _Project.Scripts.UI;
-using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Common.HealthBar;
-using _Project.Scripts.UI;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
@@ -19,19 +17,17 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly WindowFactory _windowFactory;
         private readonly Transform _uiParent;
         private readonly HealthBarFactory _healthBarFactory;
-        private readonly AudioClip _levelUpSound;
         private readonly LazyInject<HeadUpDisplayPresenter> _lazyHudPresenter;
         private readonly LazyInject<GameOverWindowPresenter> _lazyGameOverWindowPresenter;
         private readonly LazyInject<PlayerStatsWindowPresenter> _lazyPlayerStatsWindowPresenter;
         private readonly LazyInject<PlayerContainer> _lazyPlayer;
 
-        public GameUIInitializer(WindowFactory windowFactory, Transform uiParent, AudioClip levelUpSound, 
+        public GameUIInitializer(WindowFactory windowFactory, Transform uiParent, HealthBarFactory healthBarFactory,
             LazyInject<PlayerStatsWindowPresenter> lazyPlayerStatsWindowPresenter, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter,
-            LazyInject<GameOverWindowPresenter> lazyGameOverWindowPresenter, HealthBarFactory healthBarFactory, LazyInject<PlayerContainer> lazyPlayer)
+            LazyInject<GameOverWindowPresenter> lazyGameOverWindowPresenter, LazyInject<PlayerContainer> lazyPlayer)
         {
             _windowFactory = windowFactory;
             _uiParent = uiParent;
-            _levelUpSound = levelUpSound;
             _lazyPlayerStatsWindowPresenter = lazyPlayerStatsWindowPresenter;
             _lazyGameOverWindowPresenter = lazyGameOverWindowPresenter;
             _lazyHudPresenter = lazyHudPresenter;
@@ -45,7 +41,7 @@ namespace _Project.Scripts.Infrastructure.Game
             CreatePlayerHealthBar(hudView, _lazyPlayer.Value.Health);
             _lazyHudPresenter.Value.Initialize();
             
-            await InitPlayerStatsViewAsync(hudView, _levelUpSound); 
+            await InitPlayerStatsViewAsync(hudView); 
             await _lazyPlayerStatsWindowPresenter.Value.InitializeAsync();
             
             await _windowFactory.CreateAsync<GameOverWindowView>(_uiParent);
@@ -55,12 +51,12 @@ namespace _Project.Scripts.Infrastructure.Game
         private void CreatePlayerHealthBar(HeadUpDisplayView hud, Health playerHealthModel) => 
             _healthBarFactory.Create(hud.HealthBarView, playerHealthModel, hideOnZeroHealth: false);
 
-        private async UniTask<PlayerStatsWindowView> InitPlayerStatsViewAsync(HeadUpDisplayView hud, AudioClip levelUpSound)
+        private async UniTask<PlayerStatsWindowView> InitPlayerStatsViewAsync(HeadUpDisplayView hud)
         {
             Button openButton = hud.OpenStatsWindowButton;
             
             PlayerStatsWindowView playerStatsWindowView = await _windowFactory.CreateAsync<PlayerStatsWindowView>(_uiParent);
-            playerStatsWindowView.Initialize(openButton, levelUpSound);
+            playerStatsWindowView.Initialize(openButton);
             return playerStatsWindowView;
         }
     }

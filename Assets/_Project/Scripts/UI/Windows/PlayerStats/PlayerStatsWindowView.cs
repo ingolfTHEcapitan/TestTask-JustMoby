@@ -22,22 +22,22 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
         [SerializeField] private TextMeshProUGUI _pointsText;
-        
-        [field: SerializeField] public Transform StatsContainer { get; private set; }
-        [field: SerializeField, Header("Audio")] public AudioSource AudioSource { get; private set;}
+        [Header("Audio")]
+        [SerializeField] private AudioClip _levelUpSound;
+
+        [field: SerializeField] public AudioSource AudioSource { get; private set;}
+        [field: SerializeField, Space] public Transform StatsContainer { get; private set; }
         
         private AudioService _audioService;
-        private AudioClip _levelUpSound;
         private Button _openButton;
 
         [Inject]
         private void Construct(WindowFactory windowFactory, AudioService audioService) => 
             _audioService = audioService;
 
-        public void Initialize(Button openButton, AudioClip levelUpSound)
+        public void Initialize(Button openButton)
         {
             _windowContent.SetActive(false);
-            _levelUpSound = levelUpSound;
             _openButton = openButton;
             _openButton.onClick.AddListener(InvokeOnOpenButtonClicked);
             _closeButton.onClick.AddListener(InvokeOnCloseButtonClicked);

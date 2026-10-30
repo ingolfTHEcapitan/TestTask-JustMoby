@@ -27,8 +27,7 @@ namespace _Project.Scripts.Infrastructure.Game
         
         [Header("Audio")]
         [SerializeField] private AudioSource _musicSource;
-        [FormerlySerializedAs("_dungeonMusic")] [SerializeField] private AudioClip _gameplayMusic;
-        [SerializeField] private AudioClip _levelUpSounds;
+        [SerializeField] private AudioClip _gameplayMusic;
         
         public override void InstallBindings()
         {
@@ -103,7 +102,7 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindGame()
         {
-            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent, _levelUpSounds);
+            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent);
             Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _gameplayMusic);
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
         }
