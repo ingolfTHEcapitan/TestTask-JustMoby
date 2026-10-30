@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Enemy.Components.SatteMachine;
 using _Project.Scripts.Services;
+using _Project.Scripts.Services.Audio;
 using _Project.Scripts.Services.GamePause;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;

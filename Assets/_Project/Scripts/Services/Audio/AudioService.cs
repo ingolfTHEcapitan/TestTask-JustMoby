@@ -1,12 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace _Project.Scripts.Services
+namespace _Project.Scripts.Services.Audio
 {
-    public class AudioService
+    public class AudioService : IMusicService, ISoundService
     {
         private const float MinPitchValue = 0.9f;
         private const float MaxPitchValue = 1.2f;
+
+        private readonly AudioSource _globalAudioSource;
+
+        public AudioService(AudioSource globalAudioSource) => 
+            _globalAudioSource = globalAudioSource;
 
         public void PlayOneShot(AudioClip clip, AudioSource audioSource)
         {
@@ -27,13 +32,20 @@ namespace _Project.Scripts.Services
             audioSource.pitch = Random.Range(MinPitchValue, MaxPitchValue);
         }
 
-        public void Play(AudioClip clip, AudioSource audioSource)
+        public void PlayMusic(AudioClip clip, bool loop = true)
         {
-            audioSource.clip = clip;
-            audioSource.Play();
+            if (_globalAudioSource.clip == clip && _globalAudioSource.isPlaying)
+                return;
+            
+            _globalAudioSource.clip = clip;
+            _globalAudioSource.loop = loop;
+            _globalAudioSource.Play();
         }
 
         public void Stop(AudioSource audioSource) => 
             audioSource.Stop();
+        
+        public void StopMusic() => 
+            _globalAudioSource.Stop();
     }
 }

@@ -103,8 +103,7 @@ namespace _Project.Scripts.Infrastructure.Game
         private void BindGame()
         {
             Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent);
-            Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _gameplayMusic);
-            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
+            Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint,  _musicSource, _gameplayMusic);
         }
         
         private PlayerContainer GetPlayer(InjectContext context) => 

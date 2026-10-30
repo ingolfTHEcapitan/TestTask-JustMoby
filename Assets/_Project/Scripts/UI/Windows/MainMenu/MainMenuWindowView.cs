@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Services;
+using _Project.Scripts.Services.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -20,13 +21,12 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         [SerializeField] private Button _exitButton;
         
         [Header("Audio")]
-        [SerializeField] private AudioSource _musicAudioSource;
         [SerializeField] private AudioClip _backgroundMusic;
         
-        private AudioService _audioService;
+        private IMusicService _audioService;
         
         [Inject] 
-        private void Construct(AudioService audioService) => 
+        private void Construct(IMusicService audioService) => 
             _audioService = audioService;
         
         public void Initialize()
@@ -48,10 +48,10 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         }
         
         public void PlayBackgroundMusic() => 
-            _audioService.Play(_backgroundMusic, _musicAudioSource);
+            _audioService.PlayMusic(_backgroundMusic);
 
         public void StopBackgroundMusic() => 
-            _audioService.Stop(_musicAudioSource);
+            _audioService.StopMusic();
 
         private void InvokeOnPlayButtonClicked() => 
             OnPlayButtonClicked?.Invoke();

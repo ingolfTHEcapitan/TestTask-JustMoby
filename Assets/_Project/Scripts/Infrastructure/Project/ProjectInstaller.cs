@@ -8,6 +8,7 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.Ads;
 using _Project.Scripts.Services.Analytics;
+using _Project.Scripts.Services.Audio;
 using _Project.Scripts.Services.Authentication;
 using _Project.Scripts.Services.IAP;
 using _Project.Scripts.Services.PlayerInput;
@@ -20,12 +21,17 @@ using _Project.Scripts.Tools;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
+using UnityEngine;
+using UnityEngine.Audio;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Project
 {
     public class ProjectInstaller : MonoInstaller
     {
+        [Header("Audio")] 
+        [SerializeField] private AudioSource _globalAudioSource;
+        
         public override void InstallBindings()
         {
             BindRemoteConfig();
@@ -72,7 +78,7 @@ namespace _Project.Scripts.Infrastructure.Project
             
             Container.BindInterfacesAndSelfTo<IAPProvider>().AsSingle();
             Container.Bind<IIAPService>().To<IAPService>().AsSingle();
-            Container.BindInterfacesAndSelfTo<AudioService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<AudioService>().AsSingle().WithArguments(_globalAudioSource);
         }
 
         private void BindLoadingCurtain()
