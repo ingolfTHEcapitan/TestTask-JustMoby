@@ -12,22 +12,22 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly LoadingCurtainPresenter _loadingCurtainPresenter;
         
         private readonly AudioSource _audioSource;
-        private readonly AudioClip _dungeonMusic;
+        private readonly AudioClip _gameplayMusic;
         
         public GameStarter(IAnalyticsService analyticsService, AudioService audioService, LoadingCurtainPresenter loadingCurtainPresenter, 
-            AudioSource audioSource, AudioClip dungeonMusic)
+            AudioSource audioSource, AudioClip gameplayMusic)
         {
             _analyticsService = analyticsService;
             _audioService = audioService;
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _audioSource = audioSource;
-            _dungeonMusic = dungeonMusic;
+            _gameplayMusic = gameplayMusic;
         }
 
         public void StartGame()
         {
             _analyticsService.LogGameStart();
-            _audioService.Play(_dungeonMusic, _audioSource);
+            _audioService.Play(_gameplayMusic, _audioSource);
             _loadingCurtainPresenter.HideLoading();
         }
     }

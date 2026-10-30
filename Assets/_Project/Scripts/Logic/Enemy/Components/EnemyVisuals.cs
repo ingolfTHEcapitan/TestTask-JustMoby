@@ -16,14 +16,15 @@ namespace _Project.Scripts.Logic.Enemy.Components
         [SerializeField] private Animator _animator;
         [SerializeField] private Health _health;
         [Header("Audio")]
-        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] private AudioSource _enemyAudioSource;
         [SerializeField] private List<AudioClip> _swordHitSounds;
         [SerializeField] private List<AudioClip> _swordMissSounds;
+        [SerializeField] private List<AudioClip> _takeDamageSounds;
         [Header("FX")]
         [SerializeField] private DissolveShader _dissolveShader;
 
         private readonly int _dieHash = Animator.StringToHash("Die");
-        private readonly int _hitHash = Animator.StringToHash("Hit");
+        private readonly int _takeDamageHash = Animator.StringToHash("TakeDamage");
         private readonly int _attackHash = Animator.StringToHash("Attack");
 
         private IGamePauseService _pauseService;
@@ -47,9 +48,10 @@ namespace _Project.Scripts.Logic.Enemy.Components
             _pauseService.Register(this);
             SetAnimatorSpeed(_pauseService.IsPaused);
 
-            _health.OnTakeDamage += PlayHit;
-            _health.OnZeroHealth += PlayDeath;
-            _stateMachine.OnAttackStarted += PlayAttack;
+            _health.OnTakeDamage += PlayDamageAnimation;
+            _health.OnTakeDamage += PlayDamageSound;
+            _health.OnZeroHealth += PlayDeathAnimation;
+            _stateMachine.OnAttackStarted += PlayAttackAnimation;
             _stateMachine.OnAttackMissed += PlayMissSound;
             _stateMachine.OnAttackHit += PlayHitSound;
         }
@@ -58,9 +60,10 @@ namespace _Project.Scripts.Logic.Enemy.Components
         {
             _pauseService.UnRegister(this);
             
-            _health.OnTakeDamage -= PlayHit;
-            _health.OnZeroHealth -= PlayDeath;
-            _stateMachine.OnAttackStarted -= PlayAttack;
+            _health.OnTakeDamage -= PlayDamageAnimation;
+            _health.OnTakeDamage -= PlayDamageSound;
+            _health.OnZeroHealth -= PlayDeathAnimation;
+            _stateMachine.OnAttackStarted -= PlayAttackAnimation;
             _stateMachine.OnAttackMissed -= PlayMissSound;
             _stateMachine.OnAttackHit -= PlayHitSound;
         }
@@ -78,19 +81,22 @@ namespace _Project.Scripts.Logic.Enemy.Components
         private void SetAnimatorSpeed(bool isPaused) => 
             _animator.speed = isPaused ? 0f : 1f;
 
-        private void PlayHit() => 
-            _animator.SetTrigger(_hitHash);
+        private void PlayDamageAnimation() => 
+            _animator.SetTrigger(_takeDamageHash);
 
-        private void PlayDeath() => 
+        private void PlayDeathAnimation() => 
             _animator.SetTrigger(_dieHash);
 
-        private void PlayAttack() => 
+        private void PlayAttackAnimation() => 
             _animator.SetTrigger(_attackHash);
         
         private void PlayHitSound() => 
-            _audioService.PlayOneShotRandom(_swordHitSounds, _audioSource);
+            _audioService.PlayOneShotRandom(_swordHitSounds, _enemyAudioSource);
 
         private void PlayMissSound() => 
-            _audioService.PlayOneShotRandom(_swordMissSounds, _audioSource);
+            _audioService.PlayOneShotRandom(_swordMissSounds, _enemyAudioSource);
+        
+        private void PlayDamageSound() => 
+            _audioService.PlayOneShotRandom(_takeDamageSounds, _enemyAudioSource);
     }
 }

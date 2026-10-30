@@ -7,12 +7,12 @@ using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.GamePause;
 using _Project.Scripts.Tools;
-using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common.HealthBar;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Game
@@ -27,7 +27,7 @@ namespace _Project.Scripts.Infrastructure.Game
         
         [Header("Audio")]
         [SerializeField] private AudioSource _musicSource;
-        [SerializeField] private AudioClip _dungeonMusic;
+        [FormerlySerializedAs("_dungeonMusic")] [SerializeField] private AudioClip _gameplayMusic;
         [SerializeField] private AudioClip _levelUpSounds;
         
         public override void InstallBindings()
@@ -104,7 +104,7 @@ namespace _Project.Scripts.Infrastructure.Game
         private void BindGame()
         {
             Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent, _levelUpSounds);
-            Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _dungeonMusic);
+            Container.Bind<GameStarter>().AsSingle().WithArguments( _musicSource, _gameplayMusic);
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint);
         }
         

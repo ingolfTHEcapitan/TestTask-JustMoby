@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.Player;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
@@ -53,6 +52,7 @@ namespace _Project.Scripts.Infrastructure.Game
             catch (Exception e)
             {
                 Debug.LogError($"[GAME BOOTSTRAPPER] init error: {e}");
+                Debug.LogException(e);
             }
         }
     }

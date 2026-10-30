@@ -68,6 +68,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             catch (Exception e)
             {
                 Debug.LogError($"[MAIN MENU BOOTSTRAPPER] init error: {e}");
+                Debug.LogException(e);
             }
         }
     }

@@ -74,6 +74,7 @@ namespace _Project.Scripts.Infrastructure.Project
             catch (Exception e)
             {
                 Debug.LogError($"[PROJECT BOOTSTRAPPER] init error: {e}");
+                Debug.LogException(e);
             }
         }
 

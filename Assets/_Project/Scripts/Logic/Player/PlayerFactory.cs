@@ -1,8 +1,6 @@
 using System;
 using System.Data;
 using _Project.Scripts.Infrastructure.AssetManagement;
-using _Project.Scripts.Infrastructure.Game;
-using _Project.Scripts.Logic.Common;
 using _Project.Scripts.Logic.PlayerStats;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -42,6 +40,7 @@ namespace _Project.Scripts.Logic.Player
             
             _player.PlayerDeath.Initialize();
             _player.Weapon.Initialize(_player.Camera);;
+            _player.Visuals.Initialize();
             
             return _player;
         }

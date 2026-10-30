@@ -27,8 +27,6 @@ namespace _Project.Scripts.UI.Common.HealthBar
         {
             _view.OnHealthBarDestroy += CleanUp;
             _model.OnHealthChanged += UpdateHealthBar;
-            _model.OnTakeDamage += _view.PlayHitSound;
-            _model.OnTakeHeal += _view.PlayHealSound;
             
             if (_hideOnZeroHealth) 
                 _model.OnZeroHealth += HideHealthBar;
@@ -41,8 +39,6 @@ namespace _Project.Scripts.UI.Common.HealthBar
         {
             _view.OnHealthBarDestroy -= CleanUp;
             _model.OnHealthChanged -= UpdateHealthBar;
-            _model.OnTakeDamage -= _view.PlayHitSound;
-            _model.OnTakeHeal -= _view.PlayHealSound;
             
             if (_hideOnZeroHealth) 
                 _model.OnZeroHealth -= HideHealthBar;
