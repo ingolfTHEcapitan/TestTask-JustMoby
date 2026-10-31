@@ -1,5 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.Logic.Common
@@ -12,7 +13,8 @@ namespace _Project.Scripts.Logic.Common
         [SerializeField] private float _speed = 0.25f;
         
         private readonly List<Material> _dissolveMaterials = new List<Material>();
-        private Coroutine _dissolveCoroutine;
+        private UniTask _dissolveTask;
+        private CancellationTokenSource _dissolveTokenSource;
 
         private void Awake()
         {
@@ -22,15 +24,17 @@ namespace _Project.Scripts.Logic.Common
                 _dissolveMaterials.Add(renderer.material);
         }
         
+        private void OnDestroy() => 
+            StopTask();
+
         public void PlayDissolveFx()
         {
-            if (_dissolveCoroutine != null)
-                StopCoroutine(_dissolveCoroutine);
-            
-            _dissolveCoroutine = StartCoroutine(DissolveRoutine());
+            StopTask();
+            _dissolveTokenSource = new CancellationTokenSource();
+            DissolveAsync(_dissolveTokenSource.Token).Forget();
         }
 
-        private IEnumerator DissolveRoutine()
+        private async UniTask DissolveAsync(CancellationToken token)
         {
             float threshold = 0;
 
@@ -40,8 +44,15 @@ namespace _Project.Scripts.Logic.Common
                     material.SetFloat(DissolveAmountKey, threshold);
                 
                 threshold += Time.deltaTime * _speed;
-                yield return null;
+                await UniTask.Yield(token);
             }
+        }
+
+        private void StopTask()
+        {
+            _dissolveTokenSource?.Cancel();
+            _dissolveTokenSource?.Dispose();
+            _dissolveTokenSource = null;
         }
     }
 }
