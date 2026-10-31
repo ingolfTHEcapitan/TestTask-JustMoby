@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.UI.Windows.PlayerStats
+namespace _Project.Scripts.UI.Windows.PlayerStats.StatItem
 {
     public class PlayerStatItemFactory
     {

@@ -11,6 +11,7 @@ using _Project.Scripts.UI.Common.HealthBar;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
+using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;

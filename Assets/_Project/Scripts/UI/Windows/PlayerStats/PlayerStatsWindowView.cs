@@ -2,6 +2,7 @@ using System;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.Audio;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;

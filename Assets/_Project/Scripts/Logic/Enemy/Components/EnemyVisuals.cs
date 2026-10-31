@@ -11,7 +11,7 @@ using Zenject;
 
 namespace _Project.Scripts.Logic.Enemy.Components
 {
-    public class EnemyVisuals : MonoBehaviour, IPauseHandler
+    public class EnemyVisuals : MonoBehaviour
     {
         [Header("Components")]
         [SerializeField] private Animator _animator;
@@ -27,8 +27,7 @@ namespace _Project.Scripts.Logic.Enemy.Components
         private readonly int _dieHash = Animator.StringToHash("Die");
         private readonly int _takeDamageHash = Animator.StringToHash("TakeDamage");
         private readonly int _attackHash = Animator.StringToHash("Attack");
-
-        private IGamePauseService _pauseService;
+        
         private ISoundService _audioService;
         private EffectsService _effectsService;
         private EnemyStateMachine _stateMachine;
@@ -36,9 +35,8 @@ namespace _Project.Scripts.Logic.Enemy.Components
         private float _tempAnimationSpeed;
 
         [Inject]
-        private void Construct(IGamePauseService pauseService, ISoundService audioService, EffectsService effectsService)
+        private void Construct(ISoundService audioService, EffectsService effectsService)
         {
-            _pauseService = pauseService;
             _audioService = audioService;
             _effectsService = effectsService;
         }
@@ -46,9 +44,7 @@ namespace _Project.Scripts.Logic.Enemy.Components
         public void Initialize(EnemyStateMachine stateMachine)
         {
             _stateMachine = stateMachine;
-            _pauseService.Register(this);
-            SetAnimatorSpeed(_pauseService.IsPaused);
-
+            
             _health.OnTakeDamage += PlayDamageAnimation;
             _health.OnTakeDamage += PlayDamageSound;
             _health.OnZeroHealth += PlayDeathAnimation;
@@ -59,8 +55,6 @@ namespace _Project.Scripts.Logic.Enemy.Components
         
         private void OnDestroy()
         {
-            _pauseService.UnRegister(this);
-            
             _health.OnTakeDamage -= PlayDamageAnimation;
             _health.OnTakeDamage -= PlayDamageSound;
             _health.OnZeroHealth -= PlayDeathAnimation;
@@ -75,12 +69,6 @@ namespace _Project.Scripts.Logic.Enemy.Components
             _dissolveShader.PlayDissolveFx();
             _effectsService.PlayEnemyDeathFxAsync(transform.position, transform).Forget(Debug.LogError);
         }
-        
-        public void SetPaused(bool isPaused) => 
-            SetAnimatorSpeed(isPaused);
-
-        private void SetAnimatorSpeed(bool isPaused) => 
-            _animator.speed = isPaused ? 0f : 1f;
 
         private void PlayDamageAnimation() => 
             _animator.SetTrigger(_takeDamageHash);

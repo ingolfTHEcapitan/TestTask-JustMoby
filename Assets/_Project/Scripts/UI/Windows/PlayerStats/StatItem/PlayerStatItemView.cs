@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.UI.Windows.PlayerStats
+namespace _Project.Scripts.UI.Windows.PlayerStats.StatItem
 {
     public class PlayerStatItemView : MonoBehaviour
     {

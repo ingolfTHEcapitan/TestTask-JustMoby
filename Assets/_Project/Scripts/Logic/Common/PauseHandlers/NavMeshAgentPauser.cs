@@ -1,10 +1,9 @@
-using System;
 using _Project.Scripts.Services.GamePause;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
 
-namespace _Project.Scripts.Logic.Common
+namespace _Project.Scripts.Logic.Common.PauseHandlers
 {
     [RequireComponent(typeof(NavMeshAgent))]
     public class NavMeshAgentPauser : MonoBehaviour, IPauseHandler

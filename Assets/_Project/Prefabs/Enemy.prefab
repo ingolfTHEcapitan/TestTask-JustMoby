@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 6797133231648955068}
   - component: {fileID: 6586184735384548672}
   - component: {fileID: 3726465050056379465}
+  - component: {fileID: 4423455930423028511}
   - component: {fileID: 5434324020669320190}
   - component: {fileID: 3373863833424226122}
   - component: {fileID: 666391151365057433}
@@ -244,7 +245,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animator: {fileID: 1784392016738993417}
   _health: {fileID: 3373863833424226122}
-  _death: {fileID: 1388457686687828344}
   _enemyAudioSource: {fileID: 3619087064373259428}
   _swordHitSounds:
   - {fileID: 8300000, guid: ce9896da6dfa7c343ba4dff8ad555ad5, type: 3}
@@ -257,6 +257,19 @@ MonoBehaviour:
   _takeDamageSounds:
   - {fileID: 8300000, guid: 507eb340d89be8c4ab4647e00aaf49e5, type: 3}
   _dissolveShader: {fileID: 2359227429214316021}
+--- !u!114 &4423455930423028511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4217187639714539394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfbc0e2688c842d2aed6d6118c319143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 1784392016738993417}
 --- !u!114 &5434324020669320190
 MonoBehaviour:
   m_ObjectHideFlags: 0

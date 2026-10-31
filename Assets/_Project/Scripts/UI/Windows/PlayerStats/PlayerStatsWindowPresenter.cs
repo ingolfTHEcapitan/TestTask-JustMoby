@@ -6,6 +6,7 @@ using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
