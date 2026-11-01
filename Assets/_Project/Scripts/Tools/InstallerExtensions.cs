@@ -10,7 +10,7 @@ namespace _Project.Scripts.Tools
         public static void BindWindow<TIWindow>(this DiContainer container) where TIWindow : Component, IWindow
         {
             container.BindInterfacesAndSelfTo<TIWindow>()
-                .FromMethod(context => context.Container.Resolve<WindowFactory>().Get<TIWindow>()).AsSingle();
+                .FromMethod(context => context.Container.Resolve<WindowsRepository>().Get<TIWindow>()).AsSingle();
         }
     }
 }

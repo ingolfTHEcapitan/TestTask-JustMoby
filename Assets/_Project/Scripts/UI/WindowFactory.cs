@@ -21,8 +21,8 @@ namespace _Project.Scripts.UI
     {
         private readonly IInstantiator _container;
         private readonly IAssetProvider _assetProvider;
+        private readonly WindowsRepository _repository;
         
-        private readonly Dictionary<Type, IWindow> _windowViews = new Dictionary<Type, IWindow>();
         private readonly Dictionary<Type, string> _viewAddresses = new Dictionary<Type, string>()
         {
             {typeof(HeadUpDisplayView), AssetAddress.HeadUpDisplay},
@@ -35,18 +35,19 @@ namespace _Project.Scripts.UI
             {typeof(ShopWindowView), AssetAddress.ShopWindow},
         };
         
-        public WindowFactory(IInstantiator container, IAssetProvider assetProvider)
+        public WindowFactory(IInstantiator container, IAssetProvider assetProvider, WindowsRepository repository)
         {
             _container = container;
             _assetProvider = assetProvider;
+            _repository = repository;
         }
         
         public async UniTask<TWindow> CreateAsync<TWindow>(Transform parent = null, bool isGlobal = false) where TWindow : Component, IWindow
         {
             Type viewType = typeof(TWindow);
             
-            if (_windowViews.TryGetValue(viewType, out IWindow windowView))
-                return (TWindow)windowView;
+            if (_repository.TryGet(out TWindow window))
+                return window;
             
             if (!_viewAddresses.TryGetValue(viewType, out string assetAddress))
                 throw new KeyNotFoundException("[WindowFactory] No asset address registered for window : " + viewType.Name);
@@ -54,7 +55,8 @@ namespace _Project.Scripts.UI
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(assetAddress, isGlobal);
             TWindow view = _container.InstantiatePrefabForComponent<TWindow>(prefab, parent);
             
-            _windowViews[viewType] = view;
+            _repository.Register(view);
+            
             view.OnWindowDestroy += DestroyView;
 
             return view;
@@ -62,19 +64,8 @@ namespace _Project.Scripts.UI
             void DestroyView()
             {
                 view.OnWindowDestroy -= DestroyView;
-                _windowViews.Remove(viewType);
+                _repository.UnRegister<TWindow>();
             }
-        }
-        
-        public TWindow Get<TWindow>() where TWindow : Component, IWindow
-        {
-            Type viewType = typeof(TWindow);
-            
-            if (_windowViews.TryGetValue(viewType, out IWindow windowView))
-                return (TWindow)windowView;
-            
-            throw new InvalidConstraintException(
-                $"[WindowFactory] {viewType.Name} requested before creation. Ensure it created before presenter resolution");
         }
     }
 }

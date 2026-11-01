@@ -69,6 +69,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<AdsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<DesktopInputService>().AsSingle();
             Container.BindInterfacesAndSelfTo<FirebaseAnalyticsService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WindowsRepository>().AsSingle();
             Container.BindInterfacesAndSelfTo<WindowFactory>().AsSingle();
 
             Container.Bind<ISaveLoadService>().WithId(SaveType.Local).FromMethod(GetLocalSaveInstance).AsCached();
