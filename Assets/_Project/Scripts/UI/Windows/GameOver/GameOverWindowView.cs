@@ -6,9 +6,11 @@ using UnityEngine.UI;
 
 namespace _Project.Scripts.UI.Windows.GameOver
 {
-    public class GameOverWindowView : MonoBehaviour, IWindow
+    public class GameOverWindowView : WindowBase
     {
         public event Action OnWindowDestroy;
+       
+
         public event Action OnReviveButtonClicked;
         public event Action OnLoadSaveButtonClicked;
         
@@ -31,6 +33,16 @@ namespace _Project.Scripts.UI.Windows.GameOver
             OnWindowDestroy?.Invoke();
             _reviveButton.onClick.RemoveListener(InvokeOnReviveButtonClicked);
             _loadSaveButton.onClick.RemoveListener(InvokeOnLoadSaveButtonClicked);
+        }
+        
+        public override void Open()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Close()
+        {
+            throw new NotImplementedException();
         }
         
         public async UniTask OpenAsync()

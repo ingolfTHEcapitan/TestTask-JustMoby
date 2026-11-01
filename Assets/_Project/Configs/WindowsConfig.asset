@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b016b4fc224407a8f6f40726a989614, type: 3}
+  m_Name: WindowsConfig
+  m_EditorClassIdentifier: 
+  WindowList:
+  - WindowId: 1
+    WindowAssetReference:
+      m_AssetGUID: 4f93eafe91250ba419f14c8ff7e826a2
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - WindowId: 2
+    WindowAssetReference:
+      m_AssetGUID: 5021a191353efea48a35e7c8fb146be6
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 0
+  - WindowId: 3
+    WindowAssetReference:
+      m_AssetGUID: 21c2b4e3c6f59984e80e68404e24e34c
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 1
+  - WindowId: 4
+    WindowAssetReference:
+      m_AssetGUID: 4f93eafe91250ba419f14c8ff7e826a2
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 1
+  - WindowId: 5
+    WindowAssetReference:
+      m_AssetGUID: fc2d6471bb2c0ca499ad3175b231c21b
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 1
+  - WindowId: 6
+    WindowAssetReference:
+      m_AssetGUID: 560e629e0a533dd44bc60237d7abed0c
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 1
+  - WindowId: 7
+    WindowAssetReference:
+      m_AssetGUID: 4f93eafe91250ba419f14c8ff7e826a2
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_EditorAssetChanged: 1
