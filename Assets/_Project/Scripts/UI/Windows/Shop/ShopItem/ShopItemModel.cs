@@ -16,6 +16,8 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
         public int Quantity => ProductConfig.Quantity;
         public int PurchasesLeft => ProductDescription.AvailablePurchasesLeft;
         public bool CanBuy => PurchasesLeft > 0;
+        public bool IsConsumable => ProductConfig.ProductType == ProductType.Consumable;
+
         private ProductDescription ProductDescription => _iapService.GetProductById(_productId);
         private ProductConfig ProductConfig => ProductDescription.ProductConfig;
 
@@ -27,8 +29,5 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
 
         public async UniTask<bool> TryStartPurchaseAsync() => 
             await _iapService.TryStartPurchaseAsync(ProductDescription);
-
-        public bool IsConsumableProductType() => 
-            ProductConfig.ProductType == ProductType.Consumable;
     }
 }

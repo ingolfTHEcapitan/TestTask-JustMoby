@@ -1,8 +1,4 @@
-using System.Collections.Generic;
-using _Project.Scripts.Configs.IAP;
-using _Project.Scripts.UI.Windows.Shop.ShopItem;
 using Cysharp.Threading.Tasks;
-using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.UI.Windows.Shop
 {
@@ -10,17 +6,13 @@ namespace _Project.Scripts.UI.Windows.Shop
     {
         private readonly ShopWindowView _view;
         private readonly ShopWindowModel _model;
-        private readonly ShopItemFactory _shopItemFactory;
         
-        private readonly List<ShopItemView> _shopItemViews = new List<ShopItemView>();
-
-        private bool IapServiceIsInitialized => _model.IapServiceIsInitialized;
+        private bool IapIsInitialized => _model.IapIsInitialized;
         
-        public ShopWindowPresenter(ShopWindowView view, ShopWindowModel model, ShopItemFactory shopItemFactory)
+        public ShopWindowPresenter(ShopWindowView view, ShopWindowModel model)
         {
             _view = view;
             _model = model;
-            _shopItemFactory = shopItemFactory;
         }
 
         public async UniTask InitializeAsync()
@@ -28,13 +20,12 @@ namespace _Project.Scripts.UI.Windows.Shop
             _view.Initialize();
             _view.OnWindowDestroy += CleanUp;
             _view.OnCloseButtonClicked += Close;
-            _view.ClearProductsContainer();
-            await RefreshAvailableShopItemsAsync();
+            await RefreshAvailableItemsAsync();
         }
 
         public async UniTask OpenAsync()
         {
-            await RefreshAvailableShopItemsAsync();
+            await RefreshAvailableItemsAsync();
             await _view.OpenAsync();
         }
 
@@ -42,40 +33,12 @@ namespace _Project.Scripts.UI.Windows.Shop
         {
             _view.OnWindowDestroy -= CleanUp;
             _view.OnCloseButtonClicked -= Close;
-            ClearShopItems();
         }
 
         private void Close() => 
             _view.CloseAsync().Forget();
 
-        private async UniTask RefreshAvailableShopItemsAsync()
-        {
-            ClearShopItems();
-            _view.UpdateShopUnavailableObjects(IapServiceIsInitialized);
-
-            if (IapServiceIsInitialized) 
-                await FillShopItemsAsync();
-        }
-        
-        private async UniTask FillShopItemsAsync()
-        {
-            foreach (ProductDescription productDescription in _model.GetProducts())
-            {
-                ShopItemView shopItemView = 
-                    await _shopItemFactory.CreateAsync(_view.ProductsContainer, productDescription, _view.AudioSource);
-                _shopItemViews.Add(shopItemView);
-            }
-        }
-        
-        private void ClearShopItems()
-        {
-            _shopItemFactory.Dispose();
-            
-            foreach (ShopItemView shopItemView in _shopItemViews)
-                if (shopItemView)
-                    Object.Destroy(shopItemView.gameObject);
-            
-            _shopItemViews.Clear();
-        }
+        private async UniTask RefreshAvailableItemsAsync() => 
+            await _view.RefreshAvailableItemsAsync(IapIsInitialized, _model.GetProducts());
     }
 }

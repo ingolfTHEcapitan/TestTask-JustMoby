@@ -31,8 +31,10 @@ namespace _Project.Scripts.UI.Windows.PlayerStats.StatItem
             _iconFrame.sprite = iconFrame;
             _icon.sprite = icon;
 
-            ButtonSoundEffect buttonSoundEffect = _upgradeButton.GetComponent<ButtonSoundEffect>();
-            buttonSoundEffect.Initialize(audioSource);
+            if (_upgradeButton.TryGetComponent(out ButtonSoundEffect soundEffect)) 
+                soundEffect.Initialize(audioSource);
+            else
+                Debug.LogWarning($"[PlayerStatItemView] No ButtonSoundEffect component attached to {_upgradeButton.name}");
         }
 
         public void UpdateLevelText(int level) => 

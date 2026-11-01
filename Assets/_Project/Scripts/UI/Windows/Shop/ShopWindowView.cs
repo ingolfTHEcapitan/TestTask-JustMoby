@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
+using _Project.Scripts.Configs.IAP;
 using _Project.Scripts.UI.Common;
+using _Project.Scripts.UI.Windows.Shop.ShopItem;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace _Project.Scripts.UI.Windows.Shop
 {
@@ -16,9 +20,16 @@ namespace _Project.Scripts.UI.Windows.Shop
         [SerializeField] private GameObject _windowContent;
         [SerializeField] private GameObject[] _shopUnavailableObjects;
         [SerializeField] private Button _closeButton;
-        
-        [field: SerializeField] public RectTransform ProductsContainer { get; private set; }
-        [field: SerializeField, Header("Audio")] public AudioSource AudioSource { get; private set;}
+        [SerializeField] public RectTransform _productsContainer;
+        [Header("Audio")]
+        [SerializeField,] public AudioSource _audioSource;
+
+        private ShopItemFactory _shopItemFactory;
+        private readonly List<ShopItemView> _shopItemViews = new List<ShopItemView>();
+
+        [Inject]
+        public void Construct(ShopItemFactory shopItemFactory) => 
+            _shopItemFactory = shopItemFactory;
 
         public void Initialize()
         {
@@ -30,6 +41,7 @@ namespace _Project.Scripts.UI.Windows.Shop
         {
             OnWindowDestroy?.Invoke();
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
+            ClearShopItems();
         }
 
         public async UniTask OpenAsync()
@@ -43,14 +55,40 @@ namespace _Project.Scripts.UI.Windows.Shop
             await _windowAnimation.AnimateCloseAsync();
             _windowContent.SetActive(false);
         }
-        
-        public void ClearProductsContainer()
+
+        public async UniTask RefreshAvailableItemsAsync(bool iapIsInitialized, List<ProductDescription> products)
         {
-            foreach (RectTransform child in ProductsContainer) 
-                Destroy(child.gameObject);
+            ClearShopItems();
+            UpdateShopUnavailableObjects(iapIsInitialized);
+
+            if (iapIsInitialized) 
+                await FillShopItemsAsync(products);
         }
-        
-        public void UpdateShopUnavailableObjects(bool iapServiceIsInitialized)
+
+        private void ClearShopItems()
+        {
+            foreach (Transform shopItem in _productsContainer)
+                Destroy(shopItem.gameObject);
+            
+            _shopItemFactory.Dispose();
+            
+            foreach (ShopItemView shopItemView in _shopItemViews)
+                if (shopItemView)
+                    Destroy(shopItemView.gameObject);
+            
+            _shopItemViews.Clear();
+        }
+
+        private async UniTask FillShopItemsAsync(List<ProductDescription> products)
+        {
+            foreach (ProductDescription productDescription in products)
+            {
+                ShopItemView shopItem = await _shopItemFactory.CreateAsync(_productsContainer, productDescription, _audioSource);
+                _shopItemViews.Add(shopItem);
+            }
+        }
+
+        private void UpdateShopUnavailableObjects(bool iapServiceIsInitialized)
         {
             foreach (GameObject shopUnavailableObject in _shopUnavailableObjects) 
                 shopUnavailableObject.SetActive(!iapServiceIsInitialized);

@@ -17,7 +17,7 @@ namespace _Project.Scripts.Services.RemoteConfig
 
         public RemoteConfigApplier(IRemoteConfigService remoteConfigService, PlayerSpawnerConfig playerSpawnerConfig, AdsConfig adsConfig,
             EnemySpawnerConfig enemySpawnerConfig, WeaponConfig weaponConfig, BulletConfig bulletConfig, EnemyConfig enemyConfig, 
-            LocalSaveServiceConfig localSaveServiceConfig, ProductConfigWrapper productConfigWrapper, List<PlayerStatConfig> playerStatConfigs)
+            LocalSaveTypeConfig localSaveTypeConfig, ProductConfigWrapper productConfigWrapper, List<PlayerStatConfig> playerStatConfigs)
         {
             _playerStatConfigs = playerStatConfigs;
             _remoteConfigService = remoteConfigService;
@@ -29,7 +29,7 @@ namespace _Project.Scripts.Services.RemoteConfig
                 {"weapon_config", weaponConfig},
                 {"bullet_config",bulletConfig},
                 {"enemy_skeleton_config", enemyConfig},
-                {"local_save_service_config", localSaveServiceConfig},
+                {"local_save_type_config", localSaveTypeConfig},
                 {"ads_config", adsConfig},
                 {"product_config", productConfigWrapper},
             };

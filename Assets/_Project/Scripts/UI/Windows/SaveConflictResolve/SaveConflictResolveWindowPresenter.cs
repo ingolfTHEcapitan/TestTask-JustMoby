@@ -45,11 +45,11 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 
         private async UniTask<SaveType> ResolveConflictAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {
-            string local = _saveTimeFormatter.Format(localProgress.LastSaveTimeUnix);
-            string cloud = _saveTimeFormatter.Format(cloudProgress.LastSaveTimeUnix);
+            string localDate = _saveTimeFormatter.Format(localProgress.LastSaveTimeUnix);
+            string cloudDate = _saveTimeFormatter.Format(cloudProgress.LastSaveTimeUnix);
 
-            _view.UpdateSaveDateText(local, cloud);
-            ChoiceSaveDateTextColor();
+            SaveNewestState saveState = GetSaveNewestState();
+            _view.UpdateSaveInfo(localDate, cloudDate, saveState);
             
             await _view.OpenAsync();
             _cursorController.SetCursorVisible(true);
@@ -64,20 +64,14 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             return result;
         }
 
-        private void ChoiceSaveDateTextColor()
+        private SaveNewestState GetSaveNewestState()
         {
-            if (_model.IsLocalSaveNewer())
-            {
-                _view.SetLocalDateTextColorNew();
-            }
-            else if (_model.IsCloudSaveNewer())
-            {
-               _view.SetCloudDateTextColorNew();
-            }
-            else if (_model.IsLocalSaveEqualCloudSaveTime())
-            {
-                _view.SetSaveDateTextColorDefault();
-            }
+            if (_model.LocalSaveIsNewer)
+                return SaveNewestState.LocalNewer;
+            if (_model.CloudSaveIsNewer)
+                return SaveNewestState.CloudNewer;
+
+            return SaveNewestState.Equals;
         }
 
         private void ChoiceCloudSave() => 

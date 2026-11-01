@@ -1,57 +1,45 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.PlayerStats;
-using _Project.Scripts.Services;
 using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace _Project.Scripts.UI.Windows.PlayerStats
 {
     public class PlayerStatsWindowPresenter
     {
         private readonly IInputService _inputService;
-        private readonly ScoreService _scoreService;
-        private readonly PlayerStatItemFactory _statItemFactory;
         private readonly PlayerStatsWindowModel _model;
         private readonly PlayerStatsWindowView _view;
         private readonly CursorController _cursorController;
-
-        private readonly Dictionary<StatName, PlayerStatItemView> _statItemsView = new Dictionary<StatName, PlayerStatItemView>();
-
+        
         private bool _isOpen;
 
-        public PlayerStatsWindowPresenter( PlayerStatsWindowModel model, PlayerStatsWindowView view, IInputService inputService, 
-            ScoreService scoreService, CursorController cursorController, PlayerStatItemFactory statItemFactory)
+        public PlayerStatsWindowPresenter(PlayerStatsWindowModel model, PlayerStatsWindowView view, 
+            IInputService inputService, CursorController cursorController)
         {
             _model = model;
             _view = view;
             _inputService = inputService;
-            _scoreService = scoreService;
             _cursorController = cursorController;
-            _statItemFactory = statItemFactory;
         }
         
         public async UniTask InitializeAsync()
         {
             _model.Initialize();
+            _view.Initialize();
 
             _view.OnWindowDestroy += CleanUp;
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyChangesButtonClicked += ApplyChanges;
+            _view.OnStatItemUpgradeButtonClicked += UpgradeStatItem;
             _model.OnStatsChanged += UpdateAllStatItems;
             _inputService.OnOpenStatsButtonPressed += Open;
-            _scoreService.OnScoreChanged += _view.PlayLevelUpSound;
-            
+
             await CreateStatItemsAsync();
-            
-            foreach (PlayerStatItemView statItemView in GetStatItems())
-                statItemView.OnUpgradeButtonClicked += UpgradeStatItem;
         }
 
         private void CleanUp()
@@ -59,12 +47,9 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _view.OnWindowDestroy -= CleanUp;
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyChangesButtonClicked -= ApplyChanges;
+            _view.OnStatItemUpgradeButtonClicked -= UpgradeStatItem;
             _model.OnStatsChanged -= UpdateAllStatItems;
             _inputService.OnOpenStatsButtonPressed -= Open;
-            _scoreService.OnScoreChanged -= _view.PlayLevelUpSound;
-            
-            foreach (PlayerStatItemView statItemView in GetStatItems())
-                statItemView.OnUpgradeButtonClicked -= UpgradeStatItem;
             
             _model.Dispose();
         }
@@ -83,19 +68,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             catch (Exception e)
             {
                 Debug.LogError(e);
-            }
-        }
-
-        private async UniTask CreateStatItemsAsync()
-        {
-            _view.ClearStatsContainer();
-            ClearStatItems();
-            
-            foreach (PlayerStatData stat in _model.GetStats())
-            {
-                PlayerStatConfig statConfig = _model.FindStatConfigByName(stat.Name);
-                PlayerStatItemView statItemView = await _statItemFactory.CreateAsync(_view.StatsContainer, stat, statConfig, _view.AudioSource);
-                _statItemsView[stat.Name] = statItemView;
             }
         }
         
@@ -154,21 +126,21 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         {
             _model.TryGetStat(statName, out PlayerStatData stat);
             bool canUpgrade = _model.CanUpgrade(statName);
-           
-            if (_statItemsView.TryGetValue(statName, out PlayerStatItemView statItemView)) 
-                _view.UpdateStatItem(statItemView, stat.PreviewLevel, canUpgrade);
-        }
-
-        private void ClearStatItems()
-        {
-            foreach (PlayerStatItemView statItemView in _statItemsView.Values)
-                if (statItemView)
-                    Object.Destroy(statItemView.gameObject);
             
-            _statItemsView.Clear();
+           _view.UpdateStatItem(statName, stat.PreviewLevel, canUpgrade);
         }
-
-        private List<PlayerStatItemView> GetStatItems() => 
-            _statItemsView.Values.ToList();
+        
+        private async UniTask CreateStatItemsAsync()
+        {
+            List<(PlayerStatData, PlayerStatConfig)> statsInfos = new List<(PlayerStatData, PlayerStatConfig)>();
+            
+            foreach (PlayerStatData data in _model.GetStats())
+            {
+                PlayerStatConfig config = _model.FindStatConfigByName(data.Name);
+                statsInfos.Add((data, config));
+            }
+            
+            await _view.CreateStatItemsAsync(statsInfos);
+        }
     }
 }

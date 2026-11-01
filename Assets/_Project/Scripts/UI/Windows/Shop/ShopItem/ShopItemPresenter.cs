@@ -9,7 +9,7 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
         private readonly ShopItemModel _itemModel;
         private readonly ShopItemView _itemView;
 
-        private bool _isPurchased;
+        private bool _isPurchaseNow;
         
         public ShopItemPresenter(ShopItemView itemView, ShopItemModel itemModel)
         {
@@ -17,26 +17,28 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
             _itemModel = itemModel;
         }
 
-        public void Initialize(AudioSource audioSource, Sprite icon)
+        public void Initialize()
         {
             _itemView.OnBuyButtonClicked += StartPurchase;
-            _itemView.Initialize(audioSource);
 
-            FillShopItem(icon);
+            ShopItemDisplayData itemDisplayData = new ShopItemDisplayData(
+                _itemModel.ProductName,
+                _itemModel.Price,
+                _itemModel.Quantity,
+                _itemModel.PurchasesLeft,
+                _itemModel.CanBuy,
+                _itemModel.IsConsumable
+            );
+            
+            _itemView.UpdateItemData(itemDisplayData);
         }
 
         public void Dispose() => 
             _itemView.OnBuyButtonClicked -= StartPurchase;
 
-        private void FillShopItem(Sprite icon)
-        {
-            _itemView.UpdateItemData(icon, _itemModel.ProductName, _itemModel.Price, _itemModel.PurchasesLeft);
-            ToggleQuantityTextVisibility();
-        }
-
         private void StartPurchase()
         {
-            if (_isPurchased)
+            if (_isPurchaseNow)
                 return;
 
             StartPurchaseAsync().Forget();
@@ -46,13 +48,10 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
         {
             try
             {
-                _isPurchased = true;
-                _itemView.SetBuyButtonInteractable(false);
+                _isPurchaseNow = true;
                 
                 bool success = await _itemModel.TryStartPurchaseAsync();
-
-                if (success)
-                    _itemView.UpdateAvailablePurchasesLeft(_itemModel.PurchasesLeft);
+                _itemView.HandlePurchaseResults(_itemModel.PurchasesLeft, _itemModel.CanBuy, success);
             }
             catch (Exception e)
             {
@@ -61,28 +60,8 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
             }
             finally
             {
-                _isPurchased = false;
-                RefreshBuyButtonState();
+                _isPurchaseNow = false;
             }
-        }
-
-        private void ToggleQuantityTextVisibility()
-        {
-            if (_itemModel.IsConsumableProductType()) 
-                _itemView.UpdateQuantityText(_itemModel.Quantity);
-            else
-                _itemView.HideQuantityText();
-        }
-
-        private void RefreshBuyButtonState()
-        {
-            bool canBuy = _itemModel.CanBuy;
-            _itemView.SetBuyButtonInteractable(canBuy);
-            
-            if (canBuy)
-                _itemView.ShowBuyButton();
-            else
-                _itemView.HideBuyButton();
         }
     }
 }

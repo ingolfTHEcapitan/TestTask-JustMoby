@@ -35,6 +35,8 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _settingsButton.onClick.AddListener(InvokeOnSettingsButtonClicked);
             _shopButton.onClick.AddListener(InvokeOnShopButtonClicked);
             _exitButton.onClick.AddListener(InvokeOnExitButtonClicked);
+            
+            _audioService.PlayMusic(_backgroundMusic);
         }
         
         private void OnDestroy()
@@ -45,9 +47,6 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _shopButton.onClick.RemoveListener(InvokeOnShopButtonClicked);
             _exitButton.onClick.RemoveListener(InvokeOnExitButtonClicked);
         }
-        
-        public void PlayBackgroundMusic() => 
-            _audioService.PlayMusic(_backgroundMusic);
 
         private void InvokeOnPlayButtonClicked() => 
             OnPlayButtonClicked?.Invoke();

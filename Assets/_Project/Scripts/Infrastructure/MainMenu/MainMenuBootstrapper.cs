@@ -25,12 +25,14 @@ namespace _Project.Scripts.Infrastructure.MainMenu
         private readonly LazyInject<ShopWindowPresenter> _lazyShopWindowPresenter;
         private readonly LazyInject<MainMenuWindowPresenter> _lazyMainMenuWindowPresenter;
         private readonly LazyInject<SaveConflictResolveWindowPresenter> _lazySaveConflictResolveWindowPresenter;
+        private readonly IInstantiator _mainMenuContainer;
 
-        public MainMenuBootstrapper(LoadingCurtainPresenter loadingCurtainPresenter, ProgressService progressService,
+        public MainMenuBootstrapper(IInstantiator mainMenuContainer, LoadingCurtainPresenter loadingCurtainPresenter, ProgressService progressService,
             [Inject(Id = SaveType.Coordinator)]ISaveLoadService saveLoadService, WindowFactory windowFactory, Transform uiParent,
             LazyInject<SettingsWindowPresenter> lazySettingsWindowPresenter, LazyInject<ShopWindowPresenter> lazyShopWindowPresenter,
             LazyInject<MainMenuWindowPresenter> lazyMainMenuWindowPresenter,LazyInject<SaveConflictResolveWindowPresenter> lazySaveConflictResolveWindowPresenter)
         {
+            _mainMenuContainer = mainMenuContainer;
             _lazyShopWindowPresenter = lazyShopWindowPresenter;
             _lazySettingsWindowPresenter = lazySettingsWindowPresenter;
             _lazyMainMenuWindowPresenter = lazyMainMenuWindowPresenter;
@@ -54,7 +56,7 @@ namespace _Project.Scripts.Infrastructure.MainMenu
             
                 _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
             
-                await _windowFactory.CreateAsync<ShopWindowView>(_uiParent);
+                await _windowFactory.CreateAsync<ShopWindowView>(_uiParent, sceneContainer: _mainMenuContainer);
                 await _lazyShopWindowPresenter.Value.InitializeAsync();
 
                 await _windowFactory.CreateAsync<SettingsWindowView>(_uiParent);

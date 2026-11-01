@@ -17,45 +17,65 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
         [SerializeField] private Button _buyButton;
         [SerializeField] private TextMeshProUGUI _buyButtonPriceText;
 
-        public void Initialize(AudioSource audioSource)
+        private AudioSource _audioSource;
+        private Sprite _iconSprite;
+        
+        public void Initialize(AudioSource audioSource, Sprite iconSprite)
         {
+            _iconSprite = iconSprite;
+            _audioSource = audioSource;
+            
             _buyButton.onClick.AddListener(InvokeOnBuyButtonClicked);
-            ButtonSoundEffect buttonSoundEffect = _buyButton.GetComponent<ButtonSoundEffect>();
-            buttonSoundEffect.Initialize(audioSource);
+            
+            if (_buyButton.TryGetComponent(out ButtonSoundEffect soundEffect)) 
+                soundEffect.Initialize(_audioSource);
+            else
+                Debug.LogWarning($"[ShopItemView] No ButtonSoundEffect component attached to {_buyButton.name}");
         }
 
         private void OnDestroy() => 
             _buyButton.onClick.RemoveListener(InvokeOnBuyButtonClicked);
 
-
-        public void UpdateItemData(Sprite icon, string productName, string price, int purchasesLeft)
+        public void UpdateItemData(ShopItemDisplayData data)
         {
-            _icon.sprite = icon;
-            _productNameText.text = productName;
-            _buyButtonPriceText.text = price;
-            UpdateAvailablePurchasesLeft(purchasesLeft);
+            _icon.sprite = _iconSprite;
+            _productNameText.text = data.ProductName;
+            _buyButtonPriceText.text = data.Price;
+            UpdateAvailablePurchasesLeft(data.PurchasesLeft);
+            ToggleQuantityTextVisibility(data.IsConsumable, data.Quantity);
+            
+            RefreshBuyButtonState(data.CanBuy);
         }
 
-        public void UpdateAvailablePurchasesLeft(int purchasesLeft) => 
-            _availablePurchasesLeftText.text = purchasesLeft.ToString();
+        public void HandlePurchaseResults(int purchasesLeft, bool canBuy, bool success)
+        {
+            if (success)
+                UpdateAvailablePurchasesLeft(purchasesLeft);
+            
+            RefreshBuyButtonState(canBuy);
+        }
+        
+        private void ToggleQuantityTextVisibility(bool isConsumable, int quantity)
+        {
+            if (isConsumable) 
+                _quantityText.text = quantity.ToString();
+            else
+                _quantityText.gameObject.SetActive(false);
+        }
 
-        public void SetBuyButtonInteractable(bool isInteractable) =>
-            _buyButton.interactable = isInteractable;
-        
-        public void HideBuyButton() => 
-            _buyButton.gameObject.SetActive(false);
-        
-        public void ShowBuyButton() => 
-            _buyButton.gameObject.SetActive(true);
-        
-        public void UpdateQuantityText(int quantity) => 
-            _quantityText.text = quantity.ToString();
-        
-        public void HideQuantityText() => 
-            _quantityText.gameObject.SetActive(false);
-
-        private void InvokeOnBuyButtonClicked() => 
+        private void InvokeOnBuyButtonClicked()
+        {
+            _buyButton.interactable = false;
             OnBuyButtonClicked?.Invoke();
+        }
         
+        private void RefreshBuyButtonState(bool canBuy)
+        {
+            _buyButton.interactable = canBuy;
+            _buyButton.gameObject.SetActive(canBuy);
+        }
+
+        private void UpdateAvailablePurchasesLeft(int purchasesLeft) => 
+            _availablePurchasesLeftText.text = purchasesLeft.ToString();
     }
 }

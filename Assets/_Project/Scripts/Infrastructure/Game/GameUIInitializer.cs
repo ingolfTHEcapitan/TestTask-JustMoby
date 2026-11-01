@@ -14,6 +14,7 @@ namespace _Project.Scripts.Infrastructure.Game
 {
     public class GameUIInitializer
     {
+        private readonly IInstantiator _gameContainer;
         private readonly WindowFactory _windowFactory;
         private readonly Transform _uiParent;
         private readonly HealthBarFactory _healthBarFactory;
@@ -22,10 +23,11 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly LazyInject<PlayerStatsWindowPresenter> _lazyPlayerStatsWindowPresenter;
         private readonly LazyInject<PlayerContainer> _lazyPlayer;
 
-        public GameUIInitializer(WindowFactory windowFactory, Transform uiParent, HealthBarFactory healthBarFactory,
+        public GameUIInitializer(IInstantiator gameContainer, WindowFactory windowFactory, Transform uiParent, HealthBarFactory healthBarFactory,
             LazyInject<PlayerStatsWindowPresenter> lazyPlayerStatsWindowPresenter, LazyInject<HeadUpDisplayPresenter> lazyHudPresenter,
             LazyInject<GameOverWindowPresenter> lazyGameOverWindowPresenter, LazyInject<PlayerContainer> lazyPlayer)
         {
+            _gameContainer = gameContainer;
             _windowFactory = windowFactory;
             _uiParent = uiParent;
             _lazyPlayerStatsWindowPresenter = lazyPlayerStatsWindowPresenter;
@@ -37,7 +39,7 @@ namespace _Project.Scripts.Infrastructure.Game
         
         public async UniTask InitUIAsync()
         {
-            await InitPlayerStatsViewAsync(); 
+            await _windowFactory.CreateAsync<PlayerStatsWindowView>(_uiParent, sceneContainer: _gameContainer);
             await _lazyPlayerStatsWindowPresenter.Value.InitializeAsync();
             
             HeadUpDisplayView hudView = await _windowFactory.CreateAsync<HeadUpDisplayView>(_uiParent);
@@ -51,11 +53,5 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void CreatePlayerHealthBar(HeadUpDisplayView hud, Health playerHealthModel) => 
             _healthBarFactory.Create(hud.HealthBarView, playerHealthModel, hideOnZeroHealth: false);
-
-        private async UniTask InitPlayerStatsViewAsync()
-        {
-            PlayerStatsWindowView playerStatsWindowView = await _windowFactory.CreateAsync<PlayerStatsWindowView>(_uiParent);
-            playerStatsWindowView.Initialize();
-        }
     }
 }

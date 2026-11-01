@@ -35,7 +35,6 @@ namespace _Project.Scripts.UI.Windows.MainMenu
             _view.OnShopButtonClicked += OpenShopWindow;
             _view.OnExitButtonClicked += ExitGame;
             
-            _view.PlayBackgroundMusic();
             _cursorController.SetCursorVisible(true);
         }
 

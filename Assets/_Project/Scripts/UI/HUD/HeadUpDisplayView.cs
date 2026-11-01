@@ -14,7 +14,7 @@ namespace _Project.Scripts.UI.HUD
         public event Action OnOpenStatsButtonClicked;
         
         [SerializeField] private Button _backMainMenuButton;
-        [SerializeField] public Button _openStatsWindowButton;
+        [SerializeField] private Button _openStatsWindowButton;
         [field:SerializeField] public HealthBarView HealthBarView { get; private set; }
         
         public void Awake()

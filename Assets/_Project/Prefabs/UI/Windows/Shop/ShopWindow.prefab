@@ -266,8 +266,8 @@ MonoBehaviour:
   _shopUnavailableObjects:
   - {fileID: 177219416663900178}
   _closeButton: {fileID: 1769913143558821594}
-  <ProductsContainer>k__BackingField: {fileID: 1059193019139081545}
-  <AudioSource>k__BackingField: {fileID: 3967975953790062513}
+  _productsContainer: {fileID: 1059193019139081545}
+  _audioSource: {fileID: 3967975953790062513}
 --- !u!114 &2413235532081861522
 MonoBehaviour:
   m_ObjectHideFlags: 0

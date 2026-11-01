@@ -14,6 +14,10 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
         private PlayerProgress _localProgress;
         private PlayerProgress _cloudProgress;
 
+        public bool LocalSaveIsNewer => _localProgress.LastSaveTimeUnix > _cloudProgress.LastSaveTimeUnix;
+        public bool CloudSaveIsNewer => _cloudProgress.LastSaveTimeUnix > _localProgress.LastSaveTimeUnix;
+        public bool SavesIsEqualSaveTime => _localProgress.LastSaveTimeUnix == _cloudProgress.LastSaveTimeUnix;
+
         public SaveConflictResolveWindowModel(ISaveLoadCoordinator saveLoadCoordinator) => 
             _saveLoadCoordinator = saveLoadCoordinator;
 
@@ -22,15 +26,6 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
 
         public void Dispose() => 
             _saveLoadCoordinator.OnSaveConflictHappened -= InvokeOnSaveConflictHappenedAsync;
-
-        public bool IsLocalSaveNewer()=>
-            _localProgress.LastSaveTimeUnix > _cloudProgress.LastSaveTimeUnix;
-
-        public bool IsCloudSaveNewer()=>
-            _cloudProgress.LastSaveTimeUnix > _localProgress.LastSaveTimeUnix;
-
-        public bool IsLocalSaveEqualCloudSaveTime()=>
-            _localProgress.LastSaveTimeUnix == _cloudProgress.LastSaveTimeUnix;
 
         private async UniTask<SaveType> InvokeOnSaveConflictHappenedAsync(PlayerProgress localProgress, PlayerProgress cloudProgress)
         {

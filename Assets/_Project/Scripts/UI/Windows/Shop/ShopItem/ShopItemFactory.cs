@@ -32,13 +32,15 @@ namespace _Project.Scripts.UI.Windows.Shop.ShopItem
         public async UniTask<ShopItemView> CreateAsync(Transform parent, ProductDescription productDescription, AudioSource audioSource)
         {
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.ShopItem);
-            ShopItemView view = _container.InstantiatePrefabForComponent<ShopItemView>(prefab, parent);
 
             ShopItemModel model = _container.Instantiate<ShopItemModel>(new object[] {productDescription});
-            Sprite icon = await _assetProvider.LoadAsync<Sprite>(model.IconAddress);
+            Sprite iconSprite = await _assetProvider.LoadAsync<Sprite>(model.IconAddress);
+            
+            ShopItemView view = _container.InstantiatePrefabForComponent<ShopItemView>(prefab, parent);
+            view.Initialize(audioSource, iconSprite);
             
             ShopItemPresenter presenter = _container.Instantiate<ShopItemPresenter>(new object[] {view, model});
-            presenter.Initialize(audioSource, icon);
+            presenter.Initialize();
             
             _presenters.Add(presenter);
             

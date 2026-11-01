@@ -104,10 +104,7 @@ namespace _Project.Scripts.UI.Windows.GameOver
             }
         }
         
-        private void RefreshReviveButtonState()
-        {
-            bool canRevive = _model.CanRevive();
-            _view.UpdateReviveButtonState(canRevive);
-        }
+        private void RefreshReviveButtonState() => 
+            _view.UpdateReviveButtonState(_model.CanRevive());
     }
 }

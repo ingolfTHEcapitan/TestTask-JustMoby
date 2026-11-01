@@ -54,30 +54,37 @@ namespace _Project.Scripts.UI.Windows.SaveConflictResolve
             _windowContent.SetActive(false); 
         }
 
-        public void UpdateSaveDateText(string localProgressText, string cloudProgressText)
+        public void UpdateSaveInfo(string localDate, string cloudDate, SaveNewestState saveState)
         {
-            _localDateText.text = $"Device save date\n{localProgressText}";
-            _cloudDateText.text = $"Cloud save date\n{cloudProgressText}";
+            UpdateSaveDateText(localDate, cloudDate);
+            ChoiceSaveDateTextColor(saveState);
         }
 
-        public void SetLocalDateTextColorNew()
+        private void ChoiceSaveDateTextColor(SaveNewestState saveState)
         {
-            _localDateText.color = _newSaveColor;
-            _cloudDateText.color = _oldSaveColor;
+            switch (saveState)
+            {
+                case SaveNewestState.LocalNewer:
+                    _localDateText.color = _newSaveColor;
+                    _cloudDateText.color = _oldSaveColor;
+                    break;
+                case SaveNewestState.CloudNewer:
+                    _cloudDateText.color = _newSaveColor;
+                    _localDateText.color = _oldSaveColor;
+                    break;
+                case SaveNewestState.Equals:
+                    _localDateText.color = _defaultSaveColor;
+                    _cloudDateText.color = _defaultSaveColor;
+                    break;
+            }
         }
         
-        public void SetCloudDateTextColorNew()
+        private void UpdateSaveDateText(string localDate, string cloudDate)
         {
-            _localDateText.color = _oldSaveColor;
-            _cloudDateText.color = _newSaveColor;
+            _localDateText.text = $"Device save date\n{localDate}";
+            _cloudDateText.text = $"Cloud save date\n{cloudDate}";
         }
-        
-        public void SetSaveDateTextColorDefault()
-        {
-            _localDateText.color = _defaultSaveColor;
-            _cloudDateText.color = _defaultSaveColor;
-        }
-        
+
         private void InvokeOnLocalSaveButtonClicked() => 
             OnLocalSaveButtonClicked?.Invoke();
 

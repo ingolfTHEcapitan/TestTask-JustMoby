@@ -8,7 +8,7 @@ namespace _Project.Scripts.UI.Windows.Shop
     {
         private readonly IIAPService _iapService;
 
-        public bool IapServiceIsInitialized => _iapService.IsInitialized;
+        public bool IapIsInitialized => _iapService.IsInitialized;
         
         public ShopWindowModel(IIAPService iapService) => 
             _iapService = iapService;
