@@ -35,10 +35,16 @@ namespace _Project.Scripts.Infrastructure.Project
         
         public override void InstallBindings()
         {
+            BindConfigs();
             BindRemoteConfig();
             BindServices();
             BindLoadingCurtain();
             BindProjectBootstrapper();
+        }
+
+        private void BindConfigs()
+        {
+            Container.Bind<WindowAddressesConfig>().AsSingle();
         }
 
         private void BindRemoteConfig()
