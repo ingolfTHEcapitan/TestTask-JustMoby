@@ -15,6 +15,7 @@ using _Project.Scripts.Services.PlayerInput;
 using _Project.Scripts.Services.RemoteConfig;
 using _Project.Scripts.Services.SaveLoad;
 using _Project.Scripts.Services.SaveLoad.CloudSave;
+using _Project.Scripts.Services.SaveLoad.LocalSave;
 using _Project.Scripts.Services.SaveLoad.SaveCoordinator;
 using _Project.Scripts.Services.SceneLoader;
 using _Project.Scripts.Tools;
@@ -54,7 +55,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.Bind<WeaponConfig>().AsSingle();
             Container.Bind<BulletConfig>().AsSingle();
             Container.Bind<EnemyConfig>().AsSingle();
-            Container.Bind<LocalSaveServiceConfig>().AsSingle();
+            Container.Bind<LocalSaveTypeConfig>().AsSingle();
             Container.Bind<ProductConfigWrapper>().AsSingle();
             Container.Bind<AdsConfig>().AsSingle();
             Container.Bind<List<PlayerStatConfig>>().AsSingle();
@@ -78,6 +79,7 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<WindowsRepository>().AsSingle();
             Container.BindInterfacesAndSelfTo<WindowFactory>().AsSingle();
 
+            Container.Bind<LocalSaveTypeProvider>().AsSingle();
             Container.Bind<ISaveLoadService>().WithId(SaveType.Local).FromMethod(GetLocalSaveInstance).AsCached();
             Container.Bind<ISaveLoadService>().WithId(SaveType.Cloud).To<CloudSaveLoadService>().AsCached();
             Container.Bind<SaveLoadCoordinator>().AsCached();
@@ -99,6 +101,6 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<ProjectBootstrapper>().AsSingle();
 
         private ISaveLoadService GetLocalSaveInstance(InjectContext context) => 
-            context.Container.Resolve<LocalSaveServiceConfig>().GetInstance();
+            context.Container.Resolve<LocalSaveTypeProvider>().GetInstance();
     }
 }

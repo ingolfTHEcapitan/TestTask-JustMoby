@@ -2,7 +2,7 @@ namespace _Project.Scripts.Services.SaveLoad.LocalSave
 {
     public enum LocalSaveType
     {
-        File,
-        PlayerPrefs,
+        File = 0,
+        PlayerPrefs = 1,
     }
 }
