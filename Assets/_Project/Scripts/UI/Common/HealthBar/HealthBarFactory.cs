@@ -12,9 +12,9 @@ namespace _Project.Scripts.UI.Common.HealthBar
 
         public void Create(HealthBarView healthBarView, Health healthModel, bool hideOnZeroHealth = true)
         {
-            HealthBarPresenter presenter = 
+            HealthBarPresenter barPresenter = 
                 _container.Instantiate<HealthBarPresenter>(new object[] { healthBarView, healthModel, hideOnZeroHealth });
-            presenter.Initialize();
+            barPresenter.Initialize();
         }
     }
 }
