@@ -22,6 +22,7 @@ using _Project.Scripts.Tools;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
+using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Serialization;
@@ -78,7 +79,9 @@ namespace _Project.Scripts.Infrastructure.Project
             Container.BindInterfacesAndSelfTo<FirebaseAnalyticsService>().AsSingle();
             Container.BindInterfacesAndSelfTo<WindowsRepository>().AsSingle();
             Container.BindInterfacesAndSelfTo<WindowFactory>().AsSingle();
-
+            Container.BindInterfacesAndSelfTo<PlayerStatItemFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
+            
             Container.Bind<LocalSaveTypeProvider>().AsSingle();
             Container.Bind<ISaveLoadService>().WithId(SaveType.Local).FromMethod(GetLocalSaveInstance).AsCached();
             Container.Bind<ISaveLoadService>().WithId(SaveType.Cloud).To<CloudSaveLoadService>().AsCached();

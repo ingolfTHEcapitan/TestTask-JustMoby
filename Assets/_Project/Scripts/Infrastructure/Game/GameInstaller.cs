@@ -38,7 +38,6 @@ namespace _Project.Scripts.Infrastructure.Game
             BindHealthBarFactory();
             BindGameOverWindow();
             BindHealthCalculator();
-            BindUpgradePointsService();
             BindEnemy();
             BindWeapon();
             BindGame();
@@ -66,7 +65,6 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindPlayerStats()
         {
-            Container.BindInterfacesAndSelfTo<PlayerStatItemFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
             Container.Bind<PlayerStatsWindowModel>().AsSingle();
@@ -87,10 +85,7 @@ namespace _Project.Scripts.Infrastructure.Game
             Container.Bind<GameOverWindowModel>().AsSingle();
             Container.Bind<GameOverWindowPresenter>().AsSingle();
         }
-
-        private void BindUpgradePointsService() => 
-            Container.BindInterfacesAndSelfTo<ScoreService>().AsSingle();
-
+        
         private void BindEnemy()
         {
             Container.BindInterfacesAndSelfTo<EnemyFactory>().AsSingle().WithArguments(_dynamicObjectsParent);

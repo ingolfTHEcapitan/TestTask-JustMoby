@@ -37,7 +37,7 @@ namespace _Project.Scripts.Infrastructure.Game
         
         public async UniTask InitUIAsync()
         {
-            await InitPlayerStatsViewAsync(); 
+            await _windowFactory.CreateAsync<PlayerStatsWindowView>(_uiParent);
             await _lazyPlayerStatsWindowPresenter.Value.InitializeAsync();
             
             HeadUpDisplayView hudView = await _windowFactory.CreateAsync<HeadUpDisplayView>(_uiParent);
@@ -51,11 +51,5 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void CreatePlayerHealthBar(HeadUpDisplayView hud, Health playerHealthModel) => 
             _healthBarFactory.Create(hud.HealthBarView, playerHealthModel, hideOnZeroHealth: false);
-
-        private async UniTask InitPlayerStatsViewAsync()
-        {
-            PlayerStatsWindowView playerStatsWindowView = await _windowFactory.CreateAsync<PlayerStatsWindowView>(_uiParent);
-            playerStatsWindowView.Initialize();
-        }
     }
 }
