@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Logic.Common;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace _Project.Scripts.UI.Common.HealthBar
@@ -41,20 +42,7 @@ namespace _Project.Scripts.UI.Common.HealthBar
         private void UpdateHealthView() => 
             _view.UpdateHealthBar(_model.CurrentHealth, _model.MaxHealth);
 
-        private async void HideHealthView()
-        {
-            try
-            {
-                await _view.HideAsync();
-            }
-            catch (OperationCanceledException)
-            {
-               
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
-        }
+        private void HideHealthView() => 
+            _view.HideAsync().Forget();
     }
 }

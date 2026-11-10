@@ -14,13 +14,10 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 {
     public class PlayerStatsWindowModel : IDisposable
     {
-        public event Action OnStatsChanged;
-        
         private readonly PlayerStatsModel _statsModel;
         private readonly PlayerStatsSaveLoad _saveLoad;
         private readonly IGamePauseService _pauseService;
         private readonly ScoreService _scoreService;
-        private readonly List<PlayerStatConfig> _statConfigs;
         private readonly LazyInject<PlayerContainer> _lazyPlayer;
         
         private  PlayerDeath _playerDeath;
@@ -29,13 +26,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public bool IsPlayerDead => _playerDeath.IsDead;
         
         public PlayerStatsWindowModel(PlayerStatsModel statsModel, PlayerStatsSaveLoad saveLoad, IGamePauseService pauseService, 
-            ScoreService scoreService, List<PlayerStatConfig> statConfigs, LazyInject<PlayerContainer> lazyPlayer)
+            ScoreService scoreService, LazyInject<PlayerContainer> lazyPlayer)
         {
             _statsModel = statsModel;
             _saveLoad = saveLoad;
             _pauseService = pauseService;
             _scoreService = scoreService;
-            _statConfigs = statConfigs;
             _lazyPlayer = lazyPlayer;
         }
 
@@ -43,38 +39,30 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         {
             _playerDeath = _lazyPlayer.Value.PlayerDeath;
             
-            foreach (PlayerStatData statData in _statsModel.GetStats()) 
-                statData.OnStatChanged += InvokeStatChanged;
-
             _scoreService.OnScoreAdded += AddUpgradePoints;
-            _playerDeath.OnDied += UpdateStatsProgressAndSave;
+            _playerDeath.OnDied += SaveStats;
             
             UpgradePoints = _saveLoad.LoadStats().UpgradePoints;
         }
         
         public void Dispose()
         {
-            foreach (PlayerStatData stat in GetStats())
-                stat.OnStatChanged -= InvokeStatChanged;
-            
             _scoreService.OnScoreAdded -= AddUpgradePoints;
-            _playerDeath.OnDied -= UpdateStatsProgressAndSave;
+            _playerDeath.OnDied -= SaveStats;
         }
 
-        public async UniTask ApplyChangesAsync()
+        public void ApplyStatUpgrades()
         {
-            if (!HasAnyChanges()) 
+            if (!_statsModel.HasAnyChanges()) 
                 return;
             
             foreach (PlayerStatData stat in GetStats()) 
                 stat.ApplyPreviewLevel();
-            
-            await UpdateStatsProgressAndSaveAsync();
         }
 
         public void DiscardPreviewChanges()
         {
-            if (!HasAnyChanges()) 
+            if (!_statsModel.HasAnyChanges()) 
                 return;
             
             int returnedPoints = 0;
@@ -86,28 +74,32 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             }
                
             UpgradePoints += returnedPoints;
-            OnStatsChanged?.Invoke();
         }
 
-        public void UpgradeStat(StatName statName)
+        public void PreviewStatUpgrade(StatName statName)
         {
             if (!CanUpgrade(statName))
                 return;
 
-            _statsModel.TryGetStat(statName, out PlayerStatData stat);
-            stat.IncreasePreviewLevel();
             UpgradePoints--;
-            OnStatsChanged?.Invoke();
+            PlayerStatData stat = _statsModel.GetStat(statName);
+            stat.IncreasePreviewLevel();
         }
 
         public bool CanUpgrade(StatName statName)
         {
-            if (UpgradePoints <=0 || !_statsModel.TryGetStat(statName, out _))
+            bool statExist = _statsModel.TryGetStat(statName, out PlayerStatData stat);
+            
+            if (UpgradePoints <=0 || !statExist)
                 return false;
-
-            _statsModel.TryGetStat(statName, out PlayerStatData stat);
             
             return stat.PreviewLevel < stat.MaxLevel;
+        }
+
+        private  void AddUpgradePoints(int points)
+        {
+            UpgradePoints += points;
+            _saveLoad.UpdateStatsProgress(UpgradePoints);
         }
 
         public void SetPaused(bool paused) => 
@@ -116,32 +108,19 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public IReadOnlyList<PlayerStatData> GetStats() => 
             _statsModel.GetStats();
 
-        public bool TryGetStat(StatName statName, out PlayerStatData stat) => 
-            _statsModel.TryGetStat(statName, out stat);
+        public PlayerStatData GetStat(StatName statName) => 
+            _statsModel.GetStat(statName);
 
         public PlayerStatConfig FindStatConfigByName(StatName statName) => 
-            _statConfigs.Find(statConfig => statConfig.Name == statName);
+            _statsModel.FindStatConfigByName(statName);
 
-        private  void AddUpgradePoints(int points)
-        {
-            UpgradePoints += points;
-            OnStatsChanged?.Invoke();
-            _saveLoad.UpdateStatsProgress(UpgradePoints);
-        }
-
-        private bool HasAnyChanges() =>
-            GetStats().Any(stat => stat.PreviewLevelHasChanged);
-
-        private void InvokeStatChanged() => 
-            OnStatsChanged?.Invoke();
-
-        private async UniTask UpdateStatsProgressAndSaveAsync()
+        public async UniTask SaveStatsAsync()
         {
             _saveLoad.UpdateStatsProgress(UpgradePoints);
-            await _saveLoad.SaveStatAsync();
+            await _saveLoad.SaveStatsAsync();
         }
         
-        private void UpdateStatsProgressAndSave() => 
-            UpdateStatsProgressAndSaveAsync().Forget();
+        private void SaveStats() => 
+            SaveStatsAsync().Forget();
     }
 }

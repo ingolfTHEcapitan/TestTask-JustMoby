@@ -52,7 +52,7 @@ namespace _Project.Scripts.Logic.Enemy.Components
         private void EnemyDie()
         {
             if (!_isDead)
-                DieAsync().Forget(Debug.LogError);
+                DieAsync().Forget();
         }
 
         private async UniTask DieAsync()

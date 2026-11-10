@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -7,25 +6,27 @@ namespace _Project.Scripts.Logic.Common
 {
     public class DissolveShader : MonoBehaviour
     {
+        private static readonly int DissolveAmountId = Shader.PropertyToID("_DissolveAmount");
         private const float MaxThreshold = 1f;
-        private const string DissolveAmountKey = "_DissolveAmount";
         
         [SerializeField] private float _speed = 0.25f;
+
+        private Renderer[] _dissolveRenderers;
+        private MaterialPropertyBlock _propertyBlock;
         
-        private readonly List<Material> _dissolveMaterials = new List<Material>();
-        private UniTask _dissolveTask;
         private CancellationTokenSource _dissolveTokenSource;
 
         private void Awake()
         {
-            Renderer[] renderers = GetComponentsInChildren<Renderer>();
-
-            foreach (Renderer renderer in renderers) 
-                _dissolveMaterials.Add(renderer.material);
+            _propertyBlock = new MaterialPropertyBlock();
+            _dissolveRenderers = GetComponentsInChildren<Renderer>();
         }
         
-        private void OnDestroy() => 
+        private void OnDestroy()
+        {
             StopTask();
+            ClearPropertyBlock();
+        }
 
         public void PlayDissolveFx()
         {
@@ -40,11 +41,21 @@ namespace _Project.Scripts.Logic.Common
 
             while (threshold < MaxThreshold)
             {
-                foreach (Material material in _dissolveMaterials) 
-                    material.SetFloat(DissolveAmountKey, threshold);
-                
+                ApplyThreshold(threshold);
                 threshold += Time.deltaTime * _speed;
                 await UniTask.Yield(token);
+            }
+            
+            ApplyThreshold(MaxThreshold);
+        }
+
+        private void ApplyThreshold(float threshold)
+        {
+            foreach (Renderer renderer in _dissolveRenderers)
+            {
+                renderer.GetPropertyBlock(_propertyBlock);
+                _propertyBlock.SetFloat(DissolveAmountId, threshold);
+                renderer.SetPropertyBlock(_propertyBlock);
             }
         }
 
@@ -53,6 +64,13 @@ namespace _Project.Scripts.Logic.Common
             _dissolveTokenSource?.Cancel();
             _dissolveTokenSource?.Dispose();
             _dissolveTokenSource = null;
+        }
+
+        private void ClearPropertyBlock()
+        {
+            _propertyBlock?.Clear();
+            foreach (Renderer renderer in _dissolveRenderers) 
+                renderer.SetPropertyBlock(null);
         }
     }
 }

@@ -11,7 +11,7 @@ using _Project.Scripts.UI.Common.HealthBar;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
-using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
+using _Project.Scripts.UI.Windows.PlayerStats.Stat;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Zenject;
@@ -21,8 +21,9 @@ namespace _Project.Scripts.Infrastructure.Game
     public class GameInstaller : MonoInstaller
     {
         [Header("Transforms")]
-        [SerializeField] private Transform _dynamicObjectsParent;
-        [SerializeField] private Transform _uiParent;
+        [SerializeField] private Transform _enemyContainer;
+        [SerializeField] private Transform _bulletContainer;
+        [SerializeField] private Transform _uiContainer;
         [SerializeField] private Transform _gameParent;
         [SerializeField] private Transform _enemySpawnPoint;
         
@@ -66,7 +67,7 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindPlayerStats()
         {
-            Container.BindInterfacesAndSelfTo<PlayerStatItemFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerStatViewFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
             Container.Bind<PlayerStatsWindowModel>().AsSingle();
@@ -90,16 +91,16 @@ namespace _Project.Scripts.Infrastructure.Game
         
         private void BindEnemy()
         {
-            Container.BindInterfacesAndSelfTo<EnemyFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
+            Container.BindInterfacesAndSelfTo<EnemyFactory>().AsSingle().WithArguments(_enemyContainer);
             Container.BindInterfacesAndSelfTo<EnemySpawner>().AsSingle();
         }
 
         private void BindWeapon() => 
-            Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle().WithArguments(_dynamicObjectsParent);
+            Container.BindInterfacesAndSelfTo<BulletFactory>().AsSingle().WithArguments(_bulletContainer);
 
         private void BindGame()
         {
-            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiParent);
+            Container.Bind<GameUIInitializer>().AsSingle().WithArguments(_uiContainer);
             Container.BindInterfacesAndSelfTo<GameBootstrapper>().AsSingle().WithArguments(_enemySpawnPoint, _gameplayMusic);
         }
         

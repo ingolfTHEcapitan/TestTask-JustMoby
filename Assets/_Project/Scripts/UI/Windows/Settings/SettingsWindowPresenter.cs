@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using _Project.Scripts.Data.Player;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -55,37 +56,23 @@ namespace _Project.Scripts.UI.Windows.Settings
             _view.OnUIVolumeChanged -= UpdateUIVolume;
         }
 
-        private async void SaveSettingsAndClose()
+        private async UniTask SaveSettingsAndCloseAsync()
         {
-            try
-            {
-                AudioSettingsData audioData = _model.AudioSettingsData;
+            AudioSettingsData audioData = _model.AudioSettingsData;
 
-                audioData.MasterVolume = _view.MasterVolume;
-                audioData.MusicVolume = _view.MusicVolume;
-                audioData.EffectsVolume = _view.EffectsVolume;
-                audioData.UIVolume = _view.UIVolume;
+            audioData.MasterVolume = _view.MasterVolume;
+            audioData.MusicVolume = _view.MusicVolume;
+            audioData.EffectsVolume = _view.EffectsVolume;
+            audioData.UIVolume = _view.UIVolume;
 
-                await _view.CloseAsync();
-                await _model.SaveSettingsAsync();
-            }
-            catch (Exception e)
-            {
-               Debug.LogError(e);
-            }
+            await _view.CloseAsync();
+            await _model.SaveSettingsAsync();
         }
 
-        private async void Close()
+        private async UniTask CloseAsync()
         {
-            try
-            {
-                await _view.CloseAsync();
-                UpdateAudioMixerAndSlidersValues();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
+            await _view.CloseAsync();
+            UpdateAudioMixerAndSlidersValues();
         }
 
         private void UpdateAudioMixerAndSlidersValues()
@@ -98,6 +85,12 @@ namespace _Project.Scripts.UI.Windows.Settings
             UpdateEffectsVolume(data.EffectsVolume);
             UpdateUIVolume(data.UIVolume);
         }
+
+        private void SaveSettingsAndClose() => 
+            SaveSettingsAndCloseAsync().Forget();
+
+        private void Close() => 
+            CloseAsync().Forget();
 
         private void UpdateMasterVolume(float volume) =>
             UpdateAudioMixerVolume(MasterVolumeName, volume);

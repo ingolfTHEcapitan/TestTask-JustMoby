@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Logic.Player.Weapon.Bullet;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Logic.Spawners;
 using _Project.Scripts.Services;
@@ -23,10 +24,11 @@ namespace _Project.Scripts.Infrastructure.Game
         private readonly IMusicService _audioService;
         private readonly IAnalyticsService _analyticsService;
         private readonly AudioClip _gameplayMusic;
-        
+        private readonly BulletFactory _bulletFactory;
+
         public GameBootstrapper(EffectsService effectsService, PlayerSpawner playerSpawner, EnemySpawner enemySpawner, 
             Transform enemySpawnPoint, GameUIInitializer uiInitializer, PlayerStatsModel playerStatsModel, AudioClip gameplayMusic,
-            LoadingCurtainPresenter loadingCurtainPresenter, IAnalyticsService analyticsService, IMusicService audioService)
+            LoadingCurtainPresenter loadingCurtainPresenter, IAnalyticsService analyticsService, IMusicService audioService, BulletFactory bulletFactory)
         {
             _effectsService = effectsService;
             _playerSpawner = playerSpawner;
@@ -37,6 +39,7 @@ namespace _Project.Scripts.Infrastructure.Game
             _loadingCurtainPresenter = loadingCurtainPresenter;
             _analyticsService = analyticsService;
             _audioService = audioService;
+            _bulletFactory = bulletFactory;
             _gameplayMusic = gameplayMusic;
         }
 
@@ -45,23 +48,18 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private async UniTaskVoid InitializeAsync()
         {
-            try
-            {
-                await _effectsService.WarmUpAsync();
-                _playerStatsModel.CreateStats();
-                await _playerSpawner.SpawnAsync();
-                _enemySpawner.SpawnAround(_enemySpawnPoint);
-                await _uiInitializer.InitUIAsync();
-                
-                _analyticsService.LogGameStart();
-                _audioService.PlayMusic(_gameplayMusic);
-                _loadingCurtainPresenter.HideLoading();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[GAME BOOTSTRAPPER] init error: {e}");
-                Debug.LogException(e);
-            }
+             UniTask effectsServiceTask = _effectsService.WarmUpAsync();
+             UniTask bulletFactoryTask = _bulletFactory.Initialize();
+             await UniTask.WhenAll(effectsServiceTask, bulletFactoryTask);
+             
+            _playerStatsModel.CreateStats();
+            await _playerSpawner.SpawnAsync();
+            _enemySpawner.SpawnAround(_enemySpawnPoint);
+            await _uiInitializer.InitUIAsync();
+            
+            _analyticsService.LogGameStart();
+            _audioService.PlayMusic(_gameplayMusic);
+            _loadingCurtainPresenter.HideLoading();
         }
     }
 }

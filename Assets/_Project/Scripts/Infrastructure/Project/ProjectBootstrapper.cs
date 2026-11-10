@@ -50,32 +50,24 @@ namespace _Project.Scripts.Infrastructure.Project
 
         private async UniTaskVoid InitializeAsync()
         {
-            try
-            {
-                await _assetProvider.InitializeAsync();
-                await _windowFactory.CreateAsync<LoadingCurtainView>();
-                _lazyLoadingWindowPresenter.Value.ShowLoading();
-            
-                await _analyticsService.InitializeAsync();
-                UniTask remoteConfigServiceTask = _remoteConfigService.FetchDataAsync();
-                UniTask authServiceTask = _authService.SignUpAsync();
+            await _assetProvider.InitializeAsync();
+            await _windowFactory.CreateAsync<LoadingCurtainView>();
+            _lazyLoadingWindowPresenter.Value.ShowLoading();
+        
+            await _analyticsService.InitializeAsync();
+            UniTask remoteConfigServiceTask = _remoteConfigService.FetchDataAsync();
+            UniTask authServiceTask = _authService.SignUpAsync();
 
-                await UniTask.WhenAll(remoteConfigServiceTask, authServiceTask);
+            await UniTask.WhenAll(remoteConfigServiceTask, authServiceTask);
 
-                _remoteConfigApplier.ApplyRemoteConfigs();
-            
-                _adsService.Initialize();
-            
-                _iapService = _lazyIapService.Value;
-                _iapService.Initialize();
+            _remoteConfigApplier.ApplyRemoteConfigs();
+        
+            _adsService.Initialize();
+        
+            _iapService = _lazyIapService.Value;
+            _iapService.Initialize();
 
-                await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[PROJECT BOOTSTRAPPER] init error: {e}");
-                Debug.LogException(e);
-            }
+            await _sceneLoader.LoadAsync(buildIndex: (int)SceneName.MainMenu);
         }
 
         public void Dispose() => 

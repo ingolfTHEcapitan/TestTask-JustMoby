@@ -44,7 +44,7 @@ namespace _Project.Scripts.Logic.PlayerStats
             Progress.DamageLevel = _statsModel.TryGetStat(StatName.Damage, out PlayerStatData damage) ? damage.Level : 0;
         }
 
-        public async UniTask SaveStatAsync() => 
+        public async UniTask SaveStatsAsync() => 
             await _saveLoadService.SaveProgressAsync(_progressService.PlayerProgress);
     }
 }

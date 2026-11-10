@@ -5,9 +5,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.UI.Windows.PlayerStats.StatItem
+namespace _Project.Scripts.UI.Windows.PlayerStats.Stat
 {
-    public class PlayerStatItemView : MonoBehaviour
+    public class PlayerStatView : MonoBehaviour
     {
         public event Action<StatName> OnUpgradeButtonClicked;
         
@@ -22,11 +22,11 @@ namespace _Project.Scripts.UI.Windows.PlayerStats.StatItem
         private void OnDestroy() => 
             _upgradeButton.onClick.RemoveListener(InvokeOnUpgradeButtonClicked);
 
-        public void Initialize(PlayerStatData stat, Sprite iconFrame, Sprite icon, AudioSource audioSource)
+        public void Initialize(PlayerStatData data, Sprite iconFrame, Sprite icon, AudioSource audioSource)
         {
             _upgradeButton.onClick.AddListener(InvokeOnUpgradeButtonClicked);
             
-            _statName = stat.Name;
+            _statName = data.Name;
             _nameText.SetText(_statName.ToString());
             _iconFrame.sprite = iconFrame;
             _icon.sprite = icon;
@@ -34,14 +34,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats.StatItem
             if (_upgradeButton.TryGetComponent(out ButtonSoundEffect soundEffect)) 
                 soundEffect.Initialize(audioSource);
             else
-                Debug.LogWarning($"[PlayerStatItemView] No ButtonSoundEffect component attached to {_upgradeButton.name}");
+                Debug.LogWarning($"[PlayerStatView] No ButtonSoundEffect component attached to {_upgradeButton.name}");
         }
 
-        public void UpdateLevelText(int level) => 
+        public void RefreshLevelText(int level) => 
             _levelText.SetText(level.ToString());
         
-        public void ToggleUpgradeButton(bool enable) => 
-            _upgradeButton.interactable = enable;
+        public void ToggleUpgradeButton(bool interactable) => 
+            _upgradeButton.interactable = interactable;
 
         private void InvokeOnUpgradeButtonClicked() => 
             OnUpgradeButtonClicked?.Invoke(_statName);

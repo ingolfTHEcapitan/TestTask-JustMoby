@@ -8,5 +8,6 @@ namespace _Project.Scripts.Configs.Weapon
     {
         [field: SerializeField] public float Speed { get; private set; } = 8f;
         [field: SerializeField] public float LifeTime { get; private set; } = 5f;
+        [field: SerializeField] public int PoolSize { get; private set; } = 6;
     }
 }

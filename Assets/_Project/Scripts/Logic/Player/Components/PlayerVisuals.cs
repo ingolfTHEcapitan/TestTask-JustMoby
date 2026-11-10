@@ -54,7 +54,7 @@ namespace _Project.Scripts.Logic.Player.Components
         }
 
         private void PlayBulletHitFx(Vector3 hitPosition, Transform targetContainer) => 
-            _effectsService.PlayHitFxAsync(hitPosition, targetContainer).Forget(Debug.LogError);
+            _effectsService.PlayHitFxAsync(hitPosition, targetContainer).Forget();
 
         private void PlayWeaponShootSound() => 
             _audioService.PlayOneShot(_weaponShootSound, _weaponAudioSource);

@@ -47,7 +47,7 @@ namespace _Project.Scripts.UI.HUD
                 return;
             
             _cursorController.SetCursorVisible(visible: false);
-            _model.LoadMainMenuAsync().Forget(Debug.LogError);
+            _model.LoadMainMenuAsync().Forget();
         }
 
         private void OpenStatsWindow() => 

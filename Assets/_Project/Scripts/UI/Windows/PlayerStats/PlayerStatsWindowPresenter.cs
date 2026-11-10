@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using _Project.Scripts.Configs;
 using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services.PlayerInput;
@@ -26,7 +27,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _inputService = inputService;
             _cursorController = cursorController;
         }
-        
+
         public async UniTask InitializeAsync()
         {
             _model.Initialize();
@@ -34,113 +35,90 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
             _view.OnWindowDestroy += CleanUp;
             _view.OnCloseButtonClicked += Close;
-            _view.OnApplyChangesButtonClicked += ApplyChanges;
-            _view.OnStatItemUpgradeButtonClicked += UpgradeStatItem;
-            _model.OnStatsChanged += UpdateAllStatItems;
+            _view.OnApplyButtonClicked += ApplyStatUpgradesAndClose;
+            _view.OnUpgradeButtonClicked += PreviewStatUpgrade;
             _inputService.OnOpenStatsButtonPressed += Open;
 
-            await CreateStatItemsAsync();
+            await CreateStatViewsAsync();
         }
 
         private void CleanUp()
         {
             _view.OnWindowDestroy -= CleanUp;
             _view.OnCloseButtonClicked -= Close;
-            _view.OnApplyChangesButtonClicked -= ApplyChanges;
-            _view.OnStatItemUpgradeButtonClicked -= UpgradeStatItem;
-            _model.OnStatsChanged -= UpdateAllStatItems;
+            _view.OnApplyButtonClicked -= ApplyStatUpgradesAndClose;
+            _view.OnUpgradeButtonClicked -= PreviewStatUpgrade;
             _inputService.OnOpenStatsButtonPressed -= Open;
             
             _model.Dispose();
         }
 
-        private async void Close()
+        private async UniTask OpenAsync()
         {
-            try
-            {
-                await _view.HideWindowAsync();
-                _model.SetPaused(false);
-                _cursorController.SetCursorVisible(false);
+            if (_isOpen || _model.IsPlayerDead)
+                return;
+            
+            _isOpen = true;
+            _model.SetPaused(true);
+            _cursorController.SetCursorVisible(true);
+            RefreshAllStatViews();
+            await _view.ShowWindowAsync();
+        }
+
+        private async UniTask ApplyStatUpgradesAndCloseAsync()
+        {
+            _model.ApplyStatUpgrades();
+            await CloseAsync();
+        }
+
+        private async UniTask CloseAsync()
+        {
+            await _view.HideWindowAsync();
+            _model.SetPaused(false);
+            _cursorController.SetCursorVisible(false);
                 
-                _model.DiscardPreviewChanges();
-                _isOpen = false;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
-        }
-        
-        private void UpgradeStatItem(StatName statName)
-        {
-            _model.UpgradeStat(statName);
-            UpdateStatItem(statName);
+            _model.DiscardPreviewChanges();
+            _model.SaveStatsAsync().Forget();
+            _isOpen = false;
         }
 
-        public async void Open()
+        private void PreviewStatUpgrade(StatName statName)
         {
-            try
+            _model.PreviewStatUpgrade(statName);
+            RefreshAllStatViews();
+        }
+
+        private void RefreshAllStatViews()
+        {
+            foreach (PlayerStatData stat in _model.GetStats())
             {
-                if (_isOpen || _model.IsPlayerDead)
-                    return;
+                bool canUpgrade = _model.CanUpgrade(stat.Name);
+                _view.RefreshStatView(stat.Name, stat.PreviewLevel, canUpgrade);
+            }
             
-                _isOpen = true;
-                _model.SetPaused(true);
-                _cursorController.SetCursorVisible(true);
-                UpdateAllStatItems();
-                await _view.ShowWindowAsync();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
+            _view.RefreshPointsText(_model.UpgradePoints.ToString());
         }
 
-        private async void ApplyChanges()
+        private async UniTask CreateStatViewsAsync()
         {
-            try
-            {
-                await _view.HideWindowAsync();
-                _model.SetPaused(false);
-                _cursorController.SetCursorVisible(false);
-
-                await _model.ApplyChangesAsync();
-                _model.DiscardPreviewChanges();
-                _isOpen = false;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
-        }
-
-        private void UpdateAllStatItems()
-        {
-            _view.UpdatePointsText(_model.UpgradePoints.ToString());
-            
-            foreach (var stat in _model.GetStats())
-                UpdateStatItem(stat.Name);
-        }
-
-        private void UpdateStatItem(StatName statName)
-        {
-            _model.TryGetStat(statName, out PlayerStatData stat);
-            bool canUpgrade = _model.CanUpgrade(statName);
-            
-           _view.UpdateStatItem(statName, stat.PreviewLevel, canUpgrade);
-        }
-        
-        private async UniTask CreateStatItemsAsync()
-        {
-            List<(PlayerStatData, PlayerStatConfig)> statsInfos = new List<(PlayerStatData, PlayerStatConfig)>();
+            var statInfos = new List<(PlayerStatData, PlayerStatConfig)>();
             
             foreach (PlayerStatData data in _model.GetStats())
             {
                 PlayerStatConfig config = _model.FindStatConfigByName(data.Name);
-                statsInfos.Add((data, config));
+                statInfos.Add((data, config));
             }
             
-            await _view.CreateStatItemsAsync(statsInfos);
+            await _view.CreateStatViewsAsync(statInfos);
         }
+
+        public void Open() => 
+            OpenAsync().Forget();
+
+        private void Close() => 
+            CloseAsync().Forget();
+
+        private void ApplyStatUpgradesAndClose() => 
+            ApplyStatUpgradesAndCloseAsync().Forget();
     }
 }

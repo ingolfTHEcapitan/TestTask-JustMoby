@@ -16,7 +16,7 @@ namespace _Project.Scripts.Logic.PlayerStats
         
         public int Level { get; private set; }
         public int PreviewLevel { get; private set; }
-        public int MaxLevel => Mathf.FloorToInt((MaxMultiplier - 1) / IncrementPerLevel);
+        public int MaxLevel => Mathf.RoundToInt((MaxMultiplier - 1) / IncrementPerLevel);
         public bool PreviewLevelHasChanged => PreviewLevel != Level;
 
         public PlayerStatData(PlayerStatConfig config)
@@ -43,17 +43,11 @@ namespace _Project.Scripts.Logic.PlayerStats
             RecalculateCurrentValue();
         }
 
-        public void DiscardPreviewLevel()
-        {
+        public void DiscardPreviewLevel() => 
             PreviewLevel = Level;
-            OnStatChanged?.Invoke();
-        }
 
-        public void IncreasePreviewLevel()
-        {
+        public void IncreasePreviewLevel() => 
             PreviewLevel++;
-            OnStatChanged?.Invoke();
-        }
 
         private void RecalculateCurrentValue()
         {

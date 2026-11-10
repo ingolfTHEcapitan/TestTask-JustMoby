@@ -30,7 +30,7 @@ namespace _Project.Scripts.Logic.Player.Weapon
         private BulletFactory _factory;
         private GameStatistics _statistics;
         private WeaponConfig _weaponConfig;
-        private BulletConfig _bulletConfig;
+        
 
         [Inject]
         private void Construct(IGamePauseService pauseService, IInputService inputService, BulletFactory factory, 
@@ -41,7 +41,6 @@ namespace _Project.Scripts.Logic.Player.Weapon
             _factory = factory;
             _statistics = statistics;
             _weaponConfig = weaponConfig;
-            _bulletConfig = bulletConfig;
         }
         
         public void Initialize(Camera playerCamera)
@@ -58,27 +57,27 @@ namespace _Project.Scripts.Logic.Player.Weapon
         {
             if (_inputService.IsFireButtonPressed() && CanShoot())
             {
-                ShootAsync().Forget(Debug.LogException);
+                ShootAsync();
                 OnShoot?.Invoke();
                 _statistics.RecordShot();
             }
         }
 
-        private async UniTask ShootAsync()
+        private void ShootAsync()
         {
             _nextTimeToFire = Time.time + 1 / _fireRate;
             Ray ray = _playerCamera.ViewportPointToRay(_screenCenter);
             Vector3 targetPoint = GetTargetPoint(ray);
             
-            Bullet.Bullet bullet = await _factory.CreateBulletAsync(_bulletConfig, _shootPoint, GetShootDirection(targetPoint), targetPoint);
-            bullet.OnBulletDestroy += UnSubscribe;
+            Bullet.Bullet bullet = _factory.CreateBullet(_shootPoint, GetShootDirection(targetPoint), targetPoint);
+            bullet.OnBulletDisable += UnSubscribe;
             bullet.OnHit += InvokeOnBulletHit;
             return;
 
             void UnSubscribe()
             {
                 bullet.OnHit -= InvokeOnBulletHit;
-                bullet.OnBulletDestroy -= UnSubscribe;
+                bullet.OnBulletDisable -= UnSubscribe;
             }
         }
 

@@ -67,7 +67,7 @@ namespace _Project.Scripts.Logic.Enemy.Components
         public void OnDeathPose()
         {
             _dissolveShader.PlayDissolveFx();
-            _effectsService.PlayEnemyDeathFxAsync(transform.position, transform).Forget(Debug.LogError);
+            _effectsService.PlayEnemyDeathFxAsync(transform.position, transform).Forget();
         }
 
         private void PlayDamageAnimation() => 

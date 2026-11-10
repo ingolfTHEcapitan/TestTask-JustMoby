@@ -31,7 +31,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         public void Dispose() => 
             _sceneLoader.BeforeSceneUnload -= CleanUpSceneCache;
 
-        public async UniTask<T> LoadAsync<T>(AssetReference assetReference, bool isGlobal = false) where T : class
+        public async UniTask<T> LoadAsync<T>(AssetReference assetReference, bool isGlobal = false) where T : UnityEngine.Object
         {
             if (!_asyncOperationHandle.IsDone) 
                 await _asyncOperationHandle.ToUniTask();
@@ -43,7 +43,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
             return await RunWithCacheOnCompleteAsync(assetReference.AssetGUID, handle, isGlobal);
         }
 
-        public async UniTask<T> LoadAsync<T>(string assetAddress, bool isGlobal = false) where T : class
+        public async UniTask<T> LoadAsync<T>(string assetAddress, bool isGlobal = false) where T : UnityEngine.Object
         {
             if (!_asyncOperationHandle.IsDone) 
                 await _asyncOperationHandle.ToUniTask();
@@ -56,7 +56,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
         }
 
         private async UniTask<T> RunWithCacheOnCompleteAsync<T>(string cacheKey, AsyncOperationHandle<T> handle, 
-            bool isGlobal) where T : class
+            bool isGlobal) where T : UnityEngine.Object
         {
             handle.Completed += completeHandle => 
                 _completedCache[cacheKey] = completeHandle;
@@ -65,7 +65,7 @@ namespace _Project.Scripts.Infrastructure.AssetManagement
             return await handle.ToUniTask();
         }
 
-        private void AddHandle<T>(string key, AsyncOperationHandle<T> handle, bool isGlobal) where T : class
+        private void AddHandle<T>(string key, AsyncOperationHandle<T> handle, bool isGlobal) where T : UnityEngine.Object
         {
             Dictionary<string, List<AsyncOperationHandle>> targetDictionary = isGlobal ? _globalHandles : _sceneHandles;
 

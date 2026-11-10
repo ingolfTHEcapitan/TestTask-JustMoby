@@ -51,14 +51,14 @@ namespace _Project.Scripts.UI.Windows.MainMenu
         {
             _cursorController.SetCursorVisible(false);
             _loadingCurtainPresenter.ShowLoading();
-            _model.LoadGameplaySceneAsync().Forget(Debug.LogError);
+            _model.LoadGameplaySceneAsync().Forget();
         }
 
         private void OpenSettingsWindow() => 
-            _settingsWindowPresenter.OpenAsync().Forget(Debug.LogError);
+            _settingsWindowPresenter.OpenAsync().Forget();
 
         private void OpenShopWindow() => 
-            _shopWindowPresenter.OpenAsync().Forget(Debug.LogError);
+            _shopWindowPresenter.OpenAsync().Forget();
 
         private void ExitGame() => 
             _model.ExitGame();

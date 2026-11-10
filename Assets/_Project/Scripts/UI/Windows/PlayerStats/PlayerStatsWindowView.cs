@@ -5,7 +5,7 @@ using _Project.Scripts.Logic.PlayerStats;
 using _Project.Scripts.Services;
 using _Project.Scripts.Services.Audio;
 using _Project.Scripts.UI.Common;
-using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
+using _Project.Scripts.UI.Windows.PlayerStats.Stat;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -16,10 +16,10 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 {
     public class PlayerStatsWindowView : MonoBehaviour, IWindow
     {
-        public event Action<StatName> OnStatItemUpgradeButtonClicked;
+        public event Action<StatName> OnUpgradeButtonClicked;
         public event Action OnWindowDestroy;
         public event Action OnCloseButtonClicked;
-        public event Action OnApplyChangesButtonClicked;
+        public event Action OnApplyButtonClicked;
         
         [SerializeField] private WindowPopupAnimation _windowAnimation;
         [Space]
@@ -27,30 +27,32 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         [SerializeField] private Button _closeButton;
         [SerializeField] private Button _applyButton;
         [SerializeField] private TextMeshProUGUI _pointsText;
-        [SerializeField] private Transform _statsContainer;
+        [SerializeField] private Transform _statContainer;
         [Header("Audio")]
         [SerializeField] private AudioClip _levelUpSound;
         [SerializeField] private AudioSource _audioSource;
         
-        private readonly Dictionary<StatName, PlayerStatItemView> _statItemsView = new Dictionary<StatName, PlayerStatItemView>();
+        private readonly Dictionary<StatName, PlayerStatView> _statViews = new Dictionary<StatName, PlayerStatView>();
 
-        private PlayerStatItemFactory _statItemFactory;
+        private PlayerStatViewFactory _statFactory;
         private ScoreService _scoreService;
         private ISoundService _audioService;
 
         [Inject]
-        private void Construct(WindowFactory windowFactory, PlayerStatItemFactory statItemFactory, ScoreService scoreService, ISoundService audioService)
+        private void Construct(PlayerStatViewFactory statFactory, ScoreService scoreService, ISoundService audioService)
         {
-            _statItemFactory = statItemFactory;
+            _statFactory = statFactory;
             _scoreService = scoreService;
             _audioService = audioService;
         }
 
         public void Initialize()
         {
+            ClearStatContainer();
+            
             _windowContent.SetActive(false);
             _closeButton.onClick.AddListener(InvokeOnCloseButtonClicked);
-            _applyButton.onClick.AddListener(InvokeOnApplyChangesButtonClicked);
+            _applyButton.onClick.AddListener(InvokeOnApplyButtonClicked);
             _scoreService.OnScoreChanged += PlayLevelUpSound;
         }
 
@@ -58,31 +60,31 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         {
             OnWindowDestroy?.Invoke();
             _closeButton.onClick.RemoveListener(InvokeOnCloseButtonClicked);
-            _applyButton.onClick.RemoveListener(InvokeOnApplyChangesButtonClicked);
+            _applyButton.onClick.RemoveListener(InvokeOnApplyButtonClicked);
             _scoreService.OnScoreChanged -= PlayLevelUpSound;
         }
         
-        public async UniTask CreateStatItemsAsync(List<(PlayerStatData, PlayerStatConfig)> statsInfos)
+        public async UniTask CreateStatViewsAsync(List<(PlayerStatData, PlayerStatConfig)> statInfos)
         {
-            ClearStatItemsContainer();
+            ClearStatViews();
 
-            foreach ((PlayerStatData data, PlayerStatConfig config) info in statsInfos)
+            foreach ((PlayerStatData data, PlayerStatConfig config) info in statInfos)
             {
-                PlayerStatItemView statItemView = await _statItemFactory.CreateAsync(_statsContainer, info.data, info.config, _audioSource);
-                statItemView.OnUpgradeButtonClicked += InvokeOnStatItemUpgradeButtonClicked;
-                _statItemsView[info.data.Name] = statItemView;
+                PlayerStatView statView = await _statFactory.CreateAsync(_statContainer, info.data, info.config, _audioSource);
+                statView.OnUpgradeButtonClicked += InvokeOnUpgradeButtonClicked;
+                _statViews[info.data.Name] = statView;
             }
         }
         
-        public void UpdatePointsText(string points) => 
+        public void RefreshPointsText(string points) => 
             _pointsText.SetText($"Points {points}");
         
-        public void UpdateStatItem(StatName statName, int level, bool canUpgrade)
+        public void RefreshStatView(StatName statName, int level, bool canUpgrade)
         {
-            if (_statItemsView.TryGetValue(statName, out PlayerStatItemView statItemView))
+            if (_statViews.TryGetValue(statName, out PlayerStatView statView))
             {
-                statItemView.UpdateLevelText(level);
-                statItemView.ToggleUpgradeButton(canUpgrade);
+                statView.RefreshLevelText(level);
+                statView.ToggleUpgradeButton(canUpgrade);
             }
         }
         
@@ -101,30 +103,33 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private void PlayLevelUpSound() => 
             _audioService.PlayOneShot(_levelUpSound, _audioSource);
 
-        private void ClearStatItemsContainer()
+        private void ClearStatViews()
         {
-            foreach (Transform statItem in _statsContainer) 
-                Destroy(statItem.gameObject);
-            
-            foreach (PlayerStatItemView statItemView in _statItemsView.Values)
+            foreach (PlayerStatView statView in _statViews.Values)
             {
-                if (statItemView)
+                if (statView)
                 {
-                    statItemView.OnUpgradeButtonClicked -= InvokeOnStatItemUpgradeButtonClicked;
-                    Destroy(statItemView.gameObject);
+                    statView.OnUpgradeButtonClicked -= InvokeOnUpgradeButtonClicked;
+                    Destroy(statView.gameObject);
                 }
             }
             
-            _statItemsView.Clear();
+            _statViews.Clear();
         }
 
-        private void InvokeOnStatItemUpgradeButtonClicked(StatName statName) => 
-            OnStatItemUpgradeButtonClicked?.Invoke(statName);
+        private void ClearStatContainer()
+        {
+            foreach (Transform child in _statContainer) 
+                Destroy(child.gameObject);
+        }
+
+        private void InvokeOnUpgradeButtonClicked(StatName statName) => 
+            OnUpgradeButtonClicked?.Invoke(statName);
 
         private void InvokeOnCloseButtonClicked() => 
             OnCloseButtonClicked?.Invoke();
 
-        private void InvokeOnApplyChangesButtonClicked() =>
-            OnApplyChangesButtonClicked?.Invoke();
+        private void InvokeOnApplyButtonClicked() =>
+            OnApplyButtonClicked?.Invoke();
     }
 }

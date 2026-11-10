@@ -13,20 +13,20 @@ namespace _Project.Scripts.Logic.Enemy
     public class EnemyFactory
     {
         private readonly IInstantiator _container;
-        private readonly Transform _dynamicObjectsParent;
+        private readonly Transform _enemyContainer;
         private readonly HealthCalculator _healthCalculator;
         private readonly IAssetProvider _assetProvider;
         private readonly HealthBarFactory _healthBarFactory;
         private readonly LazyInject<PlayerContainer> _lazyPlayer;
 
         public EnemyFactory(IInstantiator container, HealthCalculator healthCalculator, HealthBarFactory healthBarFactory,
-            IAssetProvider assetProvider, Transform dynamicObjectsParent, LazyInject<PlayerContainer> lazyPlayer)
+            IAssetProvider assetProvider, Transform enemyContainer, LazyInject<PlayerContainer> lazyPlayer)
         {
             _container = container;
             _healthCalculator = healthCalculator;
             _assetProvider = assetProvider;
             _healthBarFactory = healthBarFactory;
-            _dynamicObjectsParent = dynamicObjectsParent;
+            _enemyContainer = enemyContainer;
             _lazyPlayer = lazyPlayer;
         }
 
@@ -35,7 +35,7 @@ namespace _Project.Scripts.Logic.Enemy
             GameObject prefab = await _assetProvider.LoadAsync<GameObject>(AssetAddress.Enemy);
             
             EnemyContainer enemy = 
-                _container.InstantiatePrefabForComponent<EnemyContainer>(prefab, spawnPoint, Quaternion.identity, _dynamicObjectsParent);
+                _container.InstantiatePrefabForComponent<EnemyContainer>(prefab, spawnPoint, Quaternion.identity, _enemyContainer);
 
             Transform playerTransform = _lazyPlayer.Value.transform;
 

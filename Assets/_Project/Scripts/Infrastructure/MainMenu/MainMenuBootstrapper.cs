@@ -49,29 +49,21 @@ namespace _Project.Scripts.Infrastructure.MainMenu
 
         private async UniTaskVoid InitializeAsync()
         {
-            try
-            {
-                await _windowFactory.CreateAsync<SaveConflictResolveWindowView>(_uiParent);
-                _lazySaveConflictResolveWindowPresenter.Value.Initialize();
-            
-                _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
-            
-                await _windowFactory.CreateAsync<ShopWindowView>(_uiParent, sceneContainer: _mainMenuContainer);
-                await _lazyShopWindowPresenter.Value.InitializeAsync();
+            await _windowFactory.CreateAsync<SaveConflictResolveWindowView>(_uiParent);
+            _lazySaveConflictResolveWindowPresenter.Value.Initialize();
+        
+            _progressService.PlayerProgress = await _saveLoadService.LoadProgressAsync();
+        
+            await _windowFactory.CreateAsync<ShopWindowView>(_uiParent, sceneContainer: _mainMenuContainer);
+            await _lazyShopWindowPresenter.Value.InitializeAsync();
 
-                await _windowFactory.CreateAsync<SettingsWindowView>(_uiParent);
-                _lazySettingsWindowPresenter.Value.Initialize();
-            
-                await _windowFactory.CreateAsync<MainMenuWindowView>(_uiParent); 
-                _lazyMainMenuWindowPresenter.Value.Initialize();
-            
-                _loadingCurtainPresenter.HideLoading();
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[MAIN MENU BOOTSTRAPPER] init error: {e}");
-                Debug.LogException(e);
-            }
+            await _windowFactory.CreateAsync<SettingsWindowView>(_uiParent);
+            _lazySettingsWindowPresenter.Value.Initialize();
+        
+            await _windowFactory.CreateAsync<MainMenuWindowView>(_uiParent); 
+            _lazyMainMenuWindowPresenter.Value.Initialize();
+        
+            _loadingCurtainPresenter.HideLoading();
         }
     }
 }
