@@ -26,27 +26,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _inputService = inputService;
             _cursorController = cursorController;
         }
-        
-        public async UniTask InitializeAsync()
-        {
-            _model.Initialize();
-            _view.Initialize();
-
-            _view.OnWindowDestroy += CleanUp;
-            _view.OnCloseButtonClicked += Close;
-            _view.OnApplyChangesButtonClicked += ApplyChanges;
-            _view.OnStatItemUpgradeButtonClicked += UpgradeStatItem;
-            _model.OnStatsChanged += UpdateAllStatItems;
-            _inputService.OnOpenStatsButtonPressed += Open;
-
-            await CreateStatItemsAsync();
-        }
 
         private void CleanUp()
         {
             _view.OnWindowDestroy -= CleanUp;
             _view.OnCloseButtonClicked -= Close;
-            _view.OnApplyChangesButtonClicked -= ApplyChanges;
+            _view.OnApplyChangesButtonClicked -= ApplyChangesAndClose;
             _view.OnStatItemUpgradeButtonClicked -= UpgradeStatItem;
             _model.OnStatsChanged -= UpdateAllStatItems;
             _inputService.OnOpenStatsButtonPressed -= Open;
@@ -54,27 +39,19 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _model.Dispose();
         }
 
-        private async void Close()
+        public async UniTask InitializeAsync()
         {
-            try
-            {
-                await _view.HideWindowAsync();
-                _model.SetPaused(false);
-                _cursorController.SetCursorVisible(false);
-                
-                _model.DiscardPreviewChanges();
-                _isOpen = false;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
-        }
-        
-        private void UpgradeStatItem(StatName statName)
-        {
-            _model.UpgradeStat(statName);
-            UpdateStatItem(statName);
+            _model.Initialize();
+            _view.Initialize();
+
+            _view.OnWindowDestroy += CleanUp;
+            _view.OnCloseButtonClicked += Close;
+            _view.OnApplyChangesButtonClicked += ApplyChangesAndClose;
+            _view.OnStatItemUpgradeButtonClicked += UpgradeStatItem;
+            _model.OnStatsChanged += UpdateAllStatItems;
+            _inputService.OnOpenStatsButtonPressed += Open;
+
+            await CreateStatItemsAsync();
         }
 
         public async void Open()
@@ -96,15 +73,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             }
         }
 
-        private async void ApplyChanges()
+        private async void Close()
         {
             try
             {
                 await _view.HideWindowAsync();
                 _model.SetPaused(false);
                 _cursorController.SetCursorVisible(false);
-
-                await _model.ApplyChangesAsync();
+                
                 _model.DiscardPreviewChanges();
                 _isOpen = false;
             }
@@ -112,6 +88,18 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             {
                 Debug.LogError(e);
             }
+        }
+        
+        private async void ApplyChangesAndClose()
+        {
+            await _model.ApplyChangesAsync();
+            Close();
+        }
+
+        private void UpgradeStatItem(StatName statName)
+        {
+            _model.UpgradeStat(statName);
+            UpdateStatItem(statName);
         }
 
         private void UpdateAllStatItems()
@@ -124,15 +112,14 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         private void UpdateStatItem(StatName statName)
         {
-            _model.TryGetStat(statName, out PlayerStatData stat);
+            PlayerStatData stat = _model.GetStat(statName);
             bool canUpgrade = _model.CanUpgrade(statName);
-            
            _view.UpdateStatItem(statName, stat.PreviewLevel, canUpgrade);
         }
         
         private async UniTask CreateStatItemsAsync()
         {
-            List<(PlayerStatData, PlayerStatConfig)> statsInfos = new List<(PlayerStatData, PlayerStatConfig)>();
+            var statsInfos = new List<(PlayerStatData, PlayerStatConfig)>();
             
             foreach (PlayerStatData data in _model.GetStats())
             {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Scripts.Configs;
 
 namespace _Project.Scripts.Logic.PlayerStats
@@ -20,16 +21,25 @@ namespace _Project.Scripts.Logic.PlayerStats
             }
         }
         
-        public float GetStatValue(StatName statName)
-        {
-            if (_stats.TryGetValue(statName, out PlayerStatData stat))
-                return stat.CurrentValue;
-            
-            return 0;
-        }
-        
+        public bool HasAnyChanges() =>
+            _stats.Values.Any(stat => stat.PreviewLevelHasChanged);
+
+        public PlayerStatConfig FindStatConfigByName(StatName statName) => 
+            _configs.Find(statConfig => statConfig.Name == statName);
+
         public IReadOnlyList<PlayerStatData> GetStats() => 
             new List<PlayerStatData>(_stats.Values);
+
+        public float GetStatValue(StatName statName) => 
+            GetStat(statName).CurrentValue;
+
+        public PlayerStatData GetStat(StatName statName)
+        {
+            if (_stats.TryGetValue(statName, out PlayerStatData stat))
+                return stat;
+            
+            throw new KeyNotFoundException($"[PlayerStatsModel] Not stat found for name : {statName}");
+        }
         
         public bool TryGetStat(StatName statName, out PlayerStatData stat) => 
             _stats.TryGetValue(statName, out stat);

@@ -20,7 +20,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         private readonly PlayerStatsSaveLoad _saveLoad;
         private readonly IGamePauseService _pauseService;
         private readonly ScoreService _scoreService;
-        private readonly List<PlayerStatConfig> _statConfigs;
         private readonly LazyInject<PlayerContainer> _lazyPlayer;
         
         private  PlayerDeath _playerDeath;
@@ -29,13 +28,12 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public bool IsPlayerDead => _playerDeath.IsDead;
         
         public PlayerStatsWindowModel(PlayerStatsModel statsModel, PlayerStatsSaveLoad saveLoad, IGamePauseService pauseService, 
-            ScoreService scoreService, List<PlayerStatConfig> statConfigs, LazyInject<PlayerContainer> lazyPlayer)
+            ScoreService scoreService, LazyInject<PlayerContainer> lazyPlayer)
         {
             _statsModel = statsModel;
             _saveLoad = saveLoad;
             _pauseService = pauseService;
             _scoreService = scoreService;
-            _statConfigs = statConfigs;
             _lazyPlayer = lazyPlayer;
         }
 
@@ -63,7 +61,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public async UniTask ApplyChangesAsync()
         {
-            if (!HasAnyChanges()) 
+            if (!_statsModel.HasAnyChanges()) 
                 return;
             
             foreach (PlayerStatData stat in GetStats()) 
@@ -74,7 +72,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public void DiscardPreviewChanges()
         {
-            if (!HasAnyChanges()) 
+            if (!_statsModel.HasAnyChanges()) 
                 return;
             
             int returnedPoints = 0;
@@ -94,7 +92,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             if (!CanUpgrade(statName))
                 return;
 
-            _statsModel.TryGetStat(statName, out PlayerStatData stat);
+            PlayerStatData stat = _statsModel.GetStat(statName);
             stat.IncreasePreviewLevel();
             UpgradePoints--;
             OnStatsChanged?.Invoke();
@@ -102,25 +100,13 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
         public bool CanUpgrade(StatName statName)
         {
-            if (UpgradePoints <=0 || !_statsModel.TryGetStat(statName, out _))
+            bool statExist = _statsModel.TryGetStat(statName, out PlayerStatData stat);
+            
+            if (UpgradePoints <=0 || !statExist)
                 return false;
-
-            _statsModel.TryGetStat(statName, out PlayerStatData stat);
             
             return stat.PreviewLevel < stat.MaxLevel;
         }
-
-        public void SetPaused(bool paused) => 
-            _pauseService.SetPaused(paused);
-
-        public IReadOnlyList<PlayerStatData> GetStats() => 
-            _statsModel.GetStats();
-
-        public bool TryGetStat(StatName statName, out PlayerStatData stat) => 
-            _statsModel.TryGetStat(statName, out stat);
-
-        public PlayerStatConfig FindStatConfigByName(StatName statName) => 
-            _statConfigs.Find(statConfig => statConfig.Name == statName);
 
         private  void AddUpgradePoints(int points)
         {
@@ -129,8 +115,17 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _saveLoad.UpdateStatsProgress(UpgradePoints);
         }
 
-        private bool HasAnyChanges() =>
-            GetStats().Any(stat => stat.PreviewLevelHasChanged);
+        public void SetPaused(bool paused) => 
+            _pauseService.SetPaused(paused);
+
+        public IReadOnlyList<PlayerStatData> GetStats() => 
+            _statsModel.GetStats();
+
+        public PlayerStatData GetStat(StatName statName) => 
+            _statsModel.GetStat(statName);
+
+        public PlayerStatConfig FindStatConfigByName(StatName statName) => 
+            _statsModel.FindStatConfigByName(statName);
 
         private void InvokeStatChanged() => 
             OnStatsChanged?.Invoke();
