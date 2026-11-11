@@ -36,7 +36,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _view.OnCloseButtonClicked += Close;
             _view.OnApplyButtonClicked += ApplyStatUpgradesAndClose;
             _view.OnUpgradeButtonClicked += PreviewStatUpgrade;
-            _model.OnStatsChanged += RefreshAllStatViews;
             _inputService.OnOpenStatsButtonPressed += Open;
 
             await CreateStatViewsAsync();
@@ -48,7 +47,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _view.OnCloseButtonClicked -= Close;
             _view.OnApplyButtonClicked -= ApplyStatUpgradesAndClose;
             _view.OnUpgradeButtonClicked -= PreviewStatUpgrade;
-            _model.OnStatsChanged -= RefreshAllStatViews;
             _inputService.OnOpenStatsButtonPressed -= Open;
             
             _model.Dispose();
@@ -80,7 +78,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         {
             try
             {
-                await _model.ApplyStatUpgradesAsync();
+                _model.ApplyStatUpgrades();
                 await CloseAsync();
             }
             catch (Exception e)
@@ -96,30 +94,27 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _cursorController.SetCursorVisible(false);
                 
             _model.DiscardPreviewChanges();
+            _model.SaveStatsAsync().Forget();
             _isOpen = false;
         }
 
         private void PreviewStatUpgrade(StatName statName)
         {
             _model.PreviewStatUpgrade(statName);
-            RefreshStatView(statName);
+            RefreshAllStatViews();
         }
 
         private void RefreshAllStatViews()
         {
             foreach (PlayerStatData stat in _model.GetStats())
-                RefreshStatView(stat.Name, stat);
+            {
+                bool canUpgrade = _model.CanUpgrade(stat.Name);
+                _view.RefreshStatView(stat.Name, stat.PreviewLevel, canUpgrade);
+            }
+            
+            _view.RefreshPointsText(_model.UpgradePoints.ToString());
         }
 
-        private void RefreshStatView(StatName statName, PlayerStatData stat = null)
-        {
-            stat ??= _model.GetStat(statName);
-            bool canUpgrade = _model.CanUpgrade(statName);
-            
-           _view.RefreshStatView(statName, stat.PreviewLevel, canUpgrade);
-           _view.RefreshPointsText(_model.UpgradePoints.ToString());
-        }
-        
         private async UniTask CreateStatViewsAsync()
         {
             var statInfos = new List<(PlayerStatData, PlayerStatConfig)>();
