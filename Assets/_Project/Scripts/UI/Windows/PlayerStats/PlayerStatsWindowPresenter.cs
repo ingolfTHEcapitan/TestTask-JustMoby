@@ -27,18 +27,6 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _cursorController = cursorController;
         }
 
-        private void CleanUp()
-        {
-            _view.OnWindowDestroy -= CleanUp;
-            _view.OnCloseButtonClicked -= Close;
-            _view.OnApplyChangesButtonClicked -= ApplyChangesAndClose;
-            _view.OnStatItemUpgradeButtonClicked -= UpgradeStatItem;
-            _model.OnStatsChanged -= UpdateAllStatItems;
-            _inputService.OnOpenStatsButtonPressed -= Open;
-            
-            _model.Dispose();
-        }
-
         public async UniTask InitializeAsync()
         {
             _model.Initialize();
@@ -46,12 +34,24 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
 
             _view.OnWindowDestroy += CleanUp;
             _view.OnCloseButtonClicked += Close;
-            _view.OnApplyChangesButtonClicked += ApplyChangesAndClose;
-            _view.OnStatItemUpgradeButtonClicked += UpgradeStatItem;
-            _model.OnStatsChanged += UpdateAllStatItems;
+            _view.OnApplyButtonClicked += ApplyStatUpgradesAndClose;
+            _view.OnUpgradeButtonClicked += PreviewStatUpgrade;
+            _model.OnStatsChanged += RefreshAllStatViews;
             _inputService.OnOpenStatsButtonPressed += Open;
 
-            await CreateStatItemsAsync();
+            await CreateStatViewsAsync();
+        }
+
+        private void CleanUp()
+        {
+            _view.OnWindowDestroy -= CleanUp;
+            _view.OnCloseButtonClicked -= Close;
+            _view.OnApplyButtonClicked -= ApplyStatUpgradesAndClose;
+            _view.OnUpgradeButtonClicked -= PreviewStatUpgrade;
+            _model.OnStatsChanged -= RefreshAllStatViews;
+            _inputService.OnOpenStatsButtonPressed -= Open;
+            
+            _model.Dispose();
         }
 
         public async void Open()
@@ -64,7 +64,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
                 _isOpen = true;
                 _model.SetPaused(true);
                 _cursorController.SetCursorVisible(true);
-                UpdateAllStatItems();
+                RefreshAllStatViews();
                 await _view.ShowWindowAsync();
             }
             catch (Exception e)
@@ -73,61 +73,64 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             }
         }
 
-        private async void Close()
+        private void Close() => 
+            CloseAsync().Forget(Debug.LogError);
+
+        private async void ApplyStatUpgradesAndClose()
         {
             try
             {
-                await _view.HideWindowAsync();
-                _model.SetPaused(false);
-                _cursorController.SetCursorVisible(false);
-                
-                _model.DiscardPreviewChanges();
-                _isOpen = false;
+                await _model.ApplyStatUpgradesAsync();
+                await CloseAsync();
             }
             catch (Exception e)
             {
                 Debug.LogError(e);
             }
         }
-        
-        private async void ApplyChangesAndClose()
+
+        private async UniTask CloseAsync()
         {
-            await _model.ApplyChangesAsync();
-            Close();
+            await _view.HideWindowAsync();
+            _model.SetPaused(false);
+            _cursorController.SetCursorVisible(false);
+                
+            _model.DiscardPreviewChanges();
+            _isOpen = false;
         }
 
-        private void UpgradeStatItem(StatName statName)
+        private void PreviewStatUpgrade(StatName statName)
         {
-            _model.UpgradeStat(statName);
-            UpdateStatItem(statName);
+            _model.PreviewStatUpgrade(statName);
+            RefreshStatView(statName);
         }
 
-        private void UpdateAllStatItems()
+        private void RefreshAllStatViews()
         {
-            _view.UpdatePointsText(_model.UpgradePoints.ToString());
-            
-            foreach (var stat in _model.GetStats())
-                UpdateStatItem(stat.Name);
+            foreach (PlayerStatData stat in _model.GetStats())
+                RefreshStatView(stat.Name, stat);
         }
 
-        private void UpdateStatItem(StatName statName)
+        private void RefreshStatView(StatName statName, PlayerStatData stat = null)
         {
-            PlayerStatData stat = _model.GetStat(statName);
+            stat ??= _model.GetStat(statName);
             bool canUpgrade = _model.CanUpgrade(statName);
-           _view.UpdateStatItem(statName, stat.PreviewLevel, canUpgrade);
+            
+           _view.RefreshStatView(statName, stat.PreviewLevel, canUpgrade);
+           _view.RefreshPointsText(_model.UpgradePoints.ToString());
         }
         
-        private async UniTask CreateStatItemsAsync()
+        private async UniTask CreateStatViewsAsync()
         {
-            var statsInfos = new List<(PlayerStatData, PlayerStatConfig)>();
+            var statInfos = new List<(PlayerStatData, PlayerStatConfig)>();
             
             foreach (PlayerStatData data in _model.GetStats())
             {
                 PlayerStatConfig config = _model.FindStatConfigByName(data.Name);
-                statsInfos.Add((data, config));
+                statInfos.Add((data, config));
             }
             
-            await _view.CreateStatItemsAsync(statsInfos);
+            await _view.CreateStatViewsAsync(statInfos);
         }
     }
 }

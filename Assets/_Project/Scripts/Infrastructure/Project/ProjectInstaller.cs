@@ -22,7 +22,6 @@ using _Project.Scripts.Tools;
 using _Project.Scripts.UI;
 using _Project.Scripts.UI.Common;
 using _Project.Scripts.UI.Windows.LoadingCurtain;
-using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Serialization;

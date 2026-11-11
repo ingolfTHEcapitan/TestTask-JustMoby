@@ -42,10 +42,10 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             _playerDeath = _lazyPlayer.Value.PlayerDeath;
             
             foreach (PlayerStatData statData in _statsModel.GetStats()) 
-                statData.OnStatChanged += InvokeStatChanged;
+                statData.OnStatChanged += InvokeStatsChanged;
 
             _scoreService.OnScoreAdded += AddUpgradePoints;
-            _playerDeath.OnDied += UpdateStatsProgressAndSave;
+            _playerDeath.OnDied += SaveStats;
             
             UpgradePoints = _saveLoad.LoadStats().UpgradePoints;
         }
@@ -53,13 +53,13 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public void Dispose()
         {
             foreach (PlayerStatData stat in GetStats())
-                stat.OnStatChanged -= InvokeStatChanged;
+                stat.OnStatChanged -= InvokeStatsChanged;
             
             _scoreService.OnScoreAdded -= AddUpgradePoints;
-            _playerDeath.OnDied -= UpdateStatsProgressAndSave;
+            _playerDeath.OnDied -= SaveStats;
         }
 
-        public async UniTask ApplyChangesAsync()
+        public async UniTask ApplyStatUpgradesAsync()
         {
             if (!_statsModel.HasAnyChanges()) 
                 return;
@@ -67,7 +67,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             foreach (PlayerStatData stat in GetStats()) 
                 stat.ApplyPreviewLevel();
             
-            await UpdateStatsProgressAndSaveAsync();
+            await SaveStatsAsync();
         }
 
         public void DiscardPreviewChanges()
@@ -87,7 +87,7 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
             OnStatsChanged?.Invoke();
         }
 
-        public void UpgradeStat(StatName statName)
+        public void PreviewStatUpgrade(StatName statName)
         {
             if (!CanUpgrade(statName))
                 return;
@@ -127,16 +127,16 @@ namespace _Project.Scripts.UI.Windows.PlayerStats
         public PlayerStatConfig FindStatConfigByName(StatName statName) => 
             _statsModel.FindStatConfigByName(statName);
 
-        private void InvokeStatChanged() => 
-            OnStatsChanged?.Invoke();
-
-        private async UniTask UpdateStatsProgressAndSaveAsync()
+        private async UniTask SaveStatsAsync()
         {
             _saveLoad.UpdateStatsProgress(UpgradePoints);
-            await _saveLoad.SaveStatAsync();
+            await _saveLoad.SaveStatsAsync();
         }
         
-        private void UpdateStatsProgressAndSave() => 
-            UpdateStatsProgressAndSaveAsync().Forget();
+        private void SaveStats() => 
+            SaveStatsAsync().Forget();
+
+        private void InvokeStatsChanged() => 
+            OnStatsChanged?.Invoke();
     }
 }

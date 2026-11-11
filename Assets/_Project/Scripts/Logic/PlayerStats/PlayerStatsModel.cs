@@ -38,7 +38,7 @@ namespace _Project.Scripts.Logic.PlayerStats
             if (_stats.TryGetValue(statName, out PlayerStatData stat))
                 return stat;
             
-            throw new KeyNotFoundException($"[PlayerStatsModel] Not stat found for name : {statName}");
+            throw new KeyNotFoundException($"[PlayerStatsModel] Stat not found for name : {statName}");
         }
         
         public bool TryGetStat(StatName statName, out PlayerStatData stat) => 

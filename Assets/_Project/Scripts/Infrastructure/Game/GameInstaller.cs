@@ -11,9 +11,8 @@ using _Project.Scripts.UI.Common.HealthBar;
 using _Project.Scripts.UI.HUD;
 using _Project.Scripts.UI.Windows.GameOver;
 using _Project.Scripts.UI.Windows.PlayerStats;
-using _Project.Scripts.UI.Windows.PlayerStats.StatItem;
+using _Project.Scripts.UI.Windows.PlayerStats.Stat;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.Game
@@ -66,7 +65,7 @@ namespace _Project.Scripts.Infrastructure.Game
 
         private void BindPlayerStats()
         {
-            Container.BindInterfacesAndSelfTo<PlayerStatItemFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerStatViewFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerStatsSaveLoad>().AsSingle();
             Container.Bind<PlayerStatsWindowModel>().AsSingle();
